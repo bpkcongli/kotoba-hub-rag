@@ -1,6 +1,6 @@
 # Product Requirements Document — KotobaHub RAG
 
-Versi 0.5 · 23 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; kontrak v1/fixture terverifikasi pada [CON-01](docs/contracts/CON-01.md). Amendemen DOC-INF-02 mengutamakan API per pemakaian, dengan verifikasi endpoint nyata tetap terbuka. Pemilik produk/penelitian: peneliti KotobaHub. Runtime service belum diimplementasikan; spike terisolasi tersedia.
+Versi 0.6 · 23 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; kontrak v1/fixture terverifikasi pada [CON-01](docs/contracts/CON-01.md), protokol perencanaan pada [RES-01](docs/research/RES-01-protocol.md). Amendemen DOC-INF-02 mengutamakan API per pemakaian, dengan verifikasi endpoint nyata tetap terbuka. Pemilik produk/penelitian: peneliti KotobaHub. Runtime service belum diimplementasikan; protokol belum freeze dan eksperimen belum dijalankan.
 
 ## 1. Masalah dan tujuan
 
@@ -76,10 +76,10 @@ Urutan provider adalah proses seleksi sebelum eksperimen, bukan failover otomati
 | NFR-04 | Keamanan | Auth server-to-server, batas body/query/batch, allowlist input/corpus/endpoint, redaction, injection tests; Qdrant dan kredensial inferensi tidak diekspos ke browser. Egress provider melalui TLS; hanya query dan chunk yang diperlukan dikirim setelah pemeriksaan kebijakan retensi/region provider, tanpa profil learner lengkap. |
 | NFR-05 | Isolasi | Profil/progres dibawa per request; snapshot tidak memuat PII atau profil learner yang dapat terambil lintas pengguna. |
 | NFR-06 | Maintainability | Policy routing dan retrieval dapat diuji tanpa HTTP/LLM; provider/storage berada di belakang port. |
-| NFR-07 | Performa terukur | Laporkan latency end-to-end p50/p95 termasuk network/queue/cold start, token, biaya embedding/rerank/generasi dan hosting yang relevan. Memory/compute BGE dilaporkan jika tersedia; ketidaktersediaan metrik remote tidak diganti nol. SLO numerik ditetapkan dari pilot. |
+| NFR-07 | Performa terukur | Laporkan latency end-to-end p50/p95 termasuk network/queue/cold start, token, biaya embedding/rerank/generasi dan hosting yang relevan. Memory/compute BGE dilaporkan jika tersedia; ketidaktersediaan metrik remote tidak diganti nol. Batas perbandingan penelitian mengikuti TA 3.10.6; parameter runtime/SLO produk dikalibrasi pilot tanpa mengganti batas penelitian diam-diam. |
 | NFR-08 | Kompatibilitas | Contract fixtures lulus di service dan validator KotobaHub; versi schema dan aturan locale eksplisit. |
 
-Target acceptance instrument adalah kelengkapan metadata wajib pada 100% eksekusi yang ditutup. Runtime boleh gagal; harness harus merekam kegagalan atau rekonsiliasi crash sebagai terminal record sebelum analisis. Target schema success/latency/biaya produk ditetapkan pada pilot dan dibekukan sebelum main run.
+Target acceptance instrument adalah kelengkapan metadata wajib pada 100% eksekusi yang ditutup. Runtime boleh gagal; harness harus merekam kegagalan atau rekonsiliasi crash sebagai terminal record sebelum analisis. Batas keberhasilan penelitian sudah ditetapkan draf TA 3.10.6 dan dikonfirmasi pengguna pada RES-01; kesiapan memenuhi batas tersebut diukur pilot, bukan dianggap telah tercapai. SLO produk dan parameter operasional dibedakan dari kriteria penelitian.
 
 ## 6. Protokol eksperimen
 
@@ -98,18 +98,33 @@ Angka berikut mengikuti draf TA subbab 3.4.1, bukan usulan dataset baru:
 
 Onboarding adalah satu kelompok use case meskipun aplikasi mempunyai dua operasi, normalisasi dan rekomendasi. Sebuah kasus onboarding dapat memanggil keduanya; ukur total sebagai satu unit kasus dan simpan metrik suboperasi. Jangan mengubah komposisi menjadi empat kelompok tanpa revisi protokol.
 
+[Protokol RES-01](docs/research/RES-01-protocol.md) dan [matriks requirement–metric–artifact](docs/research/RES-01-requirement-matrix.md) menetapkan unit, split/label, failure/missing, kontrol perbandingan, accounting dan gate sebelum main. Sebanyak 1.800 adalah parent outcomes, bukan jumlah call model. Jika semua kasus onboarding memakai dua operasi, contoh jumlah request operasi menjadi 2.400 sebelum retry/deep path. Dataset aktual dibuat DS-01/02; fixture kontrak bukan dataset penelitian.
+
 Setiap kasus memiliki source/ground truth, graded relevance atau relevant document IDs, rubric, allowed skill catalog, level, difficulty, expected route dan alasan, serta expected outcome untuk kasus ekstrem. Label routing dan jawaban referensi hanya untuk evaluator; tidak diberikan kepada router/generator. Materi evaluasi/answer key tidak diindeks sebagai corpus; rubric pembelajaran resmi boleh diindeks dengan provenance terpisah.
 
 Bekukan model/parameter generasi dan normalisasi per operasi, prompt template/schema, snapshot, chunking, embedding, retrieval dasar, lingkungan dan provider/endpoint per operasi, cache, retry, dan evaluator sebelum main run. Embedding dokumen dan query memakai konfigurasi kompatibel; kedua mode RAG memakai endpoint embedding dan initial retrieval yang sama. Reranker deep path dipin tersendiri. Jangan memakai auto-routing/failover provider yang dapat mengubah backend tanpa jejak; endpoint tanpa revision yang dapat dipertanggungjawabkan belum memenuhi freeze. Perubahan provider atau konfigurasi embedding memerlukan pemeriksaan kompatibilitas index/reindex, serta versi/cohort baru setelah freeze. Prompt utama sama; perbedaan input context merupakan perlakuan yang dicatat. Model atau prompt rewrite adalah komponen adaptive tersendiri dan semua token/biayanya diikutkan. Nonaktifkan response/query cache untuk eksperimen utama; kebijakan provider cache, warmup dan scale-to-zero dicatat. Variasi network/shared load remote menjadi keterbatasan pengukuran, bukan bukti performa model saja.
 
 ## 7. Metrik dan definisi
 
+Outcome primer mengikuti draf TA 3.10.6: `Q = (faithfulness + answer correctness + target-skill adherence + difficulty fit) / 4`, diringkas dari lima repetition per kasus/mode. Applicability rubric lintas operasi, termasuk child onboarding, ditetapkan EVAL-01/02 sebelum freeze. Komponen missing tidak diberi nol atau dibobot ulang. Analisis primer memakai pasangan kasus lengkap dengan coverage/missing dilaporkan; kebijakan konservatif RES-01 menahan klaim keseluruhan jika primary-eligible cases belum dapat dinilai lengkap.
+
+| Kriteria baseline TA 3.10.6 | Batas penelitian; bukan hasil pengukuran |
+| --- | --- |
+| Peningkatan kualitas primer | Delta Q ADAPTIVE–SINGLE_STAGE ≥0,05; Holm-adjusted p<0,05; paired Cohen's d≥0,30 atau padanan nonparametrik yang ditetapkan sebelum main |
+| Aspek kritis | Delta faithfulness/answer correctness masing-masing ≥−0,02; syllabus compliance ≥0,95; out-of-syllabus proportion ≤1% |
+| Retrieval kasus sulit | Delta Context Recall@k atau nDCG@k ≥0,05 pada COMPLEX/AMBIGUOUS/EXTREME yang applicable; satu endpoint konfirmatori dipilih sebelum main |
+| Routing | Macro-F1 FAST/DEEP ≥0,80 dan escalation success ≥0,80 |
+| Reliabilitas | Schema-parse success ≥99%, error rate ≤2% dari seluruh closed scheduled parent requests |
+| Tambahan beban | Rasio p95 latency ≤1,50, mean LLM token dan mean total online cost masing-masing ≤1,40 terhadap SINGLE_STAGE |
+
+Semua kriteria harus terpenuhi untuk menyatakan lebih efektif secara keseluruhan. Missing/unknown yang menghalangi penilaian menghasilkan NOT_EVALUABLE. Kualitas meningkat tetapi ceiling terlampaui dilaporkan sebagai trade-off. Expected rejection tetap masuk all-request error rate; expectation-adherence dilaporkan terpisah. Pemilihan kasus ekstrem tidak boleh diubah sesudah hasil terlihat untuk meluluskan batas 2%.
+
 | Dimensi | Metrik | Ketentuan |
 | --- | --- | --- |
 | Retrieval | Context Precision@k, Context Recall@k, nDCG@k; MRR@k tambahan | Ground truth terkunci; evaluasi initial retrieval dan final selected context terpisah. `k` sama, rumus/version evaluator dibekukan. |
 | Generasi | Faithfulness, Response Relevancy, Answer Correctness | Rubric 0–1, judge/prompt terpisah dari model generasi; penilaian manusia menjadi rujukan. |
 | Personalisasi | Target-skill adherence, difficulty fit, profile alignment, syllabus compliance | Rubric terstruktur; pelanggaran katalog adalah post-validation failure. |
-| Routing | Accuracy, F1 deep sebagai positive class, activation rate, escalation success, stage count | Accuracy/F1 memakai initial route decision; activation/final path dan retry dicatat terpisah. Hanya adaptive memiliki routing metrics. |
+| Routing | Accuracy, macro-F1 FAST/DEEP, F1 deep sebagai tambahan, activation rate, escalation success, stage count | Macro-F1 menjadi criterion TA; memakai initial route decision. Activation/final path dan retry dicatat terpisah. Hanya adaptive memiliki routing metrics. |
 | Operasional | Latency p50/p95, token input/output/cached, biaya/request, error/retry rate, schema success | Semua attempt dan calls masuk; interval sukses/gagal dilaporkan terpisah serta total. |
 
 Definisi evaluasi yang harus dibakukan pada `EVAL-01`:
@@ -138,7 +153,7 @@ Analisis utama merangkum pengulangan per kasus sebelum perbandingan berpasangan,
 | Judge bias atau ICC tidak memadai | `EVAL-02`: kalibrasi dengan pilot atau manual sesuai draf; jangan menyesuaikan evaluator dari skor main set. |
 | Tiga mode mendapat budget/validator berbeda | `EXP-02`: pemeriksaan manifest, context cap, prompt/schema, client timeout, dan retry policy sebelum freeze. |
 
-Stack dan prioritas API sudah dipilih pada DEC-01/DOC-INF-02. Yang masih terbuka: provider/endpoint aktual per operasi, region/retensi/budget, bukti served revision, limit dan tarif API, lalu pada pilot top-k/pool, threshold routing, chunk token/overlap, batch/precision yang dapat dikendalikan, kapasitas teramati, deadline/biaya, outcome primer/effect, jenis ICC serta missing outcomes. SKU dan dependency/GPU lock baru diperlukan bila alternatif handler/deployment sendiri dipilih. Ukuran awal app/Qdrant 2 vCPU/4 GiB diuji pada startup smoke, bukan kapasitas produksi. Semua memiliki owner/tugas pada breakdown; bukan isi register tech debt.
+Stack dan prioritas API sudah dipilih pada DEC-01/DOC-INF-02. RES-01 menyelaraskan outcome primer serta batas penelitian dari TA 3.10.6 dan menetapkan failure/missing policy perencanaan. Yang masih terbuka: provider/endpoint aktual per operasi, region/retensi/budget, bukti served revision, limit/tarif API; pilot top-k/pool, threshold routing, chunk token/overlap, batch/precision yang dapat dikendalikan, kapasitas/deadline/runtime budgets; rubric/applicability komposit, endpoint retrieval sulit, padanan effect size nonparametrik, jenis ICC/judge dan detail analysis plan. Semua menjadi gate sebelum main, bukan alasan mengubah batas angka setelah melihat hasil. SKU/dependency GPU hanya jika handler sendiri dipilih. Ukuran awal app/Qdrant 2 vCPU/4 GiB adalah startup smoke, bukan kapasitas produksi. Gate/owner ada pada RES-01 dan breakdown; bukan isi register tech debt.
 
 ## 9. Kriteria selesai
 

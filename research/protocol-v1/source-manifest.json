@@ -1,0 +1,36 @@
+{
+  "task": "RES-01",
+  "snapshot_on": "2026-11-23",
+  "scope": "Baseline TA dan kontrak CON-01 read-only; dokumen root yang disinkronkan dichecksum dalam verification.json",
+  "files_sha256": {
+    "docs/Andrian_41522120004_TA_Draft.docx": "e571ce70d04e0ee8aa175ab8ffff884633f37a64752c5585c6de5d17ad864ba6",
+    "docs/ADR-001-stack-and-inference.md": "8e8c6575ca49f2d2a3955d1f859a9cc436f597691d16c8d1476f6e709d342e6f",
+    "docs/contracts/CON-01.md": "934f14325f827e7a38b3401cd7103871de3b197bfb85e8fb4e034bbfd0c42dad",
+    "contracts/v1/source-manifest.json": "ec5f3f3fd719f4a8ac57f9eee82c12ba12a0459ee5c882cf4fa9065d0816e7a5",
+    "contracts/v1/contract.schema.json": "2152875519f305a92a60a72f6468e6d20d87a9c77590ba396eba4e34bc4803ee",
+    "contracts/v1/domain.schema.json": "dd30836f920f73d62e65621569ec5162acef00a5d5fc03e5494c43b76dc64e6c",
+    "contracts/v1/openapi.json": "c6bbef0fc206a4fbc995555106b63582d311cadb59abfbccf74d82d33d9d763b",
+    "contracts/v1/errors.json": "c851b2a67f11d6ef9affed0ba8fee85ebd82a2a5f943e1c22815d843e08ed445"
+  },
+  "thesis_sections": [
+    "3.4.1",
+    "3.4.2",
+    "3.7.7",
+    "3.8",
+    "3.10.1–3.10.6"
+  ],
+  "approved_reconciliation": "Pengguna 23 November 2026: Ikuti draf TA dan selaraskan PRD",
+  "external_sources_checked_on": "2026-11-23",
+  "external_method_sources": [
+    "https://arxiv.org/abs/2309.15217",
+    "https://docs.ragas.io/en/stable/concepts/metrics/available_metrics/context_precision/",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC4913118/",
+    "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html",
+    "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.wilcoxon.html",
+    "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ndcg_score.html"
+  ],
+  "limitations": [
+    "TA dan transkrip adalah berkas lokal pengguna yang sudah untracked; tidak diubah atau dimasukkan staging oleh RES-01.",
+    "CON-01 evidence historis tidak ditulis ulang; RES-01 bukan audit endpoint model."
+  ]
+}

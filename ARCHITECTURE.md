@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.5 · 23 November 2026 · Status: desain yang akan diimplementasikan; stack dan prioritas API per pemakaian diputuskan pada [ADR-001](docs/ADR-001-stack-and-inference.md), kontrak dan fixture tersedia melalui [CON-01](docs/contracts/CON-01.md). Gate endpoint nyata tetap INF-01. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime service yang tersedia; spike terisolasi menjadi bukti kompatibilitas awal.
+Versi 0.6 · 23 November 2026 · Status: desain yang akan diimplementasikan; stack/prioritas API pada [ADR-001](docs/ADR-001-stack-and-inference.md), kontrak/fixture pada [CON-01](docs/contracts/CON-01.md), protokol planning dan accounting pada [RES-01](docs/research/RES-01-protocol.md). Gate endpoint nyata tetap INF-01; protokol belum freeze. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime service yang tersedia; spike terisolasi menjadi bukti kompatibilitas awal.
 
 ## 1. Dasar keputusan
 
@@ -229,7 +229,7 @@ Routing tidak menggunakan threshold universal seperti cosine 0,7 tanpa kalibrasi
 
 ### Deep path
 
-Usulan awal: maksimum dua retrieval stage total; satu rewrite opsional; stage 2 memakai query yang dipertajam atau pool lebih luas dengan hard filter sama; merge/dedup kandidat awal dan lanjutan; rerank menggunakan `BAAI/bge-reranker-v2-m3`; evaluasi evidence akhir; assemble context. Semua nilai adalah konfigurasi pilot, lalu dikunci. Tidak ada loop agent bebas atau retry sampai skor memuaskan.
+Kontrak v1 membatasi maksimum dua retrieval stage total dan satu actual rewrite call opsional; retry tetap tunduk pada cap call ini. Stage 2 memakai query dipertajam atau pool lebih luas dengan hard filter sama; merge/dedup kandidat awal dan lanjutan, rerank `BAAI/bge-reranker-v2-m3`, evidence gate lalu context assembly. Parameter pool/threshold/budget dikalibrasi pilot dalam batas CON-01/RES-01, lalu dikunci. Perubahan topology/cap di luar kontrak memerlukan revisi eksplisit, bukan konfigurasi tersembunyi. Tidak ada loop agent bebas atau retry sampai skor memuaskan.
 
 Rewrite mengubah query pencarian, bukan target skill, difficulty, locale, atau kebenaran jawaban. Candidate reference answer dari kontrak grading adalah konteks domain yang sah; jawaban acuan rahasia milik dataset evaluasi tetap terpisah. Model rewrite, jika dipakai, dipin dan biaya/latensinya masuk request total.
 
@@ -267,6 +267,12 @@ Hasil tidak langsung mengubah profil, mastery, atau sesi. KotobaHub tetap mengot
 ## 10. Telemetry dan penyimpanan eksperimen
 
 Setiap run menghasilkan manifest immutable, event JSONL per execution (menghindari concurrent writers ke file sama), terminal results, evaluator scores, lalu summary CSV/JSON. Checksum menghubungkan artefak dan raw evidence. Atur atomic finalization dan rekonsiliasi unfinished execution; kegagalan sink trace membuat run tidak layak main analysis sampai diperbaiki.
+
+[Protokol RES-01](docs/research/RES-01-protocol.md) memisahkan 1.800 parent case×mode×repetition outcomes dari child operation requests dan actual provider attempts. Parent onboarding menampung normalize/recommend sesuai dependency plan yang dibekukan; output normalize tidak otomatis menjadi mastery atau input rekomendasi yang berbeda antar mode. Replay tidak menambah observasi. Semua scheduled outcomes, termasuk EXPECTED_REJECTION/TIMEOUT/UNKNOWN/NOT_EXECUTED, tetap direkonsiliasi. Schema success, domain validity, expected-outcome adherence dan semantic quality adalah status/metrik terpisah.
+
+Template [manifest penelitian](research/protocol-v1/manifest.template.json) mencatat field provider/revision/capability/pricing, config, dataset, rubric, ICC dan analysis gates; null berarti belum tersedia, bukan siap dijalankan. [Matriks requirement](docs/research/RES-01-requirement-matrix.md) memetakan 22 FR/NFR ke path artefak rencana. Metadata 100% adalah acceptance instrument, bukan klaim 100% runtime success.
+
+Kriteria penelitian mengikuti TA 3.10.6 yang dikonfirmasi pengguna pada RES-01: komposit empat komponen berbobot setara dengan delta ≥0,05 dan uji berpasangan/Holm/effect size, macro-F1/escalation ≥0,80, schema success ≥99%, error ≤2%, rasio p95 latency ≤1,50 serta mean token/biaya ≤1,40. Aspek kritis dan retrieval sulit dirinci PRD/RES-01. Semua adalah target baseline, belum hasil. Parameter runtime dikalibrasi pilot; freeze memerlukan rubric/applicability, model revision, accounting dan human sign-off yang nyata.
 
 | Kelompok | Field minimum |
 | --- | --- |

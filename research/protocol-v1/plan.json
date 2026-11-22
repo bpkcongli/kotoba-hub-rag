@@ -1,0 +1,273 @@
+{
+  "protocol_id": "kotobahub-rag-protocol-v1",
+  "status": "PLANNING_NOT_FROZEN",
+  "prepared_on": "2026-11-23",
+  "ready_for_paid_run": false,
+  "authority": {
+    "baseline": "docs/Andrian_41522120004_TA_Draft.docx §3.4.1/3.4.2/3.8/3.10.6",
+    "decision": "Ikuti draf TA dan selaraskan PRD",
+    "decision_by": "pengguna/peneliti dalam sesi 23 November 2026",
+    "approval_scope": "baseline angka; bukan dataset validation, freeze atau budget paid run"
+  },
+  "sampling": {
+    "use_cases": [
+      "PRACTICE_GENERATION",
+      "ANSWER_EVALUATION",
+      "ONBOARDING"
+    ],
+    "complexities": [
+      "SIMPLE",
+      "COMPLEX",
+      "AMBIGUOUS",
+      "EXTREME"
+    ],
+    "modes": [
+      "LLM_ONLY",
+      "SINGLE_STAGE",
+      "ADAPTIVE"
+    ],
+    "pilot_per_cell": 2,
+    "main_per_cell": 10,
+    "pilot_cases": 24,
+    "main_cases": 120,
+    "main_repetitions": 5,
+    "main_parent_outcomes": 1800,
+    "main_parent_outcomes_per_mode": 600,
+    "pilot_repetitions": null,
+    "secondary_strata": [
+      "JLPT_N5",
+      "JLPT_N4",
+      "en",
+      "id"
+    ],
+    "secondary_quota_task": "DS-01/02 setelah DATA-01"
+  },
+  "operations": {
+    "PRACTICE_GENERATION": [
+      "GENERATE_PRACTICE_SESSION"
+    ],
+    "ANSWER_EVALUATION": [
+      "GRADE_PRACTICE_ANSWER"
+    ],
+    "ONBOARDING": [
+      "SUMMARIZE_PLACEMENT",
+      "GENERATE_STUDY_RECOMMENDATION"
+    ]
+  },
+  "unit_rules": {
+    "onboarding_is_one_case": true,
+    "required_operations_frozen_per_case": true,
+    "no_automatic_mastery_from_normalize": true,
+    "main_analysis_unit": "case",
+    "repetitions_nested": true,
+    "replay_adds_observation": false,
+    "child_calls_separate_ledger": true
+  },
+  "primary": {
+    "name": "quality_composite",
+    "components": {
+      "faithfulness": 0.25,
+      "answer_correctness": 0.25,
+      "target_skill_adherence": 0.25,
+      "difficulty_fit": 0.25
+    },
+    "comparison": [
+      "ADAPTIVE",
+      "SINGLE_STAGE"
+    ],
+    "case_aggregation": "mean_of_five_repetitions",
+    "component_missing": "null_without_reweighting",
+    "eligibility": "frozen_expected_valid_output_and_four_component_rubric",
+    "missing_policy": "complete_pairs_for_conditional_analysis; overall_NOT_EVALUABLE_if_primary_eligible_incomplete"
+  },
+  "criteria": {
+    "quality_delta_min": 0.05,
+    "holm_p_exclusive_max": 0.05,
+    "paired_cohen_d_min": 0.3,
+    "faithfulness_delta_min": -0.02,
+    "answer_correctness_delta_min": -0.02,
+    "syllabus_compliance_min": 0.95,
+    "out_of_syllabus_rate_max": 0.01,
+    "hard_retrieval_delta_min": 0.05,
+    "routing_macro_f1_min": 0.8,
+    "escalation_success_min": 0.8,
+    "schema_success_min": 0.99,
+    "error_rate_max": 0.02,
+    "p95_latency_ratio_max": 1.5,
+    "mean_llm_token_ratio_max": 1.4,
+    "mean_total_online_cost_ratio_max": 1.4
+  },
+  "analysis": {
+    "alpha": 0.05,
+    "confidence_level": 0.95,
+    "alternative": "two-sided",
+    "primary_holm_family": [
+      [
+        "ADAPTIVE",
+        "SINGLE_STAGE"
+      ],
+      [
+        "ADAPTIVE",
+        "LLM_ONLY"
+      ],
+      [
+        "SINGLE_STAGE",
+        "LLM_ONLY"
+      ]
+    ],
+    "bootstrap_unit": "case_with_all_modes_repetitions_children",
+    "paired_test_selection": "paired_difference_assumptions_before_main",
+    "effect_nonparametric_equivalence": null,
+    "paired_populations": "complete cases per pair, five repetitions evaluable on both modes; IDs and attrition per pair",
+    "missing_hypothesis": "retain family of three; full Holm and confirmatory conclusion NOT_EVALUABLE if any comparison unscorable; no substitute p-value"
+  },
+  "review": {
+    "fraction": 0.2,
+    "planned_main_units": 360,
+    "strata": [
+      "mode",
+      "use_case",
+      "complexity"
+    ],
+    "stratum_count": 36,
+    "scheduled_units_per_stratum": 50,
+    "review_units_per_stratum": 10,
+    "failed_selected_replaced": false,
+    "icc_min": 0.75,
+    "icc_design": null,
+    "judge_identity": null,
+    "final_validator": "peneliti manusia",
+    "ai_is_independent_human": false
+  },
+  "execution_controls": {
+    "retrieval_stage_max": 2,
+    "rewrite_call_max": 1,
+    "initial_retrieval_shared": true,
+    "main_mode_permutations": 6,
+    "main_blocks": 600,
+    "blocks_per_permutation": 100,
+    "schedule_seed": null,
+    "no_hidden_mode_or_provider_fallback": true,
+    "response_query_cache": "off",
+    "provider_cache_policy": null,
+    "hard_retrieval_endpoint": null,
+    "top_k": null,
+    "router_threshold": null,
+    "context_cap_tokens": null,
+    "retry_budget": null,
+    "deadline_ms": null,
+    "concurrency": null,
+    "warmup_policy": null
+  },
+  "outcomes": [
+    "DOMAIN_VALID_SUCCESS",
+    "EXPECTED_REJECTION",
+    "FAILED",
+    "TIMEOUT",
+    "UNKNOWN",
+    "NOT_EXECUTED"
+  ],
+  "failure_rules": {
+    "all_scheduled_units_retained": true,
+    "expected_rejection_in_all_request_error_rate": true,
+    "expected_rejection_semantic_score": "not_applicable_or_null_with_reason",
+    "unknown_usage_cost": "null",
+    "indexing_judge_hosting_separate": true,
+    "unknown_revision_blocks_freeze": true,
+    "unknown_remote_hardware_allowed_with_reason": true
+  },
+  "pending_gates": [
+    {
+      "id": "G-DATA",
+      "owner": "DATA-01–03 / DS-01–02",
+      "requires": [
+        "corpus/dataset manifests",
+        "pilot/main semantic overlap audit",
+        "secondary strata quotas",
+        "human ground-truth sign-off",
+        "expected-rejection ceiling feasibility"
+      ]
+    },
+    {
+      "id": "G-PROVIDER",
+      "owner": "INF-01/02 / BASE-01 / OBS-02",
+      "requires": [
+        "actual endpoint/provider/revision capability evidence",
+        "index/query compatibility",
+        "price and billing units",
+        "region/retention"
+      ]
+    },
+    {
+      "id": "G-RUBRIC",
+      "owner": "EVAL-01/02 / UC-03",
+      "requires": [
+        "four-component applicability per operation × mode including LLM_ONLY supplied context",
+        "primary eligible list and complete-pair populations per comparison",
+        "onboarding aggregation and dependency plan",
+        "qrels and dedup evidence unit"
+      ]
+    },
+    {
+      "id": "G-JUDGE",
+      "owner": "EVAL-02 / EXP-01",
+      "requires": [
+        "ICC model/type/definition and CI design",
+        "frozen judge/rubric config",
+        "sample seed, ten distinct case IDs per stratum and manual fallback"
+      ]
+    },
+    {
+      "id": "G-PILOT",
+      "owner": "EXP-00/01 / ADP-01",
+      "requires": [
+        "pilot repetition/budget",
+        "top-k/chunking/threshold/context/retry/deadline/concurrency/warmup/cache",
+        "measured readiness report"
+      ]
+    },
+    {
+      "id": "G-ANALYSIS",
+      "owner": "EVAL-01/02 / EXP-02",
+      "requires": [
+        "hard retrieval endpoint choice",
+        "test diagnostics/tie/zero method",
+        "nonparametric effect equivalence to paired d 0.30",
+        "bootstrap/CI settings and hypothesis families"
+      ]
+    },
+    {
+      "id": "G-RUNTIME",
+      "owner": "TEST / INT / REVIEW / EXP-00",
+      "requires": [
+        "dry-run schedule/replay/reconciliation",
+        "runtime integration/failure tests",
+        "trace completeness and independent review"
+      ]
+    },
+    {
+      "id": "G-FREEZE",
+      "owner": "peneliti / EXP-02",
+      "requires": [
+        "all previous gates",
+        "immutable full manifest",
+        "recorded sign-off",
+        "explicit paid scope and budget"
+      ]
+    }
+  ],
+  "planned_artifacts": [
+    "manifest.json",
+    "schedule.jsonl",
+    "terminal-outcomes.jsonl",
+    "operation-outcomes.jsonl",
+    "model-calls.jsonl",
+    "retrieval-traces.jsonl",
+    "validation-results.jsonl",
+    "evaluation-results.jsonl",
+    "cost-ledger.jsonl",
+    "human-review/",
+    "analysis/",
+    "reconciliation.json"
+  ]
+}
