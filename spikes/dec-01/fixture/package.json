@@ -1,0 +1,31 @@
+{
+  "name": "kotoba-rag-dec01-spike",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.19.1",
+  "engines": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "build": "tsc",
+    "test": "npm run build && node --test .out/spike.test.js"
+  },
+  "dependencies": {
+    "fastify": "5.12.8",
+    "openai": "7.62.0",
+    "@qdrant/js-client-rest": "1.20.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "24.19.2",
+    "eslint": "10.15.0",
+    "@eslint/js": "10.0.1",
+    "typescript-eslint": "8.73.0",
+    "prettier": "3.10.1"
+  }
+}

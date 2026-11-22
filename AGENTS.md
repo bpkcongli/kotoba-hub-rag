@@ -4,7 +4,7 @@
 
 Repository ini membangun service eksperimen untuk KotobaHub. Pada inisialisasi, yang tersedia adalah dokumentasi dan paket tooling; runtime belum ada. Gunakan bahasa Indonesia untuk dokumentasi dan laporan kerja, serta identifier kode sesuai konvensi bahasa/framework yang dipilih.
 
-Sebelum mengubah implementasi, baca [PRD](PRD.md), [ARCHITECTURE](ARCHITECTURE.md), lalu task terkait pada [TASK_BREAKDOWN](TASK_BREAKDOWN.md). Untuk penelitian, baca bagian draf TA yang dirujuk. Untuk integrasi, periksa source/schema KotobaHub yang actual; dokumen draft aplikasi tidak otomatis sama dengan interface terpasang. Jangan menerapkan aturan frontend MobX/Inversify aplikasi ke service ini tanpa kebutuhan.
+Sebelum mengubah implementasi, baca [PRD](PRD.md), [ARCHITECTURE](ARCHITECTURE.md), lalu task terkait pada [TASK_BREAKDOWN](TASK_BREAKDOWN.md). Keputusan stack/deployment DEC-01 ada pada [ADR-001](docs/ADR-001-stack-and-inference.md); `spikes/dec-01` hanya bukti kompatibilitas awal, bukan runtime service. Untuk penelitian, baca bagian draf TA yang dirujuk. Untuk integrasi, periksa source/schema KotobaHub yang actual; dokumen draft aplikasi tidak otomatis sama dengan interface terpasang. Jangan menerapkan aturan frontend MobX/Inversify aplikasi ke service ini tanpa kebutuhan.
 
 ## Cara mengerjakan task
 
@@ -46,7 +46,7 @@ Reviewer Jepang adalah alat bantu. Peneliti tetap validator final; role ini tida
 
 Skill dapat dipanggil eksplisit dengan `$nama-skill` atau dipilih otomatis sesuai deskripsi setelah terpasang. Jangan memaksa semua skill masuk setiap task. Skill tidak mengubah izin filesystem, akses provider, atau otorisasi tindakan eksternal.
 
-Pemetaan skill bahasa: `backend-coder` memilih sesuai berkas implementasi; `sdet` sesuai bahasa test; `code-reviewer` memakai sebagai kriteria review read-only; `research-evaluator` memakai hanya untuk script harness/evaluasi dalam bahasa yang sudah dipilih task. `japanese-content-reviewer` tetap fokus pada konten Jepang. Agent utama dapat menyebut skill pada pesan penugasan, misalnya `backend-coder: gunakan $python-pro untuk INF-02, ownership inference/`. Skill bahasa melengkapi skill domain RAG; tidak menetapkan stack sebelum `DEC-01` atau mengubah bahasa script yang belum diputuskan.
+Pemetaan skill bahasa: `backend-coder` memilih sesuai berkas implementasi; `sdet` sesuai bahasa test; `code-reviewer` memakai sebagai kriteria review read-only; `research-evaluator` memakai hanya untuk script harness/evaluasi dalam bahasa yang sudah dipilih task. `japanese-content-reviewer` tetap fokus pada konten Jepang. Agent utama dapat menyebut skill pada pesan penugasan, misalnya `backend-coder: gunakan $python-pro untuk INF-02, ownership inference/`. Skill bahasa melengkapi skill domain RAG dan mengikuti ADR-001; tidak memilih ulang stack atau mengubah bahasa script yang belum diputuskan.
 
 ## Lokasi dan aktivasi tooling
 
@@ -62,7 +62,7 @@ Format subagent/skills merujuk [official OpenAI subagents](https://learn.chatgpt
 
 ## Invariant penelitian dan domain
 
-- Inferensi embedding/reranker direncanakan remote lewat provider atau server terpisah karena keterbatasan hardware. Model tetap BGE-M3 dense+sparse dan BGE Reranker v2 M3; audit kemampuan/revision pada INF-01, bukan menganggap model Hub otomatis tersedia via API. Python handler dan weights/GPU lokal bersifat opsional; orkestrasi tetap TypeScript. Jangan menjalankan provisioning/call berbayar tanpa scope/budget task.
+- Inferensi embedding/reranker mengutamakan API per pemakaian sesuai DOC-INF-02: evaluasi HF lebih dahulu, lalu API provider lain dengan model sama bila HF tidak memenuhi kontrak/revision/biaya. Dedicated/custom container/server sendiri hanya alternatif setelah audit API dan budget. Model tetap BGE-M3 dense+sparse dan BGE Reranker v2 M3 dari Hub; kemampuan/revision dibuktikan pada INF-01. Dense-only/BM25/model lain memerlukan keputusan penelitian tersendiri. Python handler/GPU lock hanya untuk alternatif yang dimiliki proyek; orkestrasi tetap TypeScript. Jangan membeli kredit, provisioning atau call berbayar tanpa scope/budget task.
 - Pin provider aktual/endpoint/model revision dan konfigurasi per operasi sebelum freeze. Kedua mode RAG memakai embedding awal sama dan index/query kompatibel; tidak ada auto-routing atau fallback provider/lokal tersembunyi. Unknown hardware/precision/billing remote dicatat eksplisit; identitas model/revision belum terverifikasi menghalangi freeze. Biaya query embedding/rerank serta retry masuk total request; document indexing/judge dan alokasi hosting dipisahkan tanpa double-count.
 - Tiga mode: LLM_ONLY sebagai tambahan, SINGLE_STAGE baseline utama, ADAPTIVE metode yang diuji. Jangan menghapus baseline atau menukar mode karena kegagalan.
 - Initial hybrid retrieval, generator, main prompt/schema, context cap, corpus, model parameters dan validator sama untuk kedua mode RAG. Perbedaan stage/rewrite/reranker adalah perlakuan yang eksplisit.

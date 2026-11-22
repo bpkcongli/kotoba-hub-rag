@@ -1,0 +1,508 @@
+{
+  "task_id": "DEC-01",
+  "verified_on": "2026-11-22",
+  "status": "design_decision_with_INF_01_runtime_gate",
+  "downloads": [
+    {
+      "name": "node",
+      "version": "24.22.3",
+      "archive_sha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb",
+      "expected_source": "https://nodejs.org/dist/v24.22.3/SHASUMS256.txt"
+    },
+    {
+      "name": "qdrant",
+      "version": "1.20.2",
+      "archive_sha256": "7c3e956b97830a9faa6391540330380c2fa4aa2f92df99bd8d1880a703b922af",
+      "expected_source": "https://api.github.com/repos/qdrant/qdrant/releases/latest"
+    }
+  ],
+  "node_release": {
+    "version": "v24.22.3",
+    "date": "2026-11-10",
+    "files": [
+      "aix-ppc64",
+      "headers",
+      "linux-arm64",
+      "linux-ppc64le",
+      "linux-s390x",
+      "linux-x64",
+      "linux-x64-musl",
+      "osx-arm64-tar",
+      "osx-x64-pkg",
+      "osx-x64-tar",
+      "src",
+      "win-arm64-7z",
+      "win-arm64-zip",
+      "win-x64-7z",
+      "win-x64-exe",
+      "win-x64-msi",
+      "win-x64-zip"
+    ],
+    "npm": "11.19.1",
+    "v8": "13.6.233.17",
+    "uv": "1.52.1",
+    "zlib": "1.3.2.1-motley",
+    "openssl": "3.5.9",
+    "modules": "137",
+    "lts": "Krypton",
+    "security": true
+  },
+  "typescript_package_metadata": {
+    "fastify": {
+      "version": "5.12.8",
+      "source": "https://registry.npmjs.org/fastify",
+      "engines": null,
+      "peer_dependencies": null,
+      "published": "2026-11-02T10:46:39.236Z",
+      "integrity": "sha512-moP8exb2sCHLUbJkwp+I6C0padhy4D8lp0SdmzY7HhSdZuqm7O/u3o2aq7u8okaQ//33QDzj3G/u+FsSdB8Qzw=="
+    },
+    "openai": {
+      "version": "7.62.0",
+      "source": "https://registry.npmjs.org/openai",
+      "engines": {
+        "node": ">=22.0.0"
+      },
+      "peer_dependencies": {
+        "ws": "^8.21.0",
+        "zod": "^3.25 || ^4.0",
+        "undici": ">=5 <9",
+        "@smithy/hash-node": ">=4.3.0 <5",
+        "google-auth-library": ">=9.15.1 <12",
+        "@smithy/signature-v4": ">=5.4.0 <6",
+        "@aws-sdk/credential-provider-node": ">=3.972.0 <4"
+      },
+      "published": "2026-11-20T01:43:43.250Z",
+      "integrity": "sha512-dehzgY2anBfU3H+FfWHCVjhb9ZRYzahzNpvmMExTmMaeU11i51NJIMJPDctgLiP4+pCh53KIsLVQ66ucKyDNMA=="
+    },
+    "@qdrant/js-client-rest": {
+      "version": "1.20.0",
+      "source": "https://registry.npmjs.org/@qdrant%2fjs-client-rest",
+      "engines": {
+        "node": ">=22.0.0"
+      },
+      "peer_dependencies": {
+        "typescript": ">=4.7"
+      },
+      "published": "2026-10-22T09:02:34.576Z",
+      "integrity": "sha512-NhvW4z3rbxYc1e+ksHci5hE8vNBpbi5YoB7z3dzaVcskM2el7O/exNg5fclAN+G5MXn/TRx2Rcie8YTXo2YQdg=="
+    },
+    "typescript": {
+      "version": "5.9.3",
+      "source": "https://registry.npmjs.org/typescript",
+      "engines": {
+        "node": ">=14.17"
+      },
+      "peer_dependencies": null,
+      "published": "2025-09-30T21:19:38.784Z",
+      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="
+    },
+    "@types/node": {
+      "version": "24.19.2",
+      "source": "https://registry.npmjs.org/@types%2fnode",
+      "engines": null,
+      "peer_dependencies": {},
+      "published": "2026-10-09T18:44:25.189Z",
+      "integrity": "sha512-93d49wCWJkCyN87MxLpNN6KXPCwFw7bVUg79mGUV1OS40JGWwVCr8n61DXCSqz7CV6/VfPkb7xec7uP2M+QHWQ=="
+    },
+    "eslint": {
+      "version": "10.15.0",
+      "source": "https://registry.npmjs.org/eslint",
+      "engines": {
+        "node": "^20.19.0 || ^22.13.0 || >=24"
+      },
+      "peer_dependencies": {
+        "jiti": "*"
+      },
+      "published": "2026-11-13T21:33:34.115Z",
+      "integrity": "sha512-+5Wg4p+ze3sG1WErYgUO/3H1IQIfFBymVUA0Fo/XTeBOLS6UQIUekpSJ8sdRkn7O7wjh84b55w/roqavH2aScg=="
+    },
+    "@eslint/js": {
+      "version": "10.0.1",
+      "source": "https://registry.npmjs.org/@eslint%2fjs",
+      "engines": {
+        "node": "^20.19.0 || ^22.13.0 || >=24"
+      },
+      "peer_dependencies": {
+        "eslint": "^10.0.0"
+      },
+      "published": "2026-02-06T22:34:56.290Z",
+      "integrity": "sha512-zeR9k5pd4gxjZ0abRoIaxdc7I3nDktoXZk2qOv9gCNWx3mVwEn32VRhyLaRsDiJjTs0xq/T8mfPtyuXu7GWBcA=="
+    },
+    "typescript-eslint": {
+      "version": "8.73.0",
+      "source": "https://registry.npmjs.org/typescript-eslint",
+      "engines": {
+        "node": "^18.18.0 || ^20.9.0 || >=21.1.0"
+      },
+      "peer_dependencies": {
+        "eslint": "^8.57.0 || ^9.0.0 || ^10.0.0",
+        "typescript": ">=4.8.4 <6.1.0"
+      },
+      "published": "2026-11-16T17:07:26.146Z",
+      "integrity": "sha512-+EnKy9rkYPun4l+kG2bDuYWQ6y1tGVgdR/tY1U9AC6h21CjEwOoc7gsjwe0FXB8uWFzk4QiCFbuRWgX758PiAg=="
+    },
+    "prettier": {
+      "version": "3.10.1",
+      "source": "https://registry.npmjs.org/prettier",
+      "engines": {
+        "node": ">=14"
+      },
+      "peer_dependencies": null,
+      "published": "2026-11-12T07:06:22.298Z",
+      "integrity": "sha512-70vp3ZUYoPlFbF9uiTdXHUUCGEIp7d4+6p+8DYbkm2jP7x/3i/paXVF6dopSI3zd/CEitrZN1rc4i85xWmmXlg=="
+    }
+  },
+  "hugging_face_public_metadata": {
+    "hf_embedding": {
+      "_id": "65b53851e602b6c2c96e78da",
+      "id": "BAAI/bge-m3",
+      "sha": "5617a9f61b028005a4858fdac845db406aefb181",
+      "inferenceProviderMapping": {
+        "hf-inference": {
+          "status": "live",
+          "providerId": "BAAI/bge-m3",
+          "task": "sentence-similarity",
+          "isModelAuthor": false
+        }
+      }
+    },
+    "hf_reranker": {
+      "_id": "65f44de295b7d70871c368eb",
+      "id": "BAAI/bge-reranker-v2-m3",
+      "sha": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+      "inferenceProviderMapping": {
+        "hf-inference": {
+          "status": "live",
+          "providerId": "BAAI/bge-reranker-v2-m3",
+          "task": "text-classification",
+          "isModelAuthor": false
+        }
+      }
+    }
+  },
+  "hugging_face_metadata_limit": "Hub mapping and candidate SHAs only; no authenticated inference, sparse proof, deployed revision, latency or billing verification.",
+  "spike": {
+    "environment": {
+      "python": "3.12.16",
+      "architecture": "x86_64",
+      "container_limits": {
+        "memory.max": "4294967296",
+        "cpu.max": "200000 100000",
+        "memory.peak": "670904320"
+      },
+      "qdrant": {
+        "title": "qdrant - vector search engine",
+        "version": "1.20.2",
+        "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+      },
+      "qdrant_process_peak_rss_kib": 40480,
+      "runner_image": "python@sha256:935c3c5b12357a7e10caa9c1e6ca5692344d97cf229832ef584be2cec9fc03df",
+      "container_flags": [
+        "--network=none",
+        "--cpus=2",
+        "--memory=4g",
+        "--memory-swap=4g",
+        "--pids-limit=128"
+      ]
+    },
+    "commands": [
+      {
+        "argv": [
+          "node",
+          "--version"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 0.01,
+        "stdout": "v24.22.3\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "npm",
+          "--version"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 0.226,
+        "stdout": "11.19.1\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "npm",
+          "ci",
+          "--offline",
+          "--ignore-scripts",
+          "--no-audit",
+          "--no-fund"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 4.026,
+        "stdout": "\nadded 156 packages in 4s\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "npm",
+          "run",
+          "typecheck"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 6.633,
+        "stdout": "\n> kotoba-rag-dec01-spike@0.0.0 typecheck\n> tsc --noEmit\n\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "npm",
+          "run",
+          "lint"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 3.784,
+        "stdout": "\n> kotoba-rag-dec01-spike@0.0.0 lint\n> eslint .\n\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "npm",
+          "run",
+          "format:check"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 0.429,
+        "stdout": "\n> kotoba-rag-dec01-spike@0.0.0 format:check\n> prettier --check .\n\nChecking formatting...\nAll matched files use Prettier code style!\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "npm",
+          "run",
+          "build"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 4.226,
+        "stdout": "\n> kotoba-rag-dec01-spike@0.0.0 build\n> tsc\n\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "node",
+          "--test",
+          ".out/spike.test.js"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 1.025,
+        "stdout": "✔ Fastify preserves Japanese and rejects extra properties/type coercion (267.798279ms)\n✔ OpenAI SDK imports and exposes Responses without a provider call (4.737411ms)\n✔ Qdrant client/server supports named dense+sparse query and RRF (77.602582ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 950.968728\n",
+        "stderr": ""
+      },
+      {
+        "argv": [
+          "npm",
+          "ls",
+          "--depth=0",
+          "--json"
+        ],
+        "exit_code": 0,
+        "duration_seconds": 0.584,
+        "stdout": "{\n  \"version\": \"0.0.0\",\n  \"name\": \"kotoba-rag-dec01-spike\",\n  \"dependencies\": {\n    \"@eslint/js\": {\n      \"version\": \"10.0.1\",\n      \"resolved\": \"https://registry.npmjs.org/@eslint/js/-/js-10.0.1.tgz\",\n      \"overridden\": false\n    },\n    \"@qdrant/js-client-rest\": {\n      \"version\": \"1.20.0\",\n      \"resolved\": \"https://registry.npmjs.org/@qdrant/js-client-rest/-/js-client-rest-1.20.0.tgz\",\n      \"overridden\": false\n    },\n    \"@types/node\": {\n      \"version\": \"24.19.2\",\n      \"resolved\": \"https://registry.npmjs.org/@types/node/-/node-24.19.2.tgz\",\n      \"overridden\": false\n    },\n    \"eslint\": {\n      \"version\": \"10.15.0\",\n      \"resolved\": \"https://registry.npmjs.org/eslint/-/eslint-10.15.0.tgz\",\n      \"overridden\": false\n    },\n    \"fastify\": {\n      \"version\": \"5.12.8\",\n      \"resolved\": \"https://registry.npmjs.org/fastify/-/fastify-5.12.8.tgz\",\n      \"overridden\": false\n    },\n    \"openai\": {\n      \"version\": \"7.62.0\",\n      \"resolved\": \"https://registry.npmjs.org/openai/-/openai-7.62.0.tgz\",\n      \"overridden\": false\n    },\n    \"prettier\": {\n      \"version\": \"3.10.1\",\n      \"resolved\": \"https://registry.npmjs.org/prettier/-/prettier-3.10.1.tgz\",\n      \"overridden\": false\n    },\n    \"typescript-eslint\": {\n      \"version\": \"8.73.0\",\n      \"resolved\": \"https://registry.npmjs.org/typescript-eslint/-/typescript-eslint-8.73.0.tgz\",\n      \"overridden\": false\n    },\n    \"typescript\": {\n      \"version\": \"5.9.3\",\n      \"resolved\": \"https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz\",\n      \"overridden\": false\n    }\n  }\n}\n",
+        "stderr": ""
+      }
+    ]
+  },
+  "limits": [
+    "Fastify schema fixture is not an application domain contract.",
+    "OpenAI import/init does not prove model access or structured-output support.",
+    "Qdrant smoke uses one synthetic point, not production corpus/filter/load testing.",
+    "No BGE weights, embedding or reranker model execution; no cloud provisioning or paid model calls.",
+    "2 CPU/4 GiB is a tested startup envelope, not the minimum or a production SLO. Disk capacity and remote GPU sizing remain unmeasured.",
+    "Python base interpreter only; torch/FlagEmbedding/FastAPI stack not installed or runtime-tested.",
+    "Independent design review used supplied facts, not direct file access."
+  ],
+  "fixture_sha256": {
+    ".gitignore": "14dbb3ea6e18d85e3a86068e93ace6ee282a359f6772bc5e8361b04ae705af20",
+    "fixture/.gitignore": "93409413d76d6ffc5fbbc3d0c36b5a94f6165d4c4f5fd93458de875521243449",
+    "fixture/.prettierignore": "0d91202f4d4a58f19cc928ef7b594ec1ba545896fc1e60e993f61e0c815bff47",
+    "fixture/eslint.config.mjs": "1516affdd57d70fbcf4c5fde0275c1feaae43cd1cb0ff2bff55113eb7ab0adef",
+    "fixture/package-lock.json": "21a71a66cdfdce1cee977bdfd361279abbf52a43f3aa49d4b7fd7dad89dda703",
+    "fixture/package.json": "c8562299ca61e4f6682a85a1403a43ca878dbcc35e6551b2de38682f137d474a",
+    "fixture/spike.test.ts": "5fc53d6c7deda5579ae8fc6805ca2149353b3eab0aa24cd606515739691eb9a0",
+    "fixture/tsconfig.json": "e0e5d2fa7fc425e35aa9512614c753a7f106e560a38d4c8ff411edc71ee63763",
+    "run-spike.py": "24916be66f11e8b2e9b2746b7d33b5f982cb9d1dabac32af7e148efc51c0da86"
+  },
+  "node_support_schedule": {
+    "v24": {
+      "start": "2025-05-06",
+      "lts": "2025-10-28",
+      "maintenance": "2026-10-20",
+      "end": "2028-04-30",
+      "codename": "Krypton"
+    },
+    "v26": {
+      "start": "2026-05-05",
+      "lts": "2026-10-28",
+      "maintenance": "2027-10-20",
+      "end": "2029-04-30",
+      "codename": "Lithium"
+    }
+  },
+  "selection_notes": {
+    "typescript_latest_observed": "7.0.2",
+    "typescript_choice": "5.9.3, within selected typescript-eslint peer range; direct SDK declarations compile with skipLibCheck false.",
+    "eslint_rejected_candidate": {
+      "version": "9.39.5",
+      "observed_install_warning": "This version is no longer supported. Please see https://eslint.org/version-support for other options."
+    },
+    "eslint_selected": "10.15.0; npm install and typed lint passed."
+  },
+  "python_candidates": {
+    "python_uv": {
+      "version_observed": "0.13.9",
+      "requires_python": ">=3.8",
+      "requires_dist": null,
+      "status": "metadata_only_not_installed_or_runtime_verified"
+    },
+    "python_fastapi": {
+      "version_observed": "0.165.0",
+      "requires_python": ">=3.11",
+      "requires_dist": [
+        "starlette>=1.6.0",
+        "anyio>=4.1.0",
+        "pydantic>=2.9.0",
+        "typing-extensions>=4.8.0",
+        "typing-inspection>=0.4.2",
+        "annotated-doc>=0.0.2",
+        "opentelemetry-api>=1.44.0",
+        "opentelemetry-sdk>=1.44.0; extra == \"opentelemetry\"",
+        "opentelemetry-exporter-otlp-proto-http>=1.44.0; extra == \"opentelemetry\"",
+        "opentelemetry-sdk>=1.44.0; extra == \"standard\"",
+        "opentelemetry-exporter-otlp-proto-http>=1.44.0; extra == \"standard\"",
+        "fastapi-cli[standard]>=0.0.32; extra == \"standard\"",
+        "fastar>=0.9.0; extra == \"standard\"",
+        "httpx<1.0.0,>=0.23.0; extra == \"standard\"",
+        "httpx2>=2.0.0; extra == \"standard\"",
+        "jinja2>=3.1.5; extra == \"standard\"",
+        "python-multipart>=0.0.18; extra == \"standard\"",
+        "email-validator>=2.0.0; extra == \"standard\"",
+        "uvicorn[standard]>=0.12.0; extra == \"standard\"",
+        "pydantic-settings>=2.0.0; extra == \"standard\"",
+        "pydantic-extra-types>=2.0.0; extra == \"standard\"",
+        "opentelemetry-sdk>=1.44.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "opentelemetry-exporter-otlp-proto-http>=1.44.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "fastapi-cli[standard-no-fastapi-cloud-cli]>=0.0.32; extra == \"standard-no-fastapi-cloud-cli\"",
+        "httpx<1.0.0,>=0.23.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "httpx2>=2.0.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "jinja2>=3.1.5; extra == \"standard-no-fastapi-cloud-cli\"",
+        "python-multipart>=0.0.18; extra == \"standard-no-fastapi-cloud-cli\"",
+        "email-validator>=2.0.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "uvicorn[standard]>=0.12.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "pydantic-settings>=2.0.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "pydantic-extra-types>=2.0.0; extra == \"standard-no-fastapi-cloud-cli\"",
+        "opentelemetry-sdk>=1.44.0; extra == \"all\"",
+        "opentelemetry-exporter-otlp-proto-http>=1.44.0; extra == \"all\"",
+        "fastapi-cli[standard]>=0.0.32; extra == \"all\"",
+        "httpx<1.0.0,>=0.23.0; extra == \"all\"",
+        "httpx2>=2.0.0; extra == \"all\"",
+        "jinja2>=3.1.5; extra == \"all\"",
+        "python-multipart>=0.0.18; extra == \"all\"",
+        "itsdangerous>=1.1.0; extra == \"all\"",
+        "pyyaml>=5.3.1; extra == \"all\"",
+        "email-validator>=2.0.0; extra == \"all\"",
+        "uvicorn[standard]>=0.12.0; extra == \"all\"",
+        "pydantic-settings>=2.0.0; extra == \"all\"",
+        "pydantic-extra-types>=2.0.0; extra == \"all\""
+      ],
+      "status": "metadata_only_not_installed_or_runtime_verified"
+    },
+    "python_flagembedding": {
+      "version_observed": "1.4.2",
+      "requires_python": null,
+      "requires_dist": [
+        "torch>=1.6.0",
+        "transformers<6.0.0,>=4.44.2",
+        "datasets>=2.19.0",
+        "accelerate>=0.20.1",
+        "sentence_transformers",
+        "peft",
+        "ir-datasets",
+        "sentencepiece",
+        "protobuf",
+        "deepspeed; extra == \"finetune\"",
+        "flash-attn; extra == \"finetune\""
+      ],
+      "status": "metadata_only_not_installed_or_runtime_verified"
+    },
+    "python_torch": {
+      "version_observed": "2.15.0",
+      "requires_python": ">=3.11",
+      "requires_dist": [
+        "filelock",
+        "typing-extensions>=4.13.0",
+        "setuptools>=77.0.3",
+        "sympy>=1.13.3",
+        "networkx>=2.5.1",
+        "jinja2",
+        "fsspec>=0.8.5",
+        "cuda-toolkit[cublas,cudart,cufft,cufile,cupti,cusolver,cusparse,nvjitlink,nvrtc,nvtx]==13.2.2; platform_system == \"Linux\"",
+        "cuda-bindings<14,>=13.0.3; platform_system == \"Linux\" and python_version < \"3.15\"",
+        "nvidia-cudnn-cu13==9.26.0.51; platform_system == \"Linux\"",
+        "nvidia-cusparselt-cu13==0.8.1; platform_system == \"Linux\"",
+        "nvidia-nccl-cu13==2.30.7; platform_system == \"Linux\"",
+        "nvidia-nvshmem-cu13==3.7.2; platform_system == \"Linux\"",
+        "triton~=3.9.0; platform_system == \"Linux\" and python_version < \"3.16\"",
+        "optree>=0.13.0; extra == \"optree\"",
+        "opt-einsum>=3.3; extra == \"opt-einsum\"",
+        "pyyaml; extra == \"pyyaml\""
+      ],
+      "status": "metadata_only_not_installed_or_runtime_verified"
+    },
+    "ruff": {
+      "version": "0.17.6",
+      "requires_python": ">=3.7",
+      "project_urls": {
+        "Changelog": "https://github.com/astral-sh/ruff/blob/main/CHANGELOG.md",
+        "Documentation": "https://docs.astral.sh/ruff/",
+        "Homepage": "https://docs.astral.sh/ruff",
+        "Repository": "https://github.com/astral-sh/ruff"
+      },
+      "status": "metadata_only_not_selected_exact_handler_pin"
+    },
+    "mypy": {
+      "version": "2.4.1",
+      "requires_python": ">=3.10",
+      "project_urls": {
+        "Changelog": "https://github.com/python/mypy/blob/master/CHANGELOG.md",
+        "Documentation": "https://mypy.readthedocs.io/en/stable/index.html",
+        "Homepage": "https://www.mypy-lang.org/",
+        "Issues": "https://github.com/python/mypy/issues",
+        "Repository": "https://github.com/python/mypy"
+      },
+      "status": "metadata_only_not_selected_exact_handler_pin"
+    },
+    "pytest": {
+      "version": "9.2.0",
+      "requires_python": ">=3.10",
+      "project_urls": {
+        "Changelog": "https://docs.pytest.org/en/stable/changelog.html",
+        "Contact": "https://docs.pytest.org/en/stable/contact.html",
+        "Funding": "https://docs.pytest.org/en/stable/sponsor.html",
+        "Homepage": "https://docs.pytest.org/en/latest/",
+        "Source": "https://github.com/pytest-dev/pytest",
+        "Tracker": "https://github.com/pytest-dev/pytest/issues"
+      },
+      "status": "metadata_only_not_selected_exact_handler_pin"
+    }
+  },
+  "provider_cost_audit": {
+    "source": "https://huggingface.co/docs/inference-endpoints/pricing",
+    "verified_on": "2026-11-22",
+    "billing": "minute granularity for initializing/running compute replicas",
+    "example_rate_usd_per_hour": {
+      "aws_nvidia_t4_x1": 0.5
+    },
+    "illustration_only": {
+      "two_endpoints_one_replica_each_hours": 10,
+      "compute_cost_usd": 10
+    },
+    "limitations": "No SKU selected, no model capacity proof, no final quote or provisioning; idle/cold-start/scale policy to be validated."
+  }
+}

@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.2 · 22 November 2026 · Status: desain yang akan diimplementasikan; penempatan inferensi direvisi agar mendukung provider/endpoint eksternal karena keterbatasan hardware. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime yang tersedia.
+Versi 0.4 · 22 November 2026 · Status: desain yang akan diimplementasikan; stack dan prioritas API per pemakaian diputuskan pada [ADR-001](docs/ADR-001-stack-and-inference.md) dengan amendemen DOC-INF-02 dan gate endpoint nyata INF-01. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime service yang tersedia; spike terisolasi menjadi bukti kompatibilitas awal.
 
 ## 1. Dasar keputusan
 
@@ -9,9 +9,9 @@ Urutan acuan adalah kebutuhan penelitian pada [PRD](PRD.md) dan draf TA, kontrak
 | Status | Keputusan | Alasan |
 | --- | --- | --- |
 | Baseline draf | TypeScript mengorkestrasi mode, BGE-M3 untuk embedding, Qdrant untuk retrieval, BGE Reranker untuk deep path | Mengikuti subbab 3.7.7; bukan migrasi penuh ke Python hanya karena course memakai Python. |
-| Usulan `DEC-01` | REST memakai Fastify; dependency injection via constructor/composition root | Cocok untuk service TypeScript terpisah dan pengujian policy tanpa framework. |
-| Arah deployment `DOC-INF-01`; seleksi di `DEC-01`/`INF-01` | Embedding dan reranker dipanggil lewat HTTP ke inference provider atau server terpisah; Hugging Face menjadi kandidat | Tidak mewajibkan GPU/weights di laptop atau instance aplikasi. Endpoint embedding dan reranker dapat berbeda. |
-| Opsi bersyarat `DEC-01` | Python FlagEmbedding sebagai custom handler/service remote bila API provider belum memenuhi kontrak; FastAPI hanya jika perlu transport sendiri | Python tidak wajib ada pada deployment aplikasi. Self-hosted lokal tetap opsi; routing dan policy generasi berada di TypeScript. |
+| Diterima `DEC-01` | Node 24.22.3/npm 11.19.1, TypeScript 5.9.3, Fastify 5.12.8; constructor/composition root | Kombinasi lint/typecheck/build dan schema smoke diuji; versi dan lock strategy ada pada ADR-001. |
+| Prioritas `DEC-01` amendemen `DOC-INF-02`; gate `INF-01` | API per pemakaian: HF lebih dahulu, provider API lain untuk model sama jika HF tidak layak | Model tetap BGE-M3 dense+sparse dan BGE Reranker v2 M3; provider final belum dipilih. API HF belum membuktikan sparse/revision; tidak wajib GPU/weights lokal. |
+| Alternatif bersyarat `DOC-INF-02` | Dedicated/custom container/server terpisah, dengan Python 3.12/FlagEmbedding/FastAPI jika handler sendiri dibutuhkan | Evaluasi setelah API siap pakai dan budget; Python/GPU lock hanya untuk alternatif ini. Routing/generasi tetap TypeScript; tidak ada failover runtime otomatis. |
 | Konfigurasi KotobaHub saat ini | OpenAI Responses API menggunakan `gpt-5.6-terra` untuk generasi dan `gpt-5.6-luna` untuk normalisasi | Gunakan model yang sama per operasi pada ketiga mode eksperimen; verifikasi akses dan structured output pada pilot. |
 | Dipilih untuk MVP | Manifest + JSONL lokal untuk artefak/trace eksperimen; backup ke storage terkontrol | Menghindari database telemetry tambahan sebelum kebutuhan query terbukti. |
 | Ditunda | LangChain/LangGraph, LangSmith, Redis, queue, GraphRAG | Pipeline eksplisit sudah cukup untuk dua tahap dan memudahkan audit; course menjadi checklist, bukan stack wajib. |
@@ -25,11 +25,15 @@ OPENAI_NORMALIZATION_MODEL=gpt-5.6-luna
 
 Pasangan model ini menggantikan kandidat model generatif pada draf TA. Draf TA asli tetap menjadi referensi historis dan perlu diselaraskan pada revisi laporan. Model dan parameter per operasi dibekukan sebelum eksperimen utama.
 
-`DEC-01` merekam pemilihan provider/endpoint, toolchain TypeScript dan kebutuhan Python bersyarat, batas deployment, serta hasil audit/spike awal. `INF-01` membuktikan kemampuan endpoint sebelum indexing/pilot. Identitas model mengikuti TA; penempatan remote adalah penyesuaian engineering. Draf TA asli tetap historis; uraian lingkungan deployment dan batas pengukuran harus diselaraskan pada revisi laporan sebelum eksperimen.
+`DEC-01` selesai pada [ADR-001](docs/ADR-001-stack-and-inference.md) untuk stack, matriks versi/lock dan spike awal; DOC-INF-02 mengubah prioritas deployment menjadi API per pemakaian karena biaya/maintenance penelitian. Qdrant server/client awal 1.20.2/1.20.0; checks ESLint 10, typescript-eslint 8.73, Prettier 3.10.1 dan native node:test. Target app/Qdrant Linux amd64/Debian 12 melalui Compose, ukuran awal 2 vCPU/4 GiB tanpa GPU berdasarkan startup smoke, bukan kapasitas produksi. `INF-01` masih memilih/menguji API aktual, revision, kapasitas dan biaya; Python/GPU lock hanya jika alternatif handler sendiri dipilih. Identitas model mengikuti TA; penempatan remote adalah penyesuaian engineering. Draf TA asli tetap historis dan uraian deployment diselaraskan pada revisi laporan.
 
 ### Penempatan dan kontrak inferensi
 
 Inference provider adalah layanan eksekusi model, berbeda dari repository model di Hugging Face Hub. Hugging Face Inference Providers menawarkan akses model melalui penyedia; Inference Endpoints adalah opsi deployment dedicated dengan konfigurasi deployment tersendiri. Ketersediaan `bge-m3`/reranker dan dukungan sparse tidak diasumsikan hanya dari nama model. API feature extraction umum mendokumentasikan array embedding; itu bukan bukti keluaran sparse BGE-M3. Audit sumber resmi dan smoke endpoint aktual diperlukan.
+
+Urutan seleksi sebelum run: (1) API per pemakaian HF untuk model asli; (2) API per pemakaian provider lain yang memenuhi kontrak model sama; (3) dedicated/custom container atau server inferensi terpisah bila API tidak layak dan budget mengizinkan. HF tetap preferensi pertama, tetapi belum provider final. Urutan ini bukan runtime fallback. Model dense-only, sparse BM25/SPLADE atau model/reranker lain tidak otomatis menggantikan BGE; perubahan metode memerlukan keputusan penelitian tersendiri.
+
+Audit dokumentasi 22 November 2026: HF Feature Extraction belum mengontrakkan sparse weights; [TEI PR #899](https://github.com/huggingface/text-embeddings-inference/pull/899) sparse BGE-M3 masih terbuka. Kandidat alternatif [SIE Serverless–Qdrant](https://qdrant.tech/documentation/embeddings/superlinked/) mendokumentasikan dense+sparse BGE-M3; ini belum membuktikan served revision/latency/billing aktual proyek. [Katalog SIE](https://superlinked.com/models?task=score) belum mencantumkan BGE Reranker v2 M3 sebagai serverless, sehingga audit reranker tetap terpisah. Tidak ada call model berbayar pada audit dokumentasi ini.
 
 | Komponen | Lokasi/kontrak yang direncanakan |
 | --- | --- |
@@ -39,9 +43,9 @@ Inference provider adalah layanan eksekusi model, berbeda dari repository model 
 | Handler Python opsional | Custom handler/container terkelola atau service di mesin inferensi terpisah jika provider standar belum cukup. Tidak harus berjalan bersama aplikasi; lokal hanya jika hardware layak. |
 | Qdrant | Tetap layanan vector store yang diakses adapter; tidak mengambil alih eksekusi model BGE. |
 
-Capability gate `INF-01` menguji JA/EN/ID, finite outputs/dimensi/cardinality, sparse token mapping, max length/truncation, normalization, limit batch/concurrency, rerank score semantics dan revision model/tokenizer. Provider gagal gate bila hanya dense atau revision model tidak dapat dipin/diverifikasi. Evaluasi dedicated endpoint dengan custom handler/container bila perlu; jangan diam-diam mengganti sparse dengan BM25, model lain, atau menonaktifkan reranker. Backend remote tidak diwajibkan memakai Python bila kontrak sudah dipenuhi provider.
+Capability gate `INF-01` menguji JA/EN/ID, finite outputs/dimensi/cardinality, sparse token mapping, max length/truncation, normalization, limit batch/concurrency, rerank score semantics dan revision model/tokenizer. Provider gagal gate bila hanya dense atau revision tidak dapat dipin/diverifikasi. Catat alasan penolakan lalu evaluasi API lain untuk model sama; dedicated/custom container hanya alternatif setelah audit API/budget. Jangan mengganti sparse dengan BM25/model lain atau menonaktifkan reranker diam-diam. Python proyek tidak diperlukan jika API siap pakai memenuhi kontrak.
 
-Konfigurasi dipisahkan per operasi: provider aktual, model/revision yang diminta dan terverifikasi, endpoint/deployment revision, region, auth secret reference, API schema version, timeout, limit dan pricing unit. Contoh nama konseptual: `EMBEDDING_PROVIDER`/`EMBEDDING_ENDPOINT` dan `RERANKER_PROVIDER`/`RERANKER_ENDPOINT`; env aktual baru dibuat pada BOOT/INF. Jangan commit token atau URL bertoken. Tidak ada pemilihan provider otomatis atau fallback lokal saat error; kegagalan dependency harus eksplisit. Pemilihan layanan berbayar/provisioning menunggu task dan budget yang diotorisasi.
+Konfigurasi dipisahkan per operasi: provider aktual, model/revision yang diminta dan terverifikasi, endpoint/API/deployment revision yang tersedia, region, auth secret reference, timeout, limit dan pricing unit. Contoh nama konseptual: `EMBEDDING_PROVIDER`/`EMBEDDING_ENDPOINT` dan `RERANKER_PROVIDER`/`RERANKER_ENDPOINT`; env aktual baru dibuat pada BOOT/INF. Jangan commit token atau URL bertoken. Tidak ada pemilihan provider otomatis atau fallback lokal saat error; kegagalan dependency eksplisit. Pembelian kredit/call API berbayar tetap memerlukan scope/budget; SKU/provisioning/Python image hanya diperlukan jika alternatif dedicated/self-hosted dipilih.
 
 Simpan bukti deployment/config/attestation untuk revision yang tidak dikembalikan API; nama model saja tidak cukup. Hardware/precision yang tidak diekspos provider ditulis `unknown`, beserta batas observasi. Ketidakpastian identitas model/revision harus diselesaikan sebelum freeze; fingerprint smoke tidak menggantikan pinning revision. Region, shared-load/queue, network, cold-start dan scale-to-zero dicatat sebagai faktor lingkungan. Endpoint dan konfigurasi embedding yang sama dipakai kedua mode RAG; setelah freeze pergantian provider/deployment menjadi cohort baru, dengan validasi ulang index/reindex bila konfigurasi embedding berubah.
 
@@ -130,7 +134,7 @@ kotoba-hub-rag/
   artifacts/                      # generated runs, ignored by Git
 ```
 
-Struktur runtime belum dibuat. Jangan menambah layer yang hanya membungkus satu fungsi; arah dependensi yang wajib dijaga adalah domain/policy tidak mengimpor SDK HTTP, Qdrant, atau OpenAI. Port minimum: `EmbeddingPort`, `RetrieverPort`, `RerankerPort`, `GeneratorPort`, `TraceSink`, `Clock`; adapter dipilih di composition root.
+Struktur runtime belum dibuat. `spikes/dec-01/` hanya menyimpan fixture, runner, lock dan evidence keputusan awal; bukan modul production atau penyelesaian BOOT/STORE/INF. Jangan menambah layer yang hanya membungkus satu fungsi; arah dependensi yang wajib dijaga adalah domain/policy tidak mengimpor SDK HTTP, Qdrant, atau OpenAI. Port minimum: `EmbeddingPort`, `RetrieverPort`, `RerankerPort`, `GeneratorPort`, `TraceSink`, `Clock`; adapter dipilih di composition root.
 
 ## 5. Kontrak REST yang diusulkan
 
@@ -313,3 +317,5 @@ Tambahan referensi penempatan remote, diperiksa 22 November 2026:
 - [Feature Extraction API](https://huggingface.co/docs/inference-providers/tasks/feature-extraction): kontrak umum mengembalikan array embedding, sehingga dukungan sparse BGE-M3 tetap perlu dibuktikan pada endpoint aktual.
 - [Inference Endpoints configuration](https://huggingface.co/docs/inference-endpoints/guides/configuration): konfigurasi model commit revision, networking dan scaling untuk kandidat deployment dedicated.
 - [Custom Inference Handler](https://huggingface.co/docs/inference-endpoints/engines/toolkit): jalur custom preprocessing/postprocessing dan dependensi bila engine/API standar tidak memenuhi dense+sparse; bukan klaim handler BGE proyek sudah tersedia.
+- [TEI PR #899](https://github.com/huggingface/text-embeddings-inference/pull/899): audit sparse BGE-M3 masih PR terbuka, tidak disamakan dengan kontrak API HF siap pakai.
+- [Superlinked–Qdrant](https://qdrant.tech/documentation/embeddings/superlinked/) dan [katalog SIE](https://superlinked.com/models?task=score): kandidat API alternatif dengan dense+sparse terdokumentasi; model/revision serta ketersediaan reranker API tetap gate INF-01.

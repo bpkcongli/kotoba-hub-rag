@@ -1,0 +1,9 @@
+node-v*/
+qdrant-bin/
+npm-cache/
+qdrant-data-*/
+*.tar.xz
+*.tar.gz
+spike/
+qdrant-spike.log
+spike-results.json

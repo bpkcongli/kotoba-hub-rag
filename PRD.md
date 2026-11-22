@@ -1,6 +1,6 @@
 # Product Requirements Document — KotobaHub RAG
 
-Versi 0.2 · 22 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; revisi penempatan inferensi eksternal karena keterbatasan hardware. Pemilik produk/penelitian: peneliti KotobaHub. Implementasi belum dimulai.
+Versi 0.4 · 22 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; amendemen DOC-INF-02 mengutamakan API per pemakaian, dengan verifikasi endpoint nyata tetap terbuka. Pemilik produk/penelitian: peneliti KotobaHub. Runtime service belum diimplementasikan; spike terisolasi tersedia.
 
 ## 1. Masalah dan tujuan
 
@@ -33,7 +33,9 @@ KotobaHub memiliki autentikasi, profil, policy rekomendasi, sesi latihan, gradin
 - Pilot offline, eksperimen utama, penilaian manusia oleh peneliti, dan evaluator LLM yang dikalibrasi.
 - Service TypeScript dan Qdrant dengan embedding/reranker melalui inference provider atau server inferensi terpisah; monitoring minimum dan pengujian kegagalan. Model tidak wajib diinstal pada laptop maupun instance cloud aplikasi. Self-hosted lokal adalah opsi jika hardware memadai.
 
-Model tetap `BAAI/bge-m3` (dense+sparse) dan `BAAI/bge-reranker-v2-m3`. Hugging Face menjadi kandidat penyedia, bukan jaminan bahwa kedua model dan semua keluaran tersedia pada API serverless. `DEC-01`/`INF-01` memilih provider/endpoint embedding dan reranker secara terpisah setelah audit kemampuan, reproducibility dan biaya; managed dedicated endpoint/custom handler dapat dipertimbangkan bila API standar tidak cukup. Python diperlukan hanya jika membuat handler/service inferensi sendiri atau tooling Python yang ditugaskan; aplikasi dapat memanggil provider langsung dari adapter TypeScript. Batas dan sumber verifikasi ada pada [arsitektur](ARCHITECTURE.md#penempatan-dan-kontrak-inferensi).
+Model tetap `BAAI/bge-m3` (dense+sparse) dan `BAAI/bge-reranker-v2-m3` dari Hugging Face Hub. Amendemen `DOC-INF-02` pada [ADR-001 / DEC-01](docs/ADR-001-stack-and-inference.md) menetapkan API per pemakaian sebagai jalur utama: prioritaskan API Hugging Face yang memenuhi kontrak, lalu provider API lain untuk model yang sama bila HF belum memenuhi kemampuan, revision atau biaya. Preferensi HF tidak berarti dukungan sparse API sudah terbukti. Dedicated endpoint/custom container/server inferensi sendiri menjadi alternatif setelah audit API dan budget. Adapter TypeScript memanggil HTTP langsung; Python/FlagEmbedding/FastAPI hanya diperlukan jika alternatif handler sendiri dipilih atau untuk tooling yang ditugaskan. `INF-01` memverifikasi endpoint/model revision, dense+sparse, rerank, limit, region/retensi dan biaya; dependency/GPU lock hanya wajib untuk deployment yang dimiliki proyek. Batas dan sumber verifikasi ada pada [arsitektur](ARCHITECTURE.md#penempatan-dan-kontrak-inferensi).
+
+Urutan provider adalah proses seleksi sebelum eksperimen, bukan failover otomatis saat runtime. Embedding dan reranker boleh memakai provider berbeda dengan konfigurasi tetap per operasi. Perubahan menjadi dense-only, sparse dari model/BM25 lain atau penggantian reranker memerlukan keputusan penelitian tersendiri; prioritas API tidak mengubah metode hybrid maupun baseline penelitian.
 
 ### Di luar cakupan awal
 
@@ -126,14 +128,15 @@ Analisis utama merangkum pengulangan per kasus sebelum perbandingan berpasangan,
 | --- | --- |
 | Konfigurasi model per operasi berbeda antar mode eksperimen | `CON-01`/`BASE-01`: gunakan `gpt-5.6-terra` untuk operasi generasi dan `gpt-5.6-luna` untuk normalisasi secara konsisten; data baseline lama tetap perlu diaudit sebelum dijadikan pembanding terkendali. |
 | Hardware lokal/instance aplikasi tidak cukup untuk BGE | `DEC-01`/`INF-01`: utamakan provider/endpoint remote; model dapat berjalan di server berbeda. Uji JA/EN/ID, dense+sparse, rerank, limit, latency dan biaya; jangan mengganti model sepihak. |
-| Provider hanya mengeluarkan dense, revision tidak dapat dipin, atau model tidak tersedia | `INF-01`: capability gate sebelum indexing/pilot; evaluasi dedicated endpoint/custom handler. Keberadaan model di Hub bukan bukti API kompatibel. Tidak ada penggantian sparse dengan BM25 atau model lain tanpa revisi desain. |
+| Provider hanya mengeluarkan dense, revision tidak dapat dipin, atau model tidak tersedia | `INF-01`: gate sebelum indexing/pilot; mulai API HF lalu API provider lain untuk model sama. Dedicated/custom handler hanya alternatif bila API tidak layak dan budget disepakati. Keberadaan model di Hub bukan bukti API kompatibel; dense-only/BM25/model lain memerlukan keputusan penelitian tersendiri. |
+| API murah belum memenuhi seluruh kebutuhan atau memiliki biaya minimum | `INF-01`: periksa dukungan dense+sparse aktual, reranker terpisah, unit billing gabungan, minimum kredit/biaya tetap dan retry. Kandidat embedding seperti SIE belum otomatis menyelesaikan reranker/revision; dokumentasi publik bukan smoke model nyata. |
 | Rate limit, cold start, outage atau perubahan backend remote | `INF-02`/`EXP-02`: deadline/retry terbatas, error/unknown costs tercatat, provider tetap per run dan cache/warmup/region dibekukan; tanpa fallback diam-diam ke lokal/provider lain. |
 | Corpus aplikasi belum cukup untuk grounding | `DATA-01`: audit narasi, rubric, bahasa, eligibility, dan lisensi; metadata katalog saja bukan corpus semantik yang memadai. |
 | Threshold route overfit | `ADP-01`/`EXP-01`: gunakan pilot saja, pisahkan main set, catat versi policy. |
 | Judge bias atau ICC tidak memadai | `EVAL-02`: kalibrasi dengan pilot atau manual sesuai draf; jangan menyesuaikan evaluator dari skor main set. |
 | Tiga mode mendapat budget/validator berbeda | `EXP-02`: pemeriksaan manifest, context cap, prompt/schema, client timeout, dan retry policy sebelum freeze. |
 
-Keputusan yang belum ditetapkan: provider dan jenis endpoint per operasi, bukti pinning revision, region/retensi, toolchain handler jika diperlukan, lalu pada pilot top-k/pool, threshold routing, chunk token/overlap, batch/precision BGE yang dapat dikendalikan, hardware/deployment yang teramati, batas token/deadline/biaya, outcome primer dan minimum effect yang dianggap bermakna, jenis ICC serta kebijakan missing outcomes. Semua memiliki owner/tugas pada breakdown; bukan isi register tech debt.
+Stack dan prioritas API sudah dipilih pada DEC-01/DOC-INF-02. Yang masih terbuka: provider/endpoint aktual per operasi, region/retensi/budget, bukti served revision, limit dan tarif API, lalu pada pilot top-k/pool, threshold routing, chunk token/overlap, batch/precision yang dapat dikendalikan, kapasitas teramati, deadline/biaya, outcome primer/effect, jenis ICC serta missing outcomes. SKU dan dependency/GPU lock baru diperlukan bila alternatif handler/deployment sendiri dipilih. Ukuran awal app/Qdrant 2 vCPU/4 GiB diuji pada startup smoke, bukan kapasitas produksi. Semua memiliki owner/tugas pada breakdown; bukan isi register tech debt.
 
 ## 9. Kriteria selesai
 

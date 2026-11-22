@@ -10,6 +10,7 @@ Repository ini direncanakan menjadi layanan AI/RAG bagi KotobaHub dan subjek eks
 | --- | --- |
 | [PRD.md](PRD.md) | Tujuan, ruang lingkup, kebutuhan fungsional, metrik, dan kriteria penerimaan |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Batas layanan, kontrak, ingestion, pipeline, routing, telemetry, dan keputusan teknis |
+| [ADR-001-stack-and-inference.md](docs/ADR-001-stack-and-inference.md) | Keputusan DEC-01: versi stack, deployment remote, lock strategy dan bukti spike awal |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -28,10 +29,10 @@ Perbandingan utama adalah `SINGLE_STAGE` vs `ADAPTIVE`. Baseline tanpa RAG tetap
 
 ## Stack yang direncanakan
 
-- Orkestrator REST: TypeScript dan Fastify, dengan modular monolith serta port/adapter.
+- Orkestrator REST: Node 24.22.3 LTS, npm 11.19.1, TypeScript 5.9.3 dan Fastify 5.12.8, dengan modular monolith serta port/adapter; keputusan `DEC-01` tercatat pada [ADR-001](docs/ADR-001-stack-and-inference.md).
 - Retrieval: Qdrant, embedding dense+sparse `BAAI/bge-m3`, dan deep-path reranker `BAAI/bge-reranker-v2-m3`.
-- Inferensi BGE: HTTP ke inference provider atau server inferensi terpisah; Hugging Face adalah kandidat. Embedding dan reranker dapat memakai endpoint berbeda. Weights/GPU tidak wajib tersedia pada laptop maupun instance cloud aplikasi.
-- Python/FlagEmbedding: opsi custom handler atau service inferensi remote jika API provider belum mencukupi; FastAPI hanya bila perlu transport sendiri. Self-hosted lokal tetap opsi sesuai hardware.
+- Inferensi BGE: **utamakan API per pemakaian**, dengan prioritas Hugging Face untuk BGE-M3 dense+sparse dan BGE Reranker v2 M3. Jika API HF belum memenuhi kontrak/revision/biaya, evaluasi API provider lain untuk model yang sama. Provider/endpoint final masih gate `INF-01`; dukungan sparse HF belum dianggap terbukti.
+- Dedicated custom container/server inferensi sendiri: **alternatif**, dipilih hanya setelah audit API dan budget. Python 3.12/FlagEmbedding/FastAPI serta dependency GPU hanya diperlukan bila handler sendiri dipilih, atau untuk tooling Python yang ditugaskan. Aplikasi TypeScript langsung memanggil API HTTP; weights/GPU dan Python gateway tidak wajib pada host aplikasi.
 - Generasi dan normalisasi: OpenAI Responses API menggunakan `gpt-5.6-terra` untuk generasi dan `gpt-5.6-luna` untuk normalisasi, mengikuti konfigurasi KotobaHub saat ini.
 - Data domain: MySQL milik KotobaHub tetap menjadi sumber resmi. Service menerima context bundle dan snapshot terkurasi, tanpa menulis tabel domain aplikasi.
 - Artefak eksperimen: manifest dan JSONL lokal yang berversi; observability memakai structured logs dan span. LangSmith bersifat opsional.
@@ -45,9 +46,9 @@ OPENAI_NORMALIZATION_MODEL=gpt-5.6-luna
 
 Konfigurasi model dan parameter per operasi akan diverifikasi dan dibekukan sebelum eksperimen utama.
 
-TypeScript, BGE, dan Qdrant mengikuti draf TA subbab 3.7.7. Revisi `DOC-INF-01` mengutamakan inferensi remote karena keterbatasan hardware. Fastify, pilihan provider/endpoint dan kebutuhan Python diputuskan pada `DEC-01`, lalu dibuktikan pada `INF-01`. Aplikasi dapat memanggil provider langsung dari TypeScript; handler Python tidak wajib dideploy bersama aplikasi. Orkestrasi penelitian tetap di TypeScript. Referensi course digunakan sebagai checklist engineering, bukan kewajiban memakai LangChain, Chroma, Supabase, atau LangGraph.
+TypeScript, BGE, dan Qdrant mengikuti draf TA subbab 3.7.7. `DOC-INF-01` mengutamakan inferensi remote karena hardware; amendemen `DOC-INF-02` pada [ADR-001 / DEC-01](docs/ADR-001-stack-and-inference.md) memprioritaskan API per pemakaian karena biaya dan maintenance penelitian. Hugging Face Hub merupakan sumber identitas model; inference provider dapat berbeda jika API HF belum memenuhi gate. Orkestrasi tetap TypeScript, sedangkan handler Python bersyarat. Referensi course menjadi checklist engineering, bukan kewajiban memakai LangChain, Chroma, Supabase, atau LangGraph.
 
-Provider harus membuktikan keluaran **dense dan sparse BGE-M3**, serta reranking `BAAI/bge-reranker-v2-m3`; nama model di Hugging Face Hub tidak menjamin API serverless mendukung seluruh kebutuhan. Bila perlu, evaluasi dedicated endpoint/custom handler sebelum memilih layanan. Revision model/endpoint harus dapat dipin untuk eksperimen; jangan mengganti model, metode sparse, atau provider secara diam-diam. Latency termasuk network/cold start dan biaya query embedding/rerank masuk pengukuran request. Detail dan sumber resmi tersedia pada [penempatan dan kontrak inferensi](ARCHITECTURE.md#penempatan-dan-kontrak-inferensi). Provider belum dipilih, endpoint belum dibuat, dan tidak ada panggilan berbayar yang dijalankan melalui revisi dokumentasi ini.
+Provider harus membuktikan keluaran **dense dan sparse BGE-M3**, serta reranking `BAAI/bge-reranker-v2-m3`; nama model di Hub tidak menjamin API mendukung seluruh kebutuhan. Revision harus dapat dipertanggungjawabkan; jangan mengganti dense+sparse dengan dense-only/BM25/model lain tanpa keputusan penelitian. Embedding/reranker boleh memakai provider berbeda, tetap per operasi/run; urutan seleksi bukan failover otomatis. Latency network/cold start, unit billing, minimum kredit bila ada dan seluruh retry dicatat. Kandidat embedding alternatif SIE Serverless mempunyai dense+sparse terdokumentasi, tetapi belum diuji oleh proyek dan belum otomatis memenuhi kebutuhan reranker. Detail/sumber ada pada [penempatan inferensi](ARCHITECTURE.md#penempatan-dan-kontrak-inferensi). Provider/endpoint aktual dan budget belum dipilih; tidak ada pembelian kredit, provisioning atau call model berbayar pada revisi ini.
 
 ## Tooling agent
 
@@ -68,12 +69,14 @@ Contoh penugasan skill bahasa: `Gunakan backend-coder dengan $typescript-pro unt
 
 ## Memulai pengembangan
 
-Belum ada `package.json`, `pyproject.toml`, Compose, `.env.example`, atau perintah start service. Jangan menganggap contoh endpoint/struktur dalam arsitektur sudah diimplementasikan. Urutan kerja awal:
+Belum ada `package.json` runtime di root, `pyproject.toml` inferensi, Compose, `.env.example`, atau perintah start service. [Fixture spike DEC-01](spikes/dec-01/fixture/package.json) memiliki package/lock tersendiri untuk bukti kompatibilitas, bukan implementasi service. Jangan menganggap contoh endpoint/struktur dalam arsitektur sudah diimplementasikan. Urutan kerja awal:
 
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
-2. Selesaikan keputusan stack dan kontrak (`DEC-01`, `CON-01`), termasuk pemetaan model per operasi, kesetaraan konfigurasi antar mode, dan audit retry pada KotobaHub.
-3. Bootstrap TypeScript, audit dan smoke endpoint embedding/reranker terpilih dengan budget eksplisit, serta siapkan Qdrant. Bootstrap handler Python hanya bila diperlukan; laptop/app server tidak wajib memuat model.
+2. `DEC-01` selesai untuk keputusan desain dan spike awal. Lanjutkan `CON-01`: pemetaan model/operasi, fixture domain, kesetaraan antar mode dan audit retry pada KotobaHub, mengikuti ADR-001.
+3. Bootstrap TypeScript dan siapkan Qdrant; audit/smoke API embedding/reranker dengan budget eksplisit, mulai dari HF lalu provider API lain untuk model sama. Bootstrap Python/GPU hanya jika alternatif handler sendiri akhirnya diperlukan; laptop/app server tidak wajib memuat model.
 4. Bangun ingestion, baseline, adaptive, integrasi, dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
+
+Spike terisolasi lulus typecheck, lint, format, build dan tiga smoke tests (Fastify schema, import SDK OpenAI tanpa call, Qdrant dense+sparse RRF nyata). Container berlimit 2 vCPU/4 GiB mencatat peak memory sekitar 640 MiB pada workload kecil ini; ukuran awal app/Qdrant dipilih 2 vCPU/4 GiB tanpa GPU. Ini bukan kapasitas produksi. [Evidence](spikes/dec-01/evidence.json) dan petunjuk reproduksi pada ADR memuat batas pengukuran; kapasitas corpus dan hardware endpoint remote tetap diuji kemudian.
 
 Model weights dan dataset besar kelak disimpan di luar Git; commit manifest/checksum dan lockfile. Jangan commit kredensial, data pengguna asli, atau hasil eksperimen yang belum ditinjau. Eksperimen berbayar belum dijalankan pada tahap ini.
 
