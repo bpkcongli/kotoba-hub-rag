@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rag Experiments"
+  short_description: "Project guidance for experiments"
+  default_prompt: "Use $kotoba-rag-experiments for the assigned KotobaHub RAG task."

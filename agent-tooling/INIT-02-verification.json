@@ -1,0 +1,122 @@
+{
+  "task": "INIT-02",
+  "status": "complete",
+  "verified_at_utc": "2026-11-22T14:25:16.543112+00:00",
+  "verified_date_local": "2026-11-22",
+  "timezone": "Asia/Jakarta",
+  "client": {
+    "surface": "VS Code bundled Codex CLI",
+    "version": "0.162.0-alpha.17.2",
+    "fresh_process": true
+  },
+  "installation": {
+    "installed_file_count": 16,
+    "matches_package": true,
+    "reinstall_changed_file_count": 0,
+    "global_config_modified": false,
+    "files": [
+      {
+        "path": ".codex/agents/backend-coder.toml",
+        "sha256": "5e2809b011bb886727bf03ca963af74e288cc6a6ce80284227449cdec2c01957"
+      },
+      {
+        "path": ".codex/agents/code-reviewer.toml",
+        "sha256": "079f9ba82c8a59bdaf9203d65e6ff61325560a08978474ab0ef99a047462483a"
+      },
+      {
+        "path": ".codex/agents/japanese-content-reviewer.toml",
+        "sha256": "f48ad437299fdb194d00aacb16070bc1ef471d8bb40097b7b3caa91e9ca79035"
+      },
+      {
+        "path": ".codex/agents/research-evaluator.toml",
+        "sha256": "467709ecb09a128e2314fbec8b0b6c9074ddf850c0c5a0c806831a06afce4e62"
+      },
+      {
+        "path": ".codex/agents/sdet.toml",
+        "sha256": "4754dbb47c6d027da3f4915b7a17edbbc52f6ba1d0f9e91ee8dce396fdd74a2c"
+      },
+      {
+        "path": ".codex/config.toml",
+        "sha256": "af00171d0ae3470aa41fb82e4165d91e5871e912d635e7545f9dc8f4a7752fc9"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-contracts/SKILL.md",
+        "sha256": "4892d0196566b7e7179de552c0d7eac20b046b35044fd7d91415dcfaf471ba8c"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-contracts/agents/openai.yaml",
+        "sha256": "b901a03f6625d2118d36e7b53647eec1c60e302413a176d87b349173e3dfb4ff"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-experiments/SKILL.md",
+        "sha256": "82defe24809970114f651299fb4c5dfc96b200db1b03bc288ce36aec3884049d"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-experiments/agents/openai.yaml",
+        "sha256": "f6edbb32ddec4e2aae286a20cd34ae648d21813c69e8514e404e00d81f27b922"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-ingestion/SKILL.md",
+        "sha256": "ec795c072efac4a1a701136f82b0bdb549ef15322eec4019b94090c400966242"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-ingestion/agents/openai.yaml",
+        "sha256": "03097d1ecb6dfdd6dcaa508a8bbacc971ae40672446cd7b44501798cd7613133"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-pipelines/SKILL.md",
+        "sha256": "3aad2832f22275ddf945ae08758038ed7cae5467de308a02576d4fc97341af49"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-pipelines/agents/openai.yaml",
+        "sha256": "5e051ca3f2c65bc0d8d2b649a952b6d8ea9e00e0f8829f9a1f9486fd362d717a"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-verification/SKILL.md",
+        "sha256": "93040a2b5b9185fb9bec8fd4aaf73040802818f52b6992da5bc33ce23899afed"
+      },
+      {
+        "path": ".agents/skills/kotoba-rag-verification/agents/openai.yaml",
+        "sha256": "410f1f331f07d75a9c13108c216231f3e96ae736128e02202b250719e9a14ee3"
+      }
+    ]
+  },
+  "syntax": {
+    "agent_toml_count": 5,
+    "project_config_toml_valid": true,
+    "skill_manifest_count": 5,
+    "skill_validator": "skill-creator/scripts/quick_validate.py",
+    "skill_ui_yaml_count": 5
+  },
+  "skill_discovery": {
+    "method": "Fresh app-server initialize, then skills/list with repository cwd and forceReload=true",
+    "enabled_skills": [
+      "kotoba-rag-contracts",
+      "kotoba-rag-experiments",
+      "kotoba-rag-ingestion",
+      "kotoba-rag-pipelines",
+      "kotoba-rag-verification"
+    ],
+    "errors": []
+  },
+  "agent_discovery": {
+    "method": "Fresh ephemeral Codex exec; inspect collaboration tool catalog in developer additional_tools sent to localhost-only stub",
+    "registered_agents": [
+      "backend-coder",
+      "code-reviewer",
+      "japanese-content-reviewer",
+      "research-evaluator",
+      "sdet"
+    ],
+    "stub_behavior": "HTTP 400 intentionally returned after inspecting the catalog; the probe CLI exit code 1 is expected",
+    "model_inference_performed": false,
+    "agent_tasks_executed": false
+  },
+  "project_config": {
+    "loaded": true,
+    "enabled": true,
+    "max_concurrent_threads_per_session": 3,
+    "disabled_reason": null
+  },
+  "runtime_state": "Verification runtime state and raw debug output were stored under /tmp; no project runtime was implemented."
+}

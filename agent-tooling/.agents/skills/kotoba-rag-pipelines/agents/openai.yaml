@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rag Pipelines"
+  short_description: "Project guidance for pipelines"
+  default_prompt: "Use $kotoba-rag-pipelines for the assigned KotobaHub RAG task."

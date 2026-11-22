@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rag Ingestion"
+  short_description: "Project guidance for ingestion"
+  default_prompt: "Use $kotoba-rag-ingestion for the assigned KotobaHub RAG task."

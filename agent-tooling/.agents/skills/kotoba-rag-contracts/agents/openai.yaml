@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rag Contracts"
+  short_description: "Project guidance for contracts"
+  default_prompt: "Use $kotoba-rag-contracts for the assigned KotobaHub RAG task."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rag Verification"
+  short_description: "Project guidance for verification"
+  default_prompt: "Use $kotoba-rag-verification for the assigned KotobaHub RAG task."
