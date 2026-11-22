@@ -41,12 +41,18 @@ Reviewer Jepang adalah alat bantu. Peneliti tetap validator final; role ini tida
 | `kotoba-rag-contracts` | API, provider/service boundary dan integrasi KotobaHub | Schema aktual, strict payload, locale, FREE_RESPONSE dan domain ownership |
 | `kotoba-rag-experiments` | Dataset, metric, run/reproducibility, judge dan analisis | 24/120 cases, 5 repetition, no leakage, paired analysis dan costs |
 | `kotoba-rag-verification` | Meaningful test dan review perubahan RAG | Terminasi, failure accounting, contract tests, evidence serta read-only review |
+| `typescript-pro` | Implementasi/test/review backend atau tooling TypeScript | Strict types, runtime validation, async/deadline dan adapter; adaptasi MIT dari Jeffallan/claude-skills |
+| `python-pro` | Implementasi/test/review inferensi BGE atau tooling Python yang ditugaskan | Type hints, model lifecycle, bounded concurrency dan pytest; adaptasi MIT dari Jeffallan/claude-skills |
 
 Skill dapat dipanggil eksplisit dengan `$nama-skill` atau dipilih otomatis sesuai deskripsi setelah terpasang. Jangan memaksa semua skill masuk setiap task. Skill tidak mengubah izin filesystem, akses provider, atau otorisasi tindakan eksternal.
+
+Pemetaan skill bahasa: `backend-coder` memilih sesuai berkas implementasi; `sdet` sesuai bahasa test; `code-reviewer` memakai sebagai kriteria review read-only; `research-evaluator` memakai hanya untuk script harness/evaluasi dalam bahasa yang sudah dipilih task. `japanese-content-reviewer` tetap fokus pada konten Jepang. Agent utama dapat menyebut skill pada pesan penugasan, misalnya `backend-coder: gunakan $python-pro untuk INF-02, ownership inference/`. Skill bahasa melengkapi skill domain RAG; tidak menetapkan stack sebelum `DEC-01` atau mengubah bahasa script yang belum diputuskan.
 
 ## Lokasi dan aktivasi tooling
 
 Source paket ada di `agent-tooling/.codex/agents` dan `agent-tooling/.agents/skills`. Instalasi aktif berada di `.codex/agents` dan `.agents/skills` di root; config lokal ada pada `.codex/config.toml`. INIT-02 selesai pada 22 November 2026: lima skill aktif dan lima role pada katalog tool collaboration terdeteksi oleh proses client Codex baru. Config proyek aktif dengan batas tiga subagent konkuren. [Bukti verifikasi](agent-tooling/INIT-02-verification.json) mencatat pemeriksaan file, idempotency, dan discovery; task fungsional subagent belum dijalankan. Mulai sesi Codex baru untuk menggunakan tooling tersebut.
+
+Perluasan `TOOLS-LANG-01` menambahkan dua skill bahasa sehingga paket memuat tujuh skill dan lima role. Dua skill ini diadaptasi dari commit GitHub yang dipin; masing-masing menyertakan `PROVENANCE.md` dan `LICENSE`. Bukti INIT-02 tetap historis untuk lima skill awal; pemasangan tambahan, validasi dan batas discovery dicatat terpisah pada [bukti TOOLS-LANG-01](agent-tooling/TOOLS-LANG-01-verification.json). Role memuat instruksi pemilihan skill, bukan field konfigurasi assignment baru.
 
 Jangan mengubah permission, menghapus mount, atau menimpa konfigurasi lain untuk memaksa pemasangan. Installer menolak berkas berbeda yang sudah ada; merge terarah dilakukan sebagai task tersendiri setelah file tersebut diperiksa.
 

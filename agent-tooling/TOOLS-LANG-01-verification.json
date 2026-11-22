@@ -1,0 +1,172 @@
+{
+  "task_id": "TOOLS-LANG-01",
+  "verified_on": "2026-11-22",
+  "scope": "Dua adaptasi skill bahasa dan pemetaan empat role; runtime tidak dibuat.",
+  "upstream": {
+    "repository": "https://github.com/Jeffallan/claude-skills",
+    "commit": "4b94d98605baf742b751bb82832ace5caf942271",
+    "license": "MIT",
+    "skills": [
+      "skills/typescript-pro",
+      "skills/python-pro"
+    ],
+    "download_method": "skill-installer/scripts/install-skill-from-github.py --method download dengan commit dipin; staging di /tmp"
+  },
+  "checks": {
+    "quick_validate": {
+      "typescript-pro": "passed",
+      "python-pro": "passed",
+      "command": "python3 /home/user/.codex/skills/.system/skill-creator/scripts/quick_validate.py agent-tooling/.agents/skills/<name>"
+    },
+    "toml_yaml_parse": "passed, seluruh file source paket dan instalasi aktif",
+    "skill_local_links_ui_and_license": "passed",
+    "source_active_identical_files": 24,
+    "active_install": "Merged empat role setelah hash precondition; Installed 8 files; check 24 files, 0 missing; reinstall Installed 0 files.",
+    "temporary_install_behavior": [
+      {
+        "action": "--check",
+        "exit_code": 0,
+        "stdout": "Check: 24 files; 24 missing; no content conflicts.\nThis check does not establish filesystem writability or client discovery.",
+        "stderr": ""
+      },
+      {
+        "action": "--install",
+        "exit_code": 0,
+        "stdout": "Installed 24 files into /tmp/kotoba-language-tooling-xsoy_ov9; identical files preserved.\nOpen a new Codex session and verify agent/skill discovery before marking INIT-02 done.",
+        "stderr": ""
+      },
+      {
+        "action": "--install",
+        "exit_code": 0,
+        "stdout": "Installed 0 files into /tmp/kotoba-language-tooling-xsoy_ov9; identical files preserved.\nOpen a new Codex session and verify agent/skill discovery before marking INIT-02 done.",
+        "stderr": ""
+      },
+      {
+        "action": "--check",
+        "exit_code": 0,
+        "stdout": "Check: 24 files; 0 missing; no content conflicts.\nThis check does not establish filesystem writability or client discovery.",
+        "stderr": ""
+      },
+      {
+        "action": "--install with changed local role",
+        "destination_unchanged": true,
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "CONFLICT: different existing destination: .codex/agents/backend-coder.toml\nNo files written. Inspect and merge existing configuration explicitly."
+      }
+    ],
+    "diff_whitespace": "git diff --check passed"
+  },
+  "review": {
+    "role": "code-reviewer",
+    "result": "Tidak ada defect substantif dari materi yang diteruskan parent.",
+    "limitation": "Subagent tidak memiliki tool filesystem; review berdasarkan materi ringkasan parent, bukan pembacaan berkas atau diff langsung. Parsing/equality/provenance diperiksa parent."
+  },
+  "discovery": {
+    "additional_skills_client_discovery_verified": false,
+    "updated_roles_client_reload_verified": false,
+    "note": "Sesi ini dimulai dengan katalog lima skill lama; validasi file dan pemasangan bukan bukti discovery. Skill tambahan tersedia untuk pemuatan giliran berikutnya; mulai sesi baru untuk memuat ulang role dan memeriksa discovery. Bukti INIT-02 tidak diubah."
+  },
+  "limits": [
+    "Tidak ada functional coding task TS/Python yang dijalankan dengan dua skill baru.",
+    "Tidak ada paid provider, download weights, perubahan kontrak/runtime, atau deployment."
+  ],
+  "installed_files": [
+    {
+      "path": ".agents/skills/kotoba-rag-contracts/SKILL.md",
+      "sha256": "4892d0196566b7e7179de552c0d7eac20b046b35044fd7d91415dcfaf471ba8c"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-contracts/agents/openai.yaml",
+      "sha256": "b901a03f6625d2118d36e7b53647eec1c60e302413a176d87b349173e3dfb4ff"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-experiments/SKILL.md",
+      "sha256": "82defe24809970114f651299fb4c5dfc96b200db1b03bc288ce36aec3884049d"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-experiments/agents/openai.yaml",
+      "sha256": "f6edbb32ddec4e2aae286a20cd34ae648d21813c69e8514e404e00d81f27b922"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-ingestion/SKILL.md",
+      "sha256": "ec795c072efac4a1a701136f82b0bdb549ef15322eec4019b94090c400966242"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-ingestion/agents/openai.yaml",
+      "sha256": "03097d1ecb6dfdd6dcaa508a8bbacc971ae40672446cd7b44501798cd7613133"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-pipelines/SKILL.md",
+      "sha256": "3aad2832f22275ddf945ae08758038ed7cae5467de308a02576d4fc97341af49"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-pipelines/agents/openai.yaml",
+      "sha256": "5e051ca3f2c65bc0d8d2b649a952b6d8ea9e00e0f8829f9a1f9486fd362d717a"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-verification/SKILL.md",
+      "sha256": "93040a2b5b9185fb9bec8fd4aaf73040802818f52b6992da5bc33ce23899afed"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-verification/agents/openai.yaml",
+      "sha256": "410f1f331f07d75a9c13108c216231f3e96ae736128e02202b250719e9a14ee3"
+    },
+    {
+      "path": ".agents/skills/python-pro/LICENSE",
+      "sha256": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241"
+    },
+    {
+      "path": ".agents/skills/python-pro/PROVENANCE.md",
+      "sha256": "0cef04fce942912c2f36889513b9173f5f479743f35e465051248e1cbf4c3907"
+    },
+    {
+      "path": ".agents/skills/python-pro/SKILL.md",
+      "sha256": "abde428d47ec6a37c40b19ced64bda95c20e4524e4280bb473984387b2330f66"
+    },
+    {
+      "path": ".agents/skills/python-pro/agents/openai.yaml",
+      "sha256": "7cd635de054efe3f3844d981f7f4e343fc207197f5ba37040d794e73538af622"
+    },
+    {
+      "path": ".agents/skills/typescript-pro/LICENSE",
+      "sha256": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241"
+    },
+    {
+      "path": ".agents/skills/typescript-pro/PROVENANCE.md",
+      "sha256": "b446649b191e2db108848efe1e28e0ad199781ede693af875fccc482e7102cd2"
+    },
+    {
+      "path": ".agents/skills/typescript-pro/SKILL.md",
+      "sha256": "df01b33568734498f896bdc8565354f25b243eb36fff2aed0497bcf48bee3bf0"
+    },
+    {
+      "path": ".agents/skills/typescript-pro/agents/openai.yaml",
+      "sha256": "2f52fb935ef5383dffd30aa04655163c2dffa9652378e0a7bc0ffe5879599e67"
+    },
+    {
+      "path": ".codex/agents/backend-coder.toml",
+      "sha256": "060e59c7d486416ba2c2e2095df12d0665f59f070be6be16c6fedc91259181cf"
+    },
+    {
+      "path": ".codex/agents/code-reviewer.toml",
+      "sha256": "2f4d8584f62b2ed1b7b1abb0c4903a58e1c3c5a02b09873c5f00127df475067b"
+    },
+    {
+      "path": ".codex/agents/japanese-content-reviewer.toml",
+      "sha256": "f48ad437299fdb194d00aacb16070bc1ef471d8bb40097b7b3caa91e9ca79035"
+    },
+    {
+      "path": ".codex/agents/research-evaluator.toml",
+      "sha256": "e225927a0e4050ca6b20c551770f8214038ae6e1c1f4d28f98639d9936c0f476"
+    },
+    {
+      "path": ".codex/agents/sdet.toml",
+      "sha256": "025f1de61337658483032dea81fa6c95877153f1c3b90c421ddd3e6736acd66e"
+    },
+    {
+      "path": ".codex/config.toml",
+      "sha256": "af00171d0ae3470aa41fb82e4165d91e5871e912d635e7545f9dc8f4a7752fc9"
+    }
+  ]
+}

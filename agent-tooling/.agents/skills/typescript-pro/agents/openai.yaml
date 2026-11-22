@@ -1,0 +1,4 @@
+interface:
+  display_name: "TypeScript Backend Practices"
+  short_description: "Strict types dan async backend KotobaHub RAG"
+  default_prompt: "Gunakan $typescript-pro untuk task TypeScript KotobaHub RAG yang ditugaskan."

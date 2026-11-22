@@ -15,6 +15,7 @@ Setiap task selesai bila deliverable, acceptance evidence, dan dokumentasi yang 
 | [x] | INIT-01 / utama | Enam dokumen awal di root repository, termasuk pedoman AGENTS lengkap dan source mapping | — | PRD/arsitektur/breakdown konsisten dengan draf TA dan kontrak source yang diperiksa; debt register tanpa entri. |
 | [x] | INIT-TOOLS / utama | Paket lima subagent dan lima skill pada `agent-tooling`, installer aman | INIT-01 | TOML/YAML valid, link panduan tersedia, instalasi diuji di workspace sementara; belum berarti aktif di root. |
 | [x] | INIT-02 / utama | Pasang tooling ke `.codex`/`.agents` dan verifikasi discovery pada client | INIT-TOOLS | Selesai 22 November 2026: 16 file terpasang identik, reinstall mengubah 0 file, lima skill aktif dikenali melalui `skills/list`, dan lima role muncul pada katalog tool collaboration client baru. Config proyek aktif dengan batas tiga subagent. [Bukti verifikasi](agent-tooling/INIT-02-verification.json). |
+| [x] | TOOLS-LANG-01 / utama | Tambah skill TypeScript/Python dari GitHub dengan provenance/lisensi dan pemetaan role teknis | INIT-02 | Selesai 22 November 2026: dua adaptasi skill tervalidasi, empat role memiliki instruksi pemilihan sesuai bahasa/scope, 24 file source dan instalasi aktif identik, reinstall menulis 0 file dan konflik lokal ditolak tanpa perubahan; discovery dua skill tambahan dan reload role belum diverifikasi pada client baru. [Bukti verifikasi](agent-tooling/TOOLS-LANG-01-verification.json). |
 
 ## Fase 1 — Keputusan dan kontrak
 

@@ -48,7 +48,9 @@ TypeScript, BGE, dan Qdrant mengikuti draf TA subbab 3.7.7. Fastify dan proses i
 
 ## Tooling agent
 
-Paket di [agent-tooling/](agent-tooling/) memuat lima definisi subagent, lima skill proyek, konfigurasi Codex, dan installer yang tidak menimpa konfigurasi berbeda. Tooling sudah dipasang ke `.codex/agents` dan `.agents/skills` pada 22 November 2026. Client Codex baru mengenali lima skill aktif dan lima role pada katalog tool collaboration; konfigurasi proyek memuat batas tiga subagent konkuren. Rincian pemeriksaan tersedia pada [bukti INIT-02](agent-tooling/INIT-02-verification.json).
+Paket di [agent-tooling/](agent-tooling/) memuat lima definisi subagent, lima skill domain RAG, dua skill bahasa, konfigurasi Codex, dan installer yang tidak menimpa konfigurasi berbeda. Tooling awal sudah dipasang ke `.codex/agents` dan `.agents/skills` pada 22 November 2026. Client Codex baru mengenali lima skill awal dan lima role pada katalog tool collaboration; konfigurasi proyek memuat batas tiga subagent konkuren. Rincian pemeriksaan awal tersedia pada [bukti INIT-02](agent-tooling/INIT-02-verification.json).
+
+Tambahan `typescript-pro` dan `python-pro` berasal dari adaptasi [Jeffallan/claude-skills](https://github.com/Jeffallan/claude-skills/tree/4b94d98605baf742b751bb82832ace5caf942271/skills), berlisensi MIT. [Skill TypeScript](agent-tooling/.agents/skills/typescript-pro/SKILL.md) membahas strict types, validasi runtime dan async; [skill Python](agent-tooling/.agents/skills/python-pro/SKILL.md) membahas typing, resource, concurrency dan inferensi BGE. Commit sumber, atribusi dan penyesuaian tersedia pada provenance masing-masing skill. Empat role teknis memilih skill sesuai bahasa berkas dan scope task; reviewer Jepang tidak memuat skill bahasa pemrograman. Perluasan ini tidak menyelesaikan `DEC-01` atau bootstrap runtime. Lihat [bukti TOOLS-LANG-01](agent-tooling/TOOLS-LANG-01-verification.json) untuk verifikasi tambahan dan status discovery.
 
 Untuk memeriksa atau memasang paket pada checkout lain yang writable, jalankan dari root:
 
@@ -58,6 +60,8 @@ python3 agent-tooling/install.py --install
 ```
 
 Mulai sesi Codex baru untuk memuat tooling yang terpasang. Contoh penugasan: `Gunakan backend-coder untuk RAG-01; gunakan code-reviewer untuk review read-only setelah perubahan siap.` Detail scope dan ownership ada di [AGENTS.md](AGENTS.md). Installer hanya memasang tooling di repository ini; tidak mengubah konfigurasi global atau mengeksekusi provider AI. Pemeriksaan INIT-02 memakai discovery client dan stub localhost tanpa menjalankan inferensi model berbayar atau task fungsional subagent.
+
+Contoh penugasan skill bahasa: `Gunakan backend-coder dengan $typescript-pro untuk modul retrieval yang ditugaskan` atau `Gunakan backend-coder dengan $python-pro untuk inference/ pada INF-02`. SDET dan reviewer memilih skill yang sama sesuai bahasa test/kode; evaluator memakainya hanya jika menulis script terkait. Dua skill tambahan tersedia untuk pemuatan pada giliran berikutnya; mulai sesi baru untuk memuat ulang definisi role yang telah diperbarui. Pada checkout yang sudah memiliki role versi lama, installer akan melaporkan konflik; periksa dan merge perubahan role secara terarah sebelum mengulang instalasi, tanpa menghapus konfigurasi lokal.
 
 ## Memulai pengembangan
 

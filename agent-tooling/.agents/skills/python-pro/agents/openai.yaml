@@ -1,0 +1,4 @@
+interface:
+  display_name: "Python Inference Practices"
+  short_description: "Typed Python, resource dan concurrency inferensi"
+  default_prompt: "Gunakan $python-pro untuk task Python KotobaHub RAG yang ditugaskan."
