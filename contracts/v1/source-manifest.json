@@ -1,0 +1,36 @@
+{
+  "audited_on": "2026-11-23",
+  "repository": "kotoba-hub",
+  "commit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+  "working_tree_status": [
+    "?? docs/drafts/",
+    "?? docs/sequence-diagram/ai-tools-adaptive-multi-stage-rag-overview.md",
+    "?? docs/sequence-diagram/ai-tools-rag-plus-llm-overview.md"
+  ],
+  "files": {
+    "package.json": "99899c8c8cba7e23688458c618047d6169b05eca0ac83f81a281387e362284b5",
+    "bun.lock": "397ef8ab3a6dda26b7dc11b3c81224ae8d876841690493ddfbaa1a63513c9f39",
+    "tsconfig.json": "7bd35331dfcce82853dd473dbb39b36526635da514fa7b491895fd039d062140",
+    "src/backend/shared/application/helpers/ai-schemas.ts": "16e933668af72b4428802b44b6c7759311736dea6df3261f7addc86097a4a916",
+    "src/backend/shared/application/helpers/ai-templates.ts": "795f2a97eee3af62b334941bc94be419ea954f2c83820ec690bdb5ec5412b33f",
+    "src/backend/shared/application/services/requests/ai-request.ts": "5dbff1a4c90494f4411fef365d01369cfaa831528edbc716ad55b94c94d665b7",
+    "src/backend/shared/application/services/responses/ai-response.ts": "73c7a31b48868253192953209288180f831df51b03e67047eeaf978bdcbcc1cf",
+    "src/backend/shared/application/services/ai.service.ts": "2460056137b47c7a35386bc685794bafb97dcf75ca85facad4dd23bc6b5b5e29",
+    "src/backend/shared/application/services/impl/ai.service.impl.ts": "ece3887f24554ae5aec066d687a636984f470740406928f28f5bc4d7cc6eb6e8",
+    "src/backend/shared/application/ports/ai-provider.port.ts": "966cb96ec5c8dc4f8b1ef2922f7a77a3bd0c88dba3e3682ec71265f0261456e6",
+    "src/backend/shared/domain/exceptions/ai-failure.ts": "cb6dad091a0b0e471a9701c30902ac0244ba3d7fb78999734d3738a8b878a2aa",
+    "src/backend/shared/domain/repositories/ai-request-log.repository.ts": "713f39dae7b338cf8dcab1d4a29134de35683c05177f637ef001b0b30583ea7e",
+    "src/backend/shared/interface/secondary/ai/openai-provider.ts": "8d35276a3f6b32555c03352aeea799197bcac6c3ec7625da82ba61653ba0afb3",
+    "src/backend/shared/interface/secondary/persistence/drizzle-ai-request-log.repository.ts": "9fb483d26e313bf1c505239ca3392f443d191ffdfd219658f331359065c9d350",
+    "src/backend/shared/infrastructure/config/ai-env.ts": "b59eb39353b028c5346d27d7f85ab98ea51c02de9e570a0ff90fdbabe7a70e50",
+    "src/backend/shared/infrastructure/di/index.ts": "2b09920259bb8121b43e0b58e627c34c881fcd793edb9a5016f0d12dbdf1b6b6",
+    "src/backend/shared/infrastructure/database/ai-schema.ts": "9ee2bee8b7cd4987e3ce1e74ff334bd70a39ae20b4b0d806f8d8ea8cd223accb",
+    "src/backend/practice/interface/secondary/ai/practice-ai.adapter.ts": "dc49017edf26c8f54986992a5831cb4187f600a70f2c5bfe5951a6d0b7428833",
+    "src/backend/practice/application/services/impl/practice.service.impl.ts": "1862309147f329da34c118148bc6b9f5af27dcc64fe74008f209fb165682ce62",
+    "src/backend/practice/infrastructure/di/index.ts": "586fda6c06bff3e6bd6d064246efbce185b55650c72f0aeb19b1f03a7a149d2a",
+    "src/backend/personalization/interface/secondary/ai/placement-normalization.adapter.ts": "f2a5dfb0f7a24ff88546b1bb8043d38679efcd8e7464e17e440450323fe32980",
+    "src/backend/personalization/application/services/impl/assessment.service.impl.ts": "672da95d659a7a132114e0970c69ab5d1ca8f0b59c60ab8bbcb24652b6b25bf1",
+    "src/backend/personalization/application/services/impl/recommendation.service.impl.ts": "cbe3165c6773781fc067531b03dc029c34a46d5c324c9c6967177b1a1d095d5b",
+    "src/backend/personalization/infrastructure/di/index.ts": "fa1bce8e6a503592738308e41bd1b5b140cb29d3d1f3aaa31033f89c5bcf4193"
+  }
+}

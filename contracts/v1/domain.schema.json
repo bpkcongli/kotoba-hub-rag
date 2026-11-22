@@ -1,0 +1,821 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kotobahub.invalid/contracts/v1/domain.schema.json",
+  "definitions": {
+    "AiLanguage": {
+      "type": "object",
+      "properties": {
+        "instructionLocale": {
+          "type": "string",
+          "enum": [
+            "en",
+            "id"
+          ]
+        },
+        "feedbackLocale": {
+          "type": "string",
+          "enum": [
+            "en",
+            "id"
+          ]
+        },
+        "translationLocale": {
+          "type": "string",
+          "enum": [
+            "en",
+            "id"
+          ]
+        }
+      },
+      "required": [
+        "instructionLocale",
+        "feedbackLocale",
+        "translationLocale"
+      ],
+      "additionalProperties": false
+    },
+    "AiContextBundle": {
+      "type": "object",
+      "properties": {
+        "targetLevel": {
+          "type": "string",
+          "enum": [
+            "JLPT_N5",
+            "JLPT_N4",
+            "JLPT_N3",
+            "JLPT_N2"
+          ]
+        },
+        "currentLevel": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "BEGINNER",
+                "JLPT_N5",
+                "JLPT_N4",
+                "JLPT_N3",
+                "JLPT_N2"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "currentUnitSlug": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "catalog": {
+          "minItems": 1,
+          "maxItems": 500,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "skillCode": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "lessonSlug": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "unitSlug": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "trackSlug": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              }
+            },
+            "required": [
+              "skillCode",
+              "title",
+              "lessonSlug",
+              "unitSlug",
+              "trackSlug"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "weakSkillCodes": {
+          "maxItems": 500,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "masteredSkillCodes": {
+          "maxItems": 500,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "recentMistakes": {
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "skillCode": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "summary": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            },
+            "required": [
+              "skillCode",
+              "summary"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "lessonUnderstanding": {
+          "maxItems": 500,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "lessonSlug": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "level": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10
+              }
+            },
+            "required": [
+              "lessonSlug",
+              "level"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "allowedQuestionTypes": {
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          }
+        }
+      },
+      "required": [
+        "targetLevel",
+        "currentLevel",
+        "currentUnitSlug",
+        "catalog",
+        "weakSkillCodes",
+        "masteredSkillCodes",
+        "recentMistakes",
+        "lessonUnderstanding",
+        "allowedQuestionTypes"
+      ],
+      "additionalProperties": false
+    },
+    "GeneratedPracticeSession": {
+      "type": "object",
+      "properties": {
+        "questions": {
+          "minItems": 1,
+          "maxItems": 20,
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "skillCode": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "difficultyBand": {
+                    "type": "string",
+                    "enum": [
+                      "REMEDIAL",
+                      "STANDARD",
+                      "STRETCH"
+                    ]
+                  },
+                  "questionType": {
+                    "type": "string",
+                    "const": "SHORT_FREE_RESPONSE"
+                  },
+                  "gradingStrategy": {
+                    "type": "string",
+                    "const": "DETERMINISTIC"
+                  },
+                  "promptPayload": {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "promptLanguage": {
+                        "type": "string",
+                        "const": "JA"
+                      },
+                      "answerLanguage": {
+                        "type": "string",
+                        "const": "JA"
+                      },
+                      "slotCount": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "sentenceTemplate": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      },
+                      "blankInputMode": {
+                        "type": "string",
+                        "const": "ROMAJI_TO_KANA"
+                      },
+                      "inputMethod": {
+                        "type": "object",
+                        "properties": {
+                          "acceptsRomaji": {
+                            "type": "boolean",
+                            "const": true
+                          },
+                          "transformsTo": {
+                            "type": "string",
+                            "const": "KANA"
+                          }
+                        },
+                        "required": [
+                          "acceptsRomaji",
+                          "transformsTo"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "promptLanguage",
+                      "answerLanguage",
+                      "slotCount",
+                      "sentenceTemplate",
+                      "blankInputMode",
+                      "inputMethod"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "expectedAnswer": {
+                    "type": "object",
+                    "properties": {
+                      "acceptedTextAnswers": {
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 2000
+                        }
+                      }
+                    },
+                    "required": [
+                      "acceptedTextAnswers"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "skillCode",
+                  "difficultyBand",
+                  "questionType",
+                  "gradingStrategy",
+                  "promptPayload",
+                  "expectedAnswer"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "skillCode": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "difficultyBand": {
+                    "type": "string",
+                    "enum": [
+                      "REMEDIAL",
+                      "STANDARD",
+                      "STRETCH"
+                    ]
+                  },
+                  "questionType": {
+                    "type": "string",
+                    "const": "SLOT_FILL"
+                  },
+                  "gradingStrategy": {
+                    "type": "string",
+                    "const": "DETERMINISTIC"
+                  },
+                  "promptPayload": {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "promptLanguage": {
+                        "type": "string",
+                        "const": "JA"
+                      },
+                      "optionLanguage": {
+                        "type": "string",
+                        "const": "JA"
+                      },
+                      "slotCount": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "sentenceTemplate": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      },
+                      "options": {
+                        "minItems": 4,
+                        "maxItems": 4,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 50
+                            },
+                            "label": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "label"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "promptLanguage",
+                      "optionLanguage",
+                      "slotCount",
+                      "sentenceTemplate",
+                      "options"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "expectedAnswer": {
+                    "type": "object",
+                    "properties": {
+                      "correctOptionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      }
+                    },
+                    "required": [
+                      "correctOptionId"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "skillCode",
+                  "difficultyBand",
+                  "questionType",
+                  "gradingStrategy",
+                  "promptPayload",
+                  "expectedAnswer"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "skillCode": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "difficultyBand": {
+                    "type": "string",
+                    "enum": [
+                      "REMEDIAL",
+                      "STANDARD",
+                      "STRETCH"
+                    ]
+                  },
+                  "questionType": {
+                    "type": "string",
+                    "const": "ARRANGE_TOKEN"
+                  },
+                  "gradingStrategy": {
+                    "type": "string",
+                    "const": "DETERMINISTIC"
+                  },
+                  "promptPayload": {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "promptLanguage": {
+                        "type": "string",
+                        "enum": [
+                          "EN",
+                          "ID",
+                          "JA"
+                        ]
+                      },
+                      "answerLanguage": {
+                        "type": "string",
+                        "enum": [
+                          "EN",
+                          "ID",
+                          "JA"
+                        ]
+                      },
+                      "direction": {
+                        "type": "string",
+                        "enum": [
+                          "EN_TO_JA",
+                          "JA_TO_EN",
+                          "ID_TO_JA",
+                          "JA_TO_ID"
+                        ]
+                      },
+                      "sourceSentence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      },
+                      "arrangeTokens": {
+                        "minItems": 2,
+                        "maxItems": 30,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 50
+                            },
+                            "label": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "label"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "promptLanguage",
+                      "answerLanguage",
+                      "direction",
+                      "sourceSentence",
+                      "arrangeTokens"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "expectedAnswer": {
+                    "type": "object",
+                    "properties": {
+                      "acceptedTokenOrders": {
+                        "minItems": 1,
+                        "maxItems": 10,
+                        "type": "array",
+                        "items": {
+                          "minItems": 2,
+                          "maxItems": 30,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 2000
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "acceptedTokenOrders"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "skillCode",
+                  "difficultyBand",
+                  "questionType",
+                  "gradingStrategy",
+                  "promptPayload",
+                  "expectedAnswer"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "skillCode": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "difficultyBand": {
+                    "type": "string",
+                    "enum": [
+                      "REMEDIAL",
+                      "STANDARD",
+                      "STRETCH"
+                    ]
+                  },
+                  "questionType": {
+                    "type": "string",
+                    "const": "FREE_RESPONSE"
+                  },
+                  "gradingStrategy": {
+                    "type": "string",
+                    "const": "AI"
+                  },
+                  "promptPayload": {
+                    "type": "object",
+                    "properties": {
+                      "schemaVersion": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "promptLanguage": {
+                        "type": "string",
+                        "enum": [
+                          "EN",
+                          "ID"
+                        ]
+                      },
+                      "answerLanguage": {
+                        "type": "string",
+                        "const": "JA"
+                      },
+                      "sourceSentence": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      },
+                      "inputMethod": {
+                        "type": "object",
+                        "properties": {
+                          "acceptsRomaji": {
+                            "type": "boolean",
+                            "const": true
+                          },
+                          "transformsTo": {
+                            "type": "string",
+                            "const": "KANA"
+                          }
+                        },
+                        "required": [
+                          "acceptsRomaji",
+                          "transformsTo"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "schemaVersion",
+                      "promptLanguage",
+                      "answerLanguage",
+                      "sourceSentence",
+                      "inputMethod"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "expectedAnswer": {
+                    "type": "object",
+                    "properties": {
+                      "referenceAnswer": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000
+                      }
+                    },
+                    "required": [
+                      "referenceAnswer"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "skillCode",
+                  "difficultyBand",
+                  "questionType",
+                  "gradingStrategy",
+                  "promptPayload",
+                  "expectedAnswer"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "questions"
+      ],
+      "additionalProperties": false
+    },
+    "GradedPracticeAnswer": {
+      "type": "object",
+      "properties": {
+        "isCorrect": {
+          "type": "boolean"
+        },
+        "numericScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "feedbackText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "isCorrect",
+        "numericScore",
+        "feedbackText"
+      ],
+      "additionalProperties": false
+    },
+    "PlacementSummary": {
+      "type": "object",
+      "properties": {
+        "suggestedKnownSkillClaims": {
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "skillCode": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "required": [
+              "skillCode",
+              "confidence"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "suggestedKnownSkillClaims"
+      ],
+      "additionalProperties": false
+    },
+    "StudyRecommendation": {
+      "type": "object",
+      "properties": {
+        "recommendedTrackSlug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "recommendedUnitSlug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "nextLessonSlug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "targetSkillCodes": {
+          "minItems": 1,
+          "maxItems": 100,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "difficultyBand": {
+          "type": "string",
+          "enum": [
+            "REMEDIAL",
+            "STANDARD",
+            "STRETCH"
+          ]
+        },
+        "allowedQuestionTypes": {
+          "minItems": 1,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          }
+        }
+      },
+      "required": [
+        "recommendedTrackSlug",
+        "recommendedUnitSlug",
+        "nextLessonSlug",
+        "targetSkillCodes",
+        "difficultyBand",
+        "allowedQuestionTypes"
+      ],
+      "additionalProperties": false
+    },
+    "QuestionType": {
+      "type": "string",
+      "enum": [
+        "SHORT_FREE_RESPONSE",
+        "SLOT_FILL",
+        "ARRANGE_TOKEN",
+        "FREE_RESPONSE"
+      ]
+    },
+    "DifficultyBand": {
+      "type": "string",
+      "enum": [
+        "REMEDIAL",
+        "STANDARD",
+        "STRETCH"
+      ]
+    }
+  }
+}

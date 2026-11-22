@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.4 · 22 November 2026 · Status: desain yang akan diimplementasikan; stack dan prioritas API per pemakaian diputuskan pada [ADR-001](docs/ADR-001-stack-and-inference.md) dengan amendemen DOC-INF-02 dan gate endpoint nyata INF-01. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime service yang tersedia; spike terisolasi menjadi bukti kompatibilitas awal.
+Versi 0.5 · 23 November 2026 · Status: desain yang akan diimplementasikan; stack dan prioritas API per pemakaian diputuskan pada [ADR-001](docs/ADR-001-stack-and-inference.md), kontrak dan fixture tersedia melalui [CON-01](docs/contracts/CON-01.md). Gate endpoint nyata tetap INF-01. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime service yang tersedia; spike terisolasi menjadi bukti kompatibilitas awal.
 
 ## 1. Dasar keputusan
 
@@ -92,7 +92,7 @@ Diperiksa dari `/home/user/Testing/kotoba-hub` pada 21 November 2026; path berik
 | `src/backend/shared/infrastructure/config/ai-env.ts` | `AI_PROVIDER` saat ini hanya menerima `OPENAI`; `OPENAI_GENERATION_MODEL=gpt-5.6-terra` dan `OPENAI_NORMALIZATION_MODEL=gpt-5.6-luna`. Mode RAG tidak dapat sekadar diaktifkan lewat environment yang belum didukung. |
 | `src/backend/practice/domain/services/deterministic-answer-evaluator.ts` | Grading objective dimiliki rules engine; service ini tidak menggantikannya. |
 
-Dokumen aplikasi `docs/drafts/ai-adapter-llm-only-and-rag-plus-llm.md` berguna sebagai desain awal, tetapi contoh `AiAdapter` di sana bukan bukti interface runtime terpasang. `CON-01` harus mengekspor fixture dari source/schema aktual, menyepakati boundary service-level, dan mendokumentasikan mismatch. Planning ini tidak mengedit repository aplikasi.
+Dokumen aplikasi `docs/drafts/ai-adapter-llm-only-and-rag-plus-llm.md` berguna sebagai desain awal, tetapi contoh `AiAdapter` di sana bukan bukti interface runtime terpasang. Audit ulang [CON-01](docs/contracts/CON-01.md) pada 23 November 2026 mengunci commit/source hashes, mengekspor schema/fixture dan menguji domain validator aktual. Temuan tambahan: rekomendasi consumer aplikasi masih deterministik; method AI rekomendasi belum terhubung, timeout existing per-attempt dan schema/domain failure masih digabung. Rencana adapter service-level dan perubahan v1 tercatat pada laporan; repository aplikasi tidak diedit.
 
 ## 4. Struktur yang diusulkan
 
@@ -136,11 +136,11 @@ kotoba-hub-rag/
 
 Struktur runtime belum dibuat. `spikes/dec-01/` hanya menyimpan fixture, runner, lock dan evidence keputusan awal; bukan modul production atau penyelesaian BOOT/STORE/INF. Jangan menambah layer yang hanya membungkus satu fungsi; arah dependensi yang wajib dijaga adalah domain/policy tidak mengimpor SDK HTTP, Qdrant, atau OpenAI. Port minimum: `EmbeddingPort`, `RetrieverPort`, `RerankerPort`, `GeneratorPort`, `TraceSink`, `Clock`; adapter dipilih di composition root.
 
-## 5. Kontrak REST yang diusulkan
+## 5. Kontrak REST v1
 
-Semua operasi server-to-server terautentikasi. Prefix `/v1`, correlation ID, batas body, timeout total, serta error envelope disepakati di `CON-01` sebelum coding.
+Semua operasi server-to-server terautentikasi. Acuan bentuk wire adalah [OpenAPI](contracts/v1/openapi.json) dan [JSON Schema draft-07](contracts/v1/contract.schema.json); aturan semantik, error/retry dan adapter plan pada [CON-01](docs/contracts/CON-01.md) juga normatif. Kontrak tersedia, endpoint belum diimplementasikan. Body maksimal 1 MiB, JSON strict tanpa coercion/removal/default mutation.
 
-| Endpoint usulan | Operasi aplikasi | Data domain pada `data` |
+| Endpoint kontrak | Operasi aplikasi | Data domain pada `data` |
 | --- | --- | --- |
 | `POST /v1/practice/generate` | `GENERATE_PRACTICE_SESSION` | `GeneratedPracticeSession` |
 | `POST /v1/practice/evaluate` | `GRADE_PRACTICE_ANSWER` | `GradedPracticeAnswer`, khusus FREE_RESPONSE |
@@ -157,6 +157,8 @@ Envelope request konseptual:
   "request_id": "d5a2734b-9ad7-45ba-adc9-d54e05b95e1c",
   "mode": "SINGLE_STAGE",
   "corpus_version": "corpus-pilot-v1",
+  "timeout_ms": 30000,
+  "deadline_at": "2026-11-23T12:00:30Z",
   "experiment": {
     "experiment_id": "pilot-v1",
     "case_id": "practice-simple-001",
@@ -166,11 +168,11 @@ Envelope request konseptual:
 }
 ```
 
-`payload` pada contoh sengaja belum memuat fixture lengkap. Pada kontrak final, isinya input service existing per operasi, termasuk `context`, `language`, dan metadata. Petakan `request_id` ke `metadata.requestId`; jika keduanya dikirim dan berbeda, tolak. Jangan menganggap objek kosong valid. Metadata `experiment` bersifat opsional bagi integrasi biasa dan tidak diberikan ke prompt. Dataset labels/rubric evaluasi tidak masuk payload generasi.
+`payload` pada contoh sengaja diringkas; contoh valid lengkap ada pada [fixture](contracts/v1/fixtures.json). Isinya input service per operasi, termasuk `context`, `language` wajib, dan metadata. `request_id` wajib sama dengan `payload.metadata.requestId` dan header `X-Request-ID` jika ada. Jangan menganggap objek kosong valid. `timeout_ms` ceiling budget 100–120000 ms dan `deadline_at` deadline absolut asal; contoh tanggal bukan request live. Metadata `experiment` opsional dan tidak diberikan ke prompt. Target N3/N2 ditolak sebelum call; currentLevel tetap state profil tanpa memperluas eligibility. Dataset labels/rubric evaluasi tidak masuk payload generasi.
 
 Envelope sukses: `{schema_version, request_id, execution_id, mode, data, meta}`. `data` tepat mengikuti strict domain schema existing, sedangkan `meta` memuat `trace_id`, path, source citations yang sah, dan ringkasan usage/timing. Adapter HTTP aplikasi mengekstrak `data` lalu tetap menjalankan domain validation. `execution_id` baru untuk satu eksekusi aktual; response replay tidak boleh dianggap observasi eksperimen baru.
 
-Envelope gagal: `{schema_version, request_id, execution_id, mode, error: {code, message, retryable}, meta: {trace_id}}`. Mapping yang diusulkan: 400 input/schema request, 401/403 auth, 409 snapshot/idempotency conflict, 422 unsupported level/insufficient evidence/post-validation failure, 429 capacity limit, 502 upstream/invalid generated schema, 503 dependency not ready, 504 deadline. Detail attempt ada pada trace tersanitasi; jangan mengirim raw prompt atau secret melalui error.
+Envelope gagal: `{schema_version, request_id, execution_id, mode, error: {code, message, retryable}, meta: {trace_id}}`. ID/mode yang belum valid/admitted nullable sesuai schema. Mapping: 400 input/schema request, 401/403 auth, 409 snapshot/idempotency conflict, 413/415 transport, 422 unsupported level/insufficient evidence/post-validation failure, 429 capacity limit, 500 internal, 502 upstream/invalid generated schema, 503 dependency/trace failure, 504 deadline. [Kode lengkap](contracts/v1/errors.json) dan refinement pada CON-01. `retryable` tidak mengizinkan caller mengulang execution; replay/unknown harus mengikuti registry dan rekonsiliasi. Detail attempt ada pada trace tersanitasi; jangan mengirim raw prompt atau secret melalui error.
 
 Mode dari caller harus tervalidasi dan diizinkan; tidak disimpulkan dari bahasa input. Auth memakai kredensial service yang dapat dirotasi di jaringan internal/TLS. Browser tidak memperoleh kredensial ini. Ingestion dan experiment runner awal berupa CLI, bukan endpoint admin publik.
 
@@ -254,13 +256,13 @@ Hasil tidak langsung mengubah profil, mastery, atau sesi. KotobaHub tetap mengot
 
 ## 9. Retry, deadline, cache, dan fallback
 
-- Deadline dimulai pada adapter KotobaHub menerima permintaan; simpan juga durasi internal service dan network overhead. Setiap call/stage memakai remaining budget; deadline memicu cancellation bila didukung.
+- Deadline dimulai pada adapter KotobaHub menerima permintaan; propagasikan `deadline_at` UTC dan remaining `timeout_ms`. Service membatasi deadline dengan minimum budget client/server, lalu memakai monotonic clock untuk durasi/sisa lokal; catat clock skew dan network overhead. Antrean, backoff, validasi dan pencatatan termasuk budget. Setiap call/stage memakai remaining budget; deadline memicu cancellation bila didukung.
 - Orkestrator service menjadi owner retry provider. SDK auto-retry dinonaktifkan atau diikutkan eksplisit; client aplikasi tidak mengulang eksekusi AI tanpa identitas/counter yang tercatat.
 - Error transient embedding/rerank/generasi (termasuk rate limit/cold start/outage remote) dapat di-retry dengan backoff berjitter, `Retry-After` bila tersedia, batas attempt dan remaining deadline. Input/auth/out-of-scope tidak di-retry. Timeout HTTP tidak membuktikan server remote berhenti atau tidak menagih; simpan provider request ID/outcome unknown dan rekonsiliasi biaya. Schema repair bila dipakai mengikuti budget retry bersama dan dicatat sebagai call tersendiri pada semua mode.
 - Retrieval escalation adalah perlakuan adaptive, bukan provider retry. Gunakan `retrieval_stage_count`, `rewrite_call_count`, `rerank_call_count`, `provider_retry_count`, `schema_retry_count`, dan total attempt terpisah.
 - Tidak ada fallback mode dalam eksperimen utama. Fallback ke baseline untuk produk kelak harus flag eksplisit, trace `requested_mode`/`executed_mode`, dan cohort terpisah.
 - Main run menonaktifkan response/query cache; model weights boleh warm di endpoint remote. Dokumentasikan provider cache/scale-to-zero, shared warmup, concurrency dan load. Jangan menghangatkan adaptive saja; catat warmup reranker yang hanya dipakai deep path. Jangan memakai auto-routing/failover provider yang mengubah backend; jika identitas/revision drift tidak dapat dicegah/dideteksi, endpoint belum layak freeze.
-- Idempotency operasional mengembalikan hasil eksekusi sama untuk key sama; lima repetition memiliki request IDs berbeda. Resume harness memakai terminal record/checkpoint sehingga tidak membuat duplikat observasi. Bila crash setelah provider call sebelum durable trace, catat outcome unknown beserta kemungkinan biaya tak diketahui; re-execution mendapat execution ID baru.
+- Idempotency memakai request_id per identitas service dengan fingerprint operasi dan request lengkap. Replay terminal mengembalikan execution ID sama; isi berbeda/in-flight/unknown menghasilkan 409 tanpa call baru. Lima repetition memiliki request IDs berbeda. Resume harness memakai terminal record/checkpoint. Crash setelah provider call sebelum durable trace menjadi unknown; registry tidak dihapus. Re-execution setelah rekonsiliasi mendapat execution ID baru. v1 belum memiliki endpoint status; recovery awal melalui artefak/registry OBS dan harness sesuai CON-01.
 
 ## 10. Telemetry dan penyimpanan eksperimen
 
@@ -276,7 +278,7 @@ Setiap run menghasilkan manifest immutable, event JSONL per execution (menghinda
 | Outcome | schema parse status per attempt/final, domain validation status, terminal success/failure, errors dengan kategori/cause |
 | Lingkungan | timestamp UTC, monotonic durations, hardware/runtime/dependency versions yang teramati, model precision, region, deployment/scale-to-zero, seed bila didukung, concurrency/cache/warmup; data remote yang tidak tersedia `unknown`, bukan nol |
 
-Errors dibedakan: `INVALID_INPUT`, `AUTH_FAILED`, `UNSUPPORTED_LEVEL`, `SNAPSHOT_MISMATCH`, `RETRIEVAL_FAILED`, `INSUFFICIENT_EVIDENCE`, `INFERENCE_FAILED`, `PROVIDER_FAILED`, `TIMEOUT`, `SCHEMA_PARSE_FAILED`, `POST_VALIDATION_FAILED`, `TRACE_WRITE_FAILED`. Simpan request failure tunggal dan daftar error events; retry bisa menghasilkan banyak event untuk satu request gagal/sukses.
+Errors membedakan input/auth, snapshot/idempotency, level/evidence, retrieval/inference/provider, timeout, schema/domain dan trace failures; daftar kode wire lengkap ada pada [errors.json](contracts/v1/errors.json). Trace juga mencatat cause internal seperti rate limit/refusal. Simpan request failure tunggal dan daftar error events; retry bisa menghasilkan banyak event untuk satu request gagal/sukses.
 
 `inference_total_cost` tetap subtotal LLM generasi/rewrite/repair beserta retry-nya. Total online request menjumlahkan subtotal itu dengan `query_embedding_cost` dan `rerank_cost`, termasuk semua attempt; field subtotal tidak dijumlahkan lagi dengan detail call yang sama. Cached input dipisahkan dari non-cached input sesuai usage. `null` berarti tidak diketahui, bukan nol; total lengkap tetap `null` bila komponennya tidak diketahui, dengan known subtotal dan status estimasi dilaporkan terpisah. LLM_ONLY mempunyai applicability embedding/rerank `not_applicable`; fase tanpa rerank dicatat tidak ada call. Komponen yang terbukti tidak dipanggil berkontribusi biaya 0 pada total, berbeda dari call yang terjadi tetapi usage/billing-nya tidak diketahui.
 

@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status: perencanaan dan inisialisasi tooling, diperbarui 22 November 2026. Runtime, endpoint, indeks, dan hasil eksperimen belum tersedia.
+Status: perencanaan, tooling dan kontrak v1 terverifikasi, diperbarui 23 November 2026. Runtime, endpoint, indeks, dan hasil eksperimen belum tersedia.
 
 Repository ini direncanakan menjadi layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -11,11 +11,12 @@ Repository ini direncanakan menjadi layanan AI/RAG bagi KotobaHub dan subjek eks
 | [PRD.md](PRD.md) | Tujuan, ruang lingkup, kebutuhan fungsional, metrik, dan kriteria penerimaan |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Batas layanan, kontrak, ingestion, pipeline, routing, telemetry, dan keputusan teknis |
 | [ADR-001-stack-and-inference.md](docs/ADR-001-stack-and-inference.md) | Keputusan DEC-01: versi stack, deployment remote, lock strategy dan bukti spike awal |
+| [CON-01](docs/contracts/CON-01.md) | Audit source aplikasi, kontrak v1, fixture compatibility, error/retry dan rencana adapter HTTP |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
 
-Seluruh dokumentasi proyek berada di root repository. Mulai dari PRD dan arsitektur, lalu ambil task yang dependensinya selesai. `AGENTS.md` memuat pedoman kerja lengkap. Folder `docs/` menyimpan bahan referensi asli.
+Dokumentasi utama berada di root repository. Mulai dari PRD dan arsitektur, lalu ambil task yang dependensinya selesai. `AGENTS.md` memuat pedoman kerja lengkap. Folder `docs/` menyimpan referensi dan laporan keputusan; `contracts/v1/` memuat OpenAPI, schema, fixture dan evidence CON-01.
 
 ## Konfigurasi penelitian
 
@@ -72,13 +73,21 @@ Contoh penugasan skill bahasa: `Gunakan backend-coder dengan $typescript-pro unt
 Belum ada `package.json` runtime di root, `pyproject.toml` inferensi, Compose, `.env.example`, atau perintah start service. [Fixture spike DEC-01](spikes/dec-01/fixture/package.json) memiliki package/lock tersendiri untuk bukti kompatibilitas, bukan implementasi service. Jangan menganggap contoh endpoint/struktur dalam arsitektur sudah diimplementasikan. Urutan kerja awal:
 
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
-2. `DEC-01` selesai untuk keputusan desain dan spike awal. Lanjutkan `CON-01`: pemetaan model/operasi, fixture domain, kesetaraan antar mode dan audit retry pada KotobaHub, mengikuti ADR-001.
+2. `DEC-01` dan `CON-01` selesai untuk desain/spike dan kontrak v1. [CON-01](docs/contracts/CON-01.md) mencatat 127 pemeriksaan, 16 pasangan fixture melalui wire dan domain validator aplikasi, model per operasi dan audit retry. Bentuk envelope tiga mode diuji; pipeline belum tersedia. Lanjutkan RES-01/BOOT-01 sesuai dependensi.
 3. Bootstrap TypeScript dan siapkan Qdrant; audit/smoke API embedding/reranker dengan budget eksplisit, mulai dari HF lalu provider API lain untuk model sama. Bootstrap Python/GPU hanya jika alternatif handler sendiri akhirnya diperlukan; laptop/app server tidak wajib memuat model.
 4. Bangun ingestion, baseline, adaptive, integrasi, dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 Spike terisolasi lulus typecheck, lint, format, build dan tiga smoke tests (Fastify schema, import SDK OpenAI tanpa call, Qdrant dense+sparse RRF nyata). Container berlimit 2 vCPU/4 GiB mencatat peak memory sekitar 640 MiB pada workload kecil ini; ukuran awal app/Qdrant dipilih 2 vCPU/4 GiB tanpa GPU. Ini bukan kapasitas produksi. [Evidence](spikes/dec-01/evidence.json) dan petunjuk reproduksi pada ADR memuat batas pengukuran; kapasitas corpus dan hardware endpoint remote tetap diuji kemudian.
 
 Model weights dan dataset besar kelak disimpan di luar Git; commit manifest/checksum dan lockfile. Jangan commit kredensial, data pengguna asli, atau hasil eksperimen yang belum ditinjau. Eksperimen berbayar belum dijalankan pada tahap ini.
+
+Verifikasi kontrak tanpa provider/database, dengan Node 24.22.3 dan dependency aplikasi terpasang sesuai pin runner:
+
+```bash
+node tools/con-01/run.mjs verify
+```
+
+Runner membaca checkout `../kotoba-hub` secara read-only (`KOTOBA_APP` opsional), typecheck tooling dan source yang diimpor, lalu menguji fixture dengan mock. [Petunjuk dan batas bukti](docs/contracts/CON-01.md#reproduksi-dan-batas-verifikasi) menjelaskan versi dependency dan refresh snapshot. Ini bukan perintah menjalankan service atau instalasi BOOT-01.
 
 ## Referensi dan batas bukti
 

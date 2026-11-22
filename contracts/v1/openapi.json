@@ -1,0 +1,727 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "http://json-schema.org/draft-07/schema#",
+  "info": {
+    "title": "KotobaHub RAG",
+    "version": "1.0.0",
+    "description": "Kontrak CON-01; endpoint runtime belum diimplementasikan. Aturan semantik: ../../docs/contracts/CON-01.md."
+  },
+  "security": [
+    {
+      "serviceBearer": []
+    }
+  ],
+  "paths": {
+    "/v1/practice/generate": {
+      "post": {
+        "operationId": "generatePracticeSession",
+        "summary": "GENERATE_PRACTICE_SESSION",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Request-ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "description": "Jika dikirim, harus sama dengan request_id dan payload.metadata.requestId."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./contract.schema.json#/definitions/GenerateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data domain tervalidasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/GenerateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AUTH_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "SNAPSHOT_MISMATCH, IDEMPOTENCY_CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UNSUPPORTED_LEVEL, INSUFFICIENT_EVIDENCE, POST_VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "CAPACITY_LIMIT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "RETRIEVAL_FAILED, INFERENCE_FAILED, PROVIDER_FAILED, PROVIDER_REJECTED, PROVIDER_REFUSED, SCHEMA_PARSE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_NOT_READY, TRACE_WRITE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "TIMEOUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-use-case": "PRACTICE_GENERATION",
+        "x-generation-model": "gpt-5.6-terra",
+        "x-body-limit-bytes": 1048576
+      }
+    },
+    "/v1/practice/evaluate": {
+      "post": {
+        "operationId": "gradePracticeAnswer",
+        "summary": "GRADE_PRACTICE_ANSWER",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Request-ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "description": "Jika dikirim, harus sama dengan request_id dan payload.metadata.requestId."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./contract.schema.json#/definitions/EvaluateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data domain tervalidasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/EvaluateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AUTH_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "SNAPSHOT_MISMATCH, IDEMPOTENCY_CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UNSUPPORTED_LEVEL, INSUFFICIENT_EVIDENCE, POST_VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "CAPACITY_LIMIT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "RETRIEVAL_FAILED, INFERENCE_FAILED, PROVIDER_FAILED, PROVIDER_REJECTED, PROVIDER_REFUSED, SCHEMA_PARSE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_NOT_READY, TRACE_WRITE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "TIMEOUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-use-case": "ANSWER_EVALUATION",
+        "x-generation-model": "gpt-5.6-terra",
+        "x-body-limit-bytes": 1048576
+      }
+    },
+    "/v1/onboarding/normalize": {
+      "post": {
+        "operationId": "summarizePlacement",
+        "summary": "SUMMARIZE_PLACEMENT",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Request-ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "description": "Jika dikirim, harus sama dengan request_id dan payload.metadata.requestId."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./contract.schema.json#/definitions/NormalizeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data domain tervalidasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/NormalizeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AUTH_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "SNAPSHOT_MISMATCH, IDEMPOTENCY_CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UNSUPPORTED_LEVEL, INSUFFICIENT_EVIDENCE, POST_VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "CAPACITY_LIMIT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "RETRIEVAL_FAILED, INFERENCE_FAILED, PROVIDER_FAILED, PROVIDER_REJECTED, PROVIDER_REFUSED, SCHEMA_PARSE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_NOT_READY, TRACE_WRITE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "TIMEOUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-use-case": "ONBOARDING",
+        "x-generation-model": "gpt-5.6-luna",
+        "x-body-limit-bytes": 1048576
+      }
+    },
+    "/v1/onboarding/recommend": {
+      "post": {
+        "operationId": "generateStudyRecommendation",
+        "summary": "GENERATE_STUDY_RECOMMENDATION",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Request-ID",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "description": "Jika dikirim, harus sama dengan request_id dan payload.metadata.requestId."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./contract.schema.json#/definitions/RecommendRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Data domain tervalidasi",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/RecommendResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_INPUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "AUTH_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "FORBIDDEN",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "SNAPSHOT_MISMATCH, IDEMPOTENCY_CONFLICT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "PAYLOAD_TOO_LARGE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "UNSUPPORTED_MEDIA_TYPE",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UNSUPPORTED_LEVEL, INSUFFICIENT_EVIDENCE, POST_VALIDATION_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "CAPACITY_LIMIT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "RETRIEVAL_FAILED, INFERENCE_FAILED, PROVIDER_FAILED, PROVIDER_REJECTED, PROVIDER_REFUSED, SCHEMA_PARSE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "DEPENDENCY_NOT_READY, TRACE_WRITE_FAILED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "TIMEOUT",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-use-case": "ONBOARDING",
+        "x-generation-model": "gpt-5.6-terra",
+        "x-body-limit-bytes": 1048576
+      }
+    },
+    "/health/live": {
+      "get": {
+        "operationId": "liveness",
+        "description": "Tanpa inferensi berbayar; memakai status dependency terakhir.",
+        "responses": {
+          "200": {
+            "description": "live",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "readiness",
+        "description": "Tanpa inferensi berbayar; memakai status dependency terakhir.",
+        "responses": {
+          "200": {
+            "description": "ready",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/HealthResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "not_ready",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./contract.schema.json#/definitions/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "serviceBearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Kredensial service internal melalui TLS; bukan API key provider."
+      }
+    }
+  }
+}

@@ -1,0 +1,567 @@
+{
+  "task": "CON-01",
+  "audited_on": "2026-11-23",
+  "verified_at_utc": "2026-11-22T17:58:07.175Z",
+  "node": "v24.22.3",
+  "source_commit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+  "dependencies": {
+    "zod": "4.6.5",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "typescript": "5.9.3",
+    "esbuild": "0.25.12"
+  },
+  "command": [
+    "/tmp/kotoba-dec01/node-v24.22.3-linux-x64/bin/node",
+    "tools/con-01/run.mjs",
+    "verify"
+  ],
+  "typecheck": {
+    "status": "passed",
+    "strict": true,
+    "no_unchecked_indexed_access": true,
+    "optional_semantics": "existing app tsconfig"
+  },
+  "tooling_sha256": {
+    "run.mjs": "8ea34878d44aae46c7cf7ae70d58e5f9b81799f7cd0fb2c12a9725bc64cd87c2",
+    "definition.ts": "08eb28fb32c21a153dc93e318db255749ed833476f7e985c11afca8d0836b126",
+    "fixtures.ts": "513b76fcbacc01b59e2f0e3124032bc2c359f62af0b32970a058187b19cf2fb2",
+    "verify.ts": "eaf254fe4c9e7ba3eefb4f5807ca33a04ec79f8b5f2cf48d14a9e68f8b4e5554"
+  },
+  "fixture_pairs": 16,
+  "modes_checked": [
+    "LLM_ONLY",
+    "SINGLE_STAGE",
+    "ADAPTIVE"
+  ],
+  "passed": 127,
+  "failed": 0,
+  "app_working_tree_unchanged": true,
+  "network_calls": 0,
+  "paid_calls": 0,
+  "database_writes": 0,
+  "artifacts_sha256": {
+    "domain.schema.json": "dd30836f920f73d62e65621569ec5162acef00a5d5fc03e5494c43b76dc64e6c",
+    "contract.schema.json": "2152875519f305a92a60a72f6468e6d20d87a9c77590ba396eba4e34bc4803ee",
+    "openapi.json": "c6bbef0fc206a4fbc995555106b63582d311cadb59abfbccf74d82d33d9d763b",
+    "fixtures.json": "c492946b7b042ea8880b5a14a4b9ccb3f5aac180f18e92fa954d59d921c1e999",
+    "errors.json": "c851b2a67f11d6ef9affed0ba8fee85ebd82a2a5f943e1c22815d843e08ed445",
+    "source-manifest.json": "ec5f3f3fd719f4a8ac57f9eee82c12ba12a0459ee5c882cf4fa9065d0816e7a5"
+  },
+  "checks": [
+    {
+      "name": "OpenAPI: empat operasi, dua health dan seluruh referensi schema",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n5-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n5-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n5-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n5-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n5-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n5-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n5-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n5-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n5-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n5-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n5-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n5-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n5-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n5-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n5-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n5-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n5-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n5-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n5-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n5-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n5-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n5-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n5-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n5-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n4-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n4-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n4-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n4-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n4-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n4-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n4-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n4-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n4-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n4-en/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n4-en/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n4-en/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n4-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n4-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "generate-jlpt_n4-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n4-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n4-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "evaluate-jlpt_n4-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n4-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n4-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "normalize-jlpt_n4-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n4-id/LLM_ONLY: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n4-id/SINGLE_STAGE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "recommend-jlpt_n4-id/ADAPTIVE: wire, schema aplikasi, domain aplikasi dan model",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: mode/path konflik",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: corpus konflik",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: stage tidak terbatas",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: cached tokens melebihi input",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: usage unknown sebagian",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: unknown cost menjadi nol",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: double count subtotal",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: total online menjumlahkan tiga subtotal sekali",
+      "status": "passed"
+    },
+    {
+      "name": "Metadata: usage unknown seluruhnya valid",
+      "status": "passed"
+    },
+    {
+      "name": "Request: UUID version invalid",
+      "status": "passed"
+    },
+    {
+      "name": "Request: mode tidak dikenal",
+      "status": "passed"
+    },
+    {
+      "name": "Request: extra envelope",
+      "status": "passed"
+    },
+    {
+      "name": "Request: payload kosong",
+      "status": "passed"
+    },
+    {
+      "name": "Request: angka berupa string",
+      "status": "passed"
+    },
+    {
+      "name": "Request: extra payload",
+      "status": "passed"
+    },
+    {
+      "name": "Request: extra context",
+      "status": "passed"
+    },
+    {
+      "name": "Request: metadata ID berbeda",
+      "status": "passed"
+    },
+    {
+      "name": "Request: snapshot berbeda",
+      "status": "passed"
+    },
+    {
+      "name": "Request: deadline nol",
+      "status": "passed"
+    },
+    {
+      "name": "Request: deadline melebihi ceiling",
+      "status": "passed"
+    },
+    {
+      "name": "Request: deadline expired",
+      "status": "passed"
+    },
+    {
+      "name": "Request: locale kosong",
+      "status": "passed"
+    },
+    {
+      "name": "Request: locale ja",
+      "status": "passed"
+    },
+    {
+      "name": "Request: locale dihilangkan",
+      "status": "passed"
+    },
+    {
+      "name": "Request: questionMix bukan satu",
+      "status": "passed"
+    },
+    {
+      "name": "Request: JLPT_N3",
+      "status": "passed"
+    },
+    {
+      "name": "Request: JLPT_N2",
+      "status": "passed"
+    },
+    {
+      "name": "Request: X-Request-ID konflik",
+      "status": "passed"
+    },
+    {
+      "name": "Request: metadata eksperimen opsional",
+      "status": "passed"
+    },
+    {
+      "name": "Request: note whitespace ditolak",
+      "status": "passed"
+    },
+    {
+      "name": "Request: grading objective ditolak",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: jumlah soal",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: skill di luar katalog",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: difficulty",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: blank ganda",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: jawaban short kanji",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: option ID duplikat",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: option label duplikat",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: correctOptionId hilang",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: token order bukan permutasi",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: arah terjemahan salah",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: FREE_RESPONSE locale salah",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: tipe tidak diizinkan",
+      "status": "passed"
+    },
+    {
+      "name": "Input aplikasi: duplicate skill",
+      "status": "passed"
+    },
+    {
+      "name": "Input aplikasi: current unit di luar katalog",
+      "status": "passed"
+    },
+    {
+      "name": "Input aplikasi: weak skill di luar katalog",
+      "status": "passed"
+    },
+    {
+      "name": "Input aplikasi: lesson understanding di luar katalog",
+      "status": "passed"
+    },
+    {
+      "name": "Input aplikasi: grading locale konflik sebelum provider",
+      "status": "passed"
+    },
+    {
+      "name": "Input aplikasi: tiga locale independen",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: rekomendasi relasi lesson/unit/track",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: placement claims duplikat",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: placement claims di luar katalog",
+      "status": "passed"
+    },
+    {
+      "name": "Domain aplikasi: placement claims kosong valid",
+      "status": "passed"
+    },
+    {
+      "name": "Output strict: metadata ditolak dalam data",
+      "status": "passed"
+    },
+    {
+      "name": "Output grading: numericScore >100 ditolak kedua validator",
+      "status": "passed"
+    },
+    {
+      "name": "Retry aplikasi: dua attempt dan usage terakumulasi",
+      "status": "passed"
+    },
+    {
+      "name": "Biaya aplikasi: missing usage tetap null",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: INVALID_INPUT/400",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: AUTH_FAILED/401",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: FORBIDDEN/403",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: SNAPSHOT_MISMATCH/409",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: IDEMPOTENCY_CONFLICT/409",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: PAYLOAD_TOO_LARGE/413",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: UNSUPPORTED_MEDIA_TYPE/415",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: UNSUPPORTED_LEVEL/422",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: INSUFFICIENT_EVIDENCE/422",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: POST_VALIDATION_FAILED/422",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: CAPACITY_LIMIT/429",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: INTERNAL_ERROR/500",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: RETRIEVAL_FAILED/502",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: INFERENCE_FAILED/502",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: PROVIDER_FAILED/502",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: PROVIDER_REJECTED/502",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: PROVIDER_REFUSED/502",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: SCHEMA_PARSE_FAILED/502",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: DEPENDENCY_NOT_READY/503",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: TRACE_WRITE_FAILED/503",
+      "status": "passed"
+    },
+    {
+      "name": "Error envelope: TIMEOUT/504",
+      "status": "passed"
+    }
+  ],
+  "limitations": [
+    "Tidak ada HTTP runtime RAG, adapter aplikasi baru, persistence, auth/deadline/retry remote, atau provider nyata yang dijalankan.",
+    "Tiga mode menguji bentuk envelope; app validator yang sama dipanggil dengan mock. Ini bukan bukti pipeline tiga mode sudah ada.",
+    "Pemeriksaan OpenAPI meliputi struktur operasi dan resolusi semua schema refs; bukan sertifikasi validator OpenAPI eksternal.",
+    "Fixture bukan validasi konten Jepang oleh manusia atau hasil eksperimen."
+  ]
+}

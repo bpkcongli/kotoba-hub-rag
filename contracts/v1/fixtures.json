@@ -1,0 +1,2437 @@
+{
+  "description": "Fixture sintetis CON-01; bukan hasil runtime atau dataset eksperimen.",
+  "cases": [
+    {
+      "id": "generate-jlpt_n5-en",
+      "operation": "generate",
+      "use_case": "PRACTICE_GENERATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000001",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "generate-jlpt_n5-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000001"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "questionCount": 5,
+          "difficultyBand": "STANDARD",
+          "questionMix": {
+            "WEAK": 0.6,
+            "REINFORCEMENT": 0.3,
+            "STRETCH": 0.1
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000001",
+        "execution_id": "71000000-0000-4000-8000-000000000001",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "questions": [
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SHORT_FREE_RESPONSE",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "blankInputMode": "ROMAJI_TO_KANA",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "acceptedTextAnswers": [
+                  "は"
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SLOT_FILL",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "optionLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "options": [
+                  {
+                    "id": "o0",
+                    "label": "は"
+                  },
+                  {
+                    "id": "o1",
+                    "label": "を"
+                  },
+                  {
+                    "id": "o2",
+                    "label": "で"
+                  },
+                  {
+                    "id": "o3",
+                    "label": "に"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "correctOptionId": "o0"
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "EN",
+                "answerLanguage": "JA",
+                "direction": "EN_TO_JA",
+                "sourceSentence": "I am a student.",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "わたしは"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "がくせいです"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "EN",
+                "direction": "JA_TO_EN",
+                "sourceSentence": "わたしはがくせいです。",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "I am"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "a student."
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "FREE_RESPONSE",
+              "gradingStrategy": "AI",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "EN",
+                "answerLanguage": "JA",
+                "sourceSentence": "I am a student.",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "referenceAnswer": "わたしはがくせいです。"
+              }
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000001",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "evaluate-jlpt_n5-en",
+      "operation": "evaluate",
+      "use_case": "ANSWER_EVALUATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000002",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "evaluate-jlpt_n5-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000002"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "question": {
+            "skillCode": "synthetic_copula",
+            "questionType": "FREE_RESPONSE",
+            "promptLanguage": "EN",
+            "answerLanguage": "JA",
+            "sourceSentence": "I am a student.",
+            "referenceAnswer": "わたしはがくせいです。"
+          },
+          "userAnswer": {
+            "rawInputRomaji": "watashi wa gakusei desu",
+            "normalizedKana": "わたしはがくせいです。",
+            "normalizedKanji": "私は学生です。"
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000002",
+        "execution_id": "71000000-0000-4000-8000-000000000002",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "isCorrect": true,
+          "numericScore": 100,
+          "feedbackText": "Your sentence expresses the requested meaning."
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000002",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "normalize-jlpt_n5-en",
+      "operation": "normalize",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000003",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "normalize-jlpt_n5-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000003"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "note": "I know the desu pattern."
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000003",
+        "execution_id": "71000000-0000-4000-8000-000000000003",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "suggestedKnownSkillClaims": [
+            {
+              "skillCode": "synthetic_copula",
+              "confidence": 0.8
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000003",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "recommend-jlpt_n5-en",
+      "operation": "recommend",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000004",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "recommend-jlpt_n5-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000004"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000004",
+        "execution_id": "71000000-0000-4000-8000-000000000004",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "recommendedTrackSlug": "synthetic-track",
+          "recommendedUnitSlug": "synthetic-unit",
+          "nextLessonSlug": "synthetic-lesson",
+          "targetSkillCodes": [
+            "synthetic_copula"
+          ],
+          "difficultyBand": "STANDARD",
+          "allowedQuestionTypes": [
+            "FREE_RESPONSE"
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000004",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "generate-jlpt_n5-id",
+      "operation": "generate",
+      "use_case": "PRACTICE_GENERATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000005",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "generate-jlpt_n5-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000005"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "questionCount": 5,
+          "difficultyBand": "STANDARD",
+          "questionMix": {
+            "WEAK": 0.6,
+            "REINFORCEMENT": 0.3,
+            "STRETCH": 0.1
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000005",
+        "execution_id": "71000000-0000-4000-8000-000000000005",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "questions": [
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SHORT_FREE_RESPONSE",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "blankInputMode": "ROMAJI_TO_KANA",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "acceptedTextAnswers": [
+                  "は"
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SLOT_FILL",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "optionLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "options": [
+                  {
+                    "id": "o0",
+                    "label": "は"
+                  },
+                  {
+                    "id": "o1",
+                    "label": "を"
+                  },
+                  {
+                    "id": "o2",
+                    "label": "で"
+                  },
+                  {
+                    "id": "o3",
+                    "label": "に"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "correctOptionId": "o0"
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "ID",
+                "answerLanguage": "JA",
+                "direction": "ID_TO_JA",
+                "sourceSentence": "Saya seorang pelajar.",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "わたしは"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "がくせいです"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "ID",
+                "direction": "JA_TO_ID",
+                "sourceSentence": "わたしはがくせいです。",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "Saya"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "seorang pelajar."
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "FREE_RESPONSE",
+              "gradingStrategy": "AI",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "ID",
+                "answerLanguage": "JA",
+                "sourceSentence": "Saya seorang pelajar.",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "referenceAnswer": "わたしはがくせいです。"
+              }
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000005",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "evaluate-jlpt_n5-id",
+      "operation": "evaluate",
+      "use_case": "ANSWER_EVALUATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000006",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "evaluate-jlpt_n5-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000006"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "question": {
+            "skillCode": "synthetic_copula",
+            "questionType": "FREE_RESPONSE",
+            "promptLanguage": "ID",
+            "answerLanguage": "JA",
+            "sourceSentence": "Saya seorang pelajar.",
+            "referenceAnswer": "わたしはがくせいです。"
+          },
+          "userAnswer": {
+            "rawInputRomaji": "watashi wa gakusei desu",
+            "normalizedKana": "わたしはがくせいです。",
+            "normalizedKanji": "私は学生です。"
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000006",
+        "execution_id": "71000000-0000-4000-8000-000000000006",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "isCorrect": true,
+          "numericScore": 100,
+          "feedbackText": "Kalimatmu menyampaikan makna yang diminta."
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000006",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "normalize-jlpt_n5-id",
+      "operation": "normalize",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000007",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "normalize-jlpt_n5-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000007"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "note": "Saya mengenal pola desu."
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000007",
+        "execution_id": "71000000-0000-4000-8000-000000000007",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "suggestedKnownSkillClaims": [
+            {
+              "skillCode": "synthetic_copula",
+              "confidence": 0.8
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000007",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "recommend-jlpt_n5-id",
+      "operation": "recommend",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000008",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "recommend-jlpt_n5-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000008"
+          },
+          "context": {
+            "targetLevel": "JLPT_N5",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000008",
+        "execution_id": "71000000-0000-4000-8000-000000000008",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "recommendedTrackSlug": "synthetic-track",
+          "recommendedUnitSlug": "synthetic-unit",
+          "nextLessonSlug": "synthetic-lesson",
+          "targetSkillCodes": [
+            "synthetic_copula"
+          ],
+          "difficultyBand": "STANDARD",
+          "allowedQuestionTypes": [
+            "FREE_RESPONSE"
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000008",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "generate-jlpt_n4-en",
+      "operation": "generate",
+      "use_case": "PRACTICE_GENERATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000009",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "generate-jlpt_n4-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000009"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "questionCount": 5,
+          "difficultyBand": "STANDARD",
+          "questionMix": {
+            "WEAK": 0.6,
+            "REINFORCEMENT": 0.3,
+            "STRETCH": 0.1
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000009",
+        "execution_id": "71000000-0000-4000-8000-000000000009",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "questions": [
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SHORT_FREE_RESPONSE",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "blankInputMode": "ROMAJI_TO_KANA",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "acceptedTextAnswers": [
+                  "は"
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SLOT_FILL",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "optionLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "options": [
+                  {
+                    "id": "o0",
+                    "label": "は"
+                  },
+                  {
+                    "id": "o1",
+                    "label": "を"
+                  },
+                  {
+                    "id": "o2",
+                    "label": "で"
+                  },
+                  {
+                    "id": "o3",
+                    "label": "に"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "correctOptionId": "o0"
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "EN",
+                "answerLanguage": "JA",
+                "direction": "EN_TO_JA",
+                "sourceSentence": "I am a student.",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "わたしは"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "がくせいです"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "EN",
+                "direction": "JA_TO_EN",
+                "sourceSentence": "わたしはがくせいです。",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "I am"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "a student."
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "FREE_RESPONSE",
+              "gradingStrategy": "AI",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "EN",
+                "answerLanguage": "JA",
+                "sourceSentence": "I am a student.",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "referenceAnswer": "わたしはがくせいです。"
+              }
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000009",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "evaluate-jlpt_n4-en",
+      "operation": "evaluate",
+      "use_case": "ANSWER_EVALUATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000010",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "evaluate-jlpt_n4-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000010"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "question": {
+            "skillCode": "synthetic_copula",
+            "questionType": "FREE_RESPONSE",
+            "promptLanguage": "EN",
+            "answerLanguage": "JA",
+            "sourceSentence": "I am a student.",
+            "referenceAnswer": "わたしはがくせいです。"
+          },
+          "userAnswer": {
+            "rawInputRomaji": "watashi wa gakusei desu",
+            "normalizedKana": "わたしはがくせいです。",
+            "normalizedKanji": "私は学生です。"
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000010",
+        "execution_id": "71000000-0000-4000-8000-000000000010",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "isCorrect": true,
+          "numericScore": 100,
+          "feedbackText": "Your sentence expresses the requested meaning."
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000010",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "normalize-jlpt_n4-en",
+      "operation": "normalize",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000011",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "normalize-jlpt_n4-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000011"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "note": "I know the desu pattern."
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000011",
+        "execution_id": "71000000-0000-4000-8000-000000000011",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "suggestedKnownSkillClaims": [
+            {
+              "skillCode": "synthetic_copula",
+              "confidence": 0.8
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000011",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "recommend-jlpt_n4-en",
+      "operation": "recommend",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000012",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "recommend-jlpt_n4-en",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "en",
+            "feedbackLocale": "en",
+            "translationLocale": "en"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000012"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000012",
+        "execution_id": "71000000-0000-4000-8000-000000000012",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "recommendedTrackSlug": "synthetic-track",
+          "recommendedUnitSlug": "synthetic-unit",
+          "nextLessonSlug": "synthetic-lesson",
+          "targetSkillCodes": [
+            "synthetic_copula"
+          ],
+          "difficultyBand": "STANDARD",
+          "allowedQuestionTypes": [
+            "FREE_RESPONSE"
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000012",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "generate-jlpt_n4-id",
+      "operation": "generate",
+      "use_case": "PRACTICE_GENERATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000013",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "generate-jlpt_n4-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000013"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "questionCount": 5,
+          "difficultyBand": "STANDARD",
+          "questionMix": {
+            "WEAK": 0.6,
+            "REINFORCEMENT": 0.3,
+            "STRETCH": 0.1
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000013",
+        "execution_id": "71000000-0000-4000-8000-000000000013",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "questions": [
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SHORT_FREE_RESPONSE",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "blankInputMode": "ROMAJI_TO_KANA",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "acceptedTextAnswers": [
+                  "は"
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "SLOT_FILL",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "optionLanguage": "JA",
+                "slotCount": 1,
+                "sentenceTemplate": "わたし___がくせいです。",
+                "options": [
+                  {
+                    "id": "o0",
+                    "label": "は"
+                  },
+                  {
+                    "id": "o1",
+                    "label": "を"
+                  },
+                  {
+                    "id": "o2",
+                    "label": "で"
+                  },
+                  {
+                    "id": "o3",
+                    "label": "に"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "correctOptionId": "o0"
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "ID",
+                "answerLanguage": "JA",
+                "direction": "ID_TO_JA",
+                "sourceSentence": "Saya seorang pelajar.",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "わたしは"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "がくせいです"
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "ARRANGE_TOKEN",
+              "gradingStrategy": "DETERMINISTIC",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "JA",
+                "answerLanguage": "ID",
+                "direction": "JA_TO_ID",
+                "sourceSentence": "わたしはがくせいです。",
+                "arrangeTokens": [
+                  {
+                    "id": "t1",
+                    "label": "Saya"
+                  },
+                  {
+                    "id": "t2",
+                    "label": "seorang pelajar."
+                  }
+                ]
+              },
+              "expectedAnswer": {
+                "acceptedTokenOrders": [
+                  [
+                    "t1",
+                    "t2"
+                  ]
+                ]
+              }
+            },
+            {
+              "skillCode": "synthetic_copula",
+              "difficultyBand": "STANDARD",
+              "questionType": "FREE_RESPONSE",
+              "gradingStrategy": "AI",
+              "promptPayload": {
+                "schemaVersion": 1,
+                "promptLanguage": "ID",
+                "answerLanguage": "JA",
+                "sourceSentence": "Saya seorang pelajar.",
+                "inputMethod": {
+                  "acceptsRomaji": true,
+                  "transformsTo": "KANA"
+                }
+              },
+              "expectedAnswer": {
+                "referenceAnswer": "わたしはがくせいです。"
+              }
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000013",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "evaluate-jlpt_n4-id",
+      "operation": "evaluate",
+      "use_case": "ANSWER_EVALUATION",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000014",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "evaluate-jlpt_n4-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000014"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "question": {
+            "skillCode": "synthetic_copula",
+            "questionType": "FREE_RESPONSE",
+            "promptLanguage": "ID",
+            "answerLanguage": "JA",
+            "sourceSentence": "Saya seorang pelajar.",
+            "referenceAnswer": "わたしはがくせいです。"
+          },
+          "userAnswer": {
+            "rawInputRomaji": "watashi wa gakusei desu",
+            "normalizedKana": "わたしはがくせいです。",
+            "normalizedKanji": "私は学生です。"
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000014",
+        "execution_id": "71000000-0000-4000-8000-000000000014",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "isCorrect": true,
+          "numericScore": 100,
+          "feedbackText": "Kalimatmu menyampaikan makna yang diminta."
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000014",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "normalize-jlpt_n4-id",
+      "operation": "normalize",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000015",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "normalize-jlpt_n4-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000015"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          },
+          "note": "Saya mengenal pola desu."
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000015",
+        "execution_id": "71000000-0000-4000-8000-000000000015",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "suggestedKnownSkillClaims": [
+            {
+              "skillCode": "synthetic_copula",
+              "confidence": 0.8
+            }
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000015",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "recommend-jlpt_n4-id",
+      "operation": "recommend",
+      "use_case": "ONBOARDING",
+      "request": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000016",
+        "mode": "SINGLE_STAGE",
+        "corpus_version": "synthetic-contract-v1",
+        "timeout_ms": 30000,
+        "deadline_at": "2026-11-23T12:00:30Z",
+        "experiment": {
+          "experiment_id": "contract-only",
+          "case_id": "recommend-jlpt_n4-id",
+          "repetition": 1
+        },
+        "payload": {
+          "language": {
+            "instructionLocale": "id",
+            "feedbackLocale": "id",
+            "translationLocale": "id"
+          },
+          "metadata": {
+            "requestId": "70000000-0000-4000-8000-000000000016"
+          },
+          "context": {
+            "targetLevel": "JLPT_N4",
+            "currentLevel": "BEGINNER",
+            "currentUnitSlug": "synthetic-unit",
+            "catalog": [
+              {
+                "skillCode": "synthetic_copula",
+                "title": "Synthetic copula",
+                "lessonSlug": "synthetic-lesson",
+                "unitSlug": "synthetic-unit",
+                "trackSlug": "synthetic-track"
+              }
+            ],
+            "weakSkillCodes": [
+              "synthetic_copula"
+            ],
+            "masteredSkillCodes": [],
+            "recentMistakes": [
+              {
+                "skillCode": "synthetic_copula",
+                "summary": "Kesalahan sintetis."
+              }
+            ],
+            "lessonUnderstanding": [
+              {
+                "lessonSlug": "synthetic-lesson",
+                "level": 1
+              }
+            ],
+            "allowedQuestionTypes": [
+              "SHORT_FREE_RESPONSE",
+              "SLOT_FILL",
+              "ARRANGE_TOKEN",
+              "FREE_RESPONSE"
+            ]
+          }
+        }
+      },
+      "response": {
+        "schema_version": "1",
+        "request_id": "70000000-0000-4000-8000-000000000016",
+        "execution_id": "71000000-0000-4000-8000-000000000016",
+        "mode": "SINGLE_STAGE",
+        "data": {
+          "recommendedTrackSlug": "synthetic-track",
+          "recommendedUnitSlug": "synthetic-unit",
+          "nextLessonSlug": "synthetic-lesson",
+          "targetSkillCodes": [
+            "synthetic_copula"
+          ],
+          "difficultyBand": "STANDARD",
+          "allowedQuestionTypes": [
+            "FREE_RESPONSE"
+          ]
+        },
+        "meta": {
+          "trace_id": "72000000-0000-4000-8000-000000000016",
+          "corpus_version": "synthetic-contract-v1",
+          "path": "SINGLE_STAGE",
+          "sources": [
+            {
+              "source_id": "synthetic-lesson",
+              "chunk_id": "synthetic-chunk"
+            }
+          ],
+          "duration_ms": 12,
+          "usage": {
+            "input_tokens": 100,
+            "cached_input_tokens": 20,
+            "output_tokens": 50,
+            "total_tokens": 150
+          },
+          "cost": {
+            "currency": "USD",
+            "inference_total_usd": null,
+            "query_embedding_usd": null,
+            "rerank_usd": 0,
+            "total_online_usd": null,
+            "known_subtotal_usd": 0,
+            "status": "UNKNOWN"
+          },
+          "counters": {
+            "retrieval_stage_count": 1,
+            "rewrite_call_count": 0,
+            "rerank_call_count": 0,
+            "provider_retry_count": 0,
+            "schema_retry_count": 0,
+            "model_call_count": 2
+          }
+        }
+      }
+    }
+  ]
+}

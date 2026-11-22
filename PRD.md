@@ -1,12 +1,14 @@
 # Product Requirements Document — KotobaHub RAG
 
-Versi 0.4 · 22 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; amendemen DOC-INF-02 mengutamakan API per pemakaian, dengan verifikasi endpoint nyata tetap terbuka. Pemilik produk/penelitian: peneliti KotobaHub. Runtime service belum diimplementasikan; spike terisolasi tersedia.
+Versi 0.5 · 23 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; kontrak v1/fixture terverifikasi pada [CON-01](docs/contracts/CON-01.md). Amendemen DOC-INF-02 mengutamakan API per pemakaian, dengan verifikasi endpoint nyata tetap terbuka. Pemilik produk/penelitian: peneliti KotobaHub. Runtime service belum diimplementasikan; spike terisolasi tersedia.
 
 ## 1. Masalah dan tujuan
 
 KotobaHub saat ini menggunakan provider OpenAI untuk menghasilkan latihan, menilai jawaban bebas, dan membantu personalisasi. Context bundle sudah terstruktur, tetapi belum ada semantic retrieval, routing adaptif, atau instrumen perbandingan RAG. Diperlukan service yang menghasilkan keluaran sesuai kontrak aplikasi sambil merekam seluruh perlakuan dan biaya untuk eksperimen yang dapat diulang.
 
 Stack model mengikuti konfigurasi KotobaHub saat ini: `OPENAI_GENERATION_MODEL=gpt-5.6-terra` untuk generasi soal, evaluasi jawaban bebas, dan rekomendasi materi; `OPENAI_NORMALIZATION_MODEL=gpt-5.6-luna` untuk normalisasi note onboarding. Pemetaan model dan parameter per operasi harus sama pada ketiga mode eksperimen, dengan rincian pada [ARCHITECTURE.md](ARCHITECTURE.md).
+
+Audit CON-01 membedakan method AI rekomendasi yang tersedia dari consumer rekomendasi aplikasi yang masih deterministik. Operasi rekomendasi RAG adalah saran penelitian; integrasi tidak mengganti policy domain aplikasi secara otomatis. [OpenAPI dan fixture v1](contracts/v1/openapi.json) menetapkan language/mode/corpus eksplisit, korelasi request/execution, deadline total serta metadata di luar data domain strict. Kontrak tersebut belum merupakan endpoint runtime.
 
 Tujuan utama adalah membandingkan `SINGLE_STAGE` dengan `ADAPTIVE` pada kualitas retrieval, kualitas keluaran, personalisasi, ketepatan routing, serta efisiensi operasional. `LLM_ONLY` menjadi pembanding tambahan untuk memisahkan manfaat retrieval secara umum dari manfaat mekanisme adaptif. Keberhasilan penelitian berarti instrumen dan analisisnya valid; adaptive tidak diwajibkan selalu menang.
 
