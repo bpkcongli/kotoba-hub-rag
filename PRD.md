@@ -1,6 +1,6 @@
 # Product Requirements Document — KotobaHub RAG
 
-Versi 0.1 · 21 November 2026 · Status: rancangan awal berbasis draf TA dan source aplikasi. Pemilik produk/penelitian: peneliti KotobaHub. Implementasi belum dimulai.
+Versi 0.2 · 22 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; revisi penempatan inferensi eksternal karena keterbatasan hardware. Pemilik produk/penelitian: peneliti KotobaHub. Implementasi belum dimulai.
 
 ## 1. Masalah dan tujuan
 
@@ -31,7 +31,9 @@ KotobaHub memiliki autentikasi, profil, policy rekomendasi, sesi latihan, gradin
 - Onboarding: normalisasi note menjadi kandidat klaim skill, lalu rekomendasi materi sebagai saran yang tetap melewati policy aplikasi.
 - Tiga mode melalui kontrak eksternal yang sama; mode dapat dipilih secara eksplisit oleh backend/harness yang terautentikasi.
 - Pilot offline, eksperimen utama, penilaian manusia oleh peneliti, dan evaluator LLM yang dikalibrasi.
-- Service lokal/container tunggal dengan Qdrant dan proses inferensi BGE internal; monitoring minimum dan pengujian kegagalan.
+- Service TypeScript dan Qdrant dengan embedding/reranker melalui inference provider atau server inferensi terpisah; monitoring minimum dan pengujian kegagalan. Model tidak wajib diinstal pada laptop maupun instance cloud aplikasi. Self-hosted lokal adalah opsi jika hardware memadai.
+
+Model tetap `BAAI/bge-m3` (dense+sparse) dan `BAAI/bge-reranker-v2-m3`. Hugging Face menjadi kandidat penyedia, bukan jaminan bahwa kedua model dan semua keluaran tersedia pada API serverless. `DEC-01`/`INF-01` memilih provider/endpoint embedding dan reranker secara terpisah setelah audit kemampuan, reproducibility dan biaya; managed dedicated endpoint/custom handler dapat dipertimbangkan bila API standar tidak cukup. Python diperlukan hanya jika membuat handler/service inferensi sendiri atau tooling Python yang ditugaskan; aplikasi dapat memanggil provider langsung dari adapter TypeScript. Batas dan sumber verifikasi ada pada [arsitektur](ARCHITECTURE.md#penempatan-dan-kontrak-inferensi).
 
 ### Di luar cakupan awal
 
@@ -64,13 +66,13 @@ KotobaHub memiliki autentikasi, profil, policy rekomendasi, sesi latihan, gradin
 
 | ID | Kebutuhan | Bukti penerimaan |
 | --- | --- | --- |
-| NFR-01 | Reproducibility | Manifest mengunci commit, dataset/corpus/prompt/schema/model revisions, parameter, paket, runtime, hardware, cache policy, dan harga bertanggal. |
+| NFR-01 | Reproducibility | Manifest mengunci commit, dataset/corpus/prompt/schema/model revisions, parameter, paket, runtime, provider/endpoint/deployment revision per operasi, region dan cache policy serta harga bertanggal. Hardware/precision remote yang tidak diekspos dicatat `unknown` dengan batas observasi; revision model tetap harus dapat dipin/diverifikasi sebelum freeze. |
 | NFR-02 | Operasi terbatas | Semua cabang memiliki terminal outcome dan deadline total; retry SDK dan aplikasi tidak berlipat tanpa dicatat. |
 | NFR-03 | Observability | Request sukses maupun gagal memiliki trace lengkap; durasi diukur dengan monotonic clock dan UTC timestamp untuk audit. |
-| NFR-04 | Keamanan | Auth server-to-server, batas body/query/batch, allowlist input/corpus, redaction, injection tests; Qdrant/BGE tidak diekspos ke browser. |
+| NFR-04 | Keamanan | Auth server-to-server, batas body/query/batch, allowlist input/corpus/endpoint, redaction, injection tests; Qdrant dan kredensial inferensi tidak diekspos ke browser. Egress provider melalui TLS; hanya query dan chunk yang diperlukan dikirim setelah pemeriksaan kebijakan retensi/region provider, tanpa profil learner lengkap. |
 | NFR-05 | Isolasi | Profil/progres dibawa per request; snapshot tidak memuat PII atau profil learner yang dapat terambil lintas pengguna. |
 | NFR-06 | Maintainability | Policy routing dan retrieval dapat diuji tanpa HTTP/LLM; provider/storage berada di belakang port. |
-| NFR-07 | Performa terukur | Laporkan latency p50/p95, token, biaya, dan memory/compute BGE. SLO numerik ditetapkan dari pilot, bukan diada-adakan pada planning. |
+| NFR-07 | Performa terukur | Laporkan latency end-to-end p50/p95 termasuk network/queue/cold start, token, biaya embedding/rerank/generasi dan hosting yang relevan. Memory/compute BGE dilaporkan jika tersedia; ketidaktersediaan metrik remote tidak diganti nol. SLO numerik ditetapkan dari pilot. |
 | NFR-08 | Kompatibilitas | Contract fixtures lulus di service dan validator KotobaHub; versi schema dan aturan locale eksplisit. |
 
 Target acceptance instrument adalah kelengkapan metadata wajib pada 100% eksekusi yang ditutup. Runtime boleh gagal; harness harus merekam kegagalan atau rekonsiliasi crash sebagai terminal record sebelum analisis. Target schema success/latency/biaya produk ditetapkan pada pilot dan dibekukan sebelum main run.
@@ -94,7 +96,7 @@ Onboarding adalah satu kelompok use case meskipun aplikasi mempunyai dua operasi
 
 Setiap kasus memiliki source/ground truth, graded relevance atau relevant document IDs, rubric, allowed skill catalog, level, difficulty, expected route dan alasan, serta expected outcome untuk kasus ekstrem. Label routing dan jawaban referensi hanya untuk evaluator; tidak diberikan kepada router/generator. Materi evaluasi/answer key tidak diindeks sebagai corpus; rubric pembelajaran resmi boleh diindeks dengan provenance terpisah.
 
-Bekukan model/parameter generasi dan normalisasi per operasi, prompt template/schema, snapshot, chunking, embedding, retrieval dasar, hardware, cache, retry, dan evaluator sebelum main run. Prompt utama sama; perbedaan input context merupakan perlakuan yang dicatat. Model atau prompt rewrite adalah komponen adaptive tersendiri dan semua token/biayanya diikutkan. Nonaktifkan response/query cache untuk eksperimen utama; kebijakan provider cache dan warmup dicatat.
+Bekukan model/parameter generasi dan normalisasi per operasi, prompt template/schema, snapshot, chunking, embedding, retrieval dasar, lingkungan dan provider/endpoint per operasi, cache, retry, dan evaluator sebelum main run. Embedding dokumen dan query memakai konfigurasi kompatibel; kedua mode RAG memakai endpoint embedding dan initial retrieval yang sama. Reranker deep path dipin tersendiri. Jangan memakai auto-routing/failover provider yang dapat mengubah backend tanpa jejak; endpoint tanpa revision yang dapat dipertanggungjawabkan belum memenuhi freeze. Perubahan provider atau konfigurasi embedding memerlukan pemeriksaan kompatibilitas index/reindex, serta versi/cohort baru setelah freeze. Prompt utama sama; perbedaan input context merupakan perlakuan yang dicatat. Model atau prompt rewrite adalah komponen adaptive tersendiri dan semua token/biayanya diikutkan. Nonaktifkan response/query cache untuk eksperimen utama; kebijakan provider cache, warmup dan scale-to-zero dicatat. Variasi network/shared load remote menjadi keterbatasan pengukuran, bukan bukti performa model saja.
 
 ## 7. Metrik dan definisi
 
@@ -114,7 +116,7 @@ Definisi evaluasi yang harus dibakukan pada `EVAL-01`:
 - Faithfulness pada baseline tanpa retrieval mengacu pada context bundle yang benar-benar diberikan dan diberi label provenance berbeda; jangan mengarang retrieval citations. Judge yang tidak bisa menilai kegagalan menghasilkan missing reason, bukan skor kualitas palsu.
 - Error rate: request tanpa keluaran domain valid / semua request terjadwal yang ditutup. Retry rate: request dengan percobaan tambahan / semua request; tampilkan juga distribusi retry count. Schema success setelah attempt final berbeda dari domain-valid success.
 - Escalation success: eskalasi dengan evidence memadai **dan** output domain valid / seluruh eskalasi karena evidence awal tidak memadai. Laporkan numerator/denominator dan alasan; kualitas semantik pascaeskalasi dianalisis terpisah.
-- Biaya provider memakai usage aktual dan price snapshot; token tidak diketahui tetap `null`. Biaya judge, indexing, BGE/compute, dan inference generasi dilaporkan terpisah agar tidak dianggap gratis atau dijumlahkan dua kali.
+- Biaya provider memakai usage/billing aktual dan price snapshot; token/biaya tidak diketahui tetap `null`. Biaya query embedding, online rerank, generasi/rewrite/repair/retry masuk total request dan dirinci per tujuan. Indexing dokumen, judge, dan hosting idle/startup dilaporkan terpisah dengan aturan alokasi yang dibekukan agar tidak dianggap gratis atau dijumlahkan dua kali; warmup berbayar masuk biaya operasional run.
 
 Analisis utama merangkum pengulangan per kasus sebelum perbandingan berpasangan, sehingga lima pengulangan bukan lima sampel independen. Ikuti draf TA subbab 3.8: pemeriksaan distribusi selisih, paired t-test atau Wilcoxon, α=0,05, Holm untuk perbandingan multipel, CI serta effect size yang sesuai. Analisis tiga mode dapat memakai repeated-measures ANOVA/Friedman dengan asumsi yang diperiksa. Bootstrap dilakukan pada unit kasus. Missing outcomes, aturan penanganan failure, outcome primer, dan operational cost ceiling dipraregistrasikan setelah pilot, sebelum main run.
 
@@ -123,13 +125,15 @@ Analisis utama merangkum pengulangan per kasus sebelum perbandingan berpasangan,
 | Isu | Penanganan/tugas |
 | --- | --- |
 | Konfigurasi model per operasi berbeda antar mode eksperimen | `CON-01`/`BASE-01`: gunakan `gpt-5.6-terra` untuk operasi generasi dan `gpt-5.6-luna` untuk normalisasi secara konsisten; data baseline lama tetap perlu diaudit sebelum dijadikan pembanding terkendali. |
-| BGE berat pada CPU atau VRAM terbatas | `INF-01`: spike latency/RAM/VRAM, batch dan precision; jangan mengganti model sepihak. |
+| Hardware lokal/instance aplikasi tidak cukup untuk BGE | `DEC-01`/`INF-01`: utamakan provider/endpoint remote; model dapat berjalan di server berbeda. Uji JA/EN/ID, dense+sparse, rerank, limit, latency dan biaya; jangan mengganti model sepihak. |
+| Provider hanya mengeluarkan dense, revision tidak dapat dipin, atau model tidak tersedia | `INF-01`: capability gate sebelum indexing/pilot; evaluasi dedicated endpoint/custom handler. Keberadaan model di Hub bukan bukti API kompatibel. Tidak ada penggantian sparse dengan BM25 atau model lain tanpa revisi desain. |
+| Rate limit, cold start, outage atau perubahan backend remote | `INF-02`/`EXP-02`: deadline/retry terbatas, error/unknown costs tercatat, provider tetap per run dan cache/warmup/region dibekukan; tanpa fallback diam-diam ke lokal/provider lain. |
 | Corpus aplikasi belum cukup untuk grounding | `DATA-01`: audit narasi, rubric, bahasa, eligibility, dan lisensi; metadata katalog saja bukan corpus semantik yang memadai. |
 | Threshold route overfit | `ADP-01`/`EXP-01`: gunakan pilot saja, pisahkan main set, catat versi policy. |
 | Judge bias atau ICC tidak memadai | `EVAL-02`: kalibrasi dengan pilot atau manual sesuai draf; jangan menyesuaikan evaluator dari skor main set. |
 | Tiga mode mendapat budget/validator berbeda | `EXP-02`: pemeriksaan manifest, context cap, prompt/schema, client timeout, dan retry policy sebelum freeze. |
 
-Keputusan pilot yang belum ditetapkan: top-k/pool, threshold routing, chunk token/overlap, batch/precision BGE, hardware, batas token/deadline/biaya, outcome primer dan minimum effect yang dianggap bermakna, jenis ICC serta kebijakan missing outcomes. Semua memiliki owner/tugas pada breakdown; bukan isi register tech debt.
+Keputusan yang belum ditetapkan: provider dan jenis endpoint per operasi, bukti pinning revision, region/retensi, toolchain handler jika diperlukan, lalu pada pilot top-k/pool, threshold routing, chunk token/overlap, batch/precision BGE yang dapat dikendalikan, hardware/deployment yang teramati, batas token/deadline/biaya, outcome primer dan minimum effect yang dianggap bermakna, jenis ICC serta kebijakan missing outcomes. Semua memiliki owner/tugas pada breakdown; bukan isi register tech debt.
 
 ## 9. Kriteria selesai
 

@@ -22,7 +22,7 @@ Gunakan subagent ketika pekerjaan independen atau review terpisah memberi manfaa
 
 | Role | Scope | Ownership yang lazim |
 | --- | --- | --- |
-| `backend-coder` | API, ingestion, retrieval, router, context, provider, internal BGE API dan deployment | Modul runtime/adapter yang ditugaskan; tidak otomatis mengedit schema lintas repo |
+| `backend-coder` | API, ingestion, retrieval, router, context, provider, adapter remote BGE dan handler Python opsional serta deployment | Modul runtime/adapter yang ditugaskan; tidak otomatis mengedit schema lintas repo |
 | `research-evaluator` | Protokol, dataset, rubric/ground truth, metric spec, harness analysis dan laporan | Dataset/manifest/evaluation scripts yang ditugaskan; tidak mengubah generator untuk memperbaiki skor |
 | `sdet` | Unit/contract/integration/failure tests dan evidence verifikasi | Berkas test/fixture terpisah; perubahan production code dikoordinasikan dengan writer |
 | `code-reviewer` | Review read-only atas perubahan konkret | Tidak mengedit file; melaporkan severity, lokasi, evidence dan dampak |
@@ -42,7 +42,7 @@ Reviewer Jepang adalah alat bantu. Peneliti tetap validator final; role ini tida
 | `kotoba-rag-experiments` | Dataset, metric, run/reproducibility, judge dan analisis | 24/120 cases, 5 repetition, no leakage, paired analysis dan costs |
 | `kotoba-rag-verification` | Meaningful test dan review perubahan RAG | Terminasi, failure accounting, contract tests, evidence serta read-only review |
 | `typescript-pro` | Implementasi/test/review backend atau tooling TypeScript | Strict types, runtime validation, async/deadline dan adapter; adaptasi MIT dari Jeffallan/claude-skills |
-| `python-pro` | Implementasi/test/review inferensi BGE atau tooling Python yang ditugaskan | Type hints, model lifecycle, bounded concurrency dan pytest; adaptasi MIT dari Jeffallan/claude-skills |
+| `python-pro` | Implementasi/test/review handler BGE opsional, service inferensi terpisah atau tooling Python yang ditugaskan | Type hints, lifecycle bila handler dimiliki proyek, bounded concurrency dan pytest; adaptasi MIT dari Jeffallan/claude-skills |
 
 Skill dapat dipanggil eksplisit dengan `$nama-skill` atau dipilih otomatis sesuai deskripsi setelah terpasang. Jangan memaksa semua skill masuk setiap task. Skill tidak mengubah izin filesystem, akses provider, atau otorisasi tindakan eksternal.
 
@@ -54,12 +54,16 @@ Source paket ada di `agent-tooling/.codex/agents` dan `agent-tooling/.agents/ski
 
 Perluasan `TOOLS-LANG-01` menambahkan dua skill bahasa sehingga paket memuat tujuh skill dan lima role. Dua skill ini diadaptasi dari commit GitHub yang dipin; masing-masing menyertakan `PROVENANCE.md` dan `LICENSE`. Bukti INIT-02 tetap historis untuk lima skill awal; pemasangan tambahan, validasi dan batas discovery dicatat terpisah pada [bukti TOOLS-LANG-01](agent-tooling/TOOLS-LANG-01-verification.json). Role memuat instruksi pemilihan skill, bukan field konfigurasi assignment baru.
 
+Revisi `DOC-INF-01` menyelaraskan role backend dan lima skill terkait dengan inferensi remote/Python opsional. Bukti instalasi sebelumnya tetap snapshot historis; hash di dalamnya bukan hash revisi dokumentasi terbaru. Pemeriksaan kesamaan source/aktif dan installer diulang setelah sinkronisasi perubahan terarah; mulai sesi baru untuk memuat ulang instruksi role yang direvisi.
+
 Jangan mengubah permission, menghapus mount, atau menimpa konfigurasi lain untuk memaksa pemasangan. Installer menolak berkas berbeda yang sudah ada; merge terarah dilakukan sebagai task tersendiri setelah file tersebut diperiksa.
 
 Format subagent/skills merujuk [official OpenAI subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) dan [build skills](https://learn.chatgpt.com/docs/build-skills). Reviewer diminta read-only melalui instruksi; ini tidak memberikan sandbox terpisah dari parent session. Role mewarisi model/effort parent; tidak dipin ke model yang mungkin tidak tersedia.
 
 ## Invariant penelitian dan domain
 
+- Inferensi embedding/reranker direncanakan remote lewat provider atau server terpisah karena keterbatasan hardware. Model tetap BGE-M3 dense+sparse dan BGE Reranker v2 M3; audit kemampuan/revision pada INF-01, bukan menganggap model Hub otomatis tersedia via API. Python handler dan weights/GPU lokal bersifat opsional; orkestrasi tetap TypeScript. Jangan menjalankan provisioning/call berbayar tanpa scope/budget task.
+- Pin provider aktual/endpoint/model revision dan konfigurasi per operasi sebelum freeze. Kedua mode RAG memakai embedding awal sama dan index/query kompatibel; tidak ada auto-routing atau fallback provider/lokal tersembunyi. Unknown hardware/precision/billing remote dicatat eksplisit; identitas model/revision belum terverifikasi menghalangi freeze. Biaya query embedding/rerank serta retry masuk total request; document indexing/judge dan alokasi hosting dipisahkan tanpa double-count.
 - Tiga mode: LLM_ONLY sebagai tambahan, SINGLE_STAGE baseline utama, ADAPTIVE metode yang diuji. Jangan menghapus baseline atau menukar mode karena kegagalan.
 - Initial hybrid retrieval, generator, main prompt/schema, context cap, corpus, model parameters dan validator sama untuk kedua mode RAG. Perbedaan stage/rewrite/reranker adalah perlakuan yang eksplisit.
 - Raw similarity/fusion/rerank score bukan retrieval quality dan bukan probabilitas. Threshold dipilih dengan pilot, tidak dengan main set.
@@ -71,7 +75,7 @@ Format subagent/skills merujuk [official OpenAI subagents](https://learn.chatgpt
 
 ## Verifikasi dan kualitas
 
-Pilih test yang membuktikan invariant yang berubah. Gunakan mock provider berbayar pada CI, Qdrant sementara untuk integration tests dan smoke BGE nyata yang opt-in. Hindari tests yang hanya mengecek teks implementasi atau mengunci angka performa nondeterministik. Perintah lint/typecheck/test baru menjadi wajib ketika toolchain di BOOT-01 benar-benar tersedia dan README telah diperbarui.
+Pilih test yang membuktikan invariant yang berubah. Gunakan mock OpenAI dan remote embedding/rerank pada CI, Qdrant sementara untuk integration tests dan smoke endpoint BGE nyata yang opt-in dengan budget; tidak memerlukan GPU lokal. Uji malformed/dense-only output, rate limit/timeout, score mapping dan biaya unknown. Readiness tidak melakukan inferensi berbayar per probe. Hindari tests yang hanya mengecek teks implementasi atau mengunci angka performa nondeterministik. Perintah lint/typecheck/test baru menjadi wajib ketika toolchain di BOOT-01 benar-benar tersedia dan README telah diperbarui.
 
 Review melaporkan defect konkret dengan path/line dan dampak; bedakan temuan pasti dari pertanyaan. Jika tak ada temuan, nyatakan cakupan dan keterbatasan verifikasi. Catat tech debt hanya untuk kompromi nyata, memakai [TECH_DEBT](TECH_DEBT.md); jangan mengisi register dengan backlog atau dugaan saat inisialisasi.
 

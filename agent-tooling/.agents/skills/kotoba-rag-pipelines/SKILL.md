@@ -15,4 +15,6 @@ Fast path uses adequate initial evidence. Deep path can rewrite once, perform a 
 
 Budget prompt/input/profile/evidence/output tokens with a margin and preserve meaningful Japanese units. Record retrieved, selected and dropped IDs with reasons; citations may only refer to selected sources. All modes use equivalent schema/domain validation. Escalation and provider retry have distinct counters. Enforce total deadline, bounded attempts and cancellation across all calls; coordinate SDK/client retries so they do not multiply invisibly.
 
+Use the same pinned remote query-embedding configuration for both RAG modes and a separately pinned reranker endpoint for deep path. Keep dense+sparse capability and document/query compatibility; provider outage, dense-only output or invalid rerank results must be explicit failures. No silent provider auto-routing, local fallback or model substitution. Include remote calls, network time and all attempts in deadlines/traces.
+
 Verify initial-stage parity, route boundary cases, empty/conflicting evidence, unchanged hard filters, dedup/budget behavior, final evidence gate, and terminal outcomes at stage/retry/deadline limits. Return mode-specific traces and accounting for rewrite/rerank/repair/retry costs. Do not run paid comparisons merely to validate control flow.

@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.1 · 21 November 2026 · Status: desain yang akan diimplementasikan. Diagram, endpoint, struktur, dan konfigurasi di sini belum menjadi runtime yang tersedia.
+Versi 0.2 · 22 November 2026 · Status: desain yang akan diimplementasikan; penempatan inferensi direvisi agar mendukung provider/endpoint eksternal karena keterbatasan hardware. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime yang tersedia.
 
 ## 1. Dasar keputusan
 
@@ -10,7 +10,8 @@ Urutan acuan adalah kebutuhan penelitian pada [PRD](PRD.md) dan draf TA, kontrak
 | --- | --- | --- |
 | Baseline draf | TypeScript mengorkestrasi mode, BGE-M3 untuk embedding, Qdrant untuk retrieval, BGE Reranker untuk deep path | Mengikuti subbab 3.7.7; bukan migrasi penuh ke Python hanya karena course memakai Python. |
 | Usulan `DEC-01` | REST memakai Fastify; dependency injection via constructor/composition root | Cocok untuk service TypeScript terpisah dan pengujian policy tanpa framework. |
-| Usulan `DEC-01` | Python internal inference memakai FlagEmbedding dan transport FastAPI | API inferensi BGE tetap kecil; tidak menduplikasi router dan policy generasi pada dua bahasa. |
+| Arah deployment `DOC-INF-01`; seleksi di `DEC-01`/`INF-01` | Embedding dan reranker dipanggil lewat HTTP ke inference provider atau server terpisah; Hugging Face menjadi kandidat | Tidak mewajibkan GPU/weights di laptop atau instance aplikasi. Endpoint embedding dan reranker dapat berbeda. |
+| Opsi bersyarat `DEC-01` | Python FlagEmbedding sebagai custom handler/service remote bila API provider belum memenuhi kontrak; FastAPI hanya jika perlu transport sendiri | Python tidak wajib ada pada deployment aplikasi. Self-hosted lokal tetap opsi; routing dan policy generasi berada di TypeScript. |
 | Konfigurasi KotobaHub saat ini | OpenAI Responses API menggunakan `gpt-5.6-terra` untuk generasi dan `gpt-5.6-luna` untuk normalisasi | Gunakan model yang sama per operasi pada ketiga mode eksperimen; verifikasi akses dan structured output pada pilot. |
 | Dipilih untuk MVP | Manifest + JSONL lokal untuk artefak/trace eksperimen; backup ke storage terkontrol | Menghindari database telemetry tambahan sebelum kebutuhan query terbukti. |
 | Ditunda | LangChain/LangGraph, LangSmith, Redis, queue, GraphRAG | Pipeline eksplisit sudah cukup untuk dua tahap dan memudahkan audit; course menjadi checklist, bukan stack wajib. |
@@ -24,7 +25,25 @@ OPENAI_NORMALIZATION_MODEL=gpt-5.6-luna
 
 Pasangan model ini menggantikan kandidat model generatif pada draf TA. Draf TA asli tetap menjadi referensi historis dan perlu diselaraskan pada revisi laporan. Model dan parameter per operasi dibekukan sebelum eksperimen utama.
 
-`DEC-01` merekam keputusan berikut konsekuensi setup dua runtime, alternatif TypeScript-only inference, dan hasil spike. Perubahan stack yang menyimpang dari TA harus disertai revisi dokumentasi sebelum implementasi terkait.
+`DEC-01` merekam pemilihan provider/endpoint, toolchain TypeScript dan kebutuhan Python bersyarat, batas deployment, serta hasil audit/spike awal. `INF-01` membuktikan kemampuan endpoint sebelum indexing/pilot. Identitas model mengikuti TA; penempatan remote adalah penyesuaian engineering. Draf TA asli tetap historis; uraian lingkungan deployment dan batas pengukuran harus diselaraskan pada revisi laporan sebelum eksperimen.
+
+### Penempatan dan kontrak inferensi
+
+Inference provider adalah layanan eksekusi model, berbeda dari repository model di Hugging Face Hub. Hugging Face Inference Providers menawarkan akses model melalui penyedia; Inference Endpoints adalah opsi deployment dedicated dengan konfigurasi deployment tersendiri. Ketersediaan `bge-m3`/reranker dan dukungan sparse tidak diasumsikan hanya dari nama model. API feature extraction umum mendokumentasikan array embedding; itu bukan bukti keluaran sparse BGE-M3. Audit sumber resmi dan smoke endpoint aktual diperlukan.
+
+| Komponen | Lokasi/kontrak yang direncanakan |
+| --- | --- |
+| Orkestrator TypeScript | Laptop/server aplikasi tanpa kewajiban memasang weights BGE; adapter HTTP mengimplementasikan `EmbeddingPort` dan `RerankerPort`. |
+| Embedding | Endpoint remote terpilih; wajib mengembalikan dense vector dan sparse token indices/weights BGE-M3 untuk dokumen maupun query dengan konfigurasi kompatibel. |
+| Reranker | Endpoint remote terpilih, boleh terpisah dari embedding; model `BAAI/bge-reranker-v2-m3`, skor dipetakan kembali ke ID kandidat, urutan dan normalisasi skor terdokumentasi. |
+| Handler Python opsional | Custom handler/container terkelola atau service di mesin inferensi terpisah jika provider standar belum cukup. Tidak harus berjalan bersama aplikasi; lokal hanya jika hardware layak. |
+| Qdrant | Tetap layanan vector store yang diakses adapter; tidak mengambil alih eksekusi model BGE. |
+
+Capability gate `INF-01` menguji JA/EN/ID, finite outputs/dimensi/cardinality, sparse token mapping, max length/truncation, normalization, limit batch/concurrency, rerank score semantics dan revision model/tokenizer. Provider gagal gate bila hanya dense atau revision model tidak dapat dipin/diverifikasi. Evaluasi dedicated endpoint dengan custom handler/container bila perlu; jangan diam-diam mengganti sparse dengan BM25, model lain, atau menonaktifkan reranker. Backend remote tidak diwajibkan memakai Python bila kontrak sudah dipenuhi provider.
+
+Konfigurasi dipisahkan per operasi: provider aktual, model/revision yang diminta dan terverifikasi, endpoint/deployment revision, region, auth secret reference, API schema version, timeout, limit dan pricing unit. Contoh nama konseptual: `EMBEDDING_PROVIDER`/`EMBEDDING_ENDPOINT` dan `RERANKER_PROVIDER`/`RERANKER_ENDPOINT`; env aktual baru dibuat pada BOOT/INF. Jangan commit token atau URL bertoken. Tidak ada pemilihan provider otomatis atau fallback lokal saat error; kegagalan dependency harus eksplisit. Pemilihan layanan berbayar/provisioning menunggu task dan budget yang diotorisasi.
+
+Simpan bukti deployment/config/attestation untuk revision yang tidak dikembalikan API; nama model saja tidak cukup. Hardware/precision yang tidak diekspos provider ditulis `unknown`, beserta batas observasi. Ketidakpastian identitas model/revision harus diselesaikan sebelum freeze; fingerprint smoke tidak menggantikan pinning revision. Region, shared-load/queue, network, cold-start dan scale-to-zero dicatat sebagai faktor lingkungan. Endpoint dan konfigurasi embedding yang sama dipakai kedua mode RAG; setelah freeze pergantian provider/deployment menjadi cohort baru, dengan validasi ulang index/reindex bila konfigurasi embedding berubah.
 
 ## 2. Konteks dan batas ownership
 
@@ -34,9 +53,10 @@ flowchart LR
     Hub <--> MySQL[(MySQL domain)]
     Hub -->|REST: context + operation + mode| RAG[TypeScript RAG service]
     Export[Approved corpus snapshot] --> Ingest[Ingestion CLI]
-    Ingest --> BGE[Internal Python BGE inference]
+    Ingest -->|HTTP: dense + sparse| Embed[Remote BGE-M3 endpoint]
     Ingest --> Q[(Qdrant)]
-    RAG --> BGE
+    RAG -->|HTTP: query dense + sparse| Embed
+    RAG -->|HTTP: deep path| Ranker[Remote BGE reranker endpoint]
     RAG --> Q
     RAG --> LLM[OpenAI Responses API]
     RAG --> Trace[JSONL traces and manifests]
@@ -48,6 +68,8 @@ flowchart LR
 KotobaHub tetap source of truth untuk katalog, lesson eligibility, profile, progress, recommendation policy, sesi, dan jawaban. Service tidak menerima instruksi bebas untuk menjalankan SQL atau mengubah state learner. Context bundle dan dokumen retrieval adalah data tidak tepercaya di dalam prompt, bukan perintah sistem.
 
 Data pembelajaran statis masuk lewat ekspor/snapshot yang disetujui, bukan query database live ketika eksperimen berjalan. Profil dan progres sintetis disertakan pada request dan tidak dimasukkan ke shared vector index. Dengan demikian kedua mode retrieval berbagi corpus sama dan tidak membocorkan learner context lintas request.
+
+Node inferensi menggambarkan boundary endpoint, bukan kewajiban satu provider/mesin. Handler Python dapat berada di balik endpoint bila dibutuhkan. Kirim hanya query/chunk yang diperlukan lewat TLS server-to-server; jangan mengirim seluruh context bundle/profil ke layanan embedding/rerank. Audit retensi, region dan payload egress pada pemilihan provider; kredensial hanya di server.
 
 ## 3. Temuan integrasi pada source saat ini
 
@@ -92,10 +114,10 @@ kotoba-hub-rag/
       context/                    # budgeting, citations, dedup
       observability/              # trace, usage, pricing
     shared/                       # errors, config, clock, ports
-    adapters/                     # Qdrant, BGE HTTP, OpenAI, file sink
-  inference/
-    pyproject.toml                # Python BGE/FastAPI, locked later
-    src/                          # embed/rerank handlers, no routing
+    adapters/                     # Qdrant, remote embedding/rerank HTTP, OpenAI, file sink
+  inference/                      # opsional: hanya bila perlu handler/service sendiri
+    pyproject.toml                # Python/FlagEmbedding; FastAPI jika transport sendiri
+    src/                          # remote custom handlers atau service; no routing
     tests/
   scripts/
     ingestion/                    # snapshot -> chunks -> index
@@ -121,7 +143,7 @@ Semua operasi server-to-server terautentikasi. Prefix `/v1`, correlation ID, bat
 | `POST /v1/onboarding/normalize` | `SUMMARIZE_PLACEMENT` | `PlacementSummary` |
 | `POST /v1/onboarding/recommend` | `GENERATE_STUDY_RECOMMENDATION` | `StudyRecommendation` |
 | `GET /health/live` | Liveness proses | Tidak memanggil model berbayar |
-| `GET /health/ready` | Readiness dependency | Periksa model/index siap, tanpa generasi |
+| `GET /health/ready` | Readiness dependency | Status konfigurasi/index dan health/capability remote terakhir; tanpa inferensi berbayar pada setiap probe |
 
 Envelope request konseptual:
 
@@ -154,11 +176,11 @@ Mode dari caller harus tervalidasi dan diizinkan; tidak disimpulkan dari bahasa 
 2. Tolak sumber tanpa provenance atau di luar N5/N4. Jangan crawl ulang Bunpro/Tatoeba/dll pada setiap run; gunakan hasil kurasi yang berlisensi dan snapshot tetap.
 3. Normalisasi Unicode dengan kebijakan berversi; simpan teks Jepang asli. Jangan meratakan kanji/kana/romaji menjadi satu bentuk sehingga evidence atau grading kehilangan makna. Sanitasi HTML tanpa menghapus struktur contoh.
 4. Chunk berdasarkan unit pedagogis: pola/arti/usage/contoh/terjemahan yang terkait. Parent ID dan offsets dipertahankan. Batas token dan overlap dipilih pada pilot; duplikasi overlap tidak boleh menggelembungkan ground truth.
-5. Python inference menghasilkan dense vector serta sparse lexical weights BGE-M3 untuk dokumen dan query memakai tokenizer/revision/precision yang sama. Dense output saja dari library generik tidak memenuhi kebutuhan hybrid ini.
+5. Adapter memanggil endpoint embedding terpilih untuk dense vector serta sparse lexical weights BGE-M3. Dokumen dan query memakai model/tokenizer/revision, normalization/truncation dan precision yang kompatibel; unknown remote dicatat. Dense output saja dari API generik tidak memenuhi hybrid ini. Gunakan konfigurasi endpoint yang dibekukan pada manifest index; perubahan embedding memerlukan validasi kompatibilitas/reindex, bukan mencampur vector dari backend berbeda.
 6. Upsert point ID deterministik dari corpus/source/chunk/content checksum. Qdrant memakai named dense+sparse vectors, metric dense yang dikunci, serta payload indexes untuk filter. BGE-M3 default dense 1.024 dimensi; validasi dimensi actual saat bootstrap.
 7. Buat collection per index revision; validasi count/checksum/filter/search smoke sebelum dipromosikan. Pin physical collection di manifest main run; perubahan alias tidak boleh mengubah corpus di tengah eksperimen. Penghapusan materi memerlukan reindex/snapshot baru atau explicit delete.
 
-Metadata chunk minimum: `chunk_id`, `parent_id`, `corpus_version`, `source_id`, `source_url`, `license`, `content_checksum`, `track_slug`, `unit_slug`, `lesson_slug`, `skill_codes`, `jlpt_level`, `locale`, `content_type`, `published`, `chunk_index`, `token_count`, `embedding_revision`, `chunking_version`. Dokumen bilingual harus mempunyai metadata jelas; contoh Jepang boleh berada dalam penjelasan EN/ID.
+Metadata chunk minimum: `chunk_id`, `parent_id`, `corpus_version`, `source_id`, `source_url`, `license`, `content_checksum`, `track_slug`, `unit_slug`, `lesson_slug`, `skill_codes`, `jlpt_level`, `locale`, `content_type`, `published`, `chunk_index`, `token_count`, `embedding_revision`, `embedding_config_id`, `chunking_version`. `embedding_config_id` merujuk manifest provider/endpoint/model/processing tanpa secret. Dokumen bilingual harus mempunyai metadata jelas; contoh Jepang boleh berada dalam penjelasan EN/ID.
 
 Ground truth retrieval mengacu pada stable source/parent dan chunk mapping versi snapshot. Jika beberapa chunk overlap mendukung evidence sama, gunakan kebijakan dedup relevance yang dibekukan agar recall tidak naik semu. Simpan raw retrieval dan context terpakai sehingga dampak truncation dapat diaudit.
 
@@ -230,10 +252,10 @@ Hasil tidak langsung mengubah profil, mastery, atau sesi. KotobaHub tetap mengot
 
 - Deadline dimulai pada adapter KotobaHub menerima permintaan; simpan juga durasi internal service dan network overhead. Setiap call/stage memakai remaining budget; deadline memicu cancellation bila didukung.
 - Orkestrator service menjadi owner retry provider. SDK auto-retry dinonaktifkan atau diikutkan eksplisit; client aplikasi tidak mengulang eksekusi AI tanpa identitas/counter yang tercatat.
-- Error transient dapat di-retry dengan backoff berjitter dan batas attempt. Input/auth/out-of-scope tidak di-retry. Schema repair bila dipakai mengikuti budget retry bersama dan dicatat sebagai call tersendiri pada semua mode.
+- Error transient embedding/rerank/generasi (termasuk rate limit/cold start/outage remote) dapat di-retry dengan backoff berjitter, `Retry-After` bila tersedia, batas attempt dan remaining deadline. Input/auth/out-of-scope tidak di-retry. Timeout HTTP tidak membuktikan server remote berhenti atau tidak menagih; simpan provider request ID/outcome unknown dan rekonsiliasi biaya. Schema repair bila dipakai mengikuti budget retry bersama dan dicatat sebagai call tersendiri pada semua mode.
 - Retrieval escalation adalah perlakuan adaptive, bukan provider retry. Gunakan `retrieval_stage_count`, `rewrite_call_count`, `rerank_call_count`, `provider_retry_count`, `schema_retry_count`, dan total attempt terpisah.
 - Tidak ada fallback mode dalam eksperimen utama. Fallback ke baseline untuk produk kelak harus flag eksplisit, trace `requested_mode`/`executed_mode`, dan cohort terpisah.
-- Main run menonaktifkan response/query cache; model weights boleh warm. Dokumentasikan provider cached tokens, shared warmup, concurrency dan load. Jangan menghangatkan adaptive saja.
+- Main run menonaktifkan response/query cache; model weights boleh warm di endpoint remote. Dokumentasikan provider cache/scale-to-zero, shared warmup, concurrency dan load. Jangan menghangatkan adaptive saja; catat warmup reranker yang hanya dipakai deep path. Jangan memakai auto-routing/failover provider yang mengubah backend; jika identitas/revision drift tidak dapat dicegah/dideteksi, endpoint belum layak freeze.
 - Idempotency operasional mengembalikan hasil eksekusi sama untuk key sama; lima repetition memiliki request IDs berbeda. Resume harness memakai terminal record/checkpoint sehingga tidak membuat duplikat observasi. Bila crash setelah provider call sebelum durable trace, catat outcome unknown beserta kemungkinan biaya tak diketahui; re-execution mendapat execution ID baru.
 
 ## 10. Telemetry dan penyimpanan eksperimen
@@ -243,24 +265,28 @@ Setiap run menghasilkan manifest immutable, event JSONL per execution (menghinda
 | Kelompok | Field minimum |
 | --- | --- |
 | Identitas | experiment/case/repetition/request/execution/trace IDs, operasi dan suboperasi, mode, commit |
-| Versi | dataset, corpus/index, chunking, embedding/reranker revision, main/rewrite/evaluator prompts, schemas, retrieval/router configs |
+| Versi | dataset, corpus/index, chunking, embedding/reranker model/tokenizer/revision, provider/endpoint/deployment/API/config IDs per operasi, main/rewrite/evaluator prompts, schemas, retrieval/router configs |
 | Routing | initial decision, final path, reason codes, features, thresholds, stage/rewrite/rerank counts |
 | Retrieval | query tersanitasi atau hash, filters, per-stage chunk/source IDs, raw scores + score type, rank, selected/dropped evidence |
-| Model calls | call purpose/provider/model/version/request ID, attempt index, timing, actual usage/cached tokens, price version, estimated cost |
+| Model calls | call purpose (document/query embedding, rerank, generation, rewrite, repair, judge), provider aktual/model/version/request ID, attempt index, timing end-to-end serta network/queue/compute jika tersedia, actual usage/cached tokens atau billable unit, price version, cost dan cost status |
 | Outcome | schema parse status per attempt/final, domain validation status, terminal success/failure, errors dengan kategori/cause |
-| Lingkungan | timestamp UTC, monotonic durations, hardware/runtime/dependency versions, model precision, seed bila didukung, concurrency/cache/warmup |
+| Lingkungan | timestamp UTC, monotonic durations, hardware/runtime/dependency versions yang teramati, model precision, region, deployment/scale-to-zero, seed bila didukung, concurrency/cache/warmup; data remote yang tidak tersedia `unknown`, bukan nol |
 
 Errors dibedakan: `INVALID_INPUT`, `AUTH_FAILED`, `UNSUPPORTED_LEVEL`, `SNAPSHOT_MISMATCH`, `RETRIEVAL_FAILED`, `INSUFFICIENT_EVIDENCE`, `INFERENCE_FAILED`, `PROVIDER_FAILED`, `TIMEOUT`, `SCHEMA_PARSE_FAILED`, `POST_VALIDATION_FAILED`, `TRACE_WRITE_FAILED`. Simpan request failure tunggal dan daftar error events; retry bisa menghasilkan banyak event untuk satu request gagal/sukses.
 
-`inference_total_cost` menjumlahkan call generasi, rewrite, repair, dan retry. Cached input dipisahkan dari non-cached input sesuai usage; jangan membebankan keduanya pada token sama. `null` berarti tidak diketahui, bukan nol. Usage terlapor SDK/provider direkonsiliasi dengan pricing snapshot bertanggal. Biaya indexing/BGE hosting dan evaluasi judge dilaporkan di kolom terpisah. Parent trace onboarding menjumlahkan suboperasi tanpa menggandakan data usage child.
+`inference_total_cost` tetap subtotal LLM generasi/rewrite/repair beserta retry-nya. Total online request menjumlahkan subtotal itu dengan `query_embedding_cost` dan `rerank_cost`, termasuk semua attempt; field subtotal tidak dijumlahkan lagi dengan detail call yang sama. Cached input dipisahkan dari non-cached input sesuai usage. `null` berarti tidak diketahui, bukan nol; total lengkap tetap `null` bila komponennya tidak diketahui, dengan known subtotal dan status estimasi dilaporkan terpisah. LLM_ONLY mempunyai applicability embedding/rerank `not_applicable`; fase tanpa rerank dicatat tidak ada call. Komponen yang terbukti tidak dipanggil berkontribusi biaya 0 pada total, berbeda dari call yang terjadi tetapi usage/billing-nya tidak diketahui.
+
+Billing remote dapat berbasis token, request, pasangan dokumen atau waktu instance; jangan mengarang token usage dari ukuran teks. Rekonsiliasi usage/billing dengan price snapshot bertanggal. Biaya indexing dokumen dan judge dipisah dari online request. Hosting dedicated yang sudah mencakup inference tidak ditambahkan dua kali sebagai tarif per-call; laporkan idle/startup/warmup dan aturan alokasi run yang dibekukan bila biaya tidak dapat diatribusikan langsung. Parent trace onboarding menjumlahkan suboperasi tanpa menggandakan usage child.
 
 Trace minimal tidak perlu chain-of-thought atau data pengguna asli. Catat reason codes dan evidence yang diperlukan audit, sanitasi note/jawaban, dan simpan akses artefak secara terbatas. LangSmith/OpenTelemetry dapat ditambahkan sebagai adapter, tetapi artefak lokal tetap sumber data eksperimen agar hasil tidak tergantung dashboard eksternal.
 
 ## 11. Test dan deployment minimum
 
-Unit tests menyasar ranking/filter policy, route boundary, dedup/token budget, terminasi, validation, biaya, dan counter. Integration tests menggunakan Qdrant sementara dan BGE fixture; model BGE aktual diuji pada smoke opt-in. Contract tests memakai fixture yang diparse validator aplikasi. Provider OpenAI dimock untuk CI; paid smoke/pilot/main run terpisah dan memerlukan konfigurasi nyata serta budget yang telah ditetapkan.
+Unit tests menyasar ranking/filter policy, route boundary, dedup/token budget, terminasi, validation, biaya, dan counter. Integration tests menggunakan Qdrant sementara dan fixture HTTP embedding/rerank. Uji dense-only/malformed outputs, score-to-ID mapping, 429, timeout, unavailable revision, unknown billing dan no provider fallback. Contract tests memakai fixture yang diparse validator aplikasi. Provider OpenAI dan inferensi remote dimock untuk CI; smoke endpoint BGE aktual opt-in, memerlukan konfigurasi nyata serta budget yang diotorisasi. Readiness memakai health/config/status yang aman atau hasil pemeriksaan tersimpan; jangan membuat call inferensi berbayar pada setiap health probe.
 
-Compose kelak memuat orchestrator, BGE inference, Qdrant, persistent volumes, dan health checks. API internal dapat diakses backend KotobaHub; Qdrant/BGE hanya jaringan internal. Pin image digest/dependency lock/revision model, batasi concurrency/body/batch, muat model sekali saat startup, dan jangan download model setiap request. Backup snapshot/index dan artefak; uji restore pada task operasional. Kubernetes dan autoscaling tidak menjadi syarat eksperimen.
+Compose aplikasi kelak memuat orchestrator, Qdrant, persistent volumes dan health checks, dengan konfigurasi HTTPS untuk embedding/reranker eksternal; tidak membutuhkan download weights atau GPU pada host aplikasi. Endpoint embedding dan reranker dapat memakai provider/instance terpisah. Dev default memakai fixtures/mocks sampai endpoint dipilih; integrasi nyata harus eksplisit. Model self-hosted hanya profile deployment opsional, pada mesin terpisah atau lokal jika layak. Untuk handler sendiri, pin image/dependency/model revision, muat weights sekali per worker dan ukur kapasitas di host inferensi.
+
+API RAG diakses backend KotobaHub; Qdrant tetap jaringan internal, provider melalui egress TLS allowlist dengan secret injection. Runbook memuat endpoint/auth, rate limit, readiness/cold start, failure/reconciliation dan backup/restore index/artefak. Minimum hardware app/Qdrant dibedakan dari kapasitas remote; jangan mensyaratkan kedua model di satu instance produksi. Kubernetes dan autoscaling bukan syarat eksperimen. Pemilihan provider pada desain ini tidak membuat atau membayar endpoint.
 
 ## 12. Pemetaan course dan sumber teknis
 
@@ -280,3 +306,10 @@ Referensi primer untuk implementasi, diperiksa 21 November 2026:
 - [Fastify validation dan serialization](https://fastify.dev/docs/latest/Reference/Validation-and-Serialization/): kontrak request/response schema pada API usulan.
 - [Official OpenAI documentation: subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) dan [skills](https://learn.chatgpt.com/docs/build-skills): format role lokal dan discovery skill; kemampuan aktual tetap mengikuti versi client/session.
 - [Course freeCodeCamp](https://www.freecodecamp.org/news/production-rag-with-langchain-vector-databases/) beserta transkrip lokal adalah referensi cakupan engineering. Detail pedagogis/angka penelitian mengikuti [draf TA](docs/Andrian_41522120004_TA_Draft.docx).
+
+Tambahan referensi penempatan remote, diperiksa 22 November 2026:
+
+- [Hugging Face Inference Providers](https://huggingface.co/docs/inference-providers/index): layanan akses model melalui penyedia; audit provider aktual/routing sebelum dipakai eksperimen.
+- [Feature Extraction API](https://huggingface.co/docs/inference-providers/tasks/feature-extraction): kontrak umum mengembalikan array embedding, sehingga dukungan sparse BGE-M3 tetap perlu dibuktikan pada endpoint aktual.
+- [Inference Endpoints configuration](https://huggingface.co/docs/inference-endpoints/guides/configuration): konfigurasi model commit revision, networking dan scaling untuk kandidat deployment dedicated.
+- [Custom Inference Handler](https://huggingface.co/docs/inference-endpoints/engines/toolkit): jalur custom preprocessing/postprocessing dan dependensi bila engine/API standar tidak memenuhi dense+sparse; bukan klaim handler BGE proyek sudah tersedia.

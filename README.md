@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status: perencanaan dan inisialisasi tooling, 21 November 2026. Runtime, endpoint, indeks, dan hasil eksperimen belum tersedia.
+Status: perencanaan dan inisialisasi tooling, diperbarui 22 November 2026. Runtime, endpoint, indeks, dan hasil eksperimen belum tersedia.
 
 Repository ini direncanakan menjadi layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -30,7 +30,8 @@ Perbandingan utama adalah `SINGLE_STAGE` vs `ADAPTIVE`. Baseline tanpa RAG tetap
 
 - Orkestrator REST: TypeScript dan Fastify, dengan modular monolith serta port/adapter.
 - Retrieval: Qdrant, embedding dense+sparse `BAAI/bge-m3`, dan deep-path reranker `BAAI/bge-reranker-v2-m3`.
-- Inferensi BGE: proses Python internal menggunakan FlagEmbedding; FastAPI diusulkan sebagai transport lokal.
+- Inferensi BGE: HTTP ke inference provider atau server inferensi terpisah; Hugging Face adalah kandidat. Embedding dan reranker dapat memakai endpoint berbeda. Weights/GPU tidak wajib tersedia pada laptop maupun instance cloud aplikasi.
+- Python/FlagEmbedding: opsi custom handler atau service inferensi remote jika API provider belum mencukupi; FastAPI hanya bila perlu transport sendiri. Self-hosted lokal tetap opsi sesuai hardware.
 - Generasi dan normalisasi: OpenAI Responses API menggunakan `gpt-5.6-terra` untuk generasi dan `gpt-5.6-luna` untuk normalisasi, mengikuti konfigurasi KotobaHub saat ini.
 - Data domain: MySQL milik KotobaHub tetap menjadi sumber resmi. Service menerima context bundle dan snapshot terkurasi, tanpa menulis tabel domain aplikasi.
 - Artefak eksperimen: manifest dan JSONL lokal yang berversi; observability memakai structured logs dan span. LangSmith bersifat opsional.
@@ -44,7 +45,9 @@ OPENAI_NORMALIZATION_MODEL=gpt-5.6-luna
 
 Konfigurasi model dan parameter per operasi akan diverifikasi dan dibekukan sebelum eksperimen utama.
 
-TypeScript, BGE, dan Qdrant mengikuti draf TA subbab 3.7.7. Fastify dan proses inferensi Python adalah usulan implementasi baru, dengan evaluasi kelayakan pada task `DEC-01`. Pemisahan Python memungkinkan pemakaian library model tanpa memindahkan orkestrasi penelitian ke Python. Referensi course digunakan sebagai checklist engineering, bukan kewajiban memakai LangChain, Chroma, Supabase, atau LangGraph.
+TypeScript, BGE, dan Qdrant mengikuti draf TA subbab 3.7.7. Revisi `DOC-INF-01` mengutamakan inferensi remote karena keterbatasan hardware. Fastify, pilihan provider/endpoint dan kebutuhan Python diputuskan pada `DEC-01`, lalu dibuktikan pada `INF-01`. Aplikasi dapat memanggil provider langsung dari TypeScript; handler Python tidak wajib dideploy bersama aplikasi. Orkestrasi penelitian tetap di TypeScript. Referensi course digunakan sebagai checklist engineering, bukan kewajiban memakai LangChain, Chroma, Supabase, atau LangGraph.
+
+Provider harus membuktikan keluaran **dense dan sparse BGE-M3**, serta reranking `BAAI/bge-reranker-v2-m3`; nama model di Hugging Face Hub tidak menjamin API serverless mendukung seluruh kebutuhan. Bila perlu, evaluasi dedicated endpoint/custom handler sebelum memilih layanan. Revision model/endpoint harus dapat dipin untuk eksperimen; jangan mengganti model, metode sparse, atau provider secara diam-diam. Latency termasuk network/cold start dan biaya query embedding/rerank masuk pengukuran request. Detail dan sumber resmi tersedia pada [penempatan dan kontrak inferensi](ARCHITECTURE.md#penempatan-dan-kontrak-inferensi). Provider belum dipilih, endpoint belum dibuat, dan tidak ada panggilan berbayar yang dijalankan melalui revisi dokumentasi ini.
 
 ## Tooling agent
 
@@ -69,7 +72,7 @@ Belum ada `package.json`, `pyproject.toml`, Compose, `.env.example`, atau perint
 
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
 2. Selesaikan keputusan stack dan kontrak (`DEC-01`, `CON-01`), termasuk pemetaan model per operasi, kesetaraan konfigurasi antar mode, dan audit retry pada KotobaHub.
-3. Bootstrap runtime serta jalankan spike BGE/Qdrant pada perangkat target.
+3. Bootstrap TypeScript, audit dan smoke endpoint embedding/reranker terpilih dengan budget eksplisit, serta siapkan Qdrant. Bootstrap handler Python hanya bila diperlukan; laptop/app server tidak wajib memuat model.
 4. Bangun ingestion, baseline, adaptive, integrasi, dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 Model weights dan dataset besar kelak disimpan di luar Git; commit manifest/checksum dan lockfile. Jangan commit kredensial, data pengguna asli, atau hasil eksperimen yang belum ditinjau. Eksperimen berbayar belum dijalankan pada tahap ini.
