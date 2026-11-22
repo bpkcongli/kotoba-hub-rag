@@ -1,6 +1,6 @@
 # Product Requirements Document — KotobaHub RAG
 
-Versi 0.6 · 23 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; kontrak v1/fixture terverifikasi pada [CON-01](docs/contracts/CON-01.md), protokol perencanaan pada [RES-01](docs/research/RES-01-protocol.md). Amendemen DOC-INF-02 mengutamakan API per pemakaian, dengan verifikasi endpoint nyata tetap terbuka. Pemilik produk/penelitian: peneliti KotobaHub. Runtime service belum diimplementasikan; protokol belum freeze dan eksperimen belum dijalankan.
+Versi 0.7 · 23 November 2026 · Status: rancangan berbasis draf TA dan source aplikasi; kontrak v1/fixture terverifikasi pada [CON-01](docs/contracts/CON-01.md), protokol perencanaan pada [RES-01](docs/research/RES-01-protocol.md). Amendemen DOC-INF-02 mengutamakan API per pemakaian, dengan verifikasi endpoint nyata tetap terbuka. Pemilik produk/penelitian: peneliti KotobaHub. [BOOT-01](docs/BOOT-01-bootstrap.md) menyediakan runtime health-only, config validation, port dan validator wire; operasi RAG belum diimplementasikan, protokol belum freeze dan eksperimen belum dijalankan.
 
 ## 1. Masalah dan tujuan
 

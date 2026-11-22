@@ -1,0 +1,51 @@
+{
+  "task": "BOOT-01",
+  "verified_at": "2026-11-22T19:23:33.541Z",
+  "image": {
+    "tag": "kotoba-hub-rag:boot-01",
+    "id": "sha256:54baa05b6735be16eaaa01e2b002cc33ff79c8953d8d0bf84b28cce8866cfe66",
+    "platform": "linux/amd64",
+    "base": "node:24.22.3-bookworm-slim@sha256:0e2646ab57e77b7a384a0cb59b6815b182c77e1f9c3ba36bd8435bd9c4e6680e",
+    "user": "node"
+  },
+  "isolation": {
+    "network": "none",
+    "read_only": true,
+    "host_ports": [],
+    "cpus": 2,
+    "memory_mib": 256
+  },
+  "probes": {
+    "live": 200,
+    "ready": 503,
+    "operation": 404,
+    "node": "v24.22.3",
+    "uid": 1000,
+    "port": "8080"
+  },
+  "docker_healthcheck_passed": true,
+  "sigterm_exit_code": 0,
+  "invalid_config": {
+    "exit_code": 1,
+    "stderr": "Konfigurasi tidak valid: PORT"
+  },
+  "sha256": {
+    "Dockerfile": "d90a4ae6312159003d277aaa9d76cd615af69a39613d333f69f7fd8e6d9ca042",
+    "package.json": "8030a368399fbd0d6a4f0af105a2e417b60c38fc2e10f1219f4ad129597e6a63",
+    "package-lock.json": "2a920cdf2d1597fe4ba597bf76d7abc8f9455aff91ca7b89368a3c38fe75a7a8",
+    "src/app.ts": "a881d7c7b17004bb0461d927ceaaa2f643fb94357ba2c5132ceb624a6dd8bca6",
+    "src/main.ts": "15a1a3645e03ba967be5a32183a1e03a1a5bddedef84546f36cf1cb5dddf6675",
+    "src/shared/config.ts": "56d55ea10957af6ce9e189b424eb48d015341bc0b22e371fbc403d0b954ddbac",
+    "src/shared/ports.ts": "ba05a96b308e0ec457086802ae07a2917719960d5b5b0c2363cfd9596df183b5",
+    "src/adapters/system-clock.ts": "1fb38d8cc98f6e2e3af40bd52dfe495a4ad1795cd33fd2d45a209906bc229098",
+    "src/contracts/validator.ts": "4bb02567720fcbbfd7123cdcbbe03b92fb68713833138fa5e40aaaecc2affa7d",
+    "src/contracts/v1.generated.ts": "d869c717b19365bb5cc81608794858370dafec4a08d94906908e659013765fe6",
+    "contracts/v1/domain.schema.json": "dd30836f920f73d62e65621569ec5162acef00a5d5fc03e5494c43b76dc64e6c",
+    "contracts/v1/contract.schema.json": "2152875519f305a92a60a72f6468e6d20d87a9c77590ba396eba4e34bc4803ee"
+  },
+  "limitations": [
+    "Health-only bootstrap; readiness sengaja 503.",
+    "Tanpa model/provider, Qdrant, pipeline, auth, idempotency atau paid call.",
+    "Bukan uji kapasitas corpus/produksi atau freeze eksperimen."
+  ]
+}

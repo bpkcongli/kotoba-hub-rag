@@ -1,0 +1,4 @@
+interface:
+  display_name: "Anti-slop Copy"
+  short_description: "Prosa jelas tanpa frasa AI generik atau klaim palsu"
+  default_prompt: "Gunakan $anti-slop-copy untuk memperjelas teks yang ditugaskan tanpa mengubah fakta atau suara penulis."

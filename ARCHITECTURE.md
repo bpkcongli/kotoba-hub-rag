@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.6 · 23 November 2026 · Status: desain yang akan diimplementasikan; stack/prioritas API pada [ADR-001](docs/ADR-001-stack-and-inference.md), kontrak/fixture pada [CON-01](docs/contracts/CON-01.md), protokol planning dan accounting pada [RES-01](docs/research/RES-01-protocol.md). Gate endpoint nyata tetap INF-01; protokol belum freeze. Diagram, endpoint, struktur, dan konfigurasi belum menjadi runtime service yang tersedia; spike terisolasi menjadi bukti kompatibilitas awal.
+Versi 0.7 · 23 November 2026 · Status: desain dengan fondasi runtime [BOOT-01](docs/BOOT-01-bootstrap.md); stack/prioritas API pada [ADR-001](docs/ADR-001-stack-and-inference.md), kontrak/fixture pada [CON-01](docs/contracts/CON-01.md), protokol planning dan accounting pada [RES-01](docs/research/RES-01-protocol.md). Health-only, config validation, port dan validator wire sudah tersedia. Diagram pipeline dan endpoint operasi masih rancangan; gate endpoint nyata tetap INF-01 dan protokol belum freeze.
 
 ## 1. Dasar keputusan
 
@@ -134,11 +134,13 @@ kotoba-hub-rag/
   artifacts/                      # generated runs, ignored by Git
 ```
 
-Struktur runtime belum dibuat. `spikes/dec-01/` hanya menyimpan fixture, runner, lock dan evidence keputusan awal; bukan modul production atau penyelesaian BOOT/STORE/INF. Jangan menambah layer yang hanya membungkus satu fungsi; arah dependensi yang wajib dijaga adalah domain/policy tidak mengimpor SDK HTTP, Qdrant, atau OpenAI. Port minimum: `EmbeddingPort`, `RetrieverPort`, `RerankerPort`, `GeneratorPort`, `TraceSink`, `Clock`; adapter dipilih di composition root.
+BOOT-01 sudah membuat `src/main.ts` sebagai entrypoint, `src/app.ts` sebagai composition root Fastify health-only, `src/shared/config.ts`, enam port pada `src/shared/ports.ts`, adapter `system-clock.ts`, tipe kontrak generated dan validator Ajv di `src/contracts/`, serta `tests/`. Struktur modul/pipeline di atas masih rencana; tidak dibuat folder kosong untuk backlog. Port adalah boundary awal yang dilengkapi capability/accounting saat task INF/OBS, tanpa implementasi provider palsu. `spikes/dec-01/` tetap fixture/evidence historis, terpisah dari root runtime. Domain/policy tidak boleh mengimpor SDK HTTP, Qdrant, atau OpenAI; adapter dipilih di composition root.
+
+Manifest/lock root mengambil versi exact ADR-001; Ajv 8.20.0 dan ajv-formats 3.0.1 mengikuti validator CON-01. TypeScript strict memakai `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, NodeNext dan native type stripping pada dev/test, lalu emit JavaScript untuk produksi. `.env.example` mencakup konfigurasi bootstrap saja; salah enum/tipe/rentang ditolak sebelum listen. Dockerfile menggunakan Node Debian 12 Linux amd64 melalui digest, build dengan npm 11.19.1 dan menjalankan runtime non-root. [Laporan dan bukti BOOT-01](docs/BOOT-01-bootstrap.md) mencatat checks, smoke terisolasi dan batasnya. Seleksi/konfigurasi provider final tetap INF-01/02, tanpa inferensi startup.
 
 ## 5. Kontrak REST v1
 
-Semua operasi server-to-server terautentikasi. Acuan bentuk wire adalah [OpenAPI](contracts/v1/openapi.json) dan [JSON Schema draft-07](contracts/v1/contract.schema.json); aturan semantik, error/retry dan adapter plan pada [CON-01](docs/contracts/CON-01.md) juga normatif. Kontrak tersedia, endpoint belum diimplementasikan. Body maksimal 1 MiB, JSON strict tanpa coercion/removal/default mutation.
+Semua operasi server-to-server dirancang terautentikasi. Acuan bentuk wire adalah [OpenAPI](contracts/v1/openapi.json) dan [JSON Schema draft-07](contracts/v1/contract.schema.json); aturan semantik, error/retry dan adapter plan pada [CON-01](docs/contracts/CON-01.md) juga normatif. BOOT-01 menyediakan validator schema tanpa coercion/removal/default mutation, ditambah policy ID/target level/sisa deadline yang dapat diuji tanpa provider. Endpoint operasi, auth, registry dan domain refinement belum diimplementasikan; body limit bootstrap tetap 1 MiB. Health tersedia tanpa inferensi, readiness sengaja 503 `not_ready` sampai dependency dan pipeline terhubung.
 
 | Endpoint kontrak | Operasi aplikasi | Data domain pada `data` |
 | --- | --- | --- |

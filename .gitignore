@@ -1,3 +1,9 @@
 # Hasil instalasi tooling pada root repository
 /.agents/
 /.codex/
+/node_modules/
+/dist/
+/artifacts/
+.env
+.env.*
+!.env.example

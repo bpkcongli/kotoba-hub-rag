@@ -1,0 +1,12 @@
+*
+!package.json
+!package-lock.json
+!.npmrc
+!tsconfig.json
+!tsconfig.build.json
+!src
+!src/**
+!contracts
+!contracts/v1
+!contracts/v1/domain.schema.json
+!contracts/v1/contract.schema.json

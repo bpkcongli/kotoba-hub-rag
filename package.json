@@ -1,0 +1,48 @@
+{
+  "name": "kotoba-hub-rag",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.19.1",
+  "engines": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "scripts": {
+    "contracts:generate": "node tools/boot-01/generate-types.mjs",
+    "contracts:check": "node tools/boot-01/generate-types.mjs --check",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src tests eslint.config.mjs tools/boot-01",
+    "format": "prettier --write .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs",
+    "format:check": "prettier --check .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs",
+    "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "check": "npm run contracts:check && npm run typecheck && npm run lint && npm run format:check && npm test && npm run build",
+    "start": "node --env-file-if-exists=.env dist/main.js",
+    "dev": "node --import tsx --env-file-if-exists=.env --watch src/main.ts"
+  },
+  "dependencies": {
+    "@qdrant/js-client-rest": "1.20.0",
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1",
+    "fastify": "5.12.8",
+    "openai": "7.62.0"
+  },
+  "overrides": {
+    "eslint-plugin-import": {
+      "eslint": "$eslint"
+    }
+  },
+  "devDependencies": {
+    "@eslint/compat": "2.1.1",
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.2",
+    "eslint": "10.15.0",
+    "eslint-plugin-import": "2.32.0",
+    "prettier": "3.10.1",
+    "tsc-alias": "1.9.10",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.73.0"
+  }
+}

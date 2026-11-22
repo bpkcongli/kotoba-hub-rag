@@ -18,6 +18,17 @@ Gunakan bersama skill domain yang relevan, bukan sebagai pengganti kontrak atau 
 
 `backend-coder` memakai skill ini untuk implementasi; `sdet` untuk test TypeScript; `code-reviewer` untuk review read-only; `research-evaluator` hanya ketika berkas harness/evaluator yang ditugaskan memakai TypeScript. Scope dan ownership assignment tetap berlaku.
 
+## Spasi dan pemisahan tanggung jawab
+
+Setiap kali menulis atau mengubah kode TypeScript, kelompokkan pernyataan yang menjalankan satu tanggung jawab dan pisahkan kelompok berikutnya dengan baris kosong. Terapkan pada implementasi, test dan tooling, termasuk skrip JavaScript pendukung yang ditugaskan.
+
+- Beri jarak antara konfigurasi, deklarasi tipe, helper dan alur utama bila tanggung jawabnya berbeda.
+- Di dalam fungsi, beri satu baris kosong saat berpindah dari persiapan atau validasi input ke transformasi, I/O atau operasi async, penyusunan hasil, atau cleanup. Pertahankan pernyataan yang erat terkait dalam satu kelompok; tidak perlu baris kosong setelah setiap statement.
+- Pada test, pisahkan setup/fixture, aksi yang diuji dan assertion. Kelompokkan assertion per perilaku, lalu pisahkan skenario atau cleanup yang berbeda.
+- Gunakan baris kosong untuk memperjelas alur sebelum menambah komentar atau memecah fungsi. Ikuti Prettier/config proyek; jangan mengubah nilai string, fixture atau perilaku hanya untuk mengatur jarak.
+
+Saat review read-only, nilai keterbacaan dalam scope yang ditugaskan tanpa melakukan autofix.
+
 ## Tipe dan batas data
 
 - Gunakan `strict` dan `strictNullChecks`; evaluasi `noUncheckedIndexedAccess` serta `exactOptionalPropertyTypes` pada bootstrap sesuai versi dan dependensi. Jangan mematikan pemeriksaan untuk menutupi defect.

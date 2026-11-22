@@ -20,6 +20,17 @@ Inferensi remote adalah arah deployment; provider dapat dipanggil langsung oleh 
 
 `backend-coder` memakai skill ini untuk handler/service inferensi atau adapter Python yang memang diperlukan; `sdet` untuk test Python; `code-reviewer` untuk review read-only; `research-evaluator` untuk script Python yang memang ditugaskan. Bahasa script ingestion/harness/evaluasi tetap mengikuti keputusan task, bukan otomatis Python karena skill ini tersedia.
 
+## Spasi dan pemisahan tanggung jawab
+
+Setiap kali menulis atau mengubah kode Python, kelompokkan pernyataan yang menjalankan satu tanggung jawab dan pisahkan kelompok berikutnya dengan baris kosong. Terapkan pada implementasi, test dan tooling, termasuk skrip singkat.
+
+- Pisahkan kelompok import standard library, dependency eksternal dan modul proyek sesuai konvensi Python. Beri jarak antara konfigurasi, helper dan alur utama; ikuti PEP 8 untuk jarak antar-definisi.
+- Di dalam fungsi, beri satu baris kosong saat berpindah dari persiapan atau validasi input ke pemrosesan, I/O, penyusunan hasil, atau cleanup. Pertahankan pernyataan yang erat terkait dalam satu kelompok; tidak perlu baris kosong setelah setiap statement.
+- Pada test, pisahkan setup/fixture, aksi yang diuji dan assertion. Kelompokkan assertion per perilaku, lalu pisahkan skenario atau cleanup yang berbeda.
+- Gunakan baris kosong untuk memperjelas alur sebelum menambah komentar atau memecah fungsi. Pertahankan indentasi dan formatter proyek; jangan mengubah nilai string, fixture atau perilaku hanya untuk mengatur jarak.
+
+Saat review read-only, nilai keterbacaan dalam scope yang ditugaskan tanpa melakukan autofix.
+
 ## Tipe, data dan resource
 
 - Beri type hints pada API publik dan boundary. Gunakan `Protocol` untuk dependency yang perlu disubstitusi, dataclass untuk value object bila sesuai, dan schema validator runtime untuk JSON/config eksternal. Type hints tidak menggantikan validasi.

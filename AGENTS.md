@@ -43,10 +43,13 @@ Reviewer Jepang adalah alat bantu. Peneliti tetap validator final; role ini tida
 | `kotoba-rag-verification` | Meaningful test dan review perubahan RAG | Terminasi, failure accounting, contract tests, evidence serta read-only review |
 | `typescript-pro` | Implementasi/test/review backend atau tooling TypeScript | Strict types, runtime validation, async/deadline dan adapter; adaptasi MIT dari Jeffallan/claude-skills |
 | `python-pro` | Implementasi/test/review handler BGE opsional, service inferensi terpisah atau tooling Python yang ditugaskan | Type hints, lifecycle bila handler dimiliki proyek, bounded concurrency dan pytest; adaptasi MIT dari Jeffallan/claude-skills |
+| `anti-slop-copy` | Menulis atau meninjau prosa yang ditugaskan: dokumentasi, laporan, PR, copy dan feedback EN/ID | Fakta dan suara penulis dipertahankan; adaptasi MIT skill `antislop-copywriting` dari miqdadbadjuber/anti-slop, tanpa core/UI/code upstream |
 
 Skill dapat dipanggil eksplisit dengan `$nama-skill` atau dipilih otomatis sesuai deskripsi setelah terpasang. Jangan memaksa semua skill masuk setiap task. Skill tidak mengubah izin filesystem, akses provider, atau otorisasi tindakan eksternal.
 
 Pemetaan skill bahasa: `backend-coder` memilih sesuai berkas implementasi; `sdet` sesuai bahasa test; `code-reviewer` memakai sebagai kriteria review read-only; `research-evaluator` memakai hanya untuk script harness/evaluasi dalam bahasa yang sudah dipilih task. `japanese-content-reviewer` tetap fokus pada konten Jepang. Agent utama dapat menyebut skill pada pesan penugasan, misalnya `backend-coder: gunakan $python-pro untuk INF-02, ownership inference/`. Skill bahasa melengkapi skill domain RAG dan mengikuti ADR-001; tidak memilih ulang stack atau mengubah bahasa script yang belum diputuskan.
+
+`python-pro` dan `typescript-pro` mengharuskan baris kosong antar-kelompok tanggung jawab, termasuk setup, aksi dan assertion pada test, mengikuti formatter proyek. Lima role memakai `anti-slop-copy` ketika menulis laporan atau prosa yang memang ditugaskan; evaluator untuk protokol/laporan penelitian, backend untuk dokumentasi/PR, SDET untuk laporan test, reviewer untuk temuan, dan reviewer Jepang untuk laporan serta review feedback EN/ID. Reviewer tetap read-only; perapian gaya tidak mengubah schema, kutipan, makna Jepang, rubric/label atau hasil penelitian.
 
 ## Lokasi dan aktivasi tooling
 
@@ -55,6 +58,8 @@ Source paket ada di `agent-tooling/.codex/agents` dan `agent-tooling/.agents/ski
 Perluasan `TOOLS-LANG-01` menambahkan dua skill bahasa sehingga paket memuat tujuh skill dan lima role. Dua skill ini diadaptasi dari commit GitHub yang dipin; masing-masing menyertakan `PROVENANCE.md` dan `LICENSE`. Bukti INIT-02 tetap historis untuk lima skill awal; pemasangan tambahan, validasi dan batas discovery dicatat terpisah pada [bukti TOOLS-LANG-01](agent-tooling/TOOLS-LANG-01-verification.json). Role memuat instruksi pemilihan skill, bukan field konfigurasi assignment baru.
 
 Revisi `DOC-INF-01` menyelaraskan role backend dan lima skill terkait dengan inferensi remote/Python opsional. Bukti instalasi sebelumnya tetap snapshot historis; hash di dalamnya bukan hash revisi dokumentasi terbaru. Pemeriksaan kesamaan source/aktif dan installer diulang setelah sinkronisasi perubahan terarah; mulai sesi baru untuk memuat ulang instruksi role yang direvisi.
+
+Pembaruan preferensi spasi dan pemasangan `anti-slop-copy` pada 23 November 2026 membawa paket menjadi delapan skill dan lima role. Skill copy memakai nama lokal yang diminta pengguna; sumber upstream bernama `antislop-copywriting` pada commit yang dicatat dalam [provenance](agent-tooling/.agents/skills/anti-slop-copy/PROVENANCE.md). Hanya skill copy yang diadaptasi; core, installer npm, plugin dan skill anti-slop lain tidak dipasang. Bukti historis INIT/TOOLS-LANG tidak ditulis ulang. Mulai sesi baru untuk memuat ulang instruksi subagent; keberadaan berkas bukan bukti discovery client.
 
 Jangan mengubah permission, menghapus mount, atau menimpa konfigurasi lain untuk memaksa pemasangan. Installer menolak berkas berbeda yang sudah ada; merge terarah dilakukan sebagai task tersendiri setelah file tersebut diperiksa.
 

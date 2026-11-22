@@ -1,0 +1,41 @@
+{
+  "task": "BOOT-01",
+  "verified_at_utc": "2026-11-22T19:24:04.719163+00:00",
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "install": {
+    "command": "npm ci --offline --ignore-scripts",
+    "exit_code": 0,
+    "packages_added": 151
+  },
+  "checks": {
+    "command": "npm run check",
+    "exit_code": 0,
+    "tests_passed": 9,
+    "tests_failed": 0,
+    "fixture_pairs": 16,
+    "modes_per_fixture": 3,
+    "stdout": "\n> kotoba-hub-rag@0.1.0 check\n> npm run contracts:check && npm run typecheck && npm run lint && npm run format:check && npm test && npm run build\n\n\n> kotoba-hub-rag@0.1.0 contracts:check\n> node tools/boot-01/generate-types.mjs --check\n\n\n> kotoba-hub-rag@0.1.0 typecheck\n> tsc --noEmit\n\n\n> kotoba-hub-rag@0.1.0 lint\n> eslint src tests\n\n\n> kotoba-hub-rag@0.1.0 format:check\n> prettier --check package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs\n\nChecking formatting...\nAll matched files use Prettier code style!\n\n> kotoba-hub-rag@0.1.0 test\n> node --experimental-strip-types --test tests/*.test.ts\n\n✔ composition root menerima clock; probes tidak memanggil jaringan/provider (200.86145ms)\n✔ default bootstrap lokal dan override valid diparse tanpa coercion longgar (1.586118ms)\n✔ config invalid ditolak, termasuk kosong, non-string, rentang dan enum (0.636145ms)\n✔ startup sungguhan gagal sebelum listen dengan pesan tersanitasi (169.517047ms)\n✔ 16 pasangan fixture CON-01 valid pada schema request/response ketiga mode (20.430144ms)\n✔ wire validation strict: locale, tipe, extra property, mode, bahasa grading (1.018492ms)\n✔ validator tidak memutasi input/default/remove dan menjaga teks Jepang (1.077312ms)\n✔ policy murni memeriksa ID, eligibility target dan deadline dari clock caller (0.382368ms)\n✔ metadata harus di luar domain; unknown usage/cost tidak diganti nol (1.028711ms)\nℹ tests 9\nℹ suites 0\nℹ pass 9\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 393.639836\n\n> kotoba-hub-rag@0.1.0 build\n> tsc -p tsconfig.build.json\n\n"
+  },
+  "sha256": {
+    "package.json": "8030a368399fbd0d6a4f0af105a2e417b60c38fc2e10f1219f4ad129597e6a63",
+    "package-lock.json": "2a920cdf2d1597fe4ba597bf76d7abc8f9455aff91ca7b89368a3c38fe75a7a8",
+    ".node-version": "584f19ccde29925286e32f566a2aa06c89efb4e2eb2bb2fc9ea5d56e2d190ac4",
+    ".npmrc": "be7906950cc4de765c6933ebada746d495050d9a6b4b61ddf0d261d0a8c747b1",
+    "tsconfig.json": "fbf9239d41bad2a622abede866bc218bec2263ad8e19a227dabb401446873fe8",
+    "tsconfig.build.json": "3890e5a3c4800cabe37248bd3239e202413785fde77a1b0dabbc58944a99b752",
+    "eslint.config.mjs": "0728aa40d96512f780906782e544e667d6c4a9214cebc244afb3afd8cc580e98",
+    "tests/app.test.ts": "a85724cc5bdc2538f6ac02f0ddc6f449b1277914f2b1219ab0fc188adb2e4036",
+    "tests/config.test.ts": "50fbb9cd292fee2790e3538a16d85075b76b151c3ae4534201189439e871bde9",
+    "tests/contracts.test.ts": "c6647055919ae2384b09be6142ff8016028fd86011e5bbf8a2a6e9f48c1f2af1",
+    "tools/boot-01/generate-types.mjs": "2e4c4dc7d19d9fc3e6b13a741a44f50336f72e7a08dc759e90d39d368d0e1d8f",
+    "tools/boot-01/smoke-image.mjs": "3046b4d3d478eeb34364ecd5336a30dfb6f51abd2bcbcd549aabe7fba719e24d"
+  },
+  "limitations": [
+    "Bootstrap health-only; tanpa paid provider atau database.",
+    "Subprocess startup test dijalankan dengan izin di luar sandbox setelah EPERM.",
+    "Review subagent melalui potongan kode parent, bukan filesystem/binary independen."
+  ]
+}
