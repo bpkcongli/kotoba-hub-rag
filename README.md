@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status: bootstrap runtime BOOT-01, tooling, kontrak v1 dan protokol penelitian v1 tersedia, diperbarui 23 November 2026. Runtime menyediakan health-only; endpoint operasi, provider, indeks, dan hasil eksperimen belum tersedia. Protokol belum freeze.
+Status 24 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, tooling, kontrak v1 dan protokol penelitian tersedia. Runtime HTTP tetap health-only; endpoint operasi, indeks dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -14,6 +14,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [CON-01](docs/contracts/CON-01.md) | Audit source aplikasi, kontrak v1, fixture compatibility, error/retry dan rencana adapter HTTP |
 | [RES-01](docs/research/RES-01-protocol.md) | Protokol penelitian, baseline TA 3.10.6, unit/failure/analysis/freeze dan matriks 22 requirement |
 | [BOOT-01](docs/BOOT-01-bootstrap.md) | Runtime health-only, konfigurasi, port, tipe/validator kontrak, pin image dan bukti verifikasi |
+| [INF-02](docs/inference/INF-02-adapter.md) | Adapter HTTP HF, capability lokal, batas klien, attempt metadata dan verifikasi offline/loopback |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -43,7 +44,7 @@ npm run check
 npm start
 ```
 
-`npm run check` memeriksa drift tipe kontrak, typecheck strict, lint, format, test dan build. `npm start` menjalankan `dist/main.js` hasil build, dengan `.env` opsional. Untuk pengembangan, `npm run dev` menjalankan source TypeScript melalui native type stripping dan watcher Node. Konfigurasi invalid membuat proses keluar dengan status 1 sebelum listen; pesan hanya memuat nama field. `.env` diabaikan Git dan dikecualikan dari build context.
+`npm run check` memeriksa drift tipe kontrak, typecheck strict, lint, format, test dan build. `npm start` menjalankan `dist/main.js` hasil build, dengan `.env` opsional. Untuk pengembangan, `npm run dev` menjalankan source TypeScript melalui tsx dan watcher Node. Konfigurasi invalid membuat proses keluar dengan status 1 sebelum listen; pesan hanya memuat nama field. `.env` diabaikan Git dan dikecualikan dari build context.
 
 Format runtime mengikuti `.prettierrc.json`. Jalankan `npm run format` untuk menerapkan format atau `npm run format:check` untuk memeriksanya; pemeriksaan ini juga masuk `npm run check`.
 
@@ -62,7 +63,7 @@ Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 
 | `LOG_LEVEL` | `info` | `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent` |
 | `SHUTDOWN_TIMEOUT_MS` | `10000` | Integer desimal 100–30000; batas shutdown SIGTERM/SIGINT |
 
-Konfigurasi hanya mencakup bootstrap; kredensial/model/endpoint inferensi ditambahkan saat adapter tersedia pada INF/BASE/API. Composition root belum membuat client provider. Tipe di `src/contracts/v1.generated.ts` dibangkitkan dari snapshot CON-01 dengan `npm run contracts:generate`; `contracts:check` menolak drift. Validator menerima `unknown` tanpa coercion/default/removal dan memeriksa schema, korelasi ID, target N5/N4 serta sisa deadline. Refinement domain dan admission lengkap tetap task UC/API.
+INF-02 menambahkan client HF opt-in melalui `HF_INFERENCE_ENABLED=true` dan secret `HF_TOKEN`. Startup tetap tidak memanggil provider. Provider/model/endpoint dipin pada `HF_IDENTITY`; override yang berbeda ditolak. Adapter yang sama menyediakan embedding dokumen/query dan reranker; orkestrator mode belum tersedia. Lihat [konfigurasi dan batas klien](docs/inference/INF-02-adapter.md). Tipe di `src/contracts/v1.generated.ts` dibangkitkan dari snapshot CON-01 dengan `npm run contracts:generate`; `contracts:check` menolak drift. Validator menerima `unknown` tanpa coercion/default/removal dan memeriksa schema, korelasi ID, target N5/N4 serta sisa deadline. Refinement domain dan admission lengkap tetap task UC/API.
 
 Build dan smoke image Linux amd64 lokal (Docker diperlukan):
 

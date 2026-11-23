@@ -1,5 +1,8 @@
 import Fastify, { LogController } from 'fastify';
 import type { FastifyInstance } from 'fastify';
+import type { HfConfig } from '@/adapters/hf-config';
+import { createHfInference } from '@/adapters/hf-inference';
+import type { HfInference } from '@/adapters/hf-inference';
 import { systemClock } from '@/adapters/system-clock';
 import { createContractValidators } from '@/contracts/validator';
 import type { ContractValidators } from '@/contracts/validator';
@@ -10,9 +13,14 @@ export interface Application {
   readonly server: FastifyInstance;
   readonly clock: Clock;
   readonly contracts: ContractValidators;
+  readonly inference: HfInference | null;
 }
 
-export function createApplication(config: AppConfig, clock: Clock = systemClock): Application {
+export function createApplication(
+  config: AppConfig,
+  clock: Clock = systemClock,
+  hfConfig: HfConfig | null = null,
+): Application {
   const contracts = createContractValidators();
   const server = Fastify({
     bodyLimit: 1048576,
@@ -20,7 +28,7 @@ export function createApplication(config: AppConfig, clock: Clock = systemClock)
       level: config.logLevel,
       redact: ['req.headers.authorization', 'req.headers.cookie'],
     },
-    // Request URLs, headers, and bodies may contain learner data; log only explicit bootstrap events.
+    // Request URLs, headers, and bodies may contain learner data; log only explicit sanitized events.
     logController: new LogController({ disableRequestLogging: true }),
     forceCloseConnections: true,
     ajv: {
@@ -32,10 +40,26 @@ export function createApplication(config: AppConfig, clock: Clock = systemClock)
     },
   });
 
+  const inference = hfConfig
+    ? createHfInference(hfConfig, {
+        clock,
+        onAttempt: (attempt) => {
+          server.log.info({ inferenceAttempt: attempt }, 'HF inference attempt');
+
+          return Promise.resolve();
+        },
+      })
+    : null;
+
+  server.addHook('onClose', () => {
+    inference?.close();
+    return Promise.resolve();
+  });
+
   server.get('/health/live', () => ({ status: 'live' }));
 
-  // Index, provider, and pipeline dependencies are not connected yet; report not ready.
+  // Capability is local evidence, not live provider health. Index and pipeline are still absent.
   server.get('/health/ready', (_request, reply) => reply.code(503).send({ status: 'not_ready' }));
 
-  return { server, clock, contracts };
+  return { server, clock, contracts, inference };
 }

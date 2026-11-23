@@ -1,0 +1,98 @@
+{
+  "task": "INF-02",
+  "date": "2026-11-24",
+  "status": "DONE",
+  "readyForFreeze": false,
+  "dependencies": {
+    "BOOT-01": "DONE",
+    "INF-01": "DONE"
+  },
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "includes": [
+        "inf:check",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "offlineInf01ToolTests": 15,
+      "runtimeTests": 34,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "providerCalls": {
+    "newHfRequests": 0,
+    "newPaidRequests": 0,
+    "automaticRetries": 0,
+    "historicalEvidence": "INF-01-manifest-v3.json"
+  },
+  "httpIntegration": {
+    "transport": "Node native fetch",
+    "target": "temporary HTTP 127.0.0.1 fixture",
+    "requests": 2,
+    "statuses": [
+      200,
+      429
+    ],
+    "credential": "fixture-only"
+  },
+  "capability": {
+    "profile": "DENSE",
+    "sparseVerified": false,
+    "hybridBeforeHttp": "CAPABILITY_UNAVAILABLE",
+    "healthInferenceRequests": 0,
+    "serviceReadinessHttpStatus": 503,
+    "servedModelRevision": null,
+    "tokenizerRevision": null,
+    "processingRevision": null,
+    "region": null,
+    "usage": null,
+    "costUsd": null
+  },
+  "scope": [
+    "HF fixed provider/model/TLS endpoint/config validation and secret sanitization",
+    "Replay stored dense JA/EN/ID and both reranker response layouts",
+    "Dense/hybrid normalized sparse checks and HF hybrid fail-closed admission",
+    "Batch order, score-to-ID mapping, stable score ties and immutable input/config snapshots",
+    "Shared transport concurrency without queue and bounded body streaming",
+    "Monotonic total deadline, caller abort, timeout, ignored abort and close",
+    "HTTP 429 Retry-After and auth/input/outage/network/shape failures without retry or fallback",
+    "Per-HTTP-attempt observer and null usage/cost including failures"
+  ],
+  "limitations": [
+    "No new live HF invocation; current wire compatibility rests on stored INF-01 smoke plus local HTTP tests",
+    "Remote revision/region/limits/exact billing remain unverified; no research freeze",
+    "Composition-root attempt logger is not durable OBS-01/02 telemetry",
+    "Subagent SDET/reviewer sessions lacked filesystem tools; no independent review claimed",
+    "Subprocess/loopback tests required approved escalation after sandbox EPERM",
+    "No corpus, Qdrant, pipeline, production image rebuild, deployment or experiment run"
+  ],
+  "sha256": {
+    ".env.example": "c43a79a6c96c0a9036ea45b6861e8584c620ef1dc7311907fd00f93ff5daa224",
+    "eslint.config.mjs": "99d0efee6a6ad8d593b6b7f862f8fcd6ed1851945ce4bc38ce46a1fef2738531",
+    "src/adapters/hf-config.ts": "b01c0cff0f40509ef8539a1128ffc69f10c357f4f87e473d8278783c5af4fcf1",
+    "src/adapters/hf-inference.ts": "ca6b392b2536769cd426997d7659f796db0542ea770249cf8cff58257be5448e",
+    "src/adapters/hf-validation.ts": "f4f81d8da369b127b1dbd74afc9455131fd71ec40912f8f15aed8aa388447bbc",
+    "src/app.ts": "397e38ce6c00da83b3bd9bac2cbe91cb56f2e3f14546a592420ed8d9aa995967",
+    "src/main.ts": "df59ba38ee69906ea18c7f882e0452c964df2d3937c27a3a83a9086c2ebcac3c",
+    "src/shared/ports.ts": "cdaecad437d4b3c425678f5e43805016d072a5d2b5b51edb0c7617f17efc8373",
+    "tests/app.test.ts": "2e6e5536e43b9ad831bd108abd8ddeae42d4118f83298ed066484fff21bb38ac",
+    "tests/hf-config.test.ts": "c37960fa2b204c07d8b6b393fb442e7112f75f85102fac92499fdb50a9f005bc",
+    "tests/hf-inference.test.ts": "9aa18d88aef83a8b58fb116c545408fe8890cbafe7dabddf5c6680bca05740d7",
+    "tests/hf-http.test.ts": "2a1437cc47ed98e0fe709a1784e45f0affb415e1e9696378502fca06904a3fd5"
+  }
+}

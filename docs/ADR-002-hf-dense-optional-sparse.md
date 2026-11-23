@@ -22,7 +22,7 @@ Ini perubahan metode dari baseline hybrid pada TA §3.7.7, disetujui pengguna se
 
 ## Dampak implementasi dan acceptance
 
-Port internal menggunakan `EmbeddingVector` dengan `dense` wajib dan `sparse?` opsional. Checker offline menyediakan validasi profil eksplisit dan parsing respons dense HF dua dimensi. `HybridVector` dipertahankan sebagai tipe strict untuk kebutuhan hybrid. Belum ada HTTP adapter runtime atau client provider yang dipasang; itu tetap INF-02.
+Port internal menggunakan `EmbeddingVector` dengan `dense` wajib dan `sparse?` opsional. Checker offline menyediakan validasi profil eksplisit dan parsing respons dense HF dua dimensi. `HybridVector` dipertahankan sebagai tipe strict untuk kebutuhan hybrid. Saat keputusan DOC-INF-03 dibuat, HTTP adapter belum tersedia. INF-02 pada 24 November 2026 menambahkan [adapter HTTP TypeScript](inference/INF-02-adapter.md) opt-in untuk wire dense/pair yang diamati INF-01, dengan capability lokal dan batas klien. Ini tidak mengonfirmasi served revision atau mengaktifkan HYBRID.
 
 INF-01 menerima dense-only pada profil DENSE; sparse/token mapping hanya wajib pada HYBRID. Pada 24 November 2026 pengguna mengeluarkan konfirmasi served model/tokenizer/processing revision, region/retensi dan batas layanan dari requirement task, melengkapi pengecualian biaya exact/tarif/settlement sebelumnya. INF-01 dinyatakan DONE berdasarkan smoke dense/pair rerank dan [keputusan acceptance](inference/INF-01-acceptance-decision.json). Ketiga metadata tetap unknown/unverified; tidak ada klaim bahwa provider telah mengonfirmasinya. [Laporan penutupan](inference/INF-01-completion.md) membedakan acceptance task dari gate freeze penelitian. Unknown cost tetap null dan metrik biaya penelitian tidak berubah.
 

@@ -1,11 +1,14 @@
+import { readHfConfig } from '@/adapters/hf-config';
+import { systemClock } from '@/adapters/system-clock';
 import { createApplication } from '@/app';
 import { ConfigError, readConfig } from '@/shared/config';
 
 async function main(): Promise<void> {
   // Validate configuration before creating resources or opening the listener.
   const config = readConfig(process.env);
+  const hfConfig = readHfConfig(process.env);
 
-  const { server } = createApplication(config);
+  const { server } = createApplication(config, systemClock, hfConfig);
 
   let closing = false;
 

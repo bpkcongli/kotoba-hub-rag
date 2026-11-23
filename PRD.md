@@ -1,8 +1,10 @@
 # Product Requirements Document — KotobaHub RAG
 
-Versi 0.8 · 23 November 2026 · Status: desain dengan fondasi runtime BOOT-01, kontrak CON-01 dan protokol planning RES-01 yang diamendemen [v2-dense](docs/research/RES-02-dense-amendment.md). DOC-INF-03 memilih HF Serverless dan dense wajib/sparse opsional; smoke endpoint dense/pair rerank tersedia, INF-01 DONE menurut acceptance 24 November 2026, protokol belum freeze dan eksperimen belum dijalankan.
+Versi 0.9 · 24 November 2026 · Status: desain dengan fondasi runtime BOOT-01, kontrak CON-01 dan protokol planning RES-01 yang diamendemen [v2-dense](docs/research/RES-02-dense-amendment.md). DOC-INF-03 memilih HF Serverless dan dense wajib/sparse opsional; smoke endpoint dense/pair rerank tersedia, INF-01 DONE menurut acceptance 24 November 2026, protokol belum freeze dan eksperimen belum dijalankan.
 
 Progres INF-01 (24 November 2026): **DONE** sesuai [keputusan acceptance pengguna](docs/inference/INF-01-acceptance-decision.json) dan [laporan penutupan](docs/inference/INF-01-completion.md). Smoke 13 POST membuktikan dense JA/EN/ID dan pair rerank; sparse tidak dikembalikan dan tetap opsional pada DENSE. Konfirmasi served model/tokenizer/processing revision, region/retensi dan batas layanan dikeluarkan dari requirement INF-01; metadata tersebut tetap unknown/unverified. Billing exact juga tidak diwajibkan; laporan tampilan `< USD 0,01` dan biaya null dipertahankan. Bukti smoke tidak ditulis ulang, tanpa request tambahan. Penutupan task tidak berarti penelitian sudah freeze.
+
+INF-02 menyediakan [adapter HTTP HF](docs/inference/INF-02-adapter.md) opt-in dengan provider/model/endpoint tetap, batas batch/concurrency, deadline/cancellation dan attempt metadata tersanitasi. Capability dibaca dari konfigurasi/bukti INF-01 serta attempt terakhir, tanpa paid inference pada health probe. HYBRID belum tersedia pada adapter HF karena sparse belum terbukti; tidak ada downgrade otomatis. Indeks, pipeline dan telemetry durable tetap task berikutnya.
 
 ## 1. Masalah dan tujuan
 

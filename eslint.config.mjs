@@ -9,7 +9,7 @@ const importOrder = [
     groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
     pathGroups: [{ pattern: '@/**', group: 'internal', position: 'after' }],
     pathGroupsExcludedImportTypes: ['builtin'],
-    'newlines-between': 'never',
+    'newlines-between': 'ignore',
     alphabetize: { order: 'asc', caseInsensitive: true },
   },
 ];

@@ -1,6 +1,6 @@
 import type { Mode, Operation } from '@/contracts/validator';
 
-// Initial ports; INF/OBS will define capabilities, billing, and event schemas before real adapters.
+// Each adapter attempt is observed separately; orchestration owns provider retries.
 export interface CallContext {
   readonly executionId: string;
   readonly signal: AbortSignal;

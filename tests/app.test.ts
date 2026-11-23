@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { readHfConfig } from '@/adapters/hf-config';
 import { createApplication } from '@/app';
 import { readConfig } from '@/shared/config';
 import type { Clock } from '@/shared/ports';
@@ -61,4 +62,52 @@ await test('composition root menerima clock; probes tidak memanggil jaringan/pro
     ).statusCode,
     404,
   );
+});
+
+await test('HF enabled dirangkai tanpa inference pada startup, capability dan probe health', async (t) => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+
+  globalThis.fetch = () => {
+    calls++;
+
+    return Promise.reject(new Error('Network dilarang pada health'));
+  };
+
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  const app = createApplication(
+    readConfig({ NODE_ENV: 'test', LOG_LEVEL: 'silent' }),
+    undefined,
+    readHfConfig({ HF_INFERENCE_ENABLED: 'true', HF_TOKEN: 'fixture-token' }),
+  );
+
+  t.after(async () => {
+    await app.server.close();
+  });
+
+  for (let i = 0; i < 3; i++) {
+    assert.equal(app.inference?.capabilities().capable, true);
+    assert.equal(app.inference?.capabilities().lastAttempt, null);
+    assert.equal((await app.server.inject('/health/live')).statusCode, 200);
+    assert.equal((await app.server.inject('/health/ready')).statusCode, 503);
+  }
+
+  assert.equal(calls, 0);
+
+  await app.server.close();
+
+  assert.ok(app.inference);
+  await assert.rejects(
+    app.inference.embedding.embed(['日本語'], 'query', {
+      executionId: 'closed-app',
+      signal: new AbortController().signal,
+      deadlineAt: new Date(Date.now() + 1000).toISOString(),
+    }),
+    { code: 'CANCELLED' },
+  );
+
+  assert.equal(calls, 0);
 });
