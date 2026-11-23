@@ -1,0 +1,71 @@
+{
+  "task": "INF-01 / DOC-INF-03",
+  "status": "DENSE_DECISION_VERIFIED_OFFLINE_ENDPOINT_PENDING",
+  "verifiedAt": "2026-11-23T03:15:37.876327+00:00",
+  "userFacingDate": "2026-11-23",
+  "baseCommit": "d98ae7a82d490f1e07a2a4ccd51676ff3e354a34",
+  "commands": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "auditTests": 8,
+      "runtimeTests": 13,
+      "skipped": 0,
+      "includes": [
+        "contract drift",
+        "typecheck",
+        "lint",
+        "format",
+        "tests",
+        "build"
+      ]
+    },
+    {
+      "command": "npm run inf:check",
+      "exitCode": 0,
+      "note": "Final targeted run after strengthening overlay checksum coverage."
+    },
+    {
+      "command": "prettier --check tools/inf-01/*.mjs src/shared/ports.ts",
+      "exitCode": 0
+    },
+    {
+      "command": "eslint src/shared/ports.ts tools/inf-01",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "inferenceCalls": 0,
+  "provisioning": false,
+  "readyForFreeze": false,
+  "limitations": [
+    "No actual model endpoint, served revision, region, billing or latency evidence.",
+    "Dense parser and optional sparse validators exercised with mocks/synthetic captures.",
+    "Subagent had no filesystem tools; no independent file review."
+  ],
+  "sha256": {
+    "PRD.md": "55b55d5d0bde1f2cd524cebb2340a8577e3b4a1e9990742d14eb8f331e4af67d",
+    "ARCHITECTURE.md": "e2359d738d89fceda44421d2ce2c441568a701aaccc0d0e2c69c9de526b74c8a",
+    "README.md": "ad2fabd9c0c58f6a0ded3e370da3fc222d229d69d35baa5ba0633d4bd760598e",
+    "TASK_BREAKDOWN.md": "d9415cab67ac03f69c903c8ee10e9055c3fa17c8d0d4d20812a3c4229b6141e9",
+    "AGENTS.md": "a2e602d96866ce0767a97ba96ef27dc14fd767233ff8905c44a85550ad4e4762",
+    "docs/ADR-001-stack-and-inference.md": "1b2e6b726995ee777e9246ef180a70e1909f053cc7f5b4c36352513ef7beb861",
+    "docs/ADR-002-hf-dense-optional-sparse.md": "66daefe5fbe5664ad5047cb341d79c8b931f476c6396ab499950052f4a8f5639",
+    "docs/research/RES-01-protocol.md": "5a46c8ab75d7006fec980c977244f46f4ea023cf93fbedffb9a503a2b0827cf9",
+    "docs/research/RES-01-requirement-matrix.md": "a50bfddacc874161a40a98bc1881575418b18e664094d9502aec2d16b7b38d6e",
+    "docs/research/RES-02-dense-amendment.md": "ac5b8f3c6277fddef370506e56a8c5945861a6e7ca3a93c8e09d64b295abe566",
+    "docs/inference/INF-01-audit.md": "2428f6d15e73c465b6aebddf6fcf1a5ceded6cd7ac008cd49bae260f162d3322",
+    "docs/inference/INF-01-dense-decision.md": "c0ab20d4bc4678d14d43383f5de09f24fff466e20678952775960d1a45e578e4",
+    "tools/inf-01/validate.mjs": "f9c3053c2eb47d73e6220d6d9d2b373ba3ceb0af121a93191be41832b9dfcf57",
+    "tools/inf-01/audit.test.mjs": "580faecd2659636b0cfc9d0605d6fe913669dce4daf364b112aabbb95e4c7ef5",
+    "tools/inf-01/verify.mjs": "0856ffab45ebd278709b54a77a53c3192bb9c94c595e7bc058978472d05e0010",
+    "tools/inf-01/discover.mjs": "8c4011fd824d7849562fb7260fc8b194cde484bc53556ede36ad240a826cbf6b",
+    "research/protocol-v2-dense/decision.json": "03645698160d0e6774df35220bb9ba3dbe7003aec7836d19122f7e74d19ad3b7",
+    "research/protocol-v2-dense/manifest.template.json": "aba9ce7a5943616877cfb324530342814d29e04219ad9ae613a0a2b726f0bc7a",
+    "src/shared/ports.ts": "f988b0d6580f99e58a78b3f970c34b33060a213811e3f83df83d9a21dba46b3a",
+    "docs/inference/INF-01-manifest-v2.json": "cf0212e1c2bf792107e4b2139a559e7114ff387a382983409733cf8160d87403"
+  }
+}

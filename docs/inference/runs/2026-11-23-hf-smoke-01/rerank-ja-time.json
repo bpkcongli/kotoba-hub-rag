@@ -1,0 +1,35 @@
+{
+  "id": "rerank-ja-time",
+  "operation": "rerank",
+  "language": "JA",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "query": "「七時に起きます」の「に」の使い方",
+      "texts": [
+        "時刻の後に「に」を使います。七時に起きます。"
+      ]
+    }
+  },
+  "expectedIds": [
+    "ja-time"
+  ],
+  "timestamp": "2026-11-23T16:11:23.202Z",
+  "provider": "hf-inference",
+  "attempt": 1,
+  "httpStatus": 400,
+  "outcome": "HTTP_ERROR",
+  "usage": null,
+  "costUsd": null,
+  "servedRevision": null,
+  "region": null,
+  "hardware": null,
+  "precision": null,
+  "headers": {
+    "x-request-id": "Root=1-6b0465ab-09e5ae163bc784dd27572826",
+    "content-type": "application/json"
+  },
+  "responseSha256": "b15c53fd221d2d9de02ea900ea4967d505e458689578914388b994510d12b6ee",
+  "responseText": "{\"error\":\"TextClassificationPipeline.__call__() missing 1 required positional argument: 'inputs'\"}",
+  "elapsedMs": 3668.830848
+}

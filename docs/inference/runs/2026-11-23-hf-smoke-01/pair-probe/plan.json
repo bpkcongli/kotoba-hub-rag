@@ -1,0 +1,122 @@
+[
+  {
+    "id": "pair-ja-0",
+    "operation": "rerank-pair",
+    "language": "JA",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "inputs": [
+          {
+            "text": "「七時に起きます」の「に」の使い方",
+            "text_pair": "時刻の後に「に」を使います。七時に起きます。"
+          },
+          {
+            "text": "「七時に起きます」の「に」の使い方",
+            "text_pair": "動作をする場所に「で」を使います。学校で勉強します。"
+          }
+        ]
+      },
+      "parameters": {
+        "function_to_apply": "none"
+      }
+    },
+    "expectedIds": [
+      "ja-time",
+      "ja-place"
+    ],
+    "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE"
+  },
+  {
+    "id": "pair-en-0",
+    "operation": "rerank-pair",
+    "language": "EN",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "inputs": [
+          {
+            "text": "Japanese particle for a specific time",
+            "text_pair": "に marks a specific time: 七時に起きます。"
+          }
+        ]
+      },
+      "parameters": {
+        "function_to_apply": "none"
+      }
+    },
+    "expectedIds": [
+      "en-time"
+    ],
+    "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE"
+  },
+  {
+    "id": "pair-en-1",
+    "operation": "rerank-pair",
+    "language": "EN",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "inputs": [
+          {
+            "text": "Japanese particle for a specific time",
+            "text_pair": "で marks where an action happens: 学校で勉強します。"
+          }
+        ]
+      },
+      "parameters": {
+        "function_to_apply": "none"
+      }
+    },
+    "expectedIds": [
+      "en-place"
+    ],
+    "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE"
+  },
+  {
+    "id": "pair-id-0",
+    "operation": "rerank-pair",
+    "language": "ID",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "inputs": [
+          {
+            "text": "Partikel bahasa Jepang untuk waktu tertentu",
+            "text_pair": "に menandai waktu tertentu: 七時に起きます。"
+          }
+        ]
+      },
+      "parameters": {
+        "function_to_apply": "none"
+      }
+    },
+    "expectedIds": [
+      "id-time"
+    ],
+    "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE"
+  },
+  {
+    "id": "pair-id-1",
+    "operation": "rerank-pair",
+    "language": "ID",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "inputs": [
+          {
+            "text": "Partikel bahasa Jepang untuk waktu tertentu",
+            "text_pair": "で menandai tempat aktivitas: 学校で勉強します。"
+          }
+        ]
+      },
+      "parameters": {
+        "function_to_apply": "none"
+      }
+    },
+    "expectedIds": [
+      "id-place"
+    ],
+    "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE"
+  }
+]

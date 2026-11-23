@@ -1,0 +1,18 @@
+{
+  "id": "rerank-ja-time",
+  "operation": "rerank",
+  "language": "JA",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "query": "「七時に起きます」の「に」の使い方",
+      "texts": [
+        "時刻の後に「に」を使います。七時に起きます。"
+      ]
+    }
+  },
+  "expectedIds": [
+    "ja-time"
+  ],
+  "outcome": "UNKNOWN"
+}

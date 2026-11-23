@@ -1,8 +1,12 @@
 # ADR-001 — Stack, deployment dan boundary inferensi
 
+**Status ketetapan inferensi:** sejak 23 November 2026, [ADR-002 / DOC-INF-03](ADR-002-hf-dense-optional-sparse.md) menggantikan kewajiban dense+sparse serta urutan seleksi pada dokumen ini. HF Serverless dipilih, dense wajib/sparse opsional. Uraian keputusan/audit DOC-INF-02 di bawah dipertahankan sebagai riwayat; versi stack dan evidence spike tetap berlaku sesuai batas aslinya.
+
 Tanggal: 22 November 2026 · Task: `DEC-01`, amendemen `DOC-INF-02` · Status: **diterima untuk desain dan bootstrap; API per pemakaian diutamakan**, dengan gate endpoint nyata pada `INF-01`. Pemilihan layanan bukan provisioning atau persetujuan biaya. Bukti kompatibilitas stack: [spike DEC-01](../spikes/dec-01/evidence.json).
 
 Amendemen `DOC-INF-02` mengikuti keputusan pengguna untuk menekan biaya dan maintenance penelitian: pilihan awal dedicated custom container digantikan urutan seleksi API per pemakaian. Model dan metode penelitian tetap. Evidence spike/metadata awal tidak diubah dan tidak membuktikan endpoint inference; keputusan deployment yang berlaku adalah amendemen pada dokumen ini.
+
+Progres INF-01 pada 23 November 2026: [audit publik historis](inference/INF-01-audit.md) diikuti keputusan ADR-002 dan [smoke berizin 13 POST](inference/INF-01-smoke-report.md). Dense/pair rerank HF berhasil; sparse tidak dikembalikan. [Manifest v3](inference/INF-01-manifest-v3.json) mencatat served revision/region/limits masih terbuka. [Keputusan acceptance 24 November 2026](inference/INF-01-acceptance-decision.json) mengeluarkan tiga konfirmasi dan biaya exact/tarif/settlement dari requirement INF-01; task DONE menurut [laporan penutupan](inference/INF-01-completion.md). Semua field yang tidak tersedia tetap unknown. Bukti DEC-01 tetap historis.
 
 ## Konteks dan dasar keputusan
 

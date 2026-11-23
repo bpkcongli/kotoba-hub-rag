@@ -1,0 +1,24 @@
+{
+  "id": "pair-id-1",
+  "operation": "rerank-pair",
+  "language": "ID",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "inputs": [
+        {
+          "text": "Partikel bahasa Jepang untuk waktu tertentu",
+          "text_pair": "で menandai tempat aktivitas: 学校で勉強します。"
+        }
+      ]
+    },
+    "parameters": {
+      "function_to_apply": "none"
+    }
+  },
+  "expectedIds": [
+    "id-place"
+  ],
+  "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+  "outcome": "UNKNOWN"
+}

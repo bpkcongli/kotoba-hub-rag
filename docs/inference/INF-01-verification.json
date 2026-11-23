@@ -1,0 +1,81 @@
+{
+  "task": "INF-01",
+  "status": "AUDIT_ONLY_NOT_READY",
+  "recordedAt": "2026-11-22T22:54:47.389592+00:00",
+  "userFacingDate": "2026-11-23",
+  "timezone": "Asia/Jakarta",
+  "baseCommit": "d98ae7a82d490f1e07a2a4ccd51676ff3e354a34",
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "inferenceAuditTests": 5,
+      "runtimeTests": 13,
+      "skippedTests": 0,
+      "includes": [
+        "offline manifest/discovery/fixtures",
+        "contract drift",
+        "strict typecheck",
+        "lint",
+        "format",
+        "runtime tests",
+        "build"
+      ],
+      "execution": "subprocess-capable environment"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "command": "node --input-type=module -e import discovery with fetch forbidden",
+      "exitCode": 0,
+      "networkCalls": 0
+    },
+    {
+      "check": "local report links",
+      "outcome": "pass",
+      "count": 4
+    }
+  ],
+  "discovery": {
+    "publicMetadataGetRequests": 3,
+    "successfulResponses": 3,
+    "authentication": false,
+    "automaticRetries": 0,
+    "artifact": "INF-01-discovery.json"
+  },
+  "inference": {
+    "calls": 0,
+    "paidCalls": 0,
+    "provisioning": false,
+    "modelOutputEvidence": null
+  },
+  "limitations": [
+    "Public documentation and metadata do not prove served model/tokenizer revision or actual dense+sparse/rerank behavior.",
+    "Normalized response validators have synthetic test evidence only.",
+    "Initial sandbox check failed in config/import-alias subprocess tests; full check passed outside that restriction.",
+    "Subagents lacked filesystem/web tools; parent verified primary sources. Code review of an abbreviated description was not independent file verification.",
+    "Provider selection, smoke, latency/limits/billing/region and freeze remain open."
+  ],
+  "sha256": {
+    "ARCHITECTURE.md": "f3d89685e6e8a505fb8b01b5c2e3b711b8d5e21e1172a4125c0fc4e1633b14a9",
+    "PRD.md": "14a2c0d58ab921f5d2e4a904f38b644a5e45a3bc559dd3ccd1f473d42f115519",
+    "README.md": "2d206e1cb962f3fcf8ad32314ecd5aa7655f80db3808351bc6a8730088a8b4bf",
+    "TASK_BREAKDOWN.md": "c96cc3f918fc8b87b5bff38e81d9d76b646b0a9f8dc3ca34f687da0c929fe6b2",
+    "docs/ADR-001-stack-and-inference.md": "80b719fe1a080863236bb45e2d5415a7cf1147512a54e159a1e9bfd3454865b5",
+    "docs/inference/INF-01-audit.md": "117bb097090f80656c9f42e44b7132f28af7c9d82e44b18b42c3ee2d4b107d03",
+    "docs/inference/INF-01-discovery.json": "d02d15a9146b2948c8f558389c336c1f3b4be2261d95c42e315690d8990508a2",
+    "docs/inference/INF-01-fixtures.json": "a2e8111be1cabf9430eae02356a0c2e0804fe96fc4b82da4d1e162752016f6ea",
+    "docs/inference/INF-01-manifest.json": "c8fbff865e924ca87552f59d094644d8531746288738c712d31a8ffcbb604b59",
+    "package.json": "32f527b66d5b869df391e8aeb9e3e1e515e39ea85d6bd72a0f559a0fccebc416",
+    "tools/inf-01/audit.test.mjs": "4fa734d93b9bd4c4225c16b70250a4c1584d5bf021421074abc07c4483a3d201",
+    "tools/inf-01/discover.mjs": "8c4011fd824d7849562fb7260fc8b194cde484bc53556ede36ad240a826cbf6b",
+    "tools/inf-01/validate.mjs": "18e84ad2348e95b3e2f51c4a7b159d2d9cb056bda1acc6fc4dad97d7524d10a9",
+    "tools/inf-01/verify.mjs": "67c29582c42f3dd0e24ada95c00b054ebb1423a4aecd43f8a7b506bdc34c7b66"
+  }
+}

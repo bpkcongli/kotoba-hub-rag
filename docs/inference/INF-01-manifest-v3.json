@@ -1,0 +1,424 @@
+{
+  "task": "INF-01",
+  "version": 3,
+  "status": "SMOKE_OBSERVED_IDENTITY_AND_OPERATIONAL_GATES_OPEN",
+  "readyForFreeze": false,
+  "priorDecisionSnapshot": "INF-01-manifest-v2.json",
+  "captureDirectory": "runs/2026-11-23-hf-smoke-01/",
+  "authorization": {
+    "task": "INF-01",
+    "kind": "AUTHORIZED_HF_SMOKE_NOT_EXPERIMENT",
+    "authorization": "USER_REQUEST_12_BASE_REQUESTS_PLUS_SPARSE_NECESSARY_ONLY",
+    "targetBudgetUsd": 1,
+    "budgetEnforcement": "REQUEST_CAP_ONLY_PROVIDER_PRICE_AND_FINAL_BILLING_UNKNOWN",
+    "baseRequestCeiling": 12,
+    "sparseRequestCeiling": 1,
+    "requestCeiling": 13,
+    "automaticRetries": 0,
+    "concurrency": 1,
+    "timeoutMs": 15000,
+    "fixtureSha256": "a2e8111be1cabf9430eae02356a0c2e0804fe96fc4b82da4d1e162752016f6ea",
+    "secretReference": "HF_TOKEN",
+    "readyForFreeze": false
+  },
+  "profile": {
+    "active": "DENSE",
+    "sparseEnabled": false,
+    "fusion": null,
+    "sameForBothRagModes": true
+  },
+  "actualRequests": 13,
+  "requestCounts": {
+    "dense": 6,
+    "reranker": 6,
+    "sparseDiagnostic": 1,
+    "http200": 12,
+    "http400": 1,
+    "automaticRetries": 0
+  },
+  "additionalCallsForJaReanalysis": 0,
+  "embedding": {
+    "provider": "hf-inference",
+    "model": "BAAI/bge-m3",
+    "endpoint": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "hubRevisionCandidate": "5617a9f61b028005a4858fdac845db406aefb181",
+    "servedModelRevision": null,
+    "tokenizerRevision": null,
+    "processingRevision": null,
+    "region": null,
+    "hardware": null,
+    "precision": null
+  },
+  "reranker": {
+    "provider": "hf-inference",
+    "model": "BAAI/bge-reranker-v2-m3",
+    "endpoint": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "hubRevisionCandidate": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+    "servedModelRevision": null,
+    "tokenizerRevision": null,
+    "processingRevision": null,
+    "region": null,
+    "hardware": null,
+    "precision": null
+  },
+  "observations": {
+    "dense": [
+      {
+        "id": "ja-query",
+        "language": "JA",
+        "dimension": 1024,
+        "l2Norm": 1.0000000005381084
+      },
+      {
+        "id": "ja-document",
+        "language": "JA",
+        "dimension": 1024,
+        "l2Norm": 1.0000000479059035
+      },
+      {
+        "id": "en-query",
+        "language": "EN",
+        "dimension": 1024,
+        "l2Norm": 1.0000000088930767
+      },
+      {
+        "id": "en-document",
+        "language": "EN",
+        "dimension": 1024,
+        "l2Norm": 1.0000000237812139
+      },
+      {
+        "id": "id-query",
+        "language": "ID",
+        "dimension": 1024,
+        "l2Norm": 0.9999999816385179
+      },
+      {
+        "id": "id-document",
+        "language": "ID",
+        "dimension": 1024,
+        "l2Norm": 0.9999999435828621
+      }
+    ],
+    "rerankSanity": [
+      {
+        "language": "JA",
+        "candidates": [
+          {
+            "chunkId": "ja-time",
+            "score": 5.277521133422852
+          },
+          {
+            "chunkId": "ja-place",
+            "score": -4.822001934051514
+          }
+        ],
+        "timeAbovePlace": true
+      },
+      {
+        "language": "EN",
+        "candidates": [
+          {
+            "chunkId": "en-time",
+            "score": -3.1727001667022705
+          },
+          {
+            "chunkId": "en-place",
+            "score": -8.49821949005127
+          }
+        ],
+        "timeAbovePlace": true
+      },
+      {
+        "language": "ID",
+        "candidates": [
+          {
+            "chunkId": "id-time",
+            "score": -1.7047119140625
+          },
+          {
+            "chunkId": "id-place",
+            "score": -10.226229667663574
+          }
+        ],
+        "timeAbovePlace": true
+      }
+    ],
+    "rerankMapping": "INPUT_ORDER_NOT_PROVIDER_ECHOED_IDS",
+    "scoreSemantics": "REQUESTED_NONE_RAW_LOGIT_UNVERIFIED",
+    "pairContractStatus": "OBSERVED_NESTED_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+    "sparse": {
+      "probeRequests": 1,
+      "inputs": 3,
+      "denseDimensions": [
+        1024,
+        1024,
+        1024
+      ],
+      "sparseReturned": false,
+      "capability": "NOT_ESTABLISHED_NO_GLOBAL_UNSUPPORTED_CLAIM"
+    },
+    "capacity": {
+      "observedDenseBatch": 1,
+      "sparseDiagnosticDenseBatch": 3,
+      "observedPairBatch": 2,
+      "concurrency": 1,
+      "providerMaxBatch": null,
+      "providerMaxInputTokens": null,
+      "providerRateLimit": null,
+      "truncationBehavior": "NOT_BOUNDARY_TESTED",
+      "normalization": "NEAR_UNIT_OBSERVED_PARAMETER_EFFECT_NOT_ISOLATED"
+    }
+  },
+  "billing": {
+    "kind": "USER_REPORTED_ACCOUNT_BILLING_DISPLAY",
+    "reportedOn": "2026-11-23",
+    "source": "USER_REPLY_TO_13_REQUEST_SMOKE_BILLING_QUESTION",
+    "reportedText": "< $0.01",
+    "currency": "USD",
+    "amountUsd": null,
+    "displayedUpperBoundExclusiveUsd": 0.01,
+    "perOperationAmounts": null,
+    "settlementStatus": "UNKNOWN",
+    "independentlyVerified": false,
+    "interpretation": "Displayed amount reported by user; not an exact settled invoice or per-call allocation. Missing costs remain null.",
+    "requestCostsUsd": null,
+    "aggregateCostUsd": null,
+    "tariffSnapshot": null
+  },
+  "retention": {
+    "source": "https://huggingface.co/docs/inference-providers/security",
+    "statementScope": "HF_ROUTER_DOCUMENTATION_NOT_DEPLOYMENT_ATTESTATION",
+    "routerPayloadRetention": "DOCUMENTATION_SAYS_REQUEST_RESPONSE_NOT_STORED",
+    "routerDebugLogs": "DOCUMENTATION_SAYS_UP_TO_30_DAYS_WITHOUT_USER_DATA_OR_TOKENS",
+    "providerSpecificRetention": null
+  },
+  "openGates": [
+    "SERVED_MODEL_TOKENIZER_PROCESSING_REVISION_ATTESTATION_BOTH_OPERATIONS",
+    "ACTUAL_REGION_AND_PROVIDER_RETENTION_TERMS",
+    "MAX_LENGTH_TRUNCATION_BATCH_RATE_LIMITS_AND_PAIR_CONTRACT_GUARANTEE",
+    "TARIFF_MINIMUM_CREDIT_AND_SETTLED_BILLING_RECONCILIATION"
+  ],
+  "calls": [
+    {
+      "record": "ja-query.json",
+      "id": "ja-query",
+      "operation": "dense",
+      "language": "JA",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+      "timestamp": "2026-11-23T16:11:20.108Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b0465a8-639d38963d96203058b18ab4",
+      "elapsedMs": 869.1365959999999,
+      "costUsd": null
+    },
+    {
+      "record": "ja-document.json",
+      "id": "ja-document",
+      "operation": "dense",
+      "language": "JA",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+      "timestamp": "2026-11-23T16:11:20.979Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b0465a9-563417144be397a456805e30",
+      "elapsedMs": 612.2818769999999,
+      "costUsd": null
+    },
+    {
+      "record": "en-query.json",
+      "id": "en-query",
+      "operation": "dense",
+      "language": "EN",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+      "timestamp": "2026-11-23T16:11:21.592Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b0465a9-0dc436571f695a58558ccb88",
+      "elapsedMs": 404.778196,
+      "costUsd": null
+    },
+    {
+      "record": "en-document.json",
+      "id": "en-document",
+      "operation": "dense",
+      "language": "EN",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+      "timestamp": "2026-11-23T16:11:21.999Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b0465aa-07d18e353459f04011c3863a",
+      "elapsedMs": 408.8586539999999,
+      "costUsd": null
+    },
+    {
+      "record": "id-query.json",
+      "id": "id-query",
+      "operation": "dense",
+      "language": "ID",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+      "timestamp": "2026-11-23T16:11:22.409Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b0465aa-4e663a43156cdcdf169a57e4",
+      "elapsedMs": 407.60789799999975,
+      "costUsd": null
+    },
+    {
+      "record": "id-document.json",
+      "id": "id-document",
+      "operation": "dense",
+      "language": "ID",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+      "timestamp": "2026-11-23T16:11:22.821Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b0465aa-687786e027b8120e5a591697",
+      "elapsedMs": 379.879989,
+      "costUsd": null
+    },
+    {
+      "record": "rerank-ja-time.json",
+      "id": "rerank-ja-time",
+      "operation": "rerank",
+      "language": "JA",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "timestamp": "2026-11-23T16:11:23.202Z",
+      "httpStatus": 400,
+      "originalOutcome": "HTTP_ERROR",
+      "finalAssessment": "HTTP_ERROR",
+      "requestId": "Root=1-6b0465ab-09e5ae163bc784dd27572826",
+      "elapsedMs": 3668.830848,
+      "costUsd": null
+    },
+    {
+      "record": "sparse-capability-probe.json",
+      "id": "sparse-capability-probe",
+      "operation": "sparse",
+      "language": "JA_EN_ID",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+      "timestamp": "2026-11-23T16:11:26.872Z",
+      "httpStatus": 200,
+      "originalOutcome": "RESPONSE_INVALID",
+      "finalAssessment": "DENSE_ONLY_SPARSE_NOT_RETURNED",
+      "requestId": "Root=1-6b0465af-2646d6976f450e1f6d3eaeaa",
+      "elapsedMs": 456.6832979999999,
+      "costUsd": null
+    },
+    {
+      "record": "pair-probe/pair-ja-0.json",
+      "id": "pair-ja-0",
+      "operation": "rerank-pair",
+      "language": "JA",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "timestamp": "2026-11-23T16:13:09.920Z",
+      "httpStatus": 200,
+      "originalOutcome": "RESPONSE_INVALID",
+      "finalAssessment": "SHAPE_VALID_AFTER_OFFLINE_REANALYSIS",
+      "requestId": "Root=1-6b046616-1f2f5d74145bd36c34f9febf",
+      "elapsedMs": 4219.574555,
+      "costUsd": null
+    },
+    {
+      "record": "pair-probe/continuation/pair-en-0.json",
+      "id": "pair-en-0",
+      "operation": "rerank-pair",
+      "language": "EN",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "timestamp": "2026-11-23T16:14:21.463Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b04665d-1f02f07c05e5eb8d711029c0",
+      "elapsedMs": 3952.313261,
+      "costUsd": null
+    },
+    {
+      "record": "pair-probe/continuation/pair-en-1.json",
+      "id": "pair-en-1",
+      "operation": "rerank-pair",
+      "language": "EN",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "timestamp": "2026-11-23T16:14:25.417Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b046661-43fa850a2d45536d223ddbd3",
+      "elapsedMs": 507.04636999999957,
+      "costUsd": null
+    },
+    {
+      "record": "pair-probe/continuation/pair-id-0.json",
+      "id": "pair-id-0",
+      "operation": "rerank-pair",
+      "language": "ID",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "timestamp": "2026-11-23T16:14:25.925Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b046662-65cfa2562a7078b34c7489a4",
+      "elapsedMs": 613.1628279999995,
+      "costUsd": null
+    },
+    {
+      "record": "pair-probe/continuation/pair-id-1.json",
+      "id": "pair-id-1",
+      "operation": "rerank-pair",
+      "language": "ID",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "timestamp": "2026-11-23T16:14:26.539Z",
+      "httpStatus": 200,
+      "originalOutcome": "SHAPE_VALID",
+      "finalAssessment": "SHAPE_VALID",
+      "requestId": "Root=1-6b046662-3c454e3b432a0fa8075e5fc3",
+      "elapsedMs": 510.6979030000002,
+      "costUsd": null
+    }
+  ],
+  "artifactSha256": {
+    "policy.json": "10f0dab25590b5c34f74cb9a58ea9d16747ad454d6ea8c875f7d5bc3cb7206fa",
+    "summary.json": "4e4b9abc3d2f16cae4340dd627cf419a214c51c363a9937d43a3ba1ee27438d3",
+    "pair-probe/summary.json": "ed9c2d198d4a0b264fa59eac1af088cc4cc5271b52170fbe5c643a688f9ce39c",
+    "pair-probe/continuation/summary.json": "f7296223d231739fc2e276de21e2f15b9f787b1f4ddf5983e28c781d12317cbe",
+    "discovery.json": "32bb956f665d87ece8553368f783d5ad33d2f4ef93f4714df6504a4c8d940d70",
+    "billing-user-report.json": "07eee4ca536ffa1259990004a9ed1feeeef072763d12ff85391a92e9ace8d825",
+    "pair-probe/continuation/ja-reanalysis.json": "3014be300ccbd77d1435661ea5652295dc7b13f7f84e3e0d3290e5cc73436633",
+    "plan.json": "baef04807f7a773e4a322efff7293a156483b3e6c6b39b65655c282e1e32ad93",
+    "pair-probe/plan.json": "b94c3f4ac4c91a9544a6549a6db7fb25a59690495091046cd4143b2d0cb9154d",
+    "ja-query.json": "603470939b0b1f2bba1c0518717109d8fd68605a91d7572d603ae55f2195076e",
+    "ja-query.pending.json": "7e76a37017f0389a84eb9c9444716d3ce33292183c8ba95a3bf3ce87b368fa90",
+    "ja-document.json": "f224942c03ce490fc4eab32b2a754f1499851cb3a9ec968b87f38a529210d166",
+    "ja-document.pending.json": "02f4c9daa69487c33c2e45a30fcf8230df5ebb56eb9ca0ab7d989f58affc2ad6",
+    "en-query.json": "f282a70ca9de33dfa04a3342719aaa3ecdc6ef6ddf228e2f44d55ca2eaea0ebd",
+    "en-query.pending.json": "f2da18d67ce285f3cef4981885ace6a4a817033950381048a0a4a59fe79fba14",
+    "en-document.json": "35fd49c0620a2dd20c18f74fa36354b8e20bfa076a39a1cb2f61b768d955fae8",
+    "en-document.pending.json": "a7eefdfa2b58f502d0cd47a1a777354d0327382cfe98d07fbbdd66b0fd5b41e7",
+    "id-query.json": "b83777d3abb558a69a03b6f25685ffafeef3972f0ec66a7687748ae09ae7c27d",
+    "id-query.pending.json": "d34b3baf8e66787dc59872de7801feb6e05f2fa0ff1a76d06ceb34ad1dcf8f56",
+    "id-document.json": "a7d433ccd8d35a76be7ff54d2da3f919cebec0f6286e1a1a69bc58276f42a80d",
+    "id-document.pending.json": "1283003f66f60d98edef574c696a5e8d7c81333ef2bccea216409eeefb21fef7",
+    "rerank-ja-time.json": "5f716dc4e75bf451213c50f70c16572b9d446c7a796e41215df31344a4ef1ff6",
+    "rerank-ja-time.pending.json": "a2cb59c5398f3d5aca7a8b357a383f7265f7d5664683a4e8e9b94cdb3f4fc6cf",
+    "sparse-capability-probe.json": "f206a55d40018273df67aff5852e5e45532e67cdd8623b303e68e7eae287bcd2",
+    "sparse-capability-probe.pending.json": "7ffa0c5447e55b7ecfc70eaa46d5032642ded8e5b322ab2269c9fe076b00aab2",
+    "pair-probe/pair-ja-0.json": "a5f835be49a35c4522e6f8b870b095e3b3ff8fcafa144621f09b813e0b63a424",
+    "pair-probe/pair-ja-0.pending.json": "44ace26905fbae132bea4360af4f5992f0411198e6a32f845c85792afb673096",
+    "pair-probe/continuation/pair-en-0.json": "6ef6dc1e89c8c5382d793dcc1eb513bb39d0308c78ae887a4394775ed218836f",
+    "pair-probe/continuation/pair-en-0.pending.json": "4be0aad2f1910d9d58b02618b283dbd1b0ff6446863d247dece33da5f17ff2a6",
+    "pair-probe/continuation/pair-en-1.json": "a1171f235064750d5cb721518032d942d57ad01eb66daec918d2ae5face9bf28",
+    "pair-probe/continuation/pair-en-1.pending.json": "9adcdb6f2a513a42deae0b20370b53e1bc43c4eebab70ed255c3aecf8a3bd19e",
+    "pair-probe/continuation/pair-id-0.json": "1db4cd05890e5f93ec26214b9b0aaa083e100828e5edfd1f6b3df75f82361aa7",
+    "pair-probe/continuation/pair-id-0.pending.json": "f14886f15543f4b290f533bd60ab84cdf9532860ca499bf3daf406be8d8f04c4",
+    "pair-probe/continuation/pair-id-1.json": "fd735a661e06ed124f0d9b1d5122deced8aaf654e770f801e46ca8dfa094fd15",
+    "pair-probe/continuation/pair-id-1.pending.json": "4eaa6ac7ecc3b64ea7b98923117380f7457522de4b11b523e351fb5d25a50903"
+  },
+  "fixtureSha256": "a2e8111be1cabf9430eae02356a0c2e0804fe96fc4b82da4d1e162752016f6ea"
+}

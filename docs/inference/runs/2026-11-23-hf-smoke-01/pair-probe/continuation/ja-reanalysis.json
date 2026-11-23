@@ -1,0 +1,16 @@
+{
+  "originalRecord": "../pair-ja-0.json",
+  "httpCalls": 0,
+  "outcome": "SHAPE_VALID",
+  "scores": [
+    {
+      "chunkId": "ja-time",
+      "score": 5.277521133422852
+    },
+    {
+      "chunkId": "ja-place",
+      "score": -4.822001934051514
+    }
+  ],
+  "reason": "HF response contains an outer batch wrapper; parsed saved response without another model call"
+}

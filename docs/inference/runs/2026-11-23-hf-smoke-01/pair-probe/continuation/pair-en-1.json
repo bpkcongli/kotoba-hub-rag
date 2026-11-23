@@ -1,0 +1,51 @@
+{
+  "id": "pair-en-1",
+  "operation": "rerank-pair",
+  "language": "EN",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "inputs": [
+        {
+          "text": "Japanese particle for a specific time",
+          "text_pair": "で marks where an action happens: 学校で勉強します。"
+        }
+      ]
+    },
+    "parameters": {
+      "function_to_apply": "none"
+    }
+  },
+  "expectedIds": [
+    "en-place"
+  ],
+  "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+  "timestamp": "2026-11-23T16:14:25.417Z",
+  "provider": "hf-inference",
+  "attempt": 1,
+  "httpStatus": 200,
+  "outcome": "SHAPE_VALID",
+  "usage": null,
+  "costUsd": null,
+  "servedRevision": null,
+  "region": null,
+  "hardware": null,
+  "precision": null,
+  "headers": {
+    "x-request-id": "Root=1-6b046661-43fa850a2d45536d223ddbd3",
+    "content-type": "application/json"
+  },
+  "responseSha256": "7463610e58629ee3d6c97e76773952b1bcf14a839fe79d2f7c3b5d40ddf86771",
+  "responseText": "[[{\"label\":\"LABEL_0\",\"score\":-8.49821949005127}]]",
+  "validation": {
+    "scores": [
+      {
+        "chunkId": "en-place",
+        "score": -8.49821949005127
+      }
+    ],
+    "scoreSemantics": "requested_none_raw_logit_unverified",
+    "mapping": "input_order"
+  },
+  "elapsedMs": 507.04636999999957
+}

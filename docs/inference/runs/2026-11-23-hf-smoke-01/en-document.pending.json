@@ -1,0 +1,17 @@
+{
+  "id": "en-document",
+  "operation": "dense",
+  "language": "EN",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+  "payload": {
+    "inputs": [
+      "Use に after a specific time, for example 七時に起きます。"
+    ],
+    "normalize": true,
+    "truncate": false
+  },
+  "expectedIds": [
+    "en-document"
+  ],
+  "outcome": "UNKNOWN"
+}

@@ -1,0 +1,51 @@
+{
+  "id": "pair-en-0",
+  "operation": "rerank-pair",
+  "language": "EN",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "inputs": [
+        {
+          "text": "Japanese particle for a specific time",
+          "text_pair": "に marks a specific time: 七時に起きます。"
+        }
+      ]
+    },
+    "parameters": {
+      "function_to_apply": "none"
+    }
+  },
+  "expectedIds": [
+    "en-time"
+  ],
+  "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+  "timestamp": "2026-11-23T16:14:21.463Z",
+  "provider": "hf-inference",
+  "attempt": 1,
+  "httpStatus": 200,
+  "outcome": "SHAPE_VALID",
+  "usage": null,
+  "costUsd": null,
+  "servedRevision": null,
+  "region": null,
+  "hardware": null,
+  "precision": null,
+  "headers": {
+    "x-request-id": "Root=1-6b04665d-1f02f07c05e5eb8d711029c0",
+    "content-type": "application/json"
+  },
+  "responseSha256": "04ec0e33663a2d1742f33ef33b76213a5bcd9fe8a6267001bd0bd7b4ffb09166",
+  "responseText": "[[{\"label\":\"LABEL_0\",\"score\":-3.1727001667022705}]]",
+  "validation": {
+    "scores": [
+      {
+        "chunkId": "en-time",
+        "score": -3.1727001667022705
+      }
+    ],
+    "scoreSemantics": "requested_none_raw_logit_unverified",
+    "mapping": "input_order"
+  },
+  "elapsedMs": 3952.313261
+}

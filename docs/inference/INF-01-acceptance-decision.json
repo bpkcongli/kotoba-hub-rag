@@ -1,0 +1,57 @@
+{
+  "task": "INF-01",
+  "date": "2026-11-24",
+  "authority": "USER_EXPLICIT_ACCEPTANCE_REQUIREMENTS_CHANGE",
+  "baseSmokeManifest": "INF-01-manifest-v3.json",
+  "guide": "INF-01-confirmation-guide.md",
+  "billing": {
+    "acceptance": "PROVIDER_OBSERVABILITY_LIMITATION_ACCEPTED",
+    "exactPerRequestCostRequiredForInf01": false,
+    "exactTariffAndInvoiceSettlementRequiredForInf01": false,
+    "userReportedDisplay": "< $0.01",
+    "exactCostUsd": null,
+    "unknownCostPolicy": "NULL_WITH_REASON_KNOWN_SUBTOTAL_AND_COVERAGE",
+    "researchCostMetricsUnchanged": true,
+    "doesNotAuthorizeMorePaidCalls": true
+  },
+  "requiredConfirmations": {},
+  "userClarification": "Keluarkan ketiga konfirmasi dari requirement INF-01 dan tandai task DONE berdasarkan smoke yang tersedia.",
+  "taskComplete": true,
+  "readyForFreeze": false,
+  "additionalInferenceCalls": 0,
+  "historicalCaptureAndVerificationUnchanged": true,
+  "status": "DONE",
+  "completedOn": "2026-11-24",
+  "acceptedLimitations": {
+    "servedModelTokenizerProcessingRevision": {
+      "status": "UNVERIFIED_ACCEPTED_NOT_REQUIRED_FOR_INF01",
+      "value": null
+    },
+    "actualRegionAndProviderRetention": {
+      "status": "UNVERIFIED_ACCEPTED_NOT_REQUIRED_FOR_INF01",
+      "value": null
+    },
+    "operationSpecificServiceLimits": {
+      "status": "UNVERIFIED_ACCEPTED_NOT_REQUIRED_FOR_INF01",
+      "value": null
+    }
+  },
+  "completionBasis": [
+    "USER_REMOVED_THREE_CONFIRMATION_REQUIREMENTS",
+    "EXISTING_13_POST_SMOKE_DENSE_AND_PAIR_RERANK_VALID",
+    "DENSE_PROFILE_SPARSE_OPTIONAL",
+    "UNKNOWN_VALUES_RETAINED_WITHOUT_VERIFICATION_CLAIM"
+  ],
+  "completionReport": "INF-01-completion.md",
+  "researchFreezeStatus": "NOT_FROZEN_TASK_COMPLETION_DOES_NOT_FREEZE_RESEARCH",
+  "history": [
+    {
+      "date": "2026-11-23",
+      "decision": "Exact billing waived; completion initially conditional on three confirmations."
+    },
+    {
+      "date": "2026-11-24",
+      "decision": "Three confirmations removed from INF-01 requirements by user; task DONE; observations remain unverified."
+    }
+  ]
+}

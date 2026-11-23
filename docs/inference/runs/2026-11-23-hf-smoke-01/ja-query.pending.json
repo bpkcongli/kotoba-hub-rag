@@ -1,0 +1,17 @@
+{
+  "id": "ja-query",
+  "operation": "dense",
+  "language": "JA",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+  "payload": {
+    "inputs": [
+      "「毎日七時に起きます」の「に」は何を表しますか。"
+    ],
+    "normalize": true,
+    "truncate": false
+  },
+  "expectedIds": [
+    "ja-query"
+  ],
+  "outcome": "UNKNOWN"
+}

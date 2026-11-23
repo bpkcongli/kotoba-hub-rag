@@ -1,0 +1,17 @@
+{
+  "id": "en-query",
+  "operation": "dense",
+  "language": "EN",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+  "payload": {
+    "inputs": [
+      "Which particle marks a specific time in Japanese?"
+    ],
+    "normalize": true,
+    "truncate": false
+  },
+  "expectedIds": [
+    "en-query"
+  ],
+  "outcome": "UNKNOWN"
+}

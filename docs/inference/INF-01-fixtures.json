@@ -1,0 +1,108 @@
+{
+  "kind": "INFRASTRUCTURE_SMOKE_ONLY_NOT_RESEARCH_DATASET",
+  "languages": [
+    "JA",
+    "EN",
+    "ID"
+  ],
+  "embedding": [
+    {
+      "id": "ja-query",
+      "language": "JA",
+      "purpose": "query",
+      "text": "「毎日七時に起きます」の「に」は何を表しますか。"
+    },
+    {
+      "id": "ja-document",
+      "language": "JA",
+      "purpose": "document",
+      "text": "時刻を表す言葉の後に「に」を使います。例：七時に起きます。"
+    },
+    {
+      "id": "en-query",
+      "language": "EN",
+      "purpose": "query",
+      "text": "Which particle marks a specific time in Japanese?"
+    },
+    {
+      "id": "en-document",
+      "language": "EN",
+      "purpose": "document",
+      "text": "Use に after a specific time, for example 七時に起きます。"
+    },
+    {
+      "id": "id-query",
+      "language": "ID",
+      "purpose": "query",
+      "text": "Partikel apa yang menandai waktu tertentu dalam bahasa Jepang?"
+    },
+    {
+      "id": "id-document",
+      "language": "ID",
+      "purpose": "document",
+      "text": "Gunakan に setelah waktu tertentu, misalnya 七時に起きます。"
+    }
+  ],
+  "rerank": [
+    {
+      "language": "JA",
+      "query": "「七時に起きます」の「に」の使い方",
+      "candidates": [
+        {
+          "chunkId": "ja-time",
+          "text": "時刻の後に「に」を使います。七時に起きます。"
+        },
+        {
+          "chunkId": "ja-place",
+          "text": "動作をする場所に「で」を使います。学校で勉強します。"
+        }
+      ]
+    },
+    {
+      "language": "EN",
+      "query": "Japanese particle for a specific time",
+      "candidates": [
+        {
+          "chunkId": "en-time",
+          "text": "に marks a specific time: 七時に起きます。"
+        },
+        {
+          "chunkId": "en-place",
+          "text": "で marks where an action happens: 学校で勉強します。"
+        }
+      ]
+    },
+    {
+      "language": "ID",
+      "query": "Partikel bahasa Jepang untuk waktu tertentu",
+      "candidates": [
+        {
+          "chunkId": "id-time",
+          "text": "に menandai waktu tertentu: 七時に起きます。"
+        },
+        {
+          "chunkId": "id-place",
+          "text": "で menandai tempat aktivitas: 学校で勉強します。"
+        }
+      ]
+    }
+  ],
+  "expectedShape": {
+    "denseDimension": 1024,
+    "sparseVocabularyUpperBoundExclusive": 250002,
+    "sources": [
+      "bge_model",
+      "bge_config"
+    ],
+    "doesNotProveTokenizerMapping": true
+  },
+  "futureSmokePolicy": {
+    "initialRequestCeiling": 12,
+    "automaticRetries": 0,
+    "concurrency": 1,
+    "timeoutMs": 15000,
+    "authorizationRequired": true,
+    "currentlyExecutable": false,
+    "scope": "12 requests is an initial ceiling, not full INF-01 acceptance; extra boundary/load probes require a separate budget."
+  }
+}

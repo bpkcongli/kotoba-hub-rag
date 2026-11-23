@@ -7,12 +7,17 @@ export interface CallContext {
   readonly deadlineAt: string;
 }
 
-export interface HybridVector {
+// Retrieval profile is pinned per run; optional output never selects the profile.
+export interface EmbeddingVector {
   readonly dense: readonly number[];
-  readonly sparse: {
+  readonly sparse?: {
     readonly indices: readonly number[];
     readonly values: readonly number[];
   };
+}
+
+export interface HybridVector extends EmbeddingVector {
+  readonly sparse: NonNullable<EmbeddingVector['sparse']>;
 }
 
 export interface Evidence {
@@ -35,12 +40,12 @@ export interface EmbeddingPort {
     texts: readonly string[],
     purpose: 'document' | 'query',
     context: CallContext,
-  ): Promise<readonly HybridVector[]>;
+  ): Promise<readonly EmbeddingVector[]>;
 }
 
 export interface RetrieverPort {
   retrieve(
-    vector: HybridVector,
+    vector: EmbeddingVector,
     filter: RetrievalFilter,
     limit: number,
     context: CallContext,

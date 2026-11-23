@@ -1,0 +1,60 @@
+{
+  "kind": "PUBLIC_DISCOVERY_NOT_INFERENCE",
+  "inferenceCalls": 0,
+  "records": [
+    {
+      "url": "https://huggingface.co/api/models/BAAI/bge-m3?expand%5B%5D=sha&expand%5B%5D=inferenceProviderMapping",
+      "retrievedAt": "2026-11-22T22:49:02.622Z",
+      "httpStatus": 200,
+      "sha256": "f3cffc9fa61baaecad59451102724f7a9e5d30e09c49253ef4aa3192e24209b4",
+      "data": {
+        "id": "BAAI/bge-m3",
+        "sha": "5617a9f61b028005a4858fdac845db406aefb181",
+        "inferenceProviderMapping": {
+          "hf-inference": {
+            "status": "live",
+            "providerId": "BAAI/bge-m3",
+            "task": "sentence-similarity",
+            "isModelAuthor": false
+          }
+        }
+      },
+      "outcome": "success",
+      "elapsedMs": 681.119325
+    },
+    {
+      "url": "https://huggingface.co/api/models/BAAI/bge-reranker-v2-m3?expand%5B%5D=sha&expand%5B%5D=inferenceProviderMapping",
+      "retrievedAt": "2026-11-22T22:49:03.303Z",
+      "httpStatus": 200,
+      "sha256": "837e7b120c3d97079244b717c42b76fd7c3e41bd1030b258ccbf20315d56ebcc",
+      "data": {
+        "id": "BAAI/bge-reranker-v2-m3",
+        "sha": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+        "inferenceProviderMapping": {
+          "hf-inference": {
+            "status": "live",
+            "providerId": "BAAI/bge-reranker-v2-m3",
+            "task": "text-classification",
+            "isModelAuthor": false
+          }
+        }
+      },
+      "outcome": "success",
+      "elapsedMs": 321.41080599999987
+    },
+    {
+      "url": "https://api.github.com/repos/huggingface/text-embeddings-inference/pulls/899",
+      "retrievedAt": "2026-11-22T22:49:03.625Z",
+      "httpStatus": 200,
+      "sha256": "7f4023eff6ef61ed36d5fd8901cf71f23bfcfd657f826cd13b6141fbe78c920a",
+      "data": {
+        "number": 899,
+        "state": "open",
+        "merged": false,
+        "updated_at": "2026-11-04T20:27:29Z"
+      },
+      "outcome": "success",
+      "elapsedMs": 917.9991770000001
+    }
+  ]
+}

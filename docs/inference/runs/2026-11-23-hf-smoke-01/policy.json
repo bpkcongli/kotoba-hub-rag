@@ -1,0 +1,16 @@
+{
+  "task": "INF-01",
+  "kind": "AUTHORIZED_HF_SMOKE_NOT_EXPERIMENT",
+  "authorization": "USER_REQUEST_12_BASE_REQUESTS_PLUS_SPARSE_NECESSARY_ONLY",
+  "targetBudgetUsd": 1,
+  "budgetEnforcement": "REQUEST_CAP_ONLY_PROVIDER_PRICE_AND_FINAL_BILLING_UNKNOWN",
+  "baseRequestCeiling": 12,
+  "sparseRequestCeiling": 1,
+  "requestCeiling": 13,
+  "automaticRetries": 0,
+  "concurrency": 1,
+  "timeoutMs": 15000,
+  "fixtureSha256": "a2e8111be1cabf9430eae02356a0c2e0804fe96fc4b82da4d1e162752016f6ea",
+  "secretReference": "HF_TOKEN",
+  "readyForFreeze": false
+}

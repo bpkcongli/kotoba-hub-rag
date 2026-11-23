@@ -1,0 +1,391 @@
+{
+  "task": "INF-01",
+  "auditDate": "2026-11-23",
+  "status": "AUDIT_ONLY_NOT_READY",
+  "authorization": {
+    "scope": "PUBLIC_AUDIT_AND_OFFLINE_TOOLING_ONLY",
+    "inferenceCallsAllowed": 0,
+    "paidBudgetUsd": 0,
+    "provisioningAllowed": false
+  },
+  "inferenceCalls": 0,
+  "readyForFreeze": false,
+  "selected": {
+    "embedding": null,
+    "reranker": null
+  },
+  "discoveryFile": "INF-01-discovery.json",
+  "hubRevisions": {
+    "BAAI/bge-m3": "5617a9f61b028005a4858fdac845db406aefb181",
+    "BAAI/bge-reranker-v2-m3": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e"
+  },
+  "sources": {
+    "hf_embedding": {
+      "url": "https://huggingface.co/docs/inference-providers/tasks/feature-extraction",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "hf_classification": {
+      "url": "https://huggingface.co/docs/inference-providers/tasks/text-classification",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "hf_pricing": {
+      "url": "https://huggingface.co/docs/inference-providers/pricing",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "hf_security": {
+      "url": "https://huggingface.co/docs/inference-providers/security",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "bge_model": {
+      "url": "https://huggingface.co/BAAI/bge-m3",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "bge_config": {
+      "url": "https://huggingface.co/BAAI/bge-m3/blob/5617a9f61b028005a4858fdac845db406aefb181/config.json",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "rerank_model": {
+      "url": "https://huggingface.co/BAAI/bge-reranker-v2-m3",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "sie_hybrid": {
+      "url": "https://qdrant.tech/documentation/embeddings/superlinked/",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "sie_api": {
+      "url": "https://superlinked.com/docs/reference/api",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "sie_rates": {
+      "url": "https://superlinked.com/docs/cloud/rate-limits",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "sie_models": {
+      "url": "https://superlinked.com/models?task=score",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "sie_embed": {
+      "url": "https://superlinked.com/models/baai-bge-m3--encode",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "sie_rerank": {
+      "url": "https://superlinked.com/models/baai-bge-reranker-v2-m3",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "sie_privacy": {
+      "url": "https://superlinked.com/policies/privacy-policy",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "deepinfra_embed": {
+      "url": "https://deepinfra.com/BAAI/bge-m3/api",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "siliconflow_embed": {
+      "url": "https://docs.siliconflow.com/en/api-reference/embeddings/create-embeddings",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    },
+    "siliconflow_rerank": {
+      "url": "https://docs.siliconflow.com/en/api-reference/rerank/create-rerank",
+      "checkedDate": "2026-11-23",
+      "kind": "PUBLIC_DOCUMENTATION"
+    }
+  },
+  "candidates": [
+    {
+      "id": "hf-embedding",
+      "provider": "hf-inference",
+      "operation": "embedding",
+      "model": "BAAI/bge-m3",
+      "candidateEndpoint": null,
+      "selection": "NOT_SELECTED",
+      "publicAssessment": "Mapping live sentence-similarity; kontrak dense+sparse dan served revision belum terbukti. Tarif gabungan BGE unknown.",
+      "sources": [
+        "hf_embedding",
+        "hf_pricing",
+        "hf_security"
+      ],
+      "publicPricing": null,
+      "observed": {
+        "modelRevision": null,
+        "tokenizerRevision": null,
+        "deploymentRevision": null,
+        "apiRevision": null,
+        "region": null,
+        "retention": null,
+        "hardware": null,
+        "precision": null,
+        "batchLimit": null,
+        "inputTokenLimit": null,
+        "rateLimit": null,
+        "concurrencyLimit": null,
+        "truncation": null,
+        "normalization": null,
+        "sparseTokenMapping": null,
+        "scoreSemantics": null,
+        "latencyMs": null,
+        "usage": null,
+        "costUsd": null
+      },
+      "inferenceEvidence": null
+    },
+    {
+      "id": "hf-reranker",
+      "provider": "hf-inference",
+      "operation": "reranker",
+      "model": "BAAI/bge-reranker-v2-m3",
+      "candidateEndpoint": null,
+      "selection": "NOT_SELECTED",
+      "publicAssessment": "Mapping live text-classification bukan bukti kontrak pasangan query/candidate IDs atau served revision.",
+      "sources": [
+        "hf_classification",
+        "hf_pricing",
+        "hf_security"
+      ],
+      "publicPricing": null,
+      "observed": {
+        "modelRevision": null,
+        "tokenizerRevision": null,
+        "deploymentRevision": null,
+        "apiRevision": null,
+        "region": null,
+        "retention": null,
+        "hardware": null,
+        "precision": null,
+        "batchLimit": null,
+        "inputTokenLimit": null,
+        "rateLimit": null,
+        "concurrencyLimit": null,
+        "truncation": null,
+        "normalization": null,
+        "sparseTokenMapping": null,
+        "scoreSemantics": null,
+        "latencyMs": null,
+        "usage": null,
+        "costUsd": null
+      },
+      "inferenceEvidence": null
+    },
+    {
+      "id": "sie-embedding",
+      "provider": "superlinked-serverless",
+      "operation": "embedding",
+      "model": "BAAI/bge-m3",
+      "candidateEndpoint": "https://api.superlinked.com/v1/encode/BAAI%2Fbge-m3",
+      "selection": "NOT_SELECTED",
+      "publicAssessment": "Dense+sparse terdokumentasi; field revision opsional pada API engine. Nilai served/tokenizer revision, gabungan billing dan retensi inference belum terverifikasi.",
+      "sources": [
+        "sie_hybrid",
+        "sie_api",
+        "sie_rates",
+        "sie_models",
+        "sie_embed",
+        "sie_privacy"
+      ],
+      "publicPricing": {
+        "currency": "USD",
+        "unit": "1M tokens",
+        "denseListed": 0.0377,
+        "sparseListed": 0.0408,
+        "combined": null,
+        "minimumCreditPurchase": null,
+        "source": "sie_models"
+      },
+      "observed": {
+        "modelRevision": null,
+        "tokenizerRevision": null,
+        "deploymentRevision": null,
+        "apiRevision": null,
+        "region": null,
+        "retention": null,
+        "hardware": null,
+        "precision": null,
+        "batchLimit": null,
+        "inputTokenLimit": null,
+        "rateLimit": null,
+        "concurrencyLimit": null,
+        "truncation": null,
+        "normalization": null,
+        "sparseTokenMapping": null,
+        "scoreSemantics": null,
+        "latencyMs": null,
+        "usage": null,
+        "costUsd": null
+      },
+      "inferenceEvidence": null
+    },
+    {
+      "id": "sie-reranker",
+      "provider": "superlinked-serverless",
+      "operation": "reranker",
+      "model": "BAAI/bge-reranker-v2-m3",
+      "candidateEndpoint": null,
+      "selection": "NOT_SELECTED",
+      "publicAssessment": "Model diwajibkan bertanda Run in your cloud; belum kandidat serverless yang memenuhi gate. Score bge-m3 bukan pengganti reranker-v2-m3.",
+      "sources": [
+        "sie_models",
+        "sie_rerank"
+      ],
+      "publicPricing": null,
+      "observed": {
+        "modelRevision": null,
+        "tokenizerRevision": null,
+        "deploymentRevision": null,
+        "apiRevision": null,
+        "region": null,
+        "retention": null,
+        "hardware": null,
+        "precision": null,
+        "batchLimit": null,
+        "inputTokenLimit": null,
+        "rateLimit": null,
+        "concurrencyLimit": null,
+        "truncation": null,
+        "normalization": null,
+        "sparseTokenMapping": null,
+        "scoreSemantics": null,
+        "latencyMs": null,
+        "usage": null,
+        "costUsd": null
+      },
+      "inferenceEvidence": null
+    },
+    {
+      "id": "deepinfra-embedding",
+      "provider": "deepinfra",
+      "operation": "embedding",
+      "model": "BAAI/bge-m3",
+      "candidateEndpoint": "https://api.deepinfra.com/v1/openai/embeddings",
+      "selection": "NOT_SELECTED",
+      "publicAssessment": "Contoh API hanya dense; deskripsi kemampuan model tidak membuktikan lexical sparse. Halaman mencantumkan fp32/zero retention, bukan observasi endpoint.",
+      "sources": [
+        "deepinfra_embed"
+      ],
+      "publicPricing": {
+        "currency": "USD",
+        "unit": "1M tokens",
+        "denseListed": 0.01,
+        "combined": null,
+        "minimumCreditPurchase": null,
+        "source": "deepinfra_embed"
+      },
+      "observed": {
+        "modelRevision": null,
+        "tokenizerRevision": null,
+        "deploymentRevision": null,
+        "apiRevision": null,
+        "region": null,
+        "retention": null,
+        "hardware": null,
+        "precision": null,
+        "batchLimit": null,
+        "inputTokenLimit": null,
+        "rateLimit": null,
+        "concurrencyLimit": null,
+        "truncation": null,
+        "normalization": null,
+        "sparseTokenMapping": null,
+        "scoreSemantics": null,
+        "latencyMs": null,
+        "usage": null,
+        "costUsd": null
+      },
+      "inferenceEvidence": null
+    },
+    {
+      "id": "siliconflow-embedding",
+      "provider": "siliconflow",
+      "operation": "embedding",
+      "model": "BAAI/bge-m3",
+      "candidateEndpoint": "https://api.siliconflow.com/v1/embeddings",
+      "selection": "NOT_SELECTED",
+      "publicAssessment": "Schema output dense; enum model kini Qwen3 meskipun deskripsi limit menyebut bge-m3. Availability BGE dan sparse tidak terbukti.",
+      "sources": [
+        "siliconflow_embed"
+      ],
+      "publicPricing": null,
+      "observed": {
+        "modelRevision": null,
+        "tokenizerRevision": null,
+        "deploymentRevision": null,
+        "apiRevision": null,
+        "region": null,
+        "retention": null,
+        "hardware": null,
+        "precision": null,
+        "batchLimit": null,
+        "inputTokenLimit": null,
+        "rateLimit": null,
+        "concurrencyLimit": null,
+        "truncation": null,
+        "normalization": null,
+        "sparseTokenMapping": null,
+        "scoreSemantics": null,
+        "latencyMs": null,
+        "usage": null,
+        "costUsd": null
+      },
+      "inferenceEvidence": null
+    },
+    {
+      "id": "siliconflow-reranker",
+      "provider": "siliconflow",
+      "operation": "reranker",
+      "model": "BAAI/bge-reranker-v2-m3",
+      "candidateEndpoint": "https://api.siliconflow.com/v1/rerank",
+      "selection": "NOT_SELECTED",
+      "publicAssessment": "Index/relevance_score terdokumentasi, tetapi enum model kini Qwen3; BGE reranker-v2-m3 tidak terbukti tersedia.",
+      "sources": [
+        "siliconflow_rerank"
+      ],
+      "publicPricing": null,
+      "observed": {
+        "modelRevision": null,
+        "tokenizerRevision": null,
+        "deploymentRevision": null,
+        "apiRevision": null,
+        "region": null,
+        "retention": null,
+        "hardware": null,
+        "precision": null,
+        "batchLimit": null,
+        "inputTokenLimit": null,
+        "rateLimit": null,
+        "concurrencyLimit": null,
+        "truncation": null,
+        "normalization": null,
+        "sparseTokenMapping": null,
+        "scoreSemantics": null,
+        "latencyMs": null,
+        "usage": null,
+        "costUsd": null
+      },
+      "inferenceEvidence": null
+    }
+  ],
+  "openGates": [
+    "Provider final per operasi",
+    "Dense+sparse aktual JA/EN/ID dan tokenizer mapping",
+    "Reranker aktual: ID, cardinality, score semantics",
+    "Served model/tokenizer/processing revisions",
+    "Truncation/normalization serta batch/input/rate/concurrency limits aktual",
+    "Region/retensi inference provider",
+    "Billing gabungan, minimum kredit dan seluruh attempt/cost",
+    "Latency/network/queue/cold-start serta scope/budget smoke berikutnya"
+  ]
+}

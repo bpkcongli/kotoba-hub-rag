@@ -1,0 +1,83 @@
+{
+  "previousSummary": "../summary.json",
+  "records": [
+    {
+      "id": "pair-ja-0",
+      "operation": "rerank-pair",
+      "language": "JA",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "payload": {
+        "inputs": {
+          "inputs": [
+            {
+              "text": "「七時に起きます」の「に」の使い方",
+              "text_pair": "時刻の後に「に」を使います。七時に起きます。"
+            },
+            {
+              "text": "「七時に起きます」の「に」の使い方",
+              "text_pair": "動作をする場所に「で」を使います。学校で勉強します。"
+            }
+          ]
+        },
+        "parameters": {
+          "function_to_apply": "none"
+        }
+      },
+      "expectedIds": [
+        "ja-time",
+        "ja-place"
+      ],
+      "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+      "timestamp": "2026-11-23T16:13:09.920Z",
+      "provider": "hf-inference",
+      "attempt": 1,
+      "httpStatus": 200,
+      "outcome": "RESPONSE_INVALID",
+      "usage": null,
+      "costUsd": null,
+      "servedRevision": null,
+      "region": null,
+      "hardware": null,
+      "precision": null,
+      "headers": {
+        "x-request-id": "Root=1-6b046616-1f2f5d74145bd36c34f9febf",
+        "content-type": "application/json"
+      },
+      "responseSha256": "d04208d3c868fa65c53da45068e6c726fa780b6f8a8115acbe90778fd7708743",
+      "responseText": "[[{\"label\":\"LABEL_0\",\"score\":5.277521133422852},{\"label\":\"LABEL_0\",\"score\":-4.822001934051514}]]",
+      "errorCode": "TRANSPORT_OR_VALIDATION_ERROR",
+      "elapsedMs": 4219.574555
+    },
+    {
+      "id": "pair-en-0",
+      "operation": "rerank-pair",
+      "outcome": "NOT_EXECUTED",
+      "reason": "PAIR_CONTRACT_PROBE_FAILED",
+      "costUsd": 0
+    },
+    {
+      "id": "pair-en-1",
+      "operation": "rerank-pair",
+      "outcome": "NOT_EXECUTED",
+      "reason": "PAIR_CONTRACT_PROBE_FAILED",
+      "costUsd": 0
+    },
+    {
+      "id": "pair-id-0",
+      "operation": "rerank-pair",
+      "outcome": "NOT_EXECUTED",
+      "reason": "PAIR_CONTRACT_PROBE_FAILED",
+      "costUsd": 0
+    },
+    {
+      "id": "pair-id-1",
+      "operation": "rerank-pair",
+      "outcome": "NOT_EXECUTED",
+      "reason": "PAIR_CONTRACT_PROBE_FAILED",
+      "costUsd": 0
+    }
+  ],
+  "actualRequests": 1,
+  "costUsd": null,
+  "readyForFreeze": false
+}

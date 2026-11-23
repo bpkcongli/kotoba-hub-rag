@@ -1,0 +1,158 @@
+{
+  "task": "INF-01",
+  "status": "SMOKE_OBSERVED_IDENTITY_AND_OPERATIONAL_GATES_OPEN",
+  "recordedAt": "2026-11-23T16:23:14.751716+00:00",
+  "baseCommit": "d98ae7a82d490f1e07a2a4ccd51676ff3e354a34",
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "auditTests": 8,
+      "mockSmokeTests": 7,
+      "projectTests": 13,
+      "totalTests": 28,
+      "skippedTests": 0,
+      "includes": [
+        "offline historical manifests and real capture checks",
+        "contract drift",
+        "strict typecheck",
+        "lint",
+        "format",
+        "tests",
+        "build"
+      ],
+      "execution": "subprocess-capable environment; no model calls"
+    },
+    {
+      "command": "npm run inf:check",
+      "exitCode": 0,
+      "networkCalls": 0
+    },
+    {
+      "check": "captureManifest with globalThis.fetch forbidden",
+      "exitCode": 0,
+      "additionalInferenceCalls": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    },
+    {
+      "check": "local Markdown links and code fences",
+      "files": 9,
+      "linksChecked": 126,
+      "outcome": "PASS"
+    },
+    {
+      "check": "actual credential containment and evidence token-pattern scan",
+      "filesCheckedBeforeThisSnapshot": 52,
+      "credentialFound": false,
+      "outcome": "PASS",
+      "secretPrinted": false
+    }
+  ],
+  "inference": {
+    "actualPostRequests": 13,
+    "dense": 6,
+    "reranker": 6,
+    "sparseDiagnostic": 1,
+    "http200": 12,
+    "http400": 1,
+    "automaticRetries": 0,
+    "offlineJaReanalysisAdditionalCalls": 0,
+    "evidence": "INF-01-manifest-v3.json",
+    "moreCallsAuthorizedByThisArtifact": false
+  },
+  "billing": {
+    "source": "USER_REPORTED_ACCOUNT_BILLING_DISPLAY",
+    "reportedText": "< $0.01",
+    "displayedUpperBoundExclusiveUsd": 0.01,
+    "exactCostUsd": null,
+    "perCallCostsUsd": null,
+    "settlementStatus": "UNKNOWN"
+  },
+  "readyForFreeze": false,
+  "openGates": [
+    "SERVED_MODEL_TOKENIZER_PROCESSING_REVISION_ATTESTATION_BOTH_OPERATIONS",
+    "ACTUAL_REGION_AND_PROVIDER_RETENTION_TERMS",
+    "MAX_LENGTH_TRUNCATION_BATCH_RATE_LIMITS_AND_PAIR_CONTRACT_GUARANTEE",
+    "TARIFF_MINIMUM_CREDIT_AND_SETTLED_BILLING_RECONCILIATION"
+  ],
+  "review": {
+    "performedBy": "PRIMARY_AGENT",
+    "independentReview": false,
+    "humanJapaneseValidation": false
+  },
+  "limits": [
+    "Synthetic infrastructure smoke only; not pilot/main or retrieval quality measurement",
+    "Hub SHAs are not attested served revisions",
+    "No region or serving revision inferred from routing hostname or output",
+    "Sparse diagnostic returned dense only; does not prove all HF deployments lack sparse",
+    "Boundary/load probes not executed; provider limits and pair contract need authoritative evidence",
+    "Billing display reported by user; no settled exact allocation; unknown costs remain null",
+    "Historical v1/v2 manifests and prior verification snapshots preserved"
+  ],
+  "sourceSha256": {
+    "tools/inf-01/audit.test.mjs": "580faecd2659636b0cfc9d0605d6fe913669dce4daf364b112aabbb95e4c7ef5",
+    "tools/inf-01/capture.mjs": "b8f460bdfda6224eb51ae5825692dc1031eaff44b8183bf94f0e3691c0c15927",
+    "tools/inf-01/discover.mjs": "8c4011fd824d7849562fb7260fc8b194cde484bc53556ede36ad240a826cbf6b",
+    "tools/inf-01/smoke.mjs": "809dd940963456f7cc5140d043c0e14f4442c807ee120453d3db4c294f042ecc",
+    "tools/inf-01/smoke.test.mjs": "be7efc5e8f2606fd6ef172707393151fd591bc1b960c07f68b6d5e5d7ee47e0f",
+    "tools/inf-01/validate.mjs": "f9c3053c2eb47d73e6220d6d9d2b373ba3ceb0af121a93191be41832b9dfcf57",
+    "tools/inf-01/verify.mjs": "83fe7e6ee7f508bb017b071ed7006d1a92670e109958115b31a0e103b7c70185",
+    "package.json": "a1530c4e22ba06bd5e517cc974339757d37bf24d296684c41a6edd2ad597637d",
+    "PRD.md": "83121829ee0d1da78a402a563a2e3790a9b2b86cd40945bd36fb01fbaf430e61",
+    "ARCHITECTURE.md": "47755b579d2e597a6c7a23ffe6b9e84b5656330956b36485015e94930be0b0a1",
+    "README.md": "b23b676562ce869c4234145789ad99e50d2c15e03ccbf69bd519c8b7991eabe7",
+    "TASK_BREAKDOWN.md": "af46724b5c6ec2ed8023810e0e5650f5f455ed2228a752f1d1e11a87630e286e",
+    "docs/ADR-001-stack-and-inference.md": "cc1ed1a756681ad65c9c1019937a08adb56c1aba587c62281b4dcae85915a0bb",
+    "docs/ADR-002-hf-dense-optional-sparse.md": "9fdec3a7c5a61f74f86efd9e2be5f72149a983709fd08e2ca1eaf76a979d8211",
+    "docs/inference/INF-01-audit.md": "12191ac42c589c743e526f0ab6a038afc29c4442b05d257259d06e78a601b3c7",
+    "docs/inference/INF-01-dense-decision.md": "7b50aa8f4b7db445017d8493d8ab51b4a75010333e8398088a53042518519071",
+    "docs/inference/INF-01-smoke-report.md": "8bfc0baa285adfd640ac4b975915ce6bd045e3835f32efe67e3b3dee02026636",
+    "docs/inference/INF-01-manifest-v3.json": "b890226c253f768e728643cd0c39e27dba43449d0dc92d098261aaae419a7fe7",
+    "research/protocol-v1/plan.json": "5d8d66bdcb83f1cbebeb7bdd61776eb7ba5340b314ae0d195d50b825dfb5a51a",
+    "research/protocol-v1/manifest.template.json": "079bd1193d4fe240b493e628799f0aefc4704865cb04ce4d04860ea4708fabde"
+  },
+  "captureArtifactSha256": {
+    "policy.json": "10f0dab25590b5c34f74cb9a58ea9d16747ad454d6ea8c875f7d5bc3cb7206fa",
+    "summary.json": "4e4b9abc3d2f16cae4340dd627cf419a214c51c363a9937d43a3ba1ee27438d3",
+    "pair-probe/summary.json": "ed9c2d198d4a0b264fa59eac1af088cc4cc5271b52170fbe5c643a688f9ce39c",
+    "pair-probe/continuation/summary.json": "f7296223d231739fc2e276de21e2f15b9f787b1f4ddf5983e28c781d12317cbe",
+    "discovery.json": "32bb956f665d87ece8553368f783d5ad33d2f4ef93f4714df6504a4c8d940d70",
+    "billing-user-report.json": "07eee4ca536ffa1259990004a9ed1feeeef072763d12ff85391a92e9ace8d825",
+    "pair-probe/continuation/ja-reanalysis.json": "3014be300ccbd77d1435661ea5652295dc7b13f7f84e3e0d3290e5cc73436633",
+    "plan.json": "baef04807f7a773e4a322efff7293a156483b3e6c6b39b65655c282e1e32ad93",
+    "pair-probe/plan.json": "b94c3f4ac4c91a9544a6549a6db7fb25a59690495091046cd4143b2d0cb9154d",
+    "ja-query.json": "603470939b0b1f2bba1c0518717109d8fd68605a91d7572d603ae55f2195076e",
+    "ja-query.pending.json": "7e76a37017f0389a84eb9c9444716d3ce33292183c8ba95a3bf3ce87b368fa90",
+    "ja-document.json": "f224942c03ce490fc4eab32b2a754f1499851cb3a9ec968b87f38a529210d166",
+    "ja-document.pending.json": "02f4c9daa69487c33c2e45a30fcf8230df5ebb56eb9ca0ab7d989f58affc2ad6",
+    "en-query.json": "f282a70ca9de33dfa04a3342719aaa3ecdc6ef6ddf228e2f44d55ca2eaea0ebd",
+    "en-query.pending.json": "f2da18d67ce285f3cef4981885ace6a4a817033950381048a0a4a59fe79fba14",
+    "en-document.json": "35fd49c0620a2dd20c18f74fa36354b8e20bfa076a39a1cb2f61b768d955fae8",
+    "en-document.pending.json": "a7eefdfa2b58f502d0cd47a1a777354d0327382cfe98d07fbbdd66b0fd5b41e7",
+    "id-query.json": "b83777d3abb558a69a03b6f25685ffafeef3972f0ec66a7687748ae09ae7c27d",
+    "id-query.pending.json": "d34b3baf8e66787dc59872de7801feb6e05f2fa0ff1a76d06ceb34ad1dcf8f56",
+    "id-document.json": "a7d433ccd8d35a76be7ff54d2da3f919cebec0f6286e1a1a69bc58276f42a80d",
+    "id-document.pending.json": "1283003f66f60d98edef574c696a5e8d7c81333ef2bccea216409eeefb21fef7",
+    "rerank-ja-time.json": "5f716dc4e75bf451213c50f70c16572b9d446c7a796e41215df31344a4ef1ff6",
+    "rerank-ja-time.pending.json": "a2cb59c5398f3d5aca7a8b357a383f7265f7d5664683a4e8e9b94cdb3f4fc6cf",
+    "sparse-capability-probe.json": "f206a55d40018273df67aff5852e5e45532e67cdd8623b303e68e7eae287bcd2",
+    "sparse-capability-probe.pending.json": "7ffa0c5447e55b7ecfc70eaa46d5032642ded8e5b322ab2269c9fe076b00aab2",
+    "pair-probe/pair-ja-0.json": "a5f835be49a35c4522e6f8b870b095e3b3ff8fcafa144621f09b813e0b63a424",
+    "pair-probe/pair-ja-0.pending.json": "44ace26905fbae132bea4360af4f5992f0411198e6a32f845c85792afb673096",
+    "pair-probe/continuation/pair-en-0.json": "6ef6dc1e89c8c5382d793dcc1eb513bb39d0308c78ae887a4394775ed218836f",
+    "pair-probe/continuation/pair-en-0.pending.json": "4be0aad2f1910d9d58b02618b283dbd1b0ff6446863d247dece33da5f17ff2a6",
+    "pair-probe/continuation/pair-en-1.json": "a1171f235064750d5cb721518032d942d57ad01eb66daec918d2ae5face9bf28",
+    "pair-probe/continuation/pair-en-1.pending.json": "9adcdb6f2a513a42deae0b20370b53e1bc43c4eebab70ed255c3aecf8a3bd19e",
+    "pair-probe/continuation/pair-id-0.json": "1db4cd05890e5f93ec26214b9b0aaa083e100828e5edfd1f6b3df75f82361aa7",
+    "pair-probe/continuation/pair-id-0.pending.json": "f14886f15543f4b290f533bd60ab84cdf9532860ca499bf3daf406be8d8f04c4",
+    "pair-probe/continuation/pair-id-1.json": "fd735a661e06ed124f0d9b1d5122deced8aaf654e770f801e46ca8dfa094fd15",
+    "pair-probe/continuation/pair-id-1.pending.json": "4eaa6ac7ecc3b64ea7b98923117380f7457522de4b11b523e351fb5d25a50903"
+  }
+}

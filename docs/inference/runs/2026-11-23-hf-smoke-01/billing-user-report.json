@@ -1,0 +1,13 @@
+{
+  "kind": "USER_REPORTED_ACCOUNT_BILLING_DISPLAY",
+  "reportedOn": "2026-11-23",
+  "source": "USER_REPLY_TO_13_REQUEST_SMOKE_BILLING_QUESTION",
+  "reportedText": "< $0.01",
+  "currency": "USD",
+  "amountUsd": null,
+  "displayedUpperBoundExclusiveUsd": 0.01,
+  "perOperationAmounts": null,
+  "settlementStatus": "UNKNOWN",
+  "independentlyVerified": false,
+  "interpretation": "Displayed amount reported by user; not an exact settled invoice or per-call allocation. Missing costs remain null."
+}

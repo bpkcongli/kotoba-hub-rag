@@ -1,0 +1,222 @@
+[
+  {
+    "id": "ja-query",
+    "operation": "dense",
+    "language": "JA",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "payload": {
+      "inputs": [
+        "「毎日七時に起きます」の「に」は何を表しますか。"
+      ],
+      "normalize": true,
+      "truncate": false
+    },
+    "expectedIds": [
+      "ja-query"
+    ]
+  },
+  {
+    "id": "ja-document",
+    "operation": "dense",
+    "language": "JA",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "payload": {
+      "inputs": [
+        "時刻を表す言葉の後に「に」を使います。例：七時に起きます。"
+      ],
+      "normalize": true,
+      "truncate": false
+    },
+    "expectedIds": [
+      "ja-document"
+    ]
+  },
+  {
+    "id": "en-query",
+    "operation": "dense",
+    "language": "EN",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "payload": {
+      "inputs": [
+        "Which particle marks a specific time in Japanese?"
+      ],
+      "normalize": true,
+      "truncate": false
+    },
+    "expectedIds": [
+      "en-query"
+    ]
+  },
+  {
+    "id": "en-document",
+    "operation": "dense",
+    "language": "EN",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "payload": {
+      "inputs": [
+        "Use に after a specific time, for example 七時に起きます。"
+      ],
+      "normalize": true,
+      "truncate": false
+    },
+    "expectedIds": [
+      "en-document"
+    ]
+  },
+  {
+    "id": "id-query",
+    "operation": "dense",
+    "language": "ID",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "payload": {
+      "inputs": [
+        "Partikel apa yang menandai waktu tertentu dalam bahasa Jepang?"
+      ],
+      "normalize": true,
+      "truncate": false
+    },
+    "expectedIds": [
+      "id-query"
+    ]
+  },
+  {
+    "id": "id-document",
+    "operation": "dense",
+    "language": "ID",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "payload": {
+      "inputs": [
+        "Gunakan に setelah waktu tertentu, misalnya 七時に起きます。"
+      ],
+      "normalize": true,
+      "truncate": false
+    },
+    "expectedIds": [
+      "id-document"
+    ]
+  },
+  {
+    "id": "rerank-ja-time",
+    "operation": "rerank",
+    "language": "JA",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "query": "「七時に起きます」の「に」の使い方",
+        "texts": [
+          "時刻の後に「に」を使います。七時に起きます。"
+        ]
+      }
+    },
+    "expectedIds": [
+      "ja-time"
+    ]
+  },
+  {
+    "id": "rerank-ja-place",
+    "operation": "rerank",
+    "language": "JA",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "query": "「七時に起きます」の「に」の使い方",
+        "texts": [
+          "動作をする場所に「で」を使います。学校で勉強します。"
+        ]
+      }
+    },
+    "expectedIds": [
+      "ja-place"
+    ]
+  },
+  {
+    "id": "rerank-en-time",
+    "operation": "rerank",
+    "language": "EN",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "query": "Japanese particle for a specific time",
+        "texts": [
+          "に marks a specific time: 七時に起きます。"
+        ]
+      }
+    },
+    "expectedIds": [
+      "en-time"
+    ]
+  },
+  {
+    "id": "rerank-en-place",
+    "operation": "rerank",
+    "language": "EN",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "query": "Japanese particle for a specific time",
+        "texts": [
+          "で marks where an action happens: 学校で勉強します。"
+        ]
+      }
+    },
+    "expectedIds": [
+      "en-place"
+    ]
+  },
+  {
+    "id": "rerank-id-time",
+    "operation": "rerank",
+    "language": "ID",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "query": "Partikel bahasa Jepang untuk waktu tertentu",
+        "texts": [
+          "に menandai waktu tertentu: 七時に起きます。"
+        ]
+      }
+    },
+    "expectedIds": [
+      "id-time"
+    ]
+  },
+  {
+    "id": "rerank-id-place",
+    "operation": "rerank",
+    "language": "ID",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+    "payload": {
+      "inputs": {
+        "query": "Partikel bahasa Jepang untuk waktu tertentu",
+        "texts": [
+          "で menandai tempat aktivitas: 学校で勉強します。"
+        ]
+      }
+    },
+    "expectedIds": [
+      "id-place"
+    ]
+  },
+  {
+    "id": "sparse-capability-probe",
+    "operation": "sparse",
+    "language": "JA_EN_ID",
+    "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction",
+    "payload": {
+      "inputs": [
+        "「毎日七時に起きます」の「に」は何を表しますか。",
+        "Which particle marks a specific time in Japanese?",
+        "Partikel apa yang menandai waktu tertentu dalam bahasa Jepang?"
+      ],
+      "normalize": true,
+      "truncate": false,
+      "return_dense": true,
+      "return_sparse": true
+    },
+    "expectedIds": [
+      "ja-query",
+      "en-query",
+      "id-query"
+    ]
+  }
+]

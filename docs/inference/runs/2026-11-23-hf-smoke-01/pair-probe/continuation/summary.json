@@ -1,0 +1,211 @@
+{
+  "records": [
+    {
+      "id": "pair-en-0",
+      "operation": "rerank-pair",
+      "language": "EN",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "payload": {
+        "inputs": {
+          "inputs": [
+            {
+              "text": "Japanese particle for a specific time",
+              "text_pair": "に marks a specific time: 七時に起きます。"
+            }
+          ]
+        },
+        "parameters": {
+          "function_to_apply": "none"
+        }
+      },
+      "expectedIds": [
+        "en-time"
+      ],
+      "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+      "timestamp": "2026-11-23T16:14:21.463Z",
+      "provider": "hf-inference",
+      "attempt": 1,
+      "httpStatus": 200,
+      "outcome": "SHAPE_VALID",
+      "usage": null,
+      "costUsd": null,
+      "servedRevision": null,
+      "region": null,
+      "hardware": null,
+      "precision": null,
+      "headers": {
+        "x-request-id": "Root=1-6b04665d-1f02f07c05e5eb8d711029c0",
+        "content-type": "application/json"
+      },
+      "responseSha256": "04ec0e33663a2d1742f33ef33b76213a5bcd9fe8a6267001bd0bd7b4ffb09166",
+      "responseText": "[[{\"label\":\"LABEL_0\",\"score\":-3.1727001667022705}]]",
+      "validation": {
+        "scores": [
+          {
+            "chunkId": "en-time",
+            "score": -3.1727001667022705
+          }
+        ],
+        "scoreSemantics": "requested_none_raw_logit_unverified",
+        "mapping": "input_order"
+      },
+      "elapsedMs": 3952.313261
+    },
+    {
+      "id": "pair-en-1",
+      "operation": "rerank-pair",
+      "language": "EN",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "payload": {
+        "inputs": {
+          "inputs": [
+            {
+              "text": "Japanese particle for a specific time",
+              "text_pair": "で marks where an action happens: 学校で勉強します。"
+            }
+          ]
+        },
+        "parameters": {
+          "function_to_apply": "none"
+        }
+      },
+      "expectedIds": [
+        "en-place"
+      ],
+      "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+      "timestamp": "2026-11-23T16:14:25.417Z",
+      "provider": "hf-inference",
+      "attempt": 1,
+      "httpStatus": 200,
+      "outcome": "SHAPE_VALID",
+      "usage": null,
+      "costUsd": null,
+      "servedRevision": null,
+      "region": null,
+      "hardware": null,
+      "precision": null,
+      "headers": {
+        "x-request-id": "Root=1-6b046661-43fa850a2d45536d223ddbd3",
+        "content-type": "application/json"
+      },
+      "responseSha256": "7463610e58629ee3d6c97e76773952b1bcf14a839fe79d2f7c3b5d40ddf86771",
+      "responseText": "[[{\"label\":\"LABEL_0\",\"score\":-8.49821949005127}]]",
+      "validation": {
+        "scores": [
+          {
+            "chunkId": "en-place",
+            "score": -8.49821949005127
+          }
+        ],
+        "scoreSemantics": "requested_none_raw_logit_unverified",
+        "mapping": "input_order"
+      },
+      "elapsedMs": 507.04636999999957
+    },
+    {
+      "id": "pair-id-0",
+      "operation": "rerank-pair",
+      "language": "ID",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "payload": {
+        "inputs": {
+          "inputs": [
+            {
+              "text": "Partikel bahasa Jepang untuk waktu tertentu",
+              "text_pair": "に menandai waktu tertentu: 七時に起きます。"
+            }
+          ]
+        },
+        "parameters": {
+          "function_to_apply": "none"
+        }
+      },
+      "expectedIds": [
+        "id-time"
+      ],
+      "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+      "timestamp": "2026-11-23T16:14:25.925Z",
+      "provider": "hf-inference",
+      "attempt": 1,
+      "httpStatus": 200,
+      "outcome": "SHAPE_VALID",
+      "usage": null,
+      "costUsd": null,
+      "servedRevision": null,
+      "region": null,
+      "hardware": null,
+      "precision": null,
+      "headers": {
+        "x-request-id": "Root=1-6b046662-65cfa2562a7078b34c7489a4",
+        "content-type": "application/json"
+      },
+      "responseSha256": "13882ac912466a4f0fda43e13db356ffdc03736a7074e1ffd1a4ebb4cd9188c5",
+      "responseText": "[[{\"label\":\"LABEL_0\",\"score\":-1.7047119140625}]]",
+      "validation": {
+        "scores": [
+          {
+            "chunkId": "id-time",
+            "score": -1.7047119140625
+          }
+        ],
+        "scoreSemantics": "requested_none_raw_logit_unverified",
+        "mapping": "input_order"
+      },
+      "elapsedMs": 613.1628279999995
+    },
+    {
+      "id": "pair-id-1",
+      "operation": "rerank-pair",
+      "language": "ID",
+      "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+      "payload": {
+        "inputs": {
+          "inputs": [
+            {
+              "text": "Partikel bahasa Jepang untuk waktu tertentu",
+              "text_pair": "で menandai tempat aktivitas: 学校で勉強します。"
+            }
+          ]
+        },
+        "parameters": {
+          "function_to_apply": "none"
+        }
+      },
+      "expectedIds": [
+        "id-place"
+      ],
+      "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+      "timestamp": "2026-11-23T16:14:26.539Z",
+      "provider": "hf-inference",
+      "attempt": 1,
+      "httpStatus": 200,
+      "outcome": "SHAPE_VALID",
+      "usage": null,
+      "costUsd": null,
+      "servedRevision": null,
+      "region": null,
+      "hardware": null,
+      "precision": null,
+      "headers": {
+        "x-request-id": "Root=1-6b046662-3c454e3b432a0fa8075e5fc3",
+        "content-type": "application/json"
+      },
+      "responseSha256": "dddeb8e4afd4813156c4e93cd740f4f3ab4c44be326da7d3d96c6889a974c63c",
+      "responseText": "[[{\"label\":\"LABEL_0\",\"score\":-10.226229667663574}]]",
+      "validation": {
+        "scores": [
+          {
+            "chunkId": "id-place",
+            "score": -10.226229667663574
+          }
+        ],
+        "scoreSemantics": "requested_none_raw_logit_unverified",
+        "mapping": "input_order"
+      },
+      "elapsedMs": 510.6979030000002
+    }
+  ],
+  "actualRequests": 4,
+  "costUsd": null,
+  "readyForFreeze": false
+}

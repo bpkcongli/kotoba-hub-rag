@@ -1,0 +1,24 @@
+{
+  "id": "pair-id-0",
+  "operation": "rerank-pair",
+  "language": "ID",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "inputs": [
+        {
+          "text": "Partikel bahasa Jepang untuk waktu tertentu",
+          "text_pair": "に menandai waktu tertentu: 七時に起きます。"
+        }
+      ]
+    },
+    "parameters": {
+      "function_to_apply": "none"
+    }
+  },
+  "expectedIds": [
+    "id-time"
+  ],
+  "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+  "outcome": "UNKNOWN"
+}

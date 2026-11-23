@@ -1,0 +1,29 @@
+{
+  "id": "pair-ja-0",
+  "operation": "rerank-pair",
+  "language": "JA",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "inputs": [
+        {
+          "text": "「七時に起きます」の「に」の使い方",
+          "text_pair": "時刻の後に「に」を使います。七時に起きます。"
+        },
+        {
+          "text": "「七時に起きます」の「に」の使い方",
+          "text_pair": "動作をする場所に「で」を使います。学校で勉強します。"
+        }
+      ]
+    },
+    "parameters": {
+      "function_to_apply": "none"
+    }
+  },
+  "expectedIds": [
+    "ja-time",
+    "ja-place"
+  ],
+  "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+  "outcome": "UNKNOWN"
+}

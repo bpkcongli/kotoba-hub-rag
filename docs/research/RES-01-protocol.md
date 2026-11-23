@@ -1,5 +1,7 @@
 # RES-01 — Protokol penelitian v1
 
+**Amendemen aktif:** [RES-02 / DOC-INF-03](RES-02-dense-amendment.md) menggantikan ketetapan hybrid/provider pada v1 dengan HF Serverless, DENSE aktif dan sparse opsional. Protokol run baru memakai v1 + overlay v2-dense; JSON/evidence v1 tetap snapshot historis. Bagian lain tetap berlaku.
+
 Tanggal: 23 November 2026. Status: **protokol perencanaan v1, belum freeze dan belum dieksekusi**. Dependensi CON-01 terpenuhi. Angka keberhasilan di bawah adalah kriteria draf TA, bukan hasil pengukuran. Tidak ada otorisasi panggilan berbayar, provisioning, atau perubahan repository aplikasi dari dokumen ini.
 
 ## 1. Acuan, keputusan dan artefak

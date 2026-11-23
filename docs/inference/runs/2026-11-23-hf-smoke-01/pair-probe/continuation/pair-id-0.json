@@ -1,0 +1,51 @@
+{
+  "id": "pair-id-0",
+  "operation": "rerank-pair",
+  "language": "ID",
+  "url": "https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3",
+  "payload": {
+    "inputs": {
+      "inputs": [
+        {
+          "text": "Partikel bahasa Jepang untuk waktu tertentu",
+          "text_pair": "に menandai waktu tertentu: 七時に起きます。"
+        }
+      ]
+    },
+    "parameters": {
+      "function_to_apply": "none"
+    }
+  },
+  "expectedIds": [
+    "id-time"
+  ],
+  "contractStatus": "DIAGNOSTIC_TRANSFORMERS_SIGNATURE_NOT_PUBLIC_HF_WIRE_GUARANTEE",
+  "timestamp": "2026-11-23T16:14:25.925Z",
+  "provider": "hf-inference",
+  "attempt": 1,
+  "httpStatus": 200,
+  "outcome": "SHAPE_VALID",
+  "usage": null,
+  "costUsd": null,
+  "servedRevision": null,
+  "region": null,
+  "hardware": null,
+  "precision": null,
+  "headers": {
+    "x-request-id": "Root=1-6b046662-65cfa2562a7078b34c7489a4",
+    "content-type": "application/json"
+  },
+  "responseSha256": "13882ac912466a4f0fda43e13db356ffdc03736a7074e1ffd1a4ebb4cd9188c5",
+  "responseText": "[[{\"label\":\"LABEL_0\",\"score\":-1.7047119140625}]]",
+  "validation": {
+    "scores": [
+      {
+        "chunkId": "id-time",
+        "score": -1.7047119140625
+      }
+    ],
+    "scoreSemantics": "requested_none_raw_logit_unverified",
+    "mapping": "input_order"
+  },
+  "elapsedMs": 613.1628279999995
+}

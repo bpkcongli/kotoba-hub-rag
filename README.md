@@ -25,7 +25,7 @@ Dokumentasi utama berada di root repository. Mulai dari PRD dan arsitektur, lalu
 | Mode | Peran | Mekanisme |
 | --- | --- | --- |
 | `LLM_ONLY` | Baseline sekunder | Context bundle terstruktur dari KotobaHub; tanpa semantic retrieval |
-| `SINGLE_STAGE` | Baseline utama | Satu putaran hybrid dense+sparse dengan filter metadata, kemudian generasi |
+| `SINGLE_STAGE` | Baseline utama | Satu putaran dense retrieval terfilter; hybrid hanya opsi profil run lain |
 | `ADAPTIVE` | Metode penelitian | Retrieval awal yang sama; router mempertahankan fast path atau melakukan deep path yang dibatasi |
 
 Perbandingan utama adalah `SINGLE_STAGE` vs `ADAPTIVE`. Baseline tanpa RAG tetap diperlukan sesuai Bab III draf TA. Adaptasi tingkat kesulitan mengikuti profil/progres dan policy KotobaHub; adaptasi retrieval berarti pemilihan kedalaman pencarian. Keduanya dicatat terpisah.
@@ -71,13 +71,13 @@ docker build --platform linux/amd64 -t kotoba-hub-rag:boot-01 .
 node tools/boot-01/smoke-image.mjs
 ```
 
-Dockerfile memakai image Node Debian 12 dengan digest terpin, npm build exact, runtime non-root dan dependency production saja. Smoke tidak memublikasikan port, memakai `--network none` dan root filesystem read-only; hasil disimpan pada [evidence image](docs/verification/BOOT-01-image.json). Laporan [BOOT-01](docs/BOOT-01-bootstrap.md) menjelaskan batas verifikasi. Compose Qdrant, deployment publik dan smoke provider tetap task lanjutan.
+Dockerfile memakai image Node Debian 12 dengan digest terpin, npm build exact, runtime non-root dan dependency production saja. Smoke tidak memublikasikan port, memakai `--network none` dan root filesystem read-only; hasil disimpan pada [evidence image](docs/verification/BOOT-01-image.json). Laporan [BOOT-01](docs/BOOT-01-bootstrap.md) menjelaskan batas verifikasi. Compose Qdrant dan deployment publik tetap task lanjutan; smoke provider tersedia pada INF-01.
 
 ## Stack dan rencana kelanjutan
 
 - Orkestrator REST: Node 24.22.3 LTS, npm 11.19.1, TypeScript 5.9.3 dan Fastify 5.12.8, dengan modular monolith serta port/adapter; keputusan `DEC-01` tercatat pada [ADR-001](docs/ADR-001-stack-and-inference.md).
-- Retrieval: Qdrant, embedding dense+sparse `BAAI/bge-m3`, dan deep-path reranker `BAAI/bge-reranker-v2-m3`.
-- Inferensi BGE: **utamakan API per pemakaian**, dengan prioritas Hugging Face untuk BGE-M3 dense+sparse dan BGE Reranker v2 M3. Jika API HF belum memenuhi kontrak/revision/biaya, evaluasi API provider lain untuk model yang sama. Provider/endpoint final masih gate `INF-01`; dukungan sparse HF belum dianggap terbukti.
+- Retrieval: Qdrant, BGE-M3 dense wajib dan sparse opsional; deep-path reranker BGE Reranker v2 M3 tetap.
+- Inferensi BGE: keputusan [ADR-002 / DOC-INF-03](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless dengan `hf-inference` eksplisit. DENSE aktif; sparse belum diaktifkan. Smoke dense/pair rerank berhasil; INF-01 DONE dengan konfirmasi served revision, region/retensi, batas layanan dan exact billing dikeluarkan dari requirement sesuai keputusan pengguna; nilai yang tidak diketahui tetap unknown.
 - Dedicated custom container/server inferensi sendiri: **alternatif**, dipilih hanya setelah audit API dan budget. Python 3.12/FlagEmbedding/FastAPI serta dependency GPU hanya diperlukan bila handler sendiri dipilih, atau untuk tooling Python yang ditugaskan. Aplikasi TypeScript langsung memanggil API HTTP; weights/GPU dan Python gateway tidak wajib pada host aplikasi.
 - Generasi dan normalisasi: OpenAI Responses API menggunakan `gpt-5.6-terra` untuk generasi dan `gpt-5.6-luna` untuk normalisasi, mengikuti konfigurasi KotobaHub saat ini.
 - Data domain: MySQL milik KotobaHub tetap menjadi sumber resmi. Service menerima context bundle dan snapshot terkurasi, tanpa menulis tabel domain aplikasi.
@@ -94,7 +94,9 @@ Konfigurasi model dan parameter per operasi akan diverifikasi dan dibekukan sebe
 
 TypeScript, BGE, dan Qdrant mengikuti draf TA subbab 3.7.7. `DOC-INF-01` mengutamakan inferensi remote karena hardware; amendemen `DOC-INF-02` pada [ADR-001 / DEC-01](docs/ADR-001-stack-and-inference.md) memprioritaskan API per pemakaian karena biaya dan maintenance penelitian. Hugging Face Hub merupakan sumber identitas model; inference provider dapat berbeda jika API HF belum memenuhi gate. Orkestrasi tetap TypeScript, sedangkan handler Python bersyarat. Referensi course menjadi checklist engineering, bukan kewajiban memakai LangChain, Chroma, Supabase, atau LangGraph.
 
-Provider harus membuktikan keluaran **dense dan sparse BGE-M3**, serta reranking `BAAI/bge-reranker-v2-m3`; nama model di Hub tidak menjamin API mendukung seluruh kebutuhan. Revision harus dapat dipertanggungjawabkan; jangan mengganti dense+sparse dengan dense-only/BM25/model lain tanpa keputusan penelitian. Embedding/reranker boleh memakai provider berbeda, tetap per operasi/run; urutan seleksi bukan failover otomatis. Latency network/cold start, unit billing, minimum kredit bila ada dan seluruh retry dicatat. Kandidat embedding alternatif SIE Serverless mempunyai dense+sparse terdokumentasi, tetapi belum diuji oleh proyek dan belum otomatis memenuhi kebutuhan reranker. Detail/sumber ada pada [penempatan inferensi](ARCHITECTURE.md#penempatan-dan-kontrak-inferensi). Provider/endpoint aktual dan budget belum dipilih; tidak ada pembelian kredit, provisioning atau call model berbayar pada revisi ini.
+Provider harus membuktikan dense BGE-M3 dan reranking BGE Reranker v2 M3. Sparse/token mapping hanya diwajibkan jika HYBRID diaktifkan. Kedua mode RAG memakai profil DENSE yang sama, tanpa RRF dan tanpa fallback provider/model/profil. Aktivasi sparse membutuhkan bukti, index kompatibel, pilot serta versi/cohort baru. Revision aktual tetap wajib sebelum freeze.
+
+Status aktif INF-01: **DONE, 24 November 2026**. [Laporan penutupan](docs/inference/INF-01-completion.md) dan [keputusan acceptance](docs/inference/INF-01-acceptance-decision.json) mencatat penghapusan requirement konfirmasi served revision, region/retensi dan batas layanan. Ketiganya tetap unknown/unverified. [Smoke](docs/inference/INF-01-smoke-report.md) tetap 13 POST; dense JA/EN/ID dan pair rerank berhasil, sparse tidak dikembalikan dan opsional pada DENSE. Billing tampilan yang dilaporkan pengguna `< USD 0,01`, exact cost null. Capture/manifest v1/v2/v3 tetap historis. Panduan konfirmasi HF bersifat opsional; tidak perlu menunggu jawaban untuk menutup INF-01. `npm run inf:check` memverifikasi snapshot dan capture secara offline tanpa model calls; status penelitian tetap belum freeze.
 
 ## Tooling agent
 
@@ -121,7 +123,7 @@ Manifest/lock runtime root, `.env.example`, health endpoint dan perintah start t
 
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
 2. `DEC-01` dan `CON-01` selesai untuk desain/spike dan kontrak v1. [CON-01](docs/contracts/CON-01.md) mencatat 127 pemeriksaan, 16 pasangan fixture melalui wire dan domain validator aplikasi. [RES-01](docs/research/RES-01-protocol.md) menyusun protokol dan matriks requirement; baseline komposit/angka keberhasilan TA diselaraskan, bukan hasil eksperimen. BOOT-01 menyediakan fondasi runtime; lanjutkan task corpus/dataset sesuai dependensi; provider aktual dan pilot tetap gate terpisah.
-3. Siapkan provider dan Qdrant sesuai dependensi; audit/smoke API embedding/reranker dengan budget eksplisit, mulai dari HF lalu provider API lain untuk model sama. Bootstrap Python/GPU hanya jika alternatif handler sendiri akhirnya diperlukan; laptop/app server tidak wajib memuat model.
+3. Verifikasi HF Serverless untuk embedding dense dan reranker dengan scope/budget eksplisit. Siapkan Qdrant dense sesuai dependensi; sparse hanya opsi versi run berikutnya. Jika HF gagal gate selain sparse, catat dan putuskan langkah berikutnya tanpa fallback otomatis.
 4. Bangun ingestion, baseline, adaptive, integrasi, dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 Spike terisolasi lulus typecheck, lint, format, build dan tiga smoke tests (Fastify schema, import SDK OpenAI tanpa call, Qdrant dense+sparse RRF nyata). Container berlimit 2 vCPU/4 GiB mencatat peak memory sekitar 640 MiB pada workload kecil ini; ukuran awal app/Qdrant dipilih 2 vCPU/4 GiB tanpa GPU. Ini bukan kapasitas produksi. [Evidence](spikes/dec-01/evidence.json) dan petunjuk reproduksi pada ADR memuat batas pengukuran; kapasitas corpus dan hardware endpoint remote tetap diuji kemudian.

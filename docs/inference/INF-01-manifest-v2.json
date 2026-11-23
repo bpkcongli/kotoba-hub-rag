@@ -1,0 +1,53 @@
+{
+  "task": "INF-01",
+  "artifactVersion": 2,
+  "status": "DECIDED_NOT_VERIFIED",
+  "decisionId": "DOC-INF-03",
+  "protocolId": "kotobahub-rag-protocol-v2-dense",
+  "authorization": {
+    "scope": "PUBLIC_AUDIT_AND_OFFLINE_TOOLING_ONLY",
+    "inferenceCallsAllowed": 0,
+    "paidBudgetUsd": 0,
+    "provisioningAllowed": false
+  },
+  "inferenceCalls": 0,
+  "readyForFreeze": false,
+  "selected": {
+    "embedding": {
+      "provider": "hf-inference",
+      "model": "BAAI/bge-m3",
+      "verification": "PENDING",
+      "endpoint": null,
+      "servedRevision": null
+    },
+    "reranker": {
+      "provider": "hf-inference",
+      "model": "BAAI/bge-reranker-v2-m3",
+      "verification": "PENDING",
+      "endpoint": null,
+      "servedRevision": null
+    }
+  },
+  "retrieval": {
+    "profile": "DENSE",
+    "sparseEnabled": false,
+    "sparseCapability": "OPTIONAL",
+    "fusion": null,
+    "sharedAcrossRagModes": true,
+    "automaticDowngrade": false,
+    "activationRequiresNewProtocolAndCohort": true
+  },
+  "discoveryFile": "INF-01-discovery.json",
+  "fixtureFile": "INF-01-fixtures.json",
+  "previousManifest": "INF-01-manifest.json",
+  "sparseGateApplicable": false,
+  "openGates": [
+    "Dense HF JA/EN/ID actual, dimensi/finite/cardinality/normalization",
+    "Reranker HF actual: query/document pairing dan ID/score semantics",
+    "Served model/tokenizer/processing revisions",
+    "Input/batch/rate/concurrency dan truncation aktual",
+    "Region/retensi provider",
+    "Usage, tarif dense/rerank, minimum kredit dan biaya seluruh attempt",
+    "Latency/network/cold-start serta otorisasi scope/budget smoke"
+  ]
+}
