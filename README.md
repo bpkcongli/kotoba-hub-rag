@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 24 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, tooling, kontrak v1 dan protokol penelitian tersedia. Runtime HTTP tetap health-only; endpoint operasi, indeks dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 24 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Runtime HTTP tetap health-only; endpoint operasi, corpus terisi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -15,6 +15,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [RES-01](docs/research/RES-01-protocol.md) | Protokol penelitian, baseline TA 3.10.6, unit/failure/analysis/freeze dan matriks 22 requirement |
 | [BOOT-01](docs/BOOT-01-bootstrap.md) | Runtime health-only, konfigurasi, port, tipe/validator kontrak, pin image dan bukti verifikasi |
 | [INF-02](docs/inference/INF-02-adapter.md) | Adapter HTTP HF, capability lokal, batas klien, attempt metadata dan verifikasi offline/loopback |
+| [STORE-01](docs/storage/STORE-01-qdrant.md) | Compose Qdrant, manifest/lifecycle index dan bukti filter/persistensi pada server nyata |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -72,7 +73,23 @@ docker build --platform linux/amd64 -t kotoba-hub-rag:boot-01 .
 node tools/boot-01/smoke-image.mjs
 ```
 
-Dockerfile memakai image Node Debian 12 dengan digest terpin, npm build exact, runtime non-root dan dependency production saja. Smoke tidak memublikasikan port, memakai `--network none` dan root filesystem read-only; hasil disimpan pada [evidence image](docs/verification/BOOT-01-image.json). Laporan [BOOT-01](docs/BOOT-01-bootstrap.md) menjelaskan batas verifikasi. Compose Qdrant dan deployment publik tetap task lanjutan; smoke provider tersedia pada INF-01.
+Dockerfile memakai image Node Debian 12 dengan digest terpin, npm build exact, runtime non-root dan dependency production saja. Smoke tidak memublikasikan port, memakai `--network none` dan root filesystem read-only; hasil disimpan pada [evidence image](docs/verification/BOOT-01-image.json). Laporan [BOOT-01](docs/BOOT-01-bootstrap.md) menjelaskan batas verifikasi. Compose Qdrant tersedia pada STORE-01; deployment publik tetap task lanjutan. Smoke provider tersedia pada INF-01.
+
+## Qdrant lokal STORE-01
+
+Docker Engine dan Compose diperlukan; binary Qdrant tidak perlu dipasang manual. Jalankan dari root:
+
+```bash
+docker compose up -d qdrant
+curl --fail http://127.0.0.1:6333/readyz
+npm run test:store
+```
+
+Compose mematok Qdrant 1.20.2 linux/amd64 ke digest image, bind REST hanya `127.0.0.1:6333`, dengan named volumes storage/snapshots. `QDRANT_HTTP_PORT` mengubah port host; sesuaikan `QDRANT_URL` bila port berubah. `npm run test:store` memakai project, port dan volume sementara sendiri, lalu membersihkannya. Perintah ini terpisah dari `npm run check` karena memerlukan daemon Docker; keduanya dijalankan untuk perubahan storage.
+
+`QDRANT_ENABLED=true` dan `QDRANT_URL=http://127.0.0.1:6333` mengaktifkan client pada aplikasi/CLI. Startup dan health probe tetap tidak melakukan I/O Qdrant atau membuat collection. Readiness service masih 503 sampai corpus dan pipeline siap. `QDRANT_TIMEOUT_MS` default 5000 ms (1–30000); `QDRANT_API_KEY` opsional untuk server yang telah dikonfigurasi auth. Compose lokal ini memakai loopback tanpa auth; deployment/TLS/auth dan backup/restore tetap OPS-01.
+
+CLI admin `npm run store -- prepare path/manifest.json` membuat collection/index yang hilang secara idempotent; `npm run store -- validate path/manifest.json` memeriksa kompatibilitas, inventory, seluruh point dan filtered search smoke. Isi manifest aktual dari snapshot yang disetujui sebelum prepare pertama. [Contoh manifest](docs/storage/STORE-01-manifest.example.json) hanya placeholder collection kosong; [laporan STORE-01](docs/storage/STORE-01-qdrant.md) menjelaskan schema, lifecycle dan batasnya. Operasi ini bukan ingestion dan tidak memanggil model. `docker compose down` menghentikan service dengan volume tetap tersimpan.
 
 ## Stack dan rencana kelanjutan
 
@@ -120,11 +137,11 @@ Contoh penugasan skill bahasa: `Gunakan backend-coder dengan $typescript-pro unt
 
 ## Memulai pengembangan
 
-Manifest/lock runtime root, `.env.example`, health endpoint dan perintah start tersedia melalui BOOT-01. `pyproject.toml` inferensi, Compose Qdrant dan endpoint operasi belum tersedia. [Fixture spike DEC-01](spikes/dec-01/fixture/package.json) tetap memiliki package/lock tersendiri sebagai evidence historis. Urutan kelanjutan:
+Manifest/lock runtime root, `.env.example`, health endpoint dan perintah start tersedia melalui BOOT-01. Compose/lifecycle Qdrant tersedia pada STORE-01. `pyproject.toml` inferensi tidak diperlukan pada jalur HF aktif; endpoint operasi belum tersedia. [Fixture spike DEC-01](spikes/dec-01/fixture/package.json) tetap memiliki package/lock tersendiri sebagai evidence historis. Urutan kelanjutan:
 
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
 2. `DEC-01` dan `CON-01` selesai untuk desain/spike dan kontrak v1. [CON-01](docs/contracts/CON-01.md) mencatat 127 pemeriksaan, 16 pasangan fixture melalui wire dan domain validator aplikasi. [RES-01](docs/research/RES-01-protocol.md) menyusun protokol dan matriks requirement; baseline komposit/angka keberhasilan TA diselaraskan, bukan hasil eksperimen. BOOT-01 menyediakan fondasi runtime; lanjutkan task corpus/dataset sesuai dependensi; provider aktual dan pilot tetap gate terpisah.
-3. Verifikasi HF Serverless untuk embedding dense dan reranker dengan scope/budget eksplisit. Siapkan Qdrant dense sesuai dependensi; sparse hanya opsi versi run berikutnya. Jika HF gagal gate selain sparse, catat dan putuskan langkah berikutnya tanpa fallback otomatis.
+3. INF-01/02 dan STORE-01 selesai untuk smoke HF, adapter dan fondasi Qdrant. Lanjutkan audit corpus DATA-01 serta chunking/ingestion menurut dependensi; sparse tetap opsi versi run berikutnya. Metadata provider yang unknown dan parameter pilot masih gate freeze, tanpa fallback otomatis.
 4. Bangun ingestion, baseline, adaptive, integrasi, dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 Spike terisolasi lulus typecheck, lint, format, build dan tiga smoke tests (Fastify schema, import SDK OpenAI tanpa call, Qdrant dense+sparse RRF nyata). Container berlimit 2 vCPU/4 GiB mencatat peak memory sekitar 640 MiB pada workload kecil ini; ukuran awal app/Qdrant dipilih 2 vCPU/4 GiB tanpa GPU. Ini bukan kapasitas produksi. [Evidence](spikes/dec-01/evidence.json) dan petunjuk reproduksi pada ADR memuat batas pengukuran; kapasitas corpus dan hardware endpoint remote tetap diuji kemudian.

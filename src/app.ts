@@ -8,18 +8,22 @@ import { createContractValidators } from '@/contracts/validator';
 import type { ContractValidators } from '@/contracts/validator';
 import type { AppConfig } from '@/shared/config';
 import type { Clock } from '@/shared/ports';
+import type { QdrantConfig } from '@/storage/qdrant-config';
+import { QdrantIndexStore } from '@/storage/qdrant-index';
 
 export interface Application {
   readonly server: FastifyInstance;
   readonly clock: Clock;
   readonly contracts: ContractValidators;
   readonly inference: HfInference | null;
+  readonly storage: QdrantIndexStore | null;
 }
 
 export function createApplication(
   config: AppConfig,
   clock: Clock = systemClock,
   hfConfig: HfConfig | null = null,
+  qdrantConfig: QdrantConfig | null = null,
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -51,6 +55,8 @@ export function createApplication(
       })
     : null;
 
+  const storage = qdrantConfig ? new QdrantIndexStore(qdrantConfig) : null;
+
   server.addHook('onClose', () => {
     inference?.close();
     return Promise.resolve();
@@ -61,5 +67,5 @@ export function createApplication(
   // Capability is local evidence, not live provider health. Index and pipeline are still absent.
   server.get('/health/ready', (_request, reply) => reply.code(503).send({ status: 'not_ready' }));
 
-  return { server, clock, contracts, inference };
+  return { server, clock, contracts, inference, storage };
 }

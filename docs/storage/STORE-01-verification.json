@@ -1,0 +1,165 @@
+{
+  "task": "STORE-01",
+  "date": "2026-11-24",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "readyForFreeze": false,
+  "dependencies": {
+    "BOOT-01": "DONE",
+    "INF-01": "DONE"
+  },
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "qdrant": {
+    "integrationRun": {
+      "task": "STORE-01",
+      "startedAt": "2026-11-23T18:53:13.011Z",
+      "server": {
+        "title": "qdrant - vector search engine",
+        "version": "1.20.2",
+        "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+      },
+      "clientVersion": "1.20.0",
+      "completedAt": "2026-11-23T18:53:23.076Z",
+      "exitCode": 0,
+      "cleanupSucceeded": true,
+      "image": "qdrant/qdrant:v1.20.2@sha256:c5e32ee251293d2e1f4dd34890ad75eeee5a4f3821a121d6d8b7e4323448b386",
+      "platform": "linux/amd64",
+      "loopbackOnly": true,
+      "newProviderCalls": 0
+    },
+    "registryIndexDigest": "sha256:d277592721d2e3b73f9b797b53cf05e6a5bb2134f6d13fdbda4ca51782afbcac",
+    "platformManifestDigest": "sha256:c5e32ee251293d2e1f4dd34890ad75eeee5a4f3821a121d6d8b7e4323448b386",
+    "imageDiscoveryCommand": "docker buildx imagetools inspect qdrant/qdrant:v1.20.2",
+    "config": {
+      "hostBind": "127.0.0.1",
+      "defaultRestPort": 6333,
+      "grpcPublished": false,
+      "telemetry": false,
+      "cors": false,
+      "cpus": 1,
+      "memoryGiB": 2,
+      "persistentVolumes": [
+        "storage",
+        "snapshots"
+      ]
+    }
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "runtimeTests": 43,
+      "offlineInf01ToolTests": 15,
+      "failed": 0,
+      "skipped": 0,
+      "includes": [
+        "inf:check",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ]
+    },
+    {
+      "command": "npm run test:store",
+      "exitCode": 0,
+      "integrationTests": 9,
+      "failed": 0,
+      "skipped": 0,
+      "server": "real disposable Qdrant 1.20.2",
+      "cleanupSucceeded": true
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "index": {
+    "schemaVersion": "qdrant-store-01-v1",
+    "physicalCollection": "kotoba_<indexRevision>",
+    "activeResearchProfile": "DENSE",
+    "dense": {
+      "dimension": 1024,
+      "distance": "Cosine",
+      "datatype": "float32"
+    },
+    "hybridStorageTestsOnly": true,
+    "sparseDatatype": "float32",
+    "sparseModifier": null,
+    "payloadIndexCount": 13,
+    "candidateValidation": [
+      "manifest/config compatibility",
+      "all required payload metadata",
+      "exact count",
+      "text SHA256/inventory digest",
+      "unique chunk IDs",
+      "every vector/profile",
+      "filtered positive/negative search smoke"
+    ],
+    "filters": [
+      "published=true",
+      "corpus_version exact",
+      "jlpt_level N5/N4",
+      "skill_codes ANY nonempty",
+      "embedding_config_id exact"
+    ],
+    "modelRevisionsAttestedByStore": false
+  },
+  "review": {
+    "role": "code-reviewer",
+    "mode": "read-only",
+    "findings": [
+      {
+        "severity": "P2",
+        "issue": "minimum payload fields were optional",
+        "status": "fixed and reviewed closed"
+      },
+      {
+        "severity": "P2",
+        "issue": "sparse index precision was not pinned",
+        "status": "fixed and reviewed closed"
+      }
+    ],
+    "newFindingsAfterFix": 0,
+    "reviewerReranIntegration": false
+  },
+  "providerCalls": {
+    "newHfRequests": 0,
+    "newPaidRequests": 0
+  },
+  "scopeLimits": [
+    "No production corpus, BGE embedding calls, ingestion or runtime RetrieverPort",
+    "HYBRID storage tests use synthetic vectors and do not prove HF sparse capability",
+    "Model revision strings are recorded metadata, not provider attestation; unknown remains null",
+    "Admin lifecycle only offline outside active/frozen runs; complete freeze reference registry not yet implemented",
+    "Volume restart tested, backup/restore and production sizing not tested",
+    "No public deployment, domain database mutation or edits to user .env",
+    "Docker/subprocess checks required approved sandbox escalation"
+  ],
+  "sha256": {
+    "compose.yaml": "fe076d799ff1e68ff6e950cc71cf54437a473539f0a360e5b4aa7d420a43f370",
+    "infra/qdrant/config.yaml": "ca8165cc49860d7370a27a4e1e181d05bbb12b9874bc2ee3f66656108956bfbf",
+    ".env.example": "4f606a204e3773f8c19a28c8fcfad3b13156823555055519132d33b832d997b0",
+    "package.json": "4a1257eed9dbd263c8bb7e6ebaceea4f48eb323247e1b3c231f94d2c8be5b0a1",
+    "package-lock.json": "9fd63f6b71be909ad5a87919eb58bfeb6cec2f24a337855376393a92465cb716",
+    "eslint.config.mjs": "ec3be6084a408cd40f8c986f3521e1f51b630599650236ee9a4df50273517921",
+    "src/app.ts": "3f0a1dd5fca21f897fca696447ff6d976eb74b133f4ff04edf398bc64e6520e2",
+    "src/main.ts": "d519f19334ceadb787c0dd4fbcdabcf64d2d850335f0fc16eecf390bc5015087",
+    "src/storage/cli.ts": "7657ed086e4c240f8cc61467cc9a1d06872762258281406502c4ef872c8d3618",
+    "src/storage/index-manifest.ts": "8fef0bca0f81f7114e62076b1218ba6cf8f5eadc548d6f1e8bd822bf8486314d",
+    "src/storage/knowledge-filter.ts": "4897dbfb8b0eaff11c86b5878747543b4aab132379f6ff09327d38082140bcac",
+    "src/storage/knowledge-payload.ts": "73ef234a57a03c7bddf72e532b2414fb1ae6e32b2e8014955e9d22554763ca15",
+    "src/storage/qdrant-config.ts": "6a07632cce66892c21d610f4daf5f8449d9826b7d35e6f14fe20d080f93e9760",
+    "src/storage/qdrant-index.ts": "30f45bcccaca01ed1cffacbda2a44c0b8d04127c00682d00325fed5b1995e836",
+    "tests/store.test.ts": "0845b4306b9b9296276d03a9122af22ed46bbf6611ef93c5b25b9758aa2cb595",
+    "tests/store.integration.ts": "9779f11a913666298cb4a9ee15c748aee457ca4d790e5936cf65da4ae265c903",
+    "tools/store-01/run-integration.mjs": "f11532e144c80246986bff686e05f84398cb4df17a722c356355b42579e8fd10",
+    "docs/storage/STORE-01-manifest.example.json": "518aa059fe5802071e063f4c962f1f9ccdbf14445a5ba1a254810bea65bed104"
+  },
+  "integrationLogSha256": "dc33e0cb13d302a84bb236a9471586cfdd6165d1b18c722a83ee279aeeb6a951"
+}

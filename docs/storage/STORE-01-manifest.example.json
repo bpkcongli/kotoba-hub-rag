@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "qdrant-store-01-v1",
+  "indexRevision": "pending_dense_v1",
+  "physicalCollection": "kotoba_pending_dense_v1",
+  "corpusVersion": "pending-corpus",
+  "retrievalProfile": "DENSE",
+  "embeddingConfigId": "pending-hf-bge-m3-v1",
+  "embeddingModelRevision": null,
+  "tokenizerRevision": null,
+  "processingRevision": null,
+  "sparseCapabilityVerified": false,
+  "sparseTokenMappingId": null,
+  "expectedPointCount": 0,
+  "contentDigest": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+}

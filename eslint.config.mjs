@@ -26,7 +26,13 @@ export default tseslint.config(
     },
   },
   {
-    files: ['src/**/*.ts', 'tests/**/*.ts', '*.config.mjs', 'tools/boot-01/**/*.mjs'],
+    files: [
+      'src/**/*.ts',
+      'tests/**/*.ts',
+      '*.config.mjs',
+      'tools/boot-01/**/*.mjs',
+      'tools/store-01/**/*.mjs',
+    ],
     // Plugin 2.32 uses SourceCode APIs removed in ESLint 10.
     plugins: { import: fixupPluginRules(importPlugin) },
     rules: {
