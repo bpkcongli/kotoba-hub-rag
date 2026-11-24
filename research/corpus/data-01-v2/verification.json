@@ -1,0 +1,40 @@
+{
+  "schema_version": "data-01-verification-v2",
+  "node_version": "v24.22.1",
+  "check_count": 26,
+  "checks": [
+    "unit-tests:tools/data-01/audit.test.mjs",
+    "unit-tests:tools/data-01/seed-audit.test.mjs",
+    "artifact:source-inventory.jsonl",
+    "artifact:provenance.json",
+    "artifact:audit.json",
+    "artifact:schema.json",
+    "artifact:catalog.json",
+    "artifact:exclusions.json",
+    "artifact:researcher-decision.json",
+    "artifact:USAGE-POLICY.md",
+    "artifact:ATTRIBUTION.md",
+    "artifact:licenses/JMDICT-licence.html",
+    "artifact:licenses/YOMITAN-LICENSE.txt",
+    "snapshot:candidates.jsonl",
+    "snapshot:catalog.json",
+    "snapshot:exclusions.json",
+    "snapshot:schema.json",
+    "approval-bound-to-exact-snapshot",
+    "inventory-reconciles-with-snapshot",
+    "source-and-translation-counts-distinguished",
+    "catalog-level-locale-skill-isolation",
+    "no-evaluator-keys-or-secret-connection-strings",
+    "all-candidates-match-versioned-seeds",
+    "content-approval-and-usage-limitations-are-explicit",
+    "prior-n5-approval-cannot-cover-changed-content",
+    "manifest-reconciles-eligibility-and-does-not-claim-freeze-or-paid-calls"
+  ],
+  "unit_tests": {
+    "command": "npm run data:test",
+    "passed": 11
+  },
+  "audited_candidates": 736,
+  "offline_only": true,
+  "limitation": "Hash/relasi/proyeksi dan penerimaan scope penelitian internal; bukan konfirmasi hak pihak ketiga, validasi ahli independen atau pengukuran kualitas retrieval."
+}

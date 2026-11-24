@@ -1,0 +1,29 @@
+{
+  "recorded_on": "2026-11-24",
+  "authority": "researcher_repository_owner",
+  "scope": "Isi 16 lesson N5 bilingual pada snapshot yang cocok persis dengan seed v2.",
+  "content_approval": "Sudah; saya menyetujui isi 16 lesson N5 bilingual yang diaudit.",
+  "coverage_decision": "Audit N5 dahulu; N4 tetap pending sampai materi dipublikasikan.",
+  "independent_human_expert_validation_claimed": false,
+  "license_or_redistribution_approval_inferred": false,
+  "snapshot_audit_sha256": "62fe2bb95a1c3b4b28ef6c831c8cf01959fc8bca86c38e55315c62ab5d155852",
+  "candidate_file_sha256": "dbde4d985ce29aff758391e9f0bbcfb0a094acf080190304a190debecb8d2ae3",
+  "approved_lesson_ids": [
+    "114cf2e3-5ce3-57f4-885c-c11c288337fd",
+    "24009d46-a270-5706-82e0-7c1cdbd920e7",
+    "267a011e-b87b-5252-98bb-121374301385",
+    "4b14c9cc-ca61-5a32-8bf8-bddf625e5266",
+    "6ac70d48-33b4-50c7-a3e4-9dcf3ff9312e",
+    "72e2ef5e-525f-5661-9da0-fb86987cb972",
+    "74ba7e47-177e-56ac-b418-f76f1d707ccb",
+    "7bbfb649-309e-50c2-b7e8-304ddf0bf6b7",
+    "86e7168a-ef45-5550-a44e-18574971067a",
+    "977e1f71-901a-5f3a-8302-b16a7e0c0f0f",
+    "a95dfe8b-b59e-5f22-b6df-8bba0be8315c",
+    "ae296331-0e1f-5d3b-a590-b751967a3e34",
+    "c44f7800-6bbc-50d5-8b9c-28430c1d7485",
+    "dbdca014-7aab-5738-81bc-b97b1e0a6a75",
+    "ef97d0ae-8847-5506-a417-ce4cd8b5c40e",
+    "f4f4e241-3feb-5f98-89af-037872a2ac1f"
+  ]
+}

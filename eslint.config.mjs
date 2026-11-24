@@ -16,6 +16,13 @@ const importOrder = [
 
 export default tseslint.config(
   {
+    files: ['tools/data-01/**/*.mjs'],
+    extends: [eslint.configs.recommended],
+    languageOptions: {
+      globals: { Buffer: 'readonly', console: 'readonly', process: 'readonly' },
+    },
+  },
+  {
     files: ['src/**/*.ts', 'tests/**/*.ts'],
     extends: [eslint.configs.recommended, ...tseslint.configs.recommendedTypeChecked],
     languageOptions: {

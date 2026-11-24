@@ -1,0 +1,10 @@
+{
+  "schema_version": "corpus-current-v1",
+  "manifest": "data-01-v2/manifest.json",
+  "manifest_sha256": "ef3a9238ec48cb4bd73991a5550da6a0790d69d26b595e419e451fffeb2da304",
+  "verification": "data-01-v2/verification.json",
+  "verification_sha256": "d60db2fb594b6456fcc747eb9e3510a00efce943091e86390d0c0ea8b2220a9a",
+  "usage_scope": "internal_research",
+  "public_redistribution_authorized": false,
+  "experiment_frozen": false
+}

@@ -1,0 +1,71 @@
+{
+  "task": "DATA-01",
+  "recorded_on": "2026-11-24",
+  "status": "DONE_INTERNAL_RESEARCH_SCOPE",
+  "node_version": "v24.22.1",
+  "runtime_pin_unchanged": "Node24.22.3 / npm11.19.1",
+  "checks": [
+    {
+      "command": "npm run check",
+      "exit_code": 0,
+      "runtime_tests_passed": 43,
+      "data01_tests_passed": 11,
+      "historical_inf_tooling_tests_passed": 15,
+      "includes": [
+        "contracts drift",
+        "strict typecheck",
+        "lint",
+        "format",
+        "runtime tests",
+        "build"
+      ]
+    },
+    {
+      "command": "npm run data:verify",
+      "exit_code": 0,
+      "snapshot_checks_passed": 26,
+      "snapshot_candidates": 736
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "scope": {
+    "approved_lessons": 20,
+    "N5_lessons": 16,
+    "N4_lessons": 4,
+    "unique_skill_owners": 114,
+    "unique_block_owners": 254,
+    "by_locale": {
+      "EN": 368,
+      "ID": 368
+    }
+  },
+  "database_access": "consistent snapshot READ ONLY, ROLLBACK; no learner tables or bank answer columns",
+  "database_writes": 0,
+  "paid_inference_calls": 0,
+  "sandbox_note": "Checks final berhasil dengan eskalasi untuk subprocess Node dan HTTP loopback; provider dimock.",
+  "source_terms_confirmed": false,
+  "accepted_usage_scope": "internal_research",
+  "public_redistribution_authorized": false,
+  "tooling_sha256": {
+    "tools/data-01/audit.mjs": "58bd0f5883ce6947ea485b675e954f3c82f5d684896ac7ecb853371abc8996ad",
+    "tools/data-01/audit.test.mjs": "820227335eec79ef0219198d93c67853fdcc48210d31a3b21ce2c587a3929bcb",
+    "tools/data-01/export.mjs": "9e11d67745540a61c879737681f3106885d9182d27cad1ad04b02b154131d387",
+    "tools/data-01/provenance.mjs": "916e78cd5fafd9e17f909b202c8070db02e697cabdb236e76c3ac62fce3bfe7b",
+    "tools/data-01/seed-audit.mjs": "7682113debd110b03667511e643ce64499bf0a7780860f4e3891c9d02b4f033d",
+    "tools/data-01/seed-audit.test.mjs": "2f665ad6d3826c4b6f3ef10a5800528c7fcfd381e7377c538b8bf534328853bc",
+    "tools/data-01/verify.mjs": "50033a2282db1cf7d222048c4cdafe6322d89d5d820e9c6f28d49cc4c40ff362",
+    "package.json": "da000cbfaf1aff3c4f5993eb2afdfaf0d45c14caae6885289154113a8cc2ed2c",
+    "eslint.config.mjs": "c17704f708caa208893fe1f0d783909de2e8604a3f2d863497577ba2bcaf8b73"
+  },
+  "manifest_sha256": "ef3a9238ec48cb4bd73991a5550da6a0790d69d26b595e419e451fffeb2da304",
+  "verification_sha256": "d60db2fb594b6456fcc747eb9e3510a00efce943091e86390d0c0ea8b2220a9a",
+  "limitations": [
+    "Bukan uji ingestion/retrieval corpus nyata",
+    "Tidak ada validasi ahli independen",
+    "Unknown terms tetap dicatat; bukan izin pihak ketiga",
+    "Cakupan20lesson published, bukan seluruh kurikulum N5/N4"
+  ]
+}

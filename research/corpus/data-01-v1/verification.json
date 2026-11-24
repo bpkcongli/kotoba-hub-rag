@@ -1,0 +1,33 @@
+{
+  "schema_version": "data-01-verification-v1",
+  "node_version": "v24.22.1",
+  "check_count": 19,
+  "checks": [
+    "unit-tests",
+    "artifact:source-inventory.jsonl",
+    "artifact:provenance.json",
+    "artifact:audit.json",
+    "artifact:schema.json",
+    "artifact:catalog.json",
+    "artifact:exclusions.json",
+    "artifact:researcher-decision.json",
+    "snapshot:candidates.jsonl",
+    "snapshot:catalog.json",
+    "snapshot:exclusions.json",
+    "snapshot:schema.json",
+    "approval-bound-to-exact-snapshot",
+    "inventory-reconciles-with-snapshot",
+    "source-and-translation-counts-distinguished",
+    "catalog-level-locale-skill-isolation",
+    "no-evaluator-keys-or-secret-connection-strings",
+    "all-candidates-match-versioned-seed",
+    "held-corpus-not-presented-as-ready"
+  ],
+  "unit_tests": {
+    "command": "node tools/data-01/audit.test.mjs",
+    "passed": 7
+  },
+  "audited_candidates": 618,
+  "offline_only": true,
+  "limitation": "Hash/relasi/eligibility checks atas snapshot lokal; bukan bukti hak penggunaan, validasi ahli independen, retrieval quality atau corpus N4."
+}

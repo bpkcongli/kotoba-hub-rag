@@ -1,0 +1,48 @@
+{
+  "task": "DATA-01",
+  "recorded_on": "2026-11-24",
+  "node_version": "v24.22.1",
+  "runtime_pin_unchanged": "Node 24.22.3 / npm 11.19.1",
+  "checks": [
+    {
+      "command": "npm run check",
+      "exit_code": 0,
+      "runtime_tests_passed": 43,
+      "data01_tests_passed": 7,
+      "historical_inf_tooling_tests_passed": 15,
+      "includes": [
+        "contracts drift",
+        "strict typecheck",
+        "lint",
+        "format",
+        "runtime tests",
+        "build"
+      ]
+    },
+    {
+      "command": "npm run data:verify",
+      "exit_code": 0,
+      "snapshot_checks_passed": 19,
+      "snapshot_candidates": 618
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "sandbox_note": "Default sandbox menolak subprocess Node dan membatasi socket test; checks terakhir berhasil dengan eskalasi yang disetujui. Tidak ada paid inference atau perubahan database.",
+  "tooling_sha256": {
+    "tools/data-01/audit.mjs": "d5ace7c1edd426aaf2728556026804891bce6abf53c2cb3f32ee467344ddefe2",
+    "tools/data-01/audit.test.mjs": "1c071a629432c2620fab0580c9042a796bc82b705df1ce098b1e830b0386aeb0",
+    "tools/data-01/export.mjs": "9e11d67745540a61c879737681f3106885d9182d27cad1ad04b02b154131d387",
+    "tools/data-01/provenance.mjs": "0bae791b117f50cd7a7d33976bf11850c18bb5ceba38a006342c98bdc6570e9e",
+    "tools/data-01/verify.mjs": "3dfd06961d59e22b1e0574fd997e016983faa74f23d04a3b8589b7746a36bdf8",
+    "package.json": "16c01ea59162a2c1e72c4c6a2c39e5a71c03b7ac0ca1b5a3f746751443c1394f",
+    "eslint.config.mjs": "c17704f708caa208893fe1f0d783909de2e8604a3f2d863497577ba2bcaf8b73"
+  },
+  "limitations": [
+    "Bukan uji ingestion/retrieval corpus nyata",
+    "Tidak ada validasi Jepang oleh ahli independen",
+    "Hak penggunaan/atribusi dan N4 masih pending"
+  ]
+}

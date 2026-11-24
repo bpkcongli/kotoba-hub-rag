@@ -1,0 +1,61 @@
+{
+  "schema_version": "data-01-researcher-decision-v2",
+  "recorded_on": "2026-11-24",
+  "authority": "researcher_repository_owner",
+  "snapshot_audit_sha256": "82d09da55443fe4b93ff1057cabcb3e92bc4739f2281b8232583b8b43f921ab4",
+  "candidate_file_sha256": "eba6435630682d184d6fd825704a2bc5c20baa205c6b08f6923e4330a8ced642",
+  "approved_lesson_ids": [
+    "114cf2e3-5ce3-57f4-885c-c11c288337fd",
+    "24009d46-a270-5706-82e0-7c1cdbd920e7",
+    "267a011e-b87b-5252-98bb-121374301385",
+    "4b14c9cc-ca61-5a32-8bf8-bddf625e5266",
+    "678a82bb-af5f-51db-b259-fb44123b666b",
+    "6ac70d48-33b4-50c7-a3e4-9dcf3ff9312e",
+    "72e2ef5e-525f-5661-9da0-fb86987cb972",
+    "74ba7e47-177e-56ac-b418-f76f1d707ccb",
+    "7bbfb649-309e-50c2-b7e8-304ddf0bf6b7",
+    "86e7168a-ef45-5550-a44e-18574971067a",
+    "977e1f71-901a-5f3a-8302-b16a7e0c0f0f",
+    "a95dfe8b-b59e-5f22-b6df-8bba0be8315c",
+    "ae296331-0e1f-5d3b-a590-b751967a3e34",
+    "c0521d8d-4053-5c0b-a313-d4f4b066459a",
+    "c44f7800-6bbc-50d5-8b9c-28430c1d7485",
+    "d0c9c3f2-2f29-53a4-b36b-37a80e6ca98c",
+    "dbdca014-7aab-5738-81bc-b97b1e0a6a75",
+    "e79dcb47-bc59-57f4-8e5b-815496a6a0fc",
+    "ef97d0ae-8847-5506-a417-ce4cd8b5c40e",
+    "f4f4e241-3feb-5f98-89af-037872a2ac1f"
+  ],
+  "content_review": {
+    "N5": {
+      "status": "approved",
+      "evidence": "../data-01-v1/researcher-decision.json",
+      "documents_unchanged": true,
+      "compared_documents": 618
+    },
+    "N4": {
+      "status": "approved",
+      "researcher_statement": "Ya, saya menyetujui isi empat lesson N4 tersebut.",
+      "approved_lessons": 4
+    }
+  },
+  "usage_acceptance": {
+    "scope": "internal_research",
+    "accepted": true,
+    "researcher_statement": "Ya, terima batasan tersebut untuk penelitian internal; tidak menyetujui redistribusi publik.",
+    "unverified_terms": [
+      "BUNPRO reuse license",
+      "TAE_KIM PDF license"
+    ],
+    "known_license_declarations": [
+      "JMDICT CC-BY-SA-4.0",
+      "YOMITAN_JLPT_VOCAB CC-BY-SA-4.0"
+    ],
+    "attribution_required": true,
+    "third_party_rights_confirmed": false,
+    "public_redistribution_authorized": false
+  },
+  "independent_human_expert_validation_claimed": false,
+  "paid_inference_authorized": false,
+  "scope_limitation": "20 lesson published/current pada capture ini; bukan klaim seluruh kurikulum N5/N4 lengkap."
+}

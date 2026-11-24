@@ -1,0 +1,124 @@
+{
+  "schema_version": "data-01-manifest-v2",
+  "corpus_candidate_id": "kotobahub-n5n4-data01-20261124-v2",
+  "task": "DATA-01",
+  "status": "AUDITED_APPROVED_FOR_INTERNAL_RESEARCH",
+  "captured_at_utc": "2026-11-24 10:53:35.417314",
+  "supersedes": "../data-01-v1/manifest.json",
+  "app_source": {
+    "commit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "status_sha256": "ce25825436220b122a0d909f375e50f035b58d1b7a56bd764f98c31c81411f96"
+  },
+  "snapshot_directory": "artifacts/data-01/snapshot-v4",
+  "snapshot_audit_sha256": "82d09da55443fe4b93ff1057cabcb3e92bc4739f2281b8232583b8b43f921ab4",
+  "immutable_snapshot_files": {
+    "candidates.jsonl": {
+      "sha256": "eba6435630682d184d6fd825704a2bc5c20baa205c6b08f6923e4330a8ced642",
+      "bytes": 1772417
+    },
+    "catalog.json": {
+      "sha256": "f2b772c0bf597114c9d9a747069b4b2afa737c51c196dcf53da69e02e0080b87",
+      "bytes": 22570
+    },
+    "exclusions.json": {
+      "sha256": "76c9a0c9dcab0889b58252fe1b5328f49d0b7ff7a94ab442f7b0106743970fe0",
+      "bytes": 26348
+    },
+    "schema.json": {
+      "sha256": "8c56159308f2e643efa923c75f3682bc719942126bf5a69c0d15e9b808d05042",
+      "bytes": 16343
+    }
+  },
+  "candidate_document_count": 736,
+  "unique_source_owners": 368,
+  "coverage": {
+    "requested_levels": [
+      "N5",
+      "N4"
+    ],
+    "audited_levels": [
+      "N5",
+      "N4"
+    ],
+    "pending_levels": [],
+    "approved_lessons": 20,
+    "locales": [
+      "EN",
+      "ID"
+    ],
+    "by_level": {
+      "N5": 618,
+      "N4": 118
+    },
+    "by_locale": {
+      "EN": 368,
+      "ID": 368
+    },
+    "full_curriculum_claimed": false
+  },
+  "researcher_content_review": "approved",
+  "approval_evidence": "researcher-decision.json",
+  "license_status": "ACCEPTED_LIMITATIONS_FOR_INTERNAL_RESEARCH",
+  "source_terms_confirmed": false,
+  "public_redistribution_authorized": false,
+  "usage_policy": "USAGE-POLICY.md",
+  "attribution": "ATTRIBUTION.md",
+  "ingestion_eligible_document_count": 736,
+  "ready_for_data02_ingestion": true,
+  "ready_for_data02_offline_development": true,
+  "source_inventory_digest": "a55cfc2c4c7baa5135ff81ff87671c78aa1e0ade66bc74c0fa169fb7c15d2396",
+  "normalization": {
+    "policy": "none_in_data01",
+    "html": "preserved_unsanitized_for_audit_only",
+    "unicode": "UTF-8 original strings, no NFC/NFKC",
+    "content_checksum": "SHA-256 canonical JSON of pedagogical content; not DATA-02 chunk text checksum"
+  },
+  "exclusions": {
+    "unpublished_and_ancestors": true,
+    "out_of_level": true,
+    "standalone_flashcard_groups": "Outside current lesson catalog scope; not declared intrinsically ineligible.",
+    "learner_tables": "not_read",
+    "post_study_prompts_and_answers": "not_read",
+    "comprehension_checks": "removed_from_reading_projection",
+    "evaluator_cases_and_keys": "not_read",
+    "official_free_response_rubric": "not_found_in_examined_sources_audit_result_handed_to_uc02_eval"
+  },
+  "experiment_frozen": false,
+  "paid_inference_calls": 0,
+  "database_writes": 0,
+  "artifacts": {
+    "source-inventory.jsonl": {
+      "sha256": "888b977689c0be1834950cf2f257fb4b4eb47d7f0baffaedcc0c120992844fe8"
+    },
+    "provenance.json": {
+      "sha256": "df507572ff1331f7a89aace2921da974bbb926742a4de43b2e1ca61dbf3325d4"
+    },
+    "audit.json": {
+      "sha256": "82d09da55443fe4b93ff1057cabcb3e92bc4739f2281b8232583b8b43f921ab4"
+    },
+    "schema.json": {
+      "sha256": "8c56159308f2e643efa923c75f3682bc719942126bf5a69c0d15e9b808d05042"
+    },
+    "catalog.json": {
+      "sha256": "f2b772c0bf597114c9d9a747069b4b2afa737c51c196dcf53da69e02e0080b87"
+    },
+    "exclusions.json": {
+      "sha256": "76c9a0c9dcab0889b58252fe1b5328f49d0b7ff7a94ab442f7b0106743970fe0"
+    },
+    "researcher-decision.json": {
+      "sha256": "941cbd92b883b0e9db739b825e5f9530124c0d9d66496176a815cf957eebac2d"
+    },
+    "USAGE-POLICY.md": {
+      "sha256": "6b3de275fda0a20456536c13a88c4e468f6e60653bf6c2d822f1f6cb4b7a608f"
+    },
+    "ATTRIBUTION.md": {
+      "sha256": "5940956411d58b9333e2b1c20b8201063ddd2682bd0c6f4dc4523ba072907a3c"
+    },
+    "licenses/JMDICT-licence.html": {
+      "sha256": "52f60ea9ca68170a2f0663d7dba381ebf1bd57c17a3347dfe21153865c156692"
+    },
+    "licenses/YOMITAN-LICENSE.txt": {
+      "sha256": "7abe19ec9bb73b36141b999b861d24ad855e808bafe0f81e84cce28556f6c297"
+    }
+  }
+}

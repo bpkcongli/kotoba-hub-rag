@@ -1,0 +1,107 @@
+{
+  "schema_version": "data-01-manifest-v1",
+  "corpus_candidate_id": "kotobahub-n5-data01-20261124-v1",
+  "task": "DATA-01",
+  "status": "N5_AUDITED_N4_PENDING",
+  "captured_at_utc": "2026-11-24 08:32:39.599328",
+  "app_source": {
+    "commit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "status_sha256": "05ec10efec38b8bd70eb3627b6f1092eac0a23a1708fe6f787da3074324586ba"
+  },
+  "snapshot_directory": "artifacts/data-01/snapshot-v3",
+  "snapshot_audit_sha256": "62fe2bb95a1c3b4b28ef6c831c8cf01959fc8bca86c38e55315c62ab5d155852",
+  "immutable_snapshot_files": {
+    "candidates.jsonl": {
+      "sha256": "dbde4d985ce29aff758391e9f0bbcfb0a094acf080190304a190debecb8d2ae3",
+      "bytes": 1341408
+    },
+    "catalog.json": {
+      "sha256": "16740cca4c1554c4657dae94423daa680c9728a01ae8668ad0c38df27acc57a4",
+      "bytes": 18097
+    },
+    "exclusions.json": {
+      "sha256": "76c9a0c9dcab0889b58252fe1b5328f49d0b7ff7a94ab442f7b0106743970fe0",
+      "bytes": 26348
+    },
+    "schema.json": {
+      "sha256": "8c56159308f2e643efa923c75f3682bc719942126bf5a69c0d15e9b808d05042",
+      "bytes": 16343
+    }
+  },
+  "candidate_document_count": 618,
+  "unique_source_owners": 309,
+  "coverage": {
+    "requested_levels": [
+      "N5",
+      "N4"
+    ],
+    "audited_levels": [
+      "N5"
+    ],
+    "pending_levels": [
+      "N4"
+    ],
+    "approved_lessons": 16,
+    "locales": [
+      "EN",
+      "ID"
+    ],
+    "by_level": {
+      "N5": 618,
+      "N4": 0
+    },
+    "by_locale": {
+      "EN": 309,
+      "ID": 309
+    }
+  },
+  "researcher_content_review": "approved",
+  "approval_evidence": "researcher-decision.json",
+  "license_status": "source_usage_terms_and_attribution_pending",
+  "ingestion_eligible_document_count": 0,
+  "ready_for_data02_ingestion": false,
+  "ready_for_data02_offline_development": true,
+  "data02_development_limit": "Parser/fixtures dapat dikembangkan offline; jangan menganggap kandidat sebagai corpus eligible atau memanggil embedding sebelum gate DATA-01 ditutup.",
+  "source_inventory_digest": "41e9c8a47d469ced237b2507a0f682efa122cdc1a393fe137e5799e1632822b6",
+  "normalization": {
+    "policy": "none_in_data01",
+    "html": "preserved_unsanitized_for_audit_only",
+    "unicode": "UTF-8 original strings, no NFC/NFKC",
+    "content_checksum": "SHA-256 canonical JSON of pedagogical content; not DATA-02 chunk text checksum"
+  },
+  "exclusions": {
+    "unpublished_and_ancestors": true,
+    "out_of_level": true,
+    "standalone_flashcard_groups": "Outside current lesson catalog scope; not declared intrinsically ineligible.",
+    "learner_tables": "not_read",
+    "post_study_prompts_and_answers": "not_read",
+    "evaluator_cases_and_keys": "not_read",
+    "official_free_response_rubric": "not_found_in_examined_sources"
+  },
+  "experiment_frozen": false,
+  "paid_inference_calls": 0,
+  "database_writes": 0,
+  "artifacts": {
+    "source-inventory.jsonl": {
+      "sha256": "553508a96453d3316f8c4aa0e837bf526bff0fdcd61df13443aad7839e4a678a"
+    },
+    "provenance.json": {
+      "sha256": "89fd35aa0565b7e9947a2f12d94bc99c88ce16dc08f43dae48dbfaba8b285faf"
+    },
+    "audit.json": {
+      "sha256": "62fe2bb95a1c3b4b28ef6c831c8cf01959fc8bca86c38e55315c62ab5d155852"
+    },
+    "schema.json": {
+      "sha256": "8c56159308f2e643efa923c75f3682bc719942126bf5a69c0d15e9b808d05042"
+    },
+    "catalog.json": {
+      "sha256": "16740cca4c1554c4657dae94423daa680c9728a01ae8668ad0c38df27acc57a4"
+    },
+    "exclusions.json": {
+      "sha256": "76c9a0c9dcab0889b58252fe1b5328f49d0b7ff7a94ab442f7b0106743970fe0"
+    },
+    "researcher-decision.json": {
+      "sha256": "ce42611b7a655aaed77f1ce75317010a8d8f2d5b4b964d925508a10546fa7033"
+    }
+  }
+}

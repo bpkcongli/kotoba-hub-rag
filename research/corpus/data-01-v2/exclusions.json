@@ -1,0 +1,902 @@
+[
+  {
+    "table": "lessons",
+    "id": "6a67b289-6ce2-53a0-af43-ad25b15666c3",
+    "reason": "unpublished_or_out_of_scope_ancestor"
+  },
+  {
+    "table": "lessons",
+    "id": "8064f07c-404f-5169-8f1c-d59417409c67",
+    "reason": "unpublished_or_out_of_scope_ancestor"
+  },
+  {
+    "table": "lessons",
+    "id": "9025e27a-1d53-5365-bcd3-866950ae63c0",
+    "reason": "unpublished_or_out_of_scope_ancestor"
+  },
+  {
+    "table": "lessons",
+    "id": "a88effb7-4041-5970-82db-c7aeec1e177e",
+    "reason": "unpublished_or_out_of_scope_ancestor"
+  },
+  {
+    "table": "lessons",
+    "id": "bb56f0ee-63fb-5d6c-a220-4eca3d5072cb",
+    "reason": "unpublished_or_out_of_scope_ancestor"
+  },
+  {
+    "table": "lessons",
+    "id": "df2e07d4-25de-523d-8f2a-9e9e27b1f912",
+    "reason": "unpublished_or_out_of_scope_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "0130d611-efe5-51fc-b69a-566207318880",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "02946238-c43f-5ee4-9a40-c2a708ae649b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "0466f56c-ae77-5012-9116-dc75a7fcae3b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "04a7e0c9-c9d8-5004-8f15-ed10d0174992",
+    "reason": "unpublished"
+  },
+  {
+    "table": "skills",
+    "id": "06c0cff2-868c-5de5-9f20-3e14b9a56f57",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "09bbd8ad-afa4-525e-a84b-0ac5006095ba",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "0c1aa7ca-89d8-5ae3-ba24-fbd695c478ee",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "1042b8ce-ce99-597d-b52f-82321fd0de4f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "10de3394-a911-58f1-ac11-45c6fec22e16",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "11d78b69-e258-5573-b485-6f5a59ec19fa",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "11de589d-8a69-5bce-b60c-8bb3f3cee031",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "14564392-7aa9-50e7-8b04-6ec4f1864222",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "163bbab0-cfea-5b26-9750-aebdc6edc0f5",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "163e548b-2f63-52b2-abf2-39105600356c",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "168f816a-6b62-58d2-813b-ad3ad9763f31",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "1cd8396f-2545-5592-9157-fea74d4cdc0b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "1d782925-01d6-5566-90b2-9cd4953d26d7",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "24461a82-18d7-5c92-a5ec-38736ef827e5",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "25091875-2493-51ca-8bd3-4dde7ba092f6",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "25e5b5de-7b57-5e1a-a249-27b3fcdd5cae",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "26886deb-8695-510a-b0f6-edf6d07a1a7b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "26ff7ef7-6ca0-5345-8016-11e7bb20491d",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "29782f05-ee9e-5c4a-b159-5061ba4bc4f1",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "2b530405-e6ae-58bf-89bd-7f7cc1c20569",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "2d7787e9-5bad-5cf5-a79c-5f0da2cb0d69",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "2f950742-90bd-544d-867d-9917613f8171",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "3056faa7-52d7-5a03-a4d7-373df219f350",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "33acbf5d-8e3b-53aa-8526-9078d4a3af78",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "379dae53-10a4-559e-b6d5-79111ac357b9",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "3886c6fd-e13c-53d0-bc9a-071b6e7999a3",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "38f15125-15a3-5a61-80a7-e4d101170ae8",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "3b430ba4-2784-5f69-871c-5f6a449fed22",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "3b71aa72-3d08-568d-80ec-c5cdddcd6904",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "3c328254-7c1d-5e23-b968-2d88611fa4d4",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "3cf574aa-4e58-57b7-85ec-ab764ca08785",
+    "reason": "unpublished"
+  },
+  {
+    "table": "skills",
+    "id": "3d81addb-28d3-5a9a-86bb-c4e372fd0be6",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "3feab6ad-ff28-5818-9167-aa9bfa437309",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "41e891a5-6334-5a04-bb1a-7ab60dcf33f3",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "44e6b670-2946-5957-a8aa-03bd29567864",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "456b7399-df1a-5c9e-8781-890b3a9d6289",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "46b5ccd9-b50a-5556-ab0c-e9af7762afbb",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "483fee56-106b-590b-b0c6-194e8ab87b8f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "48b5fda7-aa5c-572f-901c-cfe7d7987da5",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "4906d482-dce1-55a4-bd65-8fe896c9db75",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "4b8b94e6-df98-5b59-9174-d7b61f73529e",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "4c7a5093-9de8-5e33-8e91-b0cc351e3212",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "4d188a68-f576-5413-bd75-1b5a4775ba77",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "4e7805d8-d72a-53d8-b0a5-d0da43a22c49",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "4eff94f6-e13a-54a2-b64a-f2ea492aa33f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "504f9003-cdc8-5e53-b0c0-6f9536a17f9f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "50b3324f-2499-5e38-8c9c-39e211aff267",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "52075e60-f85b-5721-9ce8-b35370b804b1",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "52eb65ab-ddab-536a-add8-16d577ecdd20",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "533e5366-dcab-5591-8f0b-7e84835f27c6",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "54d09a8e-c403-579e-99de-a20c8d59dff9",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "55e00440-34dd-5bf9-a69f-aca91e9ab31d",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "58975144-450a-5007-819c-94d8091b8c00",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "5940c019-9ada-54c3-a1bf-9c7f8a6cd3fb",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "5950be2b-3725-5aeb-b0fa-bd7347eb1428",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "5a646d8c-2fcf-57bc-8a06-b90f773eb81b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "5b33286c-c15c-5e5e-8740-e5bcf9d01525",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "5d8cc647-766c-5c16-b753-82acc8b83f00",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "5fa6663b-03b9-54d4-bed8-6ff4c8e4fefb",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "609d4708-8416-5be0-9ba6-de84af1b348f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "62e56e48-3813-5c4a-b138-7486a98ed7e1",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "63471dbf-e050-5db5-96f6-480a5519efce",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "6388b07c-dc8e-584a-a61e-817ea6a73889",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "66c74c65-fbde-5da1-9846-b23c2e18a6a1",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "693dd87e-830c-5b4c-a00c-512482bf363f",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "69906c81-dd33-570a-924d-45480e1b3ae8",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "69b42d22-aca4-55da-af82-4faad09b84b1",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "700076c9-27fa-56f9-becc-f1c383d86874",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "7053c7a0-5e84-592c-b2e7-80104505ee15",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "74519758-479c-5319-b6a3-b4af83f1ac72",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "758337ea-3df3-5751-bc95-5fd3e8fe788c",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "76a64af7-6bae-5fc7-8d25-3ad0ba988c66",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "7a3958c6-2da1-5ae5-9d83-9082033bed82",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "800887fb-ae4b-5ba4-85a5-7d5a922e3a21",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "81784d4a-cbd1-58f2-9d8f-4ca3999c38ef",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "8327416d-cd64-5e61-9eef-f6fc60872f95",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "842a1074-3e8f-5325-89df-25a0d6cc7d45",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "882166b4-f2df-5b78-992e-0313caedb7ce",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "89929d3d-56ac-5bf7-b44f-b24c1ca4396a",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "8a1dd254-9c10-5634-a320-53bc97034912",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "8b482ea9-0a9c-5fe2-946d-282bcfd2097b",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "8c4b97b1-dca6-5a1f-8225-2f12352515df",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "8d311fe2-7c05-5bc1-a374-2c68d3a2e697",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "9159ec3a-05fe-59bf-8a9a-bbfe04455021",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "94188a9a-2cf4-59d1-978e-147deaeef7c6",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "96b32226-7c84-5cce-9162-b10964ed050f",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "995c7823-c15c-5b77-95e5-011cc07e92c3",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "9a9b223a-fd79-5af5-9119-d566864adc76",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "9b31d709-3120-538e-aede-aa96db1ef367",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a01aed93-dd83-5eec-9351-bcd9855e6297",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a135645d-7172-5b28-8a67-fdece6988d1a",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a2dbaa32-0d94-5026-b819-440b723e87a0",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a30d7cb5-dc54-56f4-938d-1e88c3361ea6",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a3c81dce-49aa-5c31-b5b3-6826cc7433b6",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a48f74b1-b2c7-56b5-a7f7-044af2f6bd8f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a50e54a9-f3bb-52ae-afc2-b28e0486d434",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a6e8a139-ac8c-5988-98ca-bf4ccbd41610",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a7f93022-19d7-5833-9179-446ebb56097e",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "a94ea8fc-17b5-51e9-90c5-caaafabcfb34",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "aa4cd7c9-8015-5dba-9f84-cf342d5b1ca9",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "ac4d2f5b-943d-5ad5-8286-12617c65fbdc",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "ad7ca1a7-1f04-5840-8464-7eb383559ea8",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "ae4a1ed2-4643-5799-9c3a-6ca36276ce4c",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "aebe601a-0998-5095-bb51-80de616179fc",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b0c78314-82a9-50b4-8003-4653b343302e",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b12987e6-5a93-5082-89ff-658e97cd05ee",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "b1e4df65-86a2-5483-8a4f-7344868bfabe",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b242a496-cfa8-507d-a7c4-65095d21432f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b4a380cc-50a3-5d50-9a11-dacffa17ab9b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b60b920c-ce3a-5236-b31e-5c893b148e97",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b67706a3-5f17-53ec-a948-0460caafd0ae",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b74b17a9-721f-539f-bb73-a711ecc4d3b3",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b7725abf-596c-51e9-92e2-5fd8fb0912f8",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "b983c779-2ca3-5c2e-8f0a-bb31e3e253b2",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "bbd42465-85e6-5caa-a1be-e322477129ed",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "be1644e8-7265-5ea0-9a57-1b1da274e413",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "bf84989f-f035-5c0c-afe0-a2f05311238f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c07609fd-6096-530b-bb89-7e4de54e4459",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c1eda9be-e00f-5c9d-adb1-25fe72a80274",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c1ef6626-3dea-56b6-a337-2c3809a8fc63",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c47ca763-be63-5775-8040-8595c3530608",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c4c2145b-96f2-5968-a365-0950f17a0068",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c64a883d-c6ca-5b2b-9b40-b3b333a09cd0",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c7107079-3b92-5348-af3a-8011eb4d86ff",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c7f7e913-7f21-59e6-a584-a5cafcde1e6e",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c8fc2062-d8d6-552f-8e94-29aa3f0432f8",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c9e11f29-9f38-553f-8930-cbf5f59e3166",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "c9e143cd-ff78-570b-938c-77d2feb4a00d",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "cb2261a2-caae-5894-acf9-8038ab4e8703",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "cb6a2fde-a2f1-597f-a745-5d475dbe09e1",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "ce50b38f-0801-5331-9ef9-49e142f324ab",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "ce959af9-62c3-5e5e-89e8-368f58e36391",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "d0d236dd-60a6-5137-a473-ecdf694eeea3",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "d1f26829-8e26-5678-b63c-d5b7b2a03638",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "d4a684da-2050-5987-a3e9-c745403aac37",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "d7efc07e-fb4e-5014-ac61-ad5b793dc850",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "d893e925-66db-5ae9-8d82-4c7910d39386",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "db2522ca-34bc-57c8-a0b0-32c82585c0ac",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "dbad3d9e-145a-573a-8c7d-8af5aa57b9d2",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "de71646a-df11-56c1-949a-d533c1b7e69a",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "dff92db7-9093-55ae-9ebf-fba7a33e4b39",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e20de44c-3293-5124-b2c6-ea9dea08b6b3",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e2308cb5-9e0f-5a95-8468-d81dc8d06e6d",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e34c9a74-4756-5514-adaa-b5fb139f5306",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "e4046a1c-7c42-554f-874c-4acbf91c90e2",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e413eb01-8910-58bb-8561-e77d8822c295",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e44fc55c-f2c5-59ba-b399-7fd6d5e00c45",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e58eaad1-ef56-58f5-b56f-6df6df630bf1",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e68a8823-9967-5fad-b05e-d8deb8827a3b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e760f823-3307-501e-ab9f-e06e6263096f",
+    "reason": "unpublished_out_of_scope_or_stale_ancestor"
+  },
+  {
+    "table": "skills",
+    "id": "e7c96135-3726-5445-a3fa-75f9b7678b4f",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e81fb4e4-c810-5943-9393-3a1489fcae19",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "e9a6f67b-e68d-58c7-8e1b-8f3524e06aa7",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "ec2b09d1-e48a-50be-9a78-a998deb976df",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "ee23fe69-a6e9-5159-93df-44e27763903b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "eeae37d9-c980-5f8f-a7aa-ce40b5314226",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "eeed9bd0-b54e-5d3e-b2f5-e5d3e280a8e6",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f059a495-a5e0-55f1-b6af-009bb953dd36",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f0ac1b11-f5f2-5649-945f-18f0310199b7",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f0b85a82-4f53-5444-9f4d-e2fbb05b83dc",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f0df235c-665b-50c9-b08b-02a6e9f2bbd7",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f28b9b08-0e45-5a66-a6ac-2b5c9d38ee95",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f4bce066-e07c-58b0-8b7e-1097b7515f08",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f4e9844e-0074-5ab2-9be6-41dec42efee7",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f5312af1-9e48-5999-b266-f0aa45dcfd76",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f54bb21f-f2f0-578b-a79b-8a37643daafd",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "f7337764-59ae-5619-8f01-f1af6fa51cb6",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "fa909a0d-7cbf-5ca4-bf28-fa28ae473f4b",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "fb082f89-9eba-5c63-8ac2-5f91d0b598f0",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  },
+  {
+    "table": "skills",
+    "id": "fd3e34e9-9802-59f9-b9d2-dfd629c89edc",
+    "reason": "standalone_flashcard_group_outside_lesson_catalog"
+  }
+]

@@ -1,0 +1,228 @@
+{
+  "schema_version": "data-01-audit-v1",
+  "captured_at_utc": "2026-11-24 08:32:39.599328",
+  "node_version": "v24.22.1",
+  "mysql2_version": "3.24.5",
+  "app_source": {
+    "commit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "status_sha256": "05ec10efec38b8bd70eb3627b6f1092eac0a23a1708fe6f787da3074324586ba"
+  },
+  "app_source_unchanged": true,
+  "transaction": {
+    "isolation": "REPEATABLE READ",
+    "start": "WITH CONSISTENT SNAPSHOT, READ ONLY",
+    "end": "ROLLBACK",
+    "table_engines": "InnoDB",
+    "session_default_read_only": 0,
+    "account_grants_audited": false
+  },
+  "read_tables": [
+    "tracks",
+    "units",
+    "lessons",
+    "skills",
+    "lesson_content_blocks",
+    "unit_skill_mappings",
+    "track_translations",
+    "unit_translations",
+    "lesson_translations",
+    "skill_translations",
+    "lesson_content_block_translations",
+    "lesson_post_study_questions (aggregate only)"
+  ],
+  "source_counts": {
+    "tracks": 1,
+    "units": 5,
+    "lessons": 22,
+    "skills": 274,
+    "lesson_content_blocks": 209,
+    "unit_skill_mappings": 100,
+    "track_translations": 2,
+    "unit_translations": 8,
+    "lesson_translations": 32,
+    "skill_translations": 506,
+    "lesson_content_block_translations": 418
+  },
+  "track_scope": [
+    {
+      "id": "fd542c28-34ff-5ef3-a069-c9b193d38bb1",
+      "slug": "jlpt-n5-foundation",
+      "curriculum_level": "N5",
+      "is_published": 1
+    }
+  ],
+  "bank_summary": [
+    {
+      "lesson_id": "114cf2e3-5ce3-57f4-885c-c11c288337fd",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "24009d46-a270-5706-82e0-7c1cdbd920e7",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "267a011e-b87b-5252-98bb-121374301385",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "4b14c9cc-ca61-5a32-8bf8-bddf625e5266",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "6ac70d48-33b4-50c7-a3e4-9dcf3ff9312e",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "72e2ef5e-525f-5661-9da0-fb86987cb972",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "74ba7e47-177e-56ac-b418-f76f1d707ccb",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "7bbfb649-309e-50c2-b7e8-304ddf0bf6b7",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "86e7168a-ef45-5550-a44e-18574971067a",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "977e1f71-901a-5f3a-8302-b16a7e0c0f0f",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "a95dfe8b-b59e-5f22-b6df-8bba0be8315c",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "ae296331-0e1f-5d3b-a590-b751967a3e34",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "c44f7800-6bbc-50d5-8b9c-28430c1d7485",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "dbdca014-7aab-5738-81bc-b97b1e0a6a75",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "ef97d0ae-8847-5506-a417-ce4cd8b5c40e",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    },
+    {
+      "lesson_id": "f4f4e241-3feb-5f98-89af-037872a2ac1f",
+      "question_count": 10,
+      "published_count": "10",
+      "published_difficulties": 10,
+      "min_difficulty": 1,
+      "max_difficulty": 10
+    }
+  ],
+  "candidate_documents": 618,
+  "by_level": {
+    "N5": 618,
+    "N4": 0
+  },
+  "by_locale": {
+    "EN": 309,
+    "ID": 309
+  },
+  "by_type": {
+    "EXAMPLE_SENTENCE": 116,
+    "GRAMMAR": 78,
+    "GRAMMAR_STRUCTURE": 78,
+    "PARAGRAPH": 224,
+    "VOCABULARY": 122
+  },
+  "published_lessons_with_current_locales": 16,
+  "ingestion_eligible_documents": 0,
+  "researcher_review": "not_recorded",
+  "source_ref_providers": [
+    "BUNPRO",
+    "JMDICT",
+    "KOTOBAHUB_INTERNAL",
+    "TAE_KIM",
+    "YOMITAN_JLPT_VOCAB"
+  ],
+  "artifacts": {
+    "candidates.jsonl": {
+      "sha256": "dbde4d985ce29aff758391e9f0bbcfb0a094acf080190304a190debecb8d2ae3",
+      "bytes": 1341408
+    },
+    "catalog.json": {
+      "sha256": "16740cca4c1554c4657dae94423daa680c9728a01ae8668ad0c38df27acc57a4",
+      "bytes": 18097
+    },
+    "exclusions.json": {
+      "sha256": "76c9a0c9dcab0889b58252fe1b5328f49d0b7ff7a94ab442f7b0106743970fe0",
+      "bytes": 26348
+    },
+    "schema.json": {
+      "sha256": "8c56159308f2e643efa923c75f3682bc719942126bf5a69c0d15e9b808d05042",
+      "bytes": 16343
+    }
+  }
+}

@@ -16,6 +16,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [BOOT-01](docs/BOOT-01-bootstrap.md) | Runtime health-only, konfigurasi, port, tipe/validator kontrak, pin image dan bukti verifikasi |
 | [INF-02](docs/inference/INF-02-adapter.md) | Adapter HTTP HF, capability lokal, batas klien, attempt metadata dan verifikasi offline/loopback |
 | [STORE-01](docs/storage/STORE-01-qdrant.md) | Compose Qdrant, manifest/lifecycle index dan bukti filter/persistensi pada server nyata |
+| [DATA-01](docs/data/DATA-01-corpus-audit.md) | Audit read-only 20 lesson N5/N4, manifest 736 dokumen dan persetujuan penggunaan penelitian internal |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -141,7 +142,7 @@ Manifest/lock runtime root, `.env.example`, health endpoint dan perintah start t
 
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
 2. `DEC-01` dan `CON-01` selesai untuk desain/spike dan kontrak v1. [CON-01](docs/contracts/CON-01.md) mencatat 127 pemeriksaan, 16 pasangan fixture melalui wire dan domain validator aplikasi. [RES-01](docs/research/RES-01-protocol.md) menyusun protokol dan matriks requirement; baseline komposit/angka keberhasilan TA diselaraskan, bukan hasil eksperimen. BOOT-01 menyediakan fondasi runtime; lanjutkan task corpus/dataset sesuai dependensi; provider aktual dan pilot tetap gate terpisah.
-3. INF-01/02 dan STORE-01 selesai untuk smoke HF, adapter dan fondasi Qdrant. Lanjutkan audit corpus DATA-01 serta chunking/ingestion menurut dependensi; sparse tetap opsi versi run berikutnya. Metadata provider yang unknown dan parameter pilot masih gate freeze, tanpa fallback otomatis.
+3. INF-01/02, STORE-01 dan DATA-01 selesai: audit 20 lesson N5/N4 menyediakan 368 owner / 736 dokumen bilingual dengan persetujuan isi serta penerimaan keterbatasan sumber untuk penelitian internal. Gunakan [manifest v2](research/corpus/data-01-v2/manifest.json) dan [laporan/verifikasi](docs/data/DATA-01-corpus-audit.md) untuk DATA-02/03. Unknown lisensi tetap dicatat, tanpa izin redistribusi publik; metadata provider dan parameter pilot masih gate freeze.
 4. Bangun ingestion, baseline, adaptive, integrasi, dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 Spike terisolasi lulus typecheck, lint, format, build dan tiga smoke tests (Fastify schema, import SDK OpenAI tanpa call, Qdrant dense+sparse RRF nyata). Container berlimit 2 vCPU/4 GiB mencatat peak memory sekitar 640 MiB pada workload kecil ini; ukuran awal app/Qdrant dipilih 2 vCPU/4 GiB tanpa GPU. Ini bukan kapasitas produksi. [Evidence](spikes/dec-01/evidence.json) dan petunjuk reproduksi pada ADR memuat batas pengukuran; kapasitas corpus dan hardware endpoint remote tetap diuji kemudian.

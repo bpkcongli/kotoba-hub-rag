@@ -1,6 +1,6 @@
 # Product Requirements Document — KotobaHub RAG
 
-Versi 0.10 · 24 November 2026 · Status: desain dengan fondasi runtime BOOT-01, kontrak CON-01 dan protokol planning RES-01 yang diamendemen [v2-dense](docs/research/RES-02-dense-amendment.md). DOC-INF-03 memilih HF Serverless dan dense wajib/sparse opsional; smoke endpoint dense/pair rerank tersedia, INF-01 DONE menurut acceptance 24 November 2026, protokol belum freeze dan eksperimen belum dijalankan.
+Versi 0.11 · 24 November 2026 · Status: desain dengan fondasi runtime BOOT-01, kontrak CON-01 dan protokol planning RES-01 yang diamendemen [v2-dense](docs/research/RES-02-dense-amendment.md). DOC-INF-03 memilih HF Serverless dan dense wajib/sparse opsional; smoke endpoint dense/pair rerank tersedia, INF-01 DONE menurut acceptance 24 November 2026, protokol belum freeze dan eksperimen belum dijalankan.
 
 Progres INF-01 (24 November 2026): **DONE** sesuai [keputusan acceptance pengguna](docs/inference/INF-01-acceptance-decision.json) dan [laporan penutupan](docs/inference/INF-01-completion.md). Smoke 13 POST membuktikan dense JA/EN/ID dan pair rerank; sparse tidak dikembalikan dan tetap opsional pada DENSE. Konfirmasi served model/tokenizer/processing revision, region/retensi dan batas layanan dikeluarkan dari requirement INF-01; metadata tersebut tetap unknown/unverified. Billing exact juga tidak diwajibkan; laporan tampilan `< USD 0,01` dan biaya null dipertahankan. Bukti smoke tidak ditulis ulang, tanpa request tambahan. Penutupan task tidak berarti penelitian sudah freeze.
 
@@ -9,6 +9,8 @@ INF-02 menyediakan [adapter HTTP HF](docs/inference/INF-02-adapter.md) opt-in de
 STORE-01 menyediakan [Compose dan lifecycle index Qdrant](docs/storage/STORE-01-qdrant.md) dengan image/server/client serta schema/profile revision dipin. Collection DENSE memakai named dense 1024 dimensi tanpa sparse buatan; HYBRID terpisah membutuhkan capability/token mapping dan sparse terisi pada setiap point. Filter published/corpus/level/skill/embedding, metadata/provenance minimum, count/checksum, compatibility, alias dan persistensi diuji pada server sementara nyata. Corpus/ingestion belum tersedia dan uji HYBRID memakai fixture sintetis, bukan bukti sparse HF atau aktivasi cohort baru.
 
 ## 1. Masalah dan tujuan
+
+DATA-01 selesai untuk [snapshot N5/N4 yang diaudit](docs/data/DATA-01-corpus-audit.md) pada 24 November 2026: 20 lesson published/current, 114 skill dan 254 block menghasilkan 736 dokumen EN/ID. Peneliti menyetujui isi serta menerima keterbatasan lisensi sumber untuk penelitian internal dengan atribusi; unknown tetap dicatat, tanpa izin redistribusi publik. [Manifest v2](research/corpus/data-01-v2/manifest.json) siap untuk DATA-02, bukan ingestion/freeze yang sudah dijalankan. Ketiadaan rubric FREE_RESPONSE terpisah menjadi hasil audit dan handoff UC-02/EVAL; tidak mengubah kontrak grading, dataset atau metrik.
 
 KotobaHub saat ini menggunakan provider OpenAI untuk menghasilkan latihan, menilai jawaban bebas, dan membantu personalisasi. Context bundle sudah terstruktur, tetapi belum ada semantic retrieval, routing adaptif, atau instrumen perbandingan RAG. Diperlukan service yang menghasilkan keluaran sesuai kontrak aplikasi sambil merekam seluruh perlakuan dan biaya untuk eksperimen yang dapat diulang.
 

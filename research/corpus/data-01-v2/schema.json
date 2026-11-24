@@ -1,0 +1,720 @@
+{
+  "columns": [
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "content_block_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "locale",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "content",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "source_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "translation_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "source_ref_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "lesson_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "block_type",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "content",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "sort_order",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "content_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "COLUMN_NAME": "seed_schema_version",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "lesson_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "locale",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "learning_objective",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "source_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "translation_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "source_ref_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "unit_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "slug",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "learning_objective",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "sort_order",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "estimated_minutes",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "content_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "COLUMN_NAME": "seed_schema_version",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "skill_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "locale",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "description",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "content",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "source_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "translation_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "source_ref_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "lesson_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "code",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "slug",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "curriculum_level",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "description",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "skill_type",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "supports_flashcards",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "supports_practice_objective",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "supports_practice_free_response",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "prerequisite_skill_codes",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "sort_order",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "content",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "content_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "seed_schema_version",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "owner_type",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "COLUMN_NAME": "group_track_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "track_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "locale",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "description",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "source_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "translation_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "source_ref_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "slug",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "curriculum_level",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "description",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "sort_order",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "content_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "COLUMN_NAME": "seed_schema_version",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "unit_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "skill_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "lesson_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "is_primary",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "sort_order",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "unit_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "locale",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "description",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "source_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "translation_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "source_ref_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "track_id",
+      "DATA_TYPE": "char"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "slug",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "title",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "description",
+      "DATA_TYPE": "text"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "sort_order",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "is_foundation_unit",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "is_published",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "created_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "updated_at",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "revision_payload",
+      "DATA_TYPE": "json"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "content_revision",
+      "DATA_TYPE": "int"
+    },
+    {
+      "TABLE_NAME": "units",
+      "COLUMN_NAME": "seed_schema_version",
+      "DATA_TYPE": "varchar"
+    }
+  ],
+  "engines": [
+    {
+      "TABLE_NAME": "lesson_content_block_translations",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "lesson_content_blocks",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "lesson_translations",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "lessons",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "skill_translations",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "skills",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "track_translations",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "tracks",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "unit_skill_mappings",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "unit_translations",
+      "ENGINE": "InnoDB"
+    },
+    {
+      "TABLE_NAME": "units",
+      "ENGINE": "InnoDB"
+    }
+  ]
+}

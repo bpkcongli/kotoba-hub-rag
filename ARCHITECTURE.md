@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.10 · 24 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. Diagram pipeline dan endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
+Versi 0.11 · 24 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. Diagram pipeline dan endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
 
 ## 1. Dasar keputusan
 
@@ -191,6 +191,8 @@ Envelope gagal: `{schema_version, request_id, execution_id, mode, error: {code, 
 Mode dari caller harus tervalidasi dan diizinkan; tidak disimpulkan dari bahasa input. Auth memakai kredensial service yang dapat dirotasi di jaringan internal/TLS. Browser tidak memperoleh kredensial ini. Ingestion dan experiment runner awal berupa CLI, bukan endpoint admin publik.
 
 ## 6. Snapshot dan indexing
+
+DATA-01 menyediakan [snapshot audit N5/N4](docs/data/DATA-01-corpus-audit.md) dan [manifest v2](research/corpus/data-01-v2/manifest.json) dari transaksi MySQL consistent snapshot `READ ONLY`, tanpa query learner/bank answer. Sebanyak 368 owner pada 20 lesson published/current mempunyai paket EN/ID, menghasilkan 736 dokumen yang cocok dengan proyeksi dua seed v2; comprehension checks reading dikeluarkan. Persetujuan isi dan penerimaan keterbatasan lisensi untuk penelitian internal terikat checksum; unknown sumber tetap dicatat, tanpa izin redistribusi publik. Inventaris v2 meng-overlay status capture historis sebelum approval. DATA-02/03 mempertahankan kebijakan/atribusi serta membedakan dasar penggunaan internal dari deklarasi lisensi pihak ketiga. Checksum teks chunk, sanitasi HTML, normalisasi/token accounting dan indexing tetap task berikutnya; tidak ada dependensi DB live saat request RAG atau freeze tersirat.
 
 1. Ekspor materi eligible yang dipublikasikan dari KotobaHub, plus referensi/rubric terkurasi. Bekukan ID relasional, timestamps, source URL, lisensi, checksum, locale, dan versi kurasi. Konten bantu LLM harus sudah ditinjau peneliti sebelum dianggap resmi.
 2. Tolak sumber tanpa provenance atau di luar N5/N4. Jangan crawl ulang Bunpro/Tatoeba/dll pada setiap run; gunakan hasil kurasi yang berlisensi dan snapshot tetap.
