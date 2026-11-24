@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "data-02-pointer-v1",
+  "preparationManifest": "data-02-v1/preparation-manifest.json",
+  "manifestSha256": "47dcb353e3394907c0aac8947ce43cf34d5cb49de78f48f09dcb54a596d09bcf",
+  "localOutputDirectory": "artifacts/data-02/preparation-v2",
+  "usageScope": "internal_research",
+  "publicRedistributionAuthorized": false,
+  "pilotTuned": false,
+  "experimentFrozen": false
+}

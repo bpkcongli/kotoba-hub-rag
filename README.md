@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 24 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Runtime HTTP tetap health-only; endpoint operasi, corpus terisi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 24 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 tersedia secara offline. Runtime HTTP tetap health-only; endpoint operasi, index corpus terisi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -17,6 +17,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [INF-02](docs/inference/INF-02-adapter.md) | Adapter HTTP HF, capability lokal, batas klien, attempt metadata dan verifikasi offline/loopback |
 | [STORE-01](docs/storage/STORE-01-qdrant.md) | Compose Qdrant, manifest/lifecycle index dan bukti filter/persistensi pada server nyata |
 | [DATA-01](docs/data/DATA-01-corpus-audit.md) | Audit read-only 20 lesson N5/N4, manifest 736 dokumen dan persetujuan penggunaan penelitian internal |
+| [DATA-02](docs/data/DATA-02-chunking.md) | Parser/normalizer/chunker offline, tokenizer BGE-M3 terpin dan manifest 98 chunk N5/N4 EN/ID |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -92,6 +93,22 @@ Compose mematok Qdrant 1.20.2 linux/amd64 ke digest image, bind REST hanya `127.
 
 CLI admin `npm run store -- prepare path/manifest.json` membuat collection/index yang hilang secara idempotent; `npm run store -- validate path/manifest.json` memeriksa kompatibilitas, inventory, seluruh point dan filtered search smoke. Isi manifest aktual dari snapshot yang disetujui sebelum prepare pertama. [Contoh manifest](docs/storage/STORE-01-manifest.example.json) hanya placeholder collection kosong; [laporan STORE-01](docs/storage/STORE-01-qdrant.md) menjelaskan schema, lifecycle dan batasnya. Operasi ini bukan ingestion dan tidak memanggil model. `docker compose down` menghentikan service dengan volume tetap tersimpan.
 
+## Preparation corpus DATA-02
+
+Snapshot DATA-01 yang disetujui diproses offline menjadi 98 chunk dari 736 dokumen N5/N4 EN/ID. [Laporan DATA-02](docs/data/DATA-02-chunking.md) menjelaskan unit grammar/contoh yang tetap utuh, normalisasi, provenance, offsets dan [manifest preparation](research/chunking/data-02-v1/preparation-manifest.json). Snapshot dan output teks berada di `artifacts/` lokal, diabaikan Git; penggunaan tetap penelitian internal dengan atribusi, tanpa izin redistribusi publik.
+
+Dengan snapshot DATA-01 lokal yang cocok dengan manifest:
+
+```bash
+npm run data:tokenizer
+npm run data:prepare
+npm run test:data02
+```
+
+`data:tokenizer` mengambil dua file publik tokenizer BGE-M3 terpin dan memeriksa hash, tanpa inference atau model weights. `data:prepare` membaca snapshot lokal, tanpa database/jaringan, lalu menulis `artifacts/data-02/preparation-v2/`; direktori existing ditolak. Gunakan `-- --out artifacts/data-02/reproduction-01` untuk output baru, atau `--config` untuk konfigurasi pilot lain. `test:data02` terpisah dari check standar karena memerlukan snapshot/tokenizer lokal.
+
+Batas awal 512 token termasuk dua special tokens, overlap maksimal 96 content tokens/dua unit, belum dituning pada pilot. Tokenizer native lokal lulus 15 golden samples JA/EN/ID/Unicode; pin lokal tidak mengonfirmasi served revision HF atau billing. Embedding, pengisian index dan retrieval smoke tetap DATA-03; penelitian belum freeze.
+
 ## Stack dan rencana kelanjutan
 
 - Orkestrator REST: Node 24.22.3 LTS, npm 11.19.1, TypeScript 5.9.3 dan Fastify 5.12.8, dengan modular monolith serta port/adapter; keputusan `DEC-01` tercatat pada [ADR-001](docs/ADR-001-stack-and-inference.md).
@@ -142,7 +159,7 @@ Manifest/lock runtime root, `.env.example`, health endpoint dan perintah start t
 
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
 2. `DEC-01` dan `CON-01` selesai untuk desain/spike dan kontrak v1. [CON-01](docs/contracts/CON-01.md) mencatat 127 pemeriksaan, 16 pasangan fixture melalui wire dan domain validator aplikasi. [RES-01](docs/research/RES-01-protocol.md) menyusun protokol dan matriks requirement; baseline komposit/angka keberhasilan TA diselaraskan, bukan hasil eksperimen. BOOT-01 menyediakan fondasi runtime; lanjutkan task corpus/dataset sesuai dependensi; provider aktual dan pilot tetap gate terpisah.
-3. INF-01/02, STORE-01 dan DATA-01 selesai: audit 20 lesson N5/N4 menyediakan 368 owner / 736 dokumen bilingual dengan persetujuan isi serta penerimaan keterbatasan sumber untuk penelitian internal. Gunakan [manifest v2](research/corpus/data-01-v2/manifest.json) dan [laporan/verifikasi](docs/data/DATA-01-corpus-audit.md) untuk DATA-02/03. Unknown lisensi tetap dicatat, tanpa izin redistribusi publik; metadata provider dan parameter pilot masih gate freeze.
+3. INF-01/02, STORE-01 dan DATA-01 selesai: audit 20 lesson N5/N4 menyediakan 368 owner / 736 dokumen bilingual dengan persetujuan isi serta penerimaan keterbatasan sumber untuk penelitian internal. DATA-02 juga selesai: [preparation offline](docs/data/DATA-02-chunking.md) menghasilkan 98 chunk dengan source mapping dan tokenizer terpin. Gunakan [manifest preparation](research/chunking/data-02-v1/preparation-manifest.json) untuk DATA-03. Unknown lisensi tetap dicatat, tanpa izin redistribusi publik; metadata provider dan parameter pilot masih gate freeze.
 4. Bangun ingestion, baseline, adaptive, integrasi, dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 Spike terisolasi lulus typecheck, lint, format, build dan tiga smoke tests (Fastify schema, import SDK OpenAI tanpa call, Qdrant dense+sparse RRF nyata). Container berlimit 2 vCPU/4 GiB mencatat peak memory sekitar 640 MiB pada workload kecil ini; ukuran awal app/Qdrant dipilih 2 vCPU/4 GiB tanpa GPU. Ini bukan kapasitas produksi. [Evidence](spikes/dec-01/evidence.json) dan petunjuk reproduksi pada ADR memuat batas pengukuran; kapasitas corpus dan hardware endpoint remote tetap diuji kemudian.

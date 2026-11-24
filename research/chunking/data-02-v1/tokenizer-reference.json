@@ -1,0 +1,82 @@
+{
+  "model": "BAAI/bge-m3",
+  "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "reference_engine": "tokenizers==0.22.1",
+  "samples": [
+    {
+      "text": "学校へ行きます。",
+      "content_tokens": 6,
+      "total_tokens": 8
+    },
+    {
+      "text": "A は B です。",
+      "content_tokens": 7,
+      "total_tokens": 9
+    },
+    {
+      "text": "昨日、友だちと映画を見ました。",
+      "content_tokens": 10,
+      "total_tokens": 12
+    },
+    {
+      "text": "が",
+      "content_tokens": 3,
+      "total_tokens": 5
+    },
+    {
+      "text": "が",
+      "content_tokens": 2,
+      "total_tokens": 4
+    },
+    {
+      "text": "ｶﾞ",
+      "content_tokens": 3,
+      "total_tokens": 5
+    },
+    {
+      "text": "カタカナと漢字",
+      "content_tokens": 8,
+      "total_tokens": 10
+    },
+    {
+      "text": "日本語👩🏽‍💻の例。",
+      "content_tokens": 9,
+      "total_tokens": 11
+    },
+    {
+      "text": "Hello, world!",
+      "content_tokens": 4,
+      "total_tokens": 6
+    },
+    {
+      "text": "Polite negative past: ませんでした.",
+      "content_tokens": 8,
+      "total_tokens": 10
+    },
+    {
+      "text": "Saya pergi ke sekolah kemarin.",
+      "content_tokens": 6,
+      "total_tokens": 8
+    },
+    {
+      "text": "Bentuk biasa dan bentuk sopan.",
+      "content_tokens": 7,
+      "total_tokens": 9
+    },
+    {
+      "text": "猫 & 犬 < 3",
+      "content_tokens": 7,
+      "total_tokens": 9
+    },
+    {
+      "text": "a b\n二行目",
+      "content_tokens": 5,
+      "total_tokens": 7
+    },
+    {
+      "text": "これは本ではありません。",
+      "content_tokens": 4,
+      "total_tokens": 6
+    }
+  ]
+}

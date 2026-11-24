@@ -1,0 +1,156 @@
+{
+  "task": "DATA-02",
+  "status": "PASS",
+  "verifiedAt": "2026-11-24",
+  "scope": "Parser, normalizer, chunker dan token accounting offline; tanpa embedding/indexing atau validasi kualitas retrieval.",
+  "environment": {
+    "node": "24.22.3",
+    "npm": "11.19.1",
+    "platform": "linux-x64",
+    "typescript": "5.9.3",
+    "tokenizerEngine": "tokenizers@0.23.2",
+    "htmlParser": "parse5@8.1.1"
+  },
+  "commands": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "checks": [
+        "INF-01: 15 tests dan verifikasi capture offline",
+        "DATA-01: 11 behavior tests",
+        "contract generation check",
+        "TypeScript strict",
+        "ESLint",
+        "Prettier",
+        "56 runtime/unit tests, termasuk 13 DATA-02",
+        "production build"
+      ]
+    },
+    {
+      "command": "npm run test:data02",
+      "exitCode": 0,
+      "tests": 2,
+      "checks": [
+        "15 sampel tokenizer JA/EN/ID/Unicode cocok dengan reference native",
+        "Preparation cocok dengan manifest DATA-02 yang dilacak",
+        "Dua preparation real corpus identik dan checksum output identik",
+        "736 source IDs dan 474 unit IDs terwakili",
+        "Seluruh chunk merupakan parent.slice(start,end), checksum dan token count cocok",
+        "Raw JSON path/checksum/range dan normalized UTF-16 offsets valid",
+        "Output existing ditolak; atomic unit terlalu besar gagal sebelum membuat output"
+      ]
+    },
+    {
+      "command": "npm run data:tokenizer",
+      "exitCode": 0,
+      "filesVerified": 2,
+      "networkRequestsOnThisRun": 0,
+      "inferenceCalls": 0
+    },
+    {
+      "command": "npm run data:prepare",
+      "exitCode": 0,
+      "outputDirectory": "artifacts/data-02/preparation-v2"
+    },
+    {
+      "command": "node dist/ingestion/cli.js --out /tmp/kotoba-data02/compiled-preparation-v1",
+      "exitCode": 0,
+      "checks": [
+        "CLI hasil production build berjalan dengan tokenizer native",
+        "Manifest dan seluruh hash output cocok persis dengan preparation yang dilacak"
+      ]
+    }
+  ],
+  "artifacts": {
+    "research/chunking/data-02-v1/preparation-manifest.json": "47dcb353e3394907c0aac8947ce43cf34d5cb49de78f48f09dcb54a596d09bcf",
+    "research/chunking/data-02-v1/config.json": "0a369ddf2d2e18236694fd6352cec6e06c59b8a51014113c1b4f6f521c62425e",
+    "research/chunking/data-02-v1/tokenizer-reference.json": "0b26e492615b689890f13f794da362ac4488f70589bbd0bf31921b7d75401b98"
+  },
+  "implementationSha256": {
+    "package-lock.json": "5a332fec83bd1ad3e280d2c85c875c5f3f23c3a2624017056a908ec0713764e1",
+    "package.json": "1b9b8f8730a920ec32802e2c44a6df642909ad64092e97f7cf77368ab23fa55b",
+    "src/ingestion/chunker.ts": "5404d67d843fa3d9afdc170865c268a7d220490e2f57e50e5d6359a7ffb4d769",
+    "src/ingestion/cli.ts": "7ce5ffacd482873559bc37d30f6c7021e325d51f80c0779566305530dfb685a8",
+    "src/ingestion/corpus-loader.ts": "1cf309c47b2f12c0d14b245805179c49a9af12972d66a4be361f29c5d2393b33",
+    "src/ingestion/fetch-tokenizer.ts": "e10929ac44e75549f7856317665495c055d21d6194abd851515182de2afe8345",
+    "src/ingestion/normalize.ts": "09602ea2c930da823d59985d31303483e2d61aab4b0d5483222e6aa9a2bbdc13",
+    "src/ingestion/prepare.ts": "44f7bb84b63248d76fd7592992df8cad547fcf2733466e7adf7245aa1bfadc5d",
+    "src/ingestion/text.ts": "2131814f855bf47326a2b03e3b632c3fd00764d25c4c8e72f88b0a35ed9548ce",
+    "src/ingestion/tokenizer.ts": "16cfb4ce7b0c387936e59be0e4e1ff3a4fdc1813a374b2668e32fb43b320d233",
+    "src/ingestion/types.ts": "85deb1e533cee7a786558a1f3ecdee521fc08ac293ccbfe619994759a63b65cd",
+    "src/ingestion/validation.ts": "b2a6bdc98d287f0cd8ca8ba411d215e953ca8398b97aa902f92423fd64729470",
+    "tests/ingestion-loader.test.ts": "027f9c2e7a84bbb74b06ad02d50b3345d5dea2fc73800ac4972d7cb132da51d3",
+    "tests/ingestion.integration.ts": "ba7f43b4637752d54175757de2bbe4e2bbcec4abc368f2f44ce6f50c36bdc33b",
+    "tests/ingestion.test.ts": "b59184efc28aea93477136d9e10f43d482816f61d7dc2a8a416ff00062d23802"
+  },
+  "counts": {
+    "sourceDocuments": 736,
+    "normalizedLessons": 40,
+    "pedagogicalUnits": 474,
+    "chunks": 98,
+    "byLocale": {
+      "EN": 51,
+      "ID": 47
+    },
+    "byLevel": {
+      "JLPT_N5": 78,
+      "JLPT_N4": 20
+    },
+    "minTokens": 91,
+    "maxTokens": 512,
+    "totalStoredTokensIncludingOverlapAndSpecial": 38275,
+    "overlapUnitOccurrences": 48
+  },
+  "tokenizerReference": {
+    "engine": "tokenizers==0.22.1",
+    "purpose": "Reference golden counts saja; bukan dependency runtime Python",
+    "samples": 15,
+    "wheel": "tokenizers-0.22.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "wheelSha256": "e2ef6063d7a84994129732b47e7915e8710f27f99f3a3260b8a38fc7ccd083f4"
+  },
+  "japaneseSampleInspection": {
+    "reviewer": "Agent utama; pemeriksaan preservasi teks, bukan validator manusia independen",
+    "samples": [
+      {
+        "level": "N5",
+        "locale": "EN",
+        "lesson": "objects-companions-and-loose-listing",
+        "unitId": "unit_bc9858de9536762d0856a9d349a6db2ef5fb4ba789ec13b3d4742e577c29ad41"
+      },
+      {
+        "level": "N5",
+        "locale": "ID",
+        "lesson": "objects-companions-and-loose-listing",
+        "unitId": "unit_913852138d5ea195ca3eb5915e4c92e9165f11d9f141863066f0a98fdde0a5eb"
+      },
+      {
+        "level": "N4",
+        "locale": "EN",
+        "lesson": "plain-present-and-past",
+        "unitId": "unit_21387f7009da7b2d47cbac0a0e1ef99f0b77fb25cf0c540c131c0686e095f259"
+      },
+      {
+        "level": "N4",
+        "locale": "ID",
+        "lesson": "plain-present-and-past",
+        "unitId": "unit_05de7f3314f7334a718f0ae9b67a1e1bbdb29e12a9e1f7b0e51eae8bb6cb1051"
+      }
+    ],
+    "result": "Pola, penjelasan, contoh Jepang dan terjemahan tetap dalam satu unit; judul/pola yang berulang dalam sumber dipertahankan."
+  },
+  "reviewScope": "Reviewer tambahan hanya menerima snippet chunker tanpa akses filesystem; tidak menemukan defect pada snippet. Review integrasi dan pemeriksaan repo dilakukan agent utama.",
+  "limitations": [
+    "Konfigurasi 512/96/2 belum dituning pada pilot",
+    "Provider-served model/tokenizer/processing revision belum terverifikasi",
+    "Token lokal bukan billable usage provider maupun token prompt generator",
+    "Source terms unknown dan penggunaan internal dengan atribusi tetap berlaku",
+    "Tidak ada retrieval smoke karena DATA-03 belum dijalankan"
+  ],
+  "databaseReads": 0,
+  "databaseWrites": 0,
+  "embeddingCalls": 0,
+  "qdrantWrites": 0,
+  "billableProviderUsage": null,
+  "publicRedistributionAuthorized": false,
+  "experimentFrozen": false
+}

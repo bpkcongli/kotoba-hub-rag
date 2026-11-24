@@ -1,0 +1,7 @@
+{
+  "version": "pedagogical-v1",
+  "unicode": "NFC",
+  "maxTokens": 512,
+  "overlapTokens": 96,
+  "overlapUnits": 2
+}
