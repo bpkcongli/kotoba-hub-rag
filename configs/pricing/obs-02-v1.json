@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "obs-02-prices-v1",
+  "id": "obs-02-2026-11-25-v1",
+  "asOf": "2026-11-25",
+  "currency": "USD",
+  "entries": [
+    {
+      "id": "hf-bge-m3-unverified-hardware",
+      "provider": "hf-inference",
+      "model": "BAAI/bge-m3",
+      "purposes": ["document", "query"],
+      "billingProfile": "hf-serverless-compute",
+      "sourceUrl": "https://huggingface.co/docs/inference-providers/pricing#hf-inference-cost",
+      "effectiveFrom": "2026-11-25T00:00:00Z",
+      "effectiveUntil": null,
+      "kind": "UNIT",
+      "unit": "COMPUTE_SECOND",
+      "perUnits": 1,
+      "priceUsd": null
+    },
+    {
+      "id": "hf-bge-reranker-unverified-hardware",
+      "provider": "hf-inference",
+      "model": "BAAI/bge-reranker-v2-m3",
+      "purposes": ["rerank"],
+      "billingProfile": "hf-serverless-compute",
+      "sourceUrl": "https://huggingface.co/docs/inference-providers/pricing#hf-inference-cost",
+      "effectiveFrom": "2026-11-25T00:00:00Z",
+      "effectiveUntil": null,
+      "kind": "UNIT",
+      "unit": "COMPUTE_SECOND",
+      "perUnits": 1,
+      "priceUsd": null
+    },
+    {
+      "id": "openai-gpt-5.6-terra-standard",
+      "provider": "openai",
+      "model": "gpt-5.6-terra",
+      "purposes": ["generate", "evaluate", "recommend", "rewrite", "repair", "judge"],
+      "billingProfile": "standard-text-default-cache",
+      "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+      "effectiveFrom": "2026-11-25T00:00:00Z",
+      "effectiveUntil": null,
+      "kind": "TOKENS",
+      "maxInputTokens": 272000,
+      "inputPerMillionUsd": "2",
+      "cachedInputPerMillionUsd": "0.2",
+      "cacheWriteInputPerMillionUsd": "2.5",
+      "outputPerMillionUsd": "12"
+    },
+    {
+      "id": "openai-gpt-5.6-luna-standard",
+      "provider": "openai",
+      "model": "gpt-5.6-luna",
+      "purposes": ["normalize", "rewrite", "repair", "judge"],
+      "billingProfile": "standard-text-default-cache",
+      "sourceUrl": "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+      "effectiveFrom": "2026-11-25T00:00:00Z",
+      "effectiveUntil": null,
+      "kind": "TOKENS",
+      "maxInputTokens": 272000,
+      "inputPerMillionUsd": "0.2",
+      "cachedInputPerMillionUsd": "0.02",
+      "cacheWriteInputPerMillionUsd": "0.25",
+      "outputPerMillionUsd": "1.2"
+    }
+  ]
+}

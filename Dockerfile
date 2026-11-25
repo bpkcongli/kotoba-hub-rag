@@ -21,6 +21,7 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --chown=node:node package.json ./
 COPY --chown=node:node contracts/v1/domain.schema.json contracts/v1/contract.schema.json ./contracts/v1/
+COPY --chown=node:node configs/pricing ./configs/pricing/
 
 USER node
 EXPOSE 3000

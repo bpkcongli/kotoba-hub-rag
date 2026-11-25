@@ -2,9 +2,11 @@
 
 Tanggal: 25 November 2026. Status: **DONE**. Dependensi: BOOT-01, CON-01, RES-01. Implementasi berada di `src/observability/`; test memakai filesystem sementara dan provider mock. Endpoint operasi, auth, response cache/replay envelope dan pemetaan HTTP tetap API-01. Accounting usage/harga tetap OBS-02; harness serta ekspor parent/child tetap EXP-00.
 
+Pembaruan OBS-02: [accounting/snapshot harga dan agregasi](OBS-02-accounting.md) sudah tersedia. Writer terbaru memakai `obs-02-v1` dengan accounting pada model attempt; parser tetap membaca versi awal. Hasil verifikasi OBS-01 di bawah dan JSON buktinya tetap snapshot historis. Endpoint/replay envelope dan harness masih task berikutnya.
+
 ## Schema dan penyimpanan
 
-`events.ts` mengekspor tipe dan JSON Schema `traceEventSchema` versi `obs-01-v1`. Ajv menolak extra fields, coercion, nonfinite/negative duration, timestamp selain UTC `Z` dan UUID invalid. Port `TraceSink` kini memakai event strict sebagai pengganti attributes bebas BOOT-01.
+`events.ts` mengekspor tipe dan JSON Schema `traceEventSchema` untuk `obs-01-v1` serta perluasan `obs-02-v1` pada OBS-02. Ajv menolak extra fields, coercion, nonfinite/negative duration, timestamp selain UTC `Z` dan UUID invalid. Port `TraceSink` kini memakai event strict sebagai pengganti attributes bebas BOOT-01.
 
 | Event | Isi |
 | --- | --- |

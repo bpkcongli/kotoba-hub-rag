@@ -1,4 +1,5 @@
 import type { Operation } from '@/contracts/validator';
+import type { CallMeasurement } from '@/observability/accounting-types';
 import type { TraceEvent } from '@/observability/events';
 
 // Each adapter attempt is observed separately; orchestration owns provider retries.
@@ -6,6 +7,7 @@ export interface CallContext {
   readonly executionId: string;
   readonly signal: AbortSignal;
   readonly deadlineAt: string;
+  readonly accounting?: Pick<CallMeasurement, 'phase' | 'retryKind'>;
 }
 
 // Retrieval profile is pinned per run; optional output never selects the profile.

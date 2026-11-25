@@ -155,8 +155,10 @@ await test('durasi request/span/rejection monotonic tetap benar saat UTC bergera
   assert.equal(events.length, 4);
   assert.equal(events[1]?.durationMs, 15);
   assert.ok(model?.data.kind === 'model_attempt');
-  assert.equal(model.data.usage, null);
-  assert.equal(model.data.costUsd, null);
+  assert.ok('accounting' in model.data);
+  assert.equal(model.data.accounting.usage, null);
+  assert.ok(model.data.accounting.cost.kind === 'PER_CALL');
+  assert.equal(model.data.accounting.cost.totalUsd, null);
   assert.equal(model.durationMs, 5);
   assert.doesNotMatch(
     raw,

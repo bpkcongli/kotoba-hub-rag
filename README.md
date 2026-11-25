@@ -137,7 +137,20 @@ npm run obs:reconcile -- --directory artifacts/observability/service
 npm run obs:reconcile -- --directory artifacts/observability/service --recover-stale-lock
 ```
 
-Laporan mencakup terminal UNKNOWN, admission failures dan trace invalid. Bila recovery ikut crash meninggalkan `recovery.lock`, ikuti [prosedur pemeriksaan operator](docs/observability/OBS-01-tracing.md#rekonsiliasi-operator) sebelum membersihkan guard tersebut. Endpoint operasi dan replay envelope tetap API-01; accounting biaya OBS-02. Indexing DATA-03 memakai journal sendiri.
+Laporan mencakup terminal UNKNOWN, admission failures dan trace invalid. Bila recovery ikut crash meninggalkan `recovery.lock`, ikuti [prosedur pemeriksaan operator](docs/observability/OBS-01-tracing.md#rekonsiliasi-operator) sebelum membersihkan guard tersebut. Endpoint operasi dan replay envelope tetap API-01; accounting biaya tersedia pada OBS-02. Indexing DATA-03 memakai journal sendiri.
+
+## Accounting OBS-02
+
+[OBS-02](docs/observability/OBS-02-accounting.md) menyediakan accounting per attempt, snapshot harga berversi, helper agregasi execution/parent, dan resource ledger. Retry tetap dihitung; cache/reasoning/subtotal/hosting tidak dijumlahkan dua kali. [Snapshot awal](configs/pricing/obs-02-v1.json) memuat tarif OpenAI pada profil terbatas dan tarif HF null. Usage serta compute HF yang belum teramati tetap null. Estimasi tarif dibedakan dari biaya provider yang dilaporkan.
+
+```bash
+# Hentikan writer terlebih dahulu. Default inventory resource belum lengkap.
+npm run obs:costs -- --directory artifacts/observability/service
+# Hanya setelah rekonsiliasi seluruh resource ledger:
+npm run obs:costs -- --directory artifacts/observability/service --resource-inventory-complete
+```
+
+CLI menulis laporan immutable tanpa inference. Bukti legacy tanpa accounting tetap ditandai belum lengkap; journal DATA-03 tidak diimpor atau diubah. Phase document indexing, judge, warmup dan kategori idle/startup dipisahkan; parent/schedule eksperimen lengkap tetap EXP-00.
 
 ## Stack dan rencana kelanjutan
 

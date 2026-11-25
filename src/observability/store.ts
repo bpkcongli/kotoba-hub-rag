@@ -5,6 +5,14 @@ import { resolve } from 'node:path';
 import type { InferenceAttempt } from '@/adapters/hf-inference';
 import { systemClock } from '@/adapters/system-clock';
 import type { Mode, Operation } from '@/contracts/validator';
+import { parsePriceSnapshot, parseResourceCharge } from '@/observability/accounting-schema';
+import type {
+  CallAccounting,
+  CallMeasurement,
+  PriceSnapshot,
+  ResourceCharge,
+} from '@/observability/accounting-types';
+import type { AccountingInput, CallRow, ExecutionSpec } from '@/observability/aggregation';
 import { parseTraceEvent, validateCorrelation } from '@/observability/events';
 import type {
   Correlation,
@@ -15,6 +23,7 @@ import type {
 } from '@/observability/events';
 import { ensureDirectory, isMissing, publishJson, syncDirectory } from '@/observability/files';
 import { JsonlTraceSink } from '@/observability/jsonl-sink';
+import { accountCall, loadPriceSnapshot, priceSnapshotHash } from '@/observability/pricing';
 import type { Clock, TraceSink } from '@/shared/ports';
 
 export class ObservationError extends Error {
@@ -88,6 +97,7 @@ export type AdmissionResult = {
 export interface ObservationOptions {
   readonly recoverStaleLock?: boolean;
   readonly sinkFactory?: (path: string) => TraceSink;
+  readonly priceSnapshot?: PriceSnapshot;
 }
 
 export interface ObservationInspection {
@@ -109,11 +119,14 @@ export class ObservationStore {
   private closed = false;
   private ownsLock = false;
   private pending = 0;
+  private priceSnapshot: PriceSnapshot | null;
 
   constructor(directory: string, clock: Clock = systemClock, options: ObservationOptions = {}) {
     this.directory = resolve(directory);
     this.clock = clock;
-    this.options = options;
+    this.options = { ...options };
+    this.priceSnapshot =
+      options.priceSnapshot === undefined ? null : parsePriceSnapshot(options.priceSnapshot);
   }
 
   private async initialize(): Promise<void> {
@@ -122,6 +135,8 @@ export class ObservationStore {
       this.path('admissions'),
       this.path('terminals'),
       this.path('events'),
+      this.path('prices'),
+      this.path('resources'),
     ]) {
       await ensureDirectory(path);
     }
@@ -141,6 +156,41 @@ export class ObservationStore {
     }
 
     await syncDirectory(this.directory);
+
+    this.priceSnapshot ??= await loadPriceSnapshot();
+    const priceHash = priceSnapshotHash(this.priceSnapshot);
+    const pricePath = this.path('prices', `${priceHash}.json`);
+
+    for (const filename of await readdir(this.path('prices'))) {
+      if (!/^[a-f0-9]{64}\.json$/.test(filename)) {
+        continue;
+      }
+
+      const saved = parsePriceSnapshot(
+        JSON.parse(await readFile(this.path('prices', filename), 'utf8')),
+      );
+
+      if (
+        `${priceSnapshotHash(saved)}.json` !== filename ||
+        (saved.id === this.priceSnapshot.id && filename !== `${priceHash}.json`)
+      ) {
+        throw new Error('Identitas snapshot harga berubah');
+      }
+    }
+
+    try {
+      const existing = parsePriceSnapshot(JSON.parse(await readFile(pricePath, 'utf8')));
+
+      if (priceSnapshotHash(existing) !== priceHash) {
+        throw new Error('Snapshot harga berubah');
+      }
+    } catch (error) {
+      if (!isMissing(error)) {
+        throw error;
+      }
+
+      await publishJson(pricePath, this.priceSnapshot);
+    }
 
     for (const filename of await readdir(this.path('admissions'))) {
       if (!/^[a-f0-9]{64}\.json$/.test(filename)) {
@@ -281,12 +331,17 @@ export class ObservationStore {
     return result;
   }
 
-  private event(correlation: Correlation, durationMs: number | null, data: EventData): TraceEvent {
+  private event(
+    correlation: Correlation,
+    durationMs: number | null,
+    data: EventData,
+    timestamp?: string,
+  ): TraceEvent {
     return parseTraceEvent({
-      schemaVersion: 'obs-01-v1',
+      schemaVersion: 'obs-02-v1',
       eventId: randomUUID(),
       correlation,
-      timestamp: this.clock.now().toISOString(),
+      timestamp: timestamp ?? this.clock.now().toISOString(),
       durationMs,
       data,
     });
@@ -444,9 +499,8 @@ export class ObservationStore {
       }
 
       try {
-        const event = this.event(entry.start.correlation, durationMs, copy);
-        const timed = timestamp === undefined ? event : parseTraceEvent({ ...event, timestamp });
-        await entry.sink.write(timed);
+        const event = this.event(entry.start.correlation, durationMs, copy, timestamp);
+        await entry.sink.write(event);
       } catch {
         await this.traceFailure(entry);
       }
@@ -454,6 +508,34 @@ export class ObservationStore {
   }
 
   recordHfAttempt(attempt: InferenceAttempt): Promise<void> {
+    if (this.priceSnapshot === null) {
+      return Promise.reject(new ObservationError('EXECUTION_NOT_ACTIVE'));
+    }
+
+    const model =
+      attempt.operation === 'embedding'
+        ? attempt.identity.embeddingModel
+        : attempt.identity.rerankerModel;
+    const accounting = accountCall(
+      {
+        attemptId: attempt.attemptId,
+        purpose: attempt.purpose,
+        phase:
+          attempt.accountingContext?.phase ??
+          (attempt.purpose === 'document' ? 'DOCUMENT_INDEXING' : 'ONLINE'),
+        retryKind: attempt.accountingContext?.retryKind ?? 'INITIAL',
+        provider: attempt.identity.provider,
+        model,
+        billingProfile: 'hf-serverless-compute',
+        timestamp: attempt.timestamp,
+        usage: null,
+        billableUnits: [{ unit: 'COMPUTE_SECOND', quantity: null, evidenceHash: null }],
+        reportedCost: null,
+        hostingChargeId: null,
+      },
+      this.priceSnapshot,
+    );
+
     // Project only allowlisted fields. Raw provider IDs, config secrets and arbitrary extras are omitted.
     return this.record(
       attempt.executionId,
@@ -493,12 +575,149 @@ export class ObservationStore {
           attempt.providerRequestId === null ? null : hashValue(attempt.providerRequestId),
         errorCode: attempt.errorCode,
         remoteOutcome: attempt.remoteOutcome,
-        usage: null,
-        costUsd: null,
+        accounting,
       },
       attempt.durationMs,
       attempt.timestamp,
     );
+  }
+
+  priceCall(measurement: CallMeasurement): Promise<CallAccounting> {
+    const copy = structuredClone(measurement);
+
+    return this.run(() => {
+      if (this.priceSnapshot === null) {
+        throw new ObservationError('TRACE_WRITE_FAILED');
+      }
+
+      return Promise.resolve(accountCall(copy, this.priceSnapshot));
+    });
+  }
+
+  recordResource(value: unknown): Promise<void> {
+    const resource = parseResourceCharge(value);
+
+    return this.run(async () => {
+      const path = this.path('resources', `${resource.chargeId}.json`);
+
+      try {
+        const prior = parseResourceCharge(JSON.parse(await readFile(path, 'utf8')));
+
+        if (canonical(prior) !== canonical(resource)) {
+          throw new Error('Resource charge konflik');
+        }
+      } catch (error) {
+        if (!isMissing(error)) {
+          throw error;
+        }
+
+        await publishJson(path, resource);
+      }
+    });
+  }
+
+  async exportAccounting(resourceInventoryComplete = false): Promise<{
+    readonly input: AccountingInput;
+    readonly unaccountedAttemptIds: readonly string[];
+  }> {
+    const inspections = await this.inspect();
+
+    return this.run(async () => {
+      const calls: CallRow[] = [];
+      const executions: ExecutionSpec[] = [];
+      const resources: ResourceCharge[] = [];
+      const priceSnapshots: PriceSnapshot[] = [];
+      const unaccountedAttemptIds: string[] = [];
+
+      for (const row of inspections) {
+        const id = row.correlation.executionId;
+        const mode = row.correlation.mode;
+
+        if (id === null || mode === null) {
+          throw new Error('Admission accounting invalid');
+        }
+
+        let complete =
+          row.traceIntegrity === 'VALID' &&
+          row.terminal?.data.kind === 'terminal' &&
+          row.terminal.data.traceComplete;
+
+        try {
+          const raw = await readFile(this.path('events', `${id}.jsonl`), 'utf8');
+
+          for (const line of raw.trimEnd().split('\n')) {
+            try {
+              const event = parseTraceEvent(JSON.parse(line));
+
+              if (event.correlation.executionId !== id) {
+                complete = false;
+                continue;
+              }
+
+              if (event.data.kind === 'model_attempt') {
+                if ('accounting' in event.data) {
+                  calls.push({ executionId: id, accounting: event.data.accounting });
+                } else {
+                  unaccountedAttemptIds.push(event.data.attemptId);
+                  complete = false;
+                }
+              }
+            } catch {
+              complete = false;
+            }
+          }
+        } catch (error) {
+          if (!isMissing(error)) {
+            throw error;
+          }
+
+          complete = false;
+        }
+
+        executions.push({
+          executionId: id,
+          mode,
+          closed: row.terminal !== null,
+          traceComplete: complete,
+        });
+      }
+
+      for (const filename of await readdir(this.path('resources'))) {
+        if (/^[a-f0-9-]{36}\.json$/.test(filename)) {
+          resources.push(
+            parseResourceCharge(
+              JSON.parse(await readFile(this.path('resources', filename), 'utf8')),
+            ),
+          );
+        }
+      }
+
+      for (const filename of await readdir(this.path('prices'))) {
+        if (/^[a-f0-9]{64}\.json$/.test(filename)) {
+          const snapshot = parsePriceSnapshot(
+            JSON.parse(await readFile(this.path('prices', filename), 'utf8')),
+          );
+
+          if (`${priceSnapshotHash(snapshot)}.json` !== filename) {
+            throw new Error('Snapshot harga berubah');
+          }
+
+          priceSnapshots.push(snapshot);
+        }
+      }
+
+      return {
+        input: {
+          executions,
+          calls,
+          resources,
+          priceSnapshots,
+          resourceInventoryComplete,
+          parents: [],
+        },
+        unaccountedAttemptIds,
+      };
+    });
   }
 
   finish(

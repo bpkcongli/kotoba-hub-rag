@@ -1,6 +1,8 @@
 import { Ajv } from 'ajv';
 import { default as formats } from 'ajv-formats';
 import type { Mode, Operation } from '@/contracts/validator';
+import { callAccountingSchema, parseCallAccounting } from '@/observability/accounting-schema';
+import type { CallAccounting } from '@/observability/accounting-types';
 
 export interface Correlation {
   readonly requestId: string | null;
@@ -50,7 +52,7 @@ export type EventData =
       readonly outcome: 'SUCCESS' | 'FAILED' | 'TIMEOUT';
       readonly code: TraceCode | null;
     }
-  | {
+  | ({
       readonly kind: 'model_attempt';
       readonly attemptId: string;
       readonly purpose:
@@ -58,6 +60,7 @@ export type EventData =
         | 'query'
         | 'rerank'
         | 'generate'
+        | 'evaluate'
         | 'normalize'
         | 'recommend'
         | 'rewrite'
@@ -76,9 +79,9 @@ export type EventData =
       readonly providerRequestIdHash: string | null;
       readonly errorCode: string | null;
       readonly remoteOutcome: 'response_received' | 'unknown';
-      readonly usage: null;
-      readonly costUsd: null;
-    }
+    } & (
+      { readonly usage: null; readonly costUsd: null } | { readonly accounting: CallAccounting }
+    ))
   | {
       readonly kind: 'terminal' | 'admission_rejected';
       readonly outcome: Outcome;
@@ -87,7 +90,7 @@ export type EventData =
     };
 
 export interface TraceEvent {
-  readonly schemaVersion: 'obs-01-v1';
+  readonly schemaVersion: 'obs-01-v1' | 'obs-02-v1';
   readonly eventId: string;
   readonly correlation: Correlation;
   readonly timestamp: string;
@@ -151,8 +154,40 @@ export const correlationSchema = object({
 });
 
 // No arbitrary attributes, messages, prompt text, headers, URLs or domain payloads.
+const modelProperties = {
+  kind: { const: 'model_attempt' },
+  attemptId: uuid,
+  purpose: {
+    enum: [
+      'document',
+      'query',
+      'rerank',
+      'generate',
+      'evaluate',
+      'normalize',
+      'recommend',
+      'rewrite',
+      'repair',
+      'judge',
+    ],
+  },
+  provider: label,
+  model: label,
+  configVersion: label,
+  configurationHash: hash,
+  endpointHash: hash,
+  profile: { enum: ['DENSE', 'HYBRID', null] },
+  servedRevision: nullable(label),
+  itemCount: { type: 'integer', minimum: 1 },
+  httpStatus: nullable({ type: 'integer', minimum: 100, maximum: 599 }),
+  retryAfterMs: nullable({ type: 'number', minimum: 0 }),
+  providerRequestIdHash: nullable(hash),
+  errorCode: nullable({ type: 'string', pattern: '^[A-Z_]{1,80}$' }),
+  remoteOutcome: { enum: ['response_received', 'unknown'] },
+};
+
 export const traceEventSchema = object({
-  schemaVersion: { const: 'obs-01-v1' },
+  schemaVersion: { enum: ['obs-01-v1', 'obs-02-v1'] },
   eventId: uuid,
   correlation: correlationSchema,
   timestamp: { type: 'string', format: 'date-time', pattern: 'Z$' },
@@ -168,38 +203,8 @@ export const traceEventSchema = object({
         outcome: { enum: ['SUCCESS', 'FAILED', 'TIMEOUT'] },
         code,
       }),
-      object({
-        kind: { const: 'model_attempt' },
-        attemptId: uuid,
-        purpose: {
-          enum: [
-            'document',
-            'query',
-            'rerank',
-            'generate',
-            'normalize',
-            'recommend',
-            'rewrite',
-            'repair',
-            'judge',
-          ],
-        },
-        provider: label,
-        model: label,
-        configVersion: label,
-        configurationHash: hash,
-        endpointHash: hash,
-        profile: { enum: ['DENSE', 'HYBRID', null] },
-        servedRevision: nullable(label),
-        itemCount: { type: 'integer', minimum: 1 },
-        httpStatus: nullable({ type: 'integer', minimum: 100, maximum: 599 }),
-        retryAfterMs: nullable({ type: 'number', minimum: 0 }),
-        providerRequestIdHash: nullable(hash),
-        errorCode: nullable({ type: 'string', pattern: '^[A-Z_]{1,80}$' }),
-        remoteOutcome: { enum: ['response_received', 'unknown'] },
-        usage: { type: 'null' },
-        costUsd: { type: 'null' },
-      }),
+      object({ ...modelProperties, usage: { type: 'null' }, costUsd: { type: 'null' } }),
+      object({ ...modelProperties, accounting: callAccountingSchema }),
       object({
         kind: { enum: ['terminal', 'admission_rejected'] },
         outcome,
@@ -228,6 +233,28 @@ export function parseTraceEvent(value: unknown): TraceEvent {
 
   const event = value;
   const terminal = event.data.kind === 'terminal' || event.data.kind === 'admission_rejected';
+
+  if (event.data.kind === 'model_attempt') {
+    const accounted = 'accounting' in event.data;
+
+    if ((event.schemaVersion === 'obs-02-v1') !== accounted) {
+      throw new Error('Versi accounting event tidak cocok');
+    }
+
+    if ('accounting' in event.data) {
+      const call = parseCallAccounting(event.data.accounting);
+
+      if (
+        call.attemptId !== event.data.attemptId ||
+        call.purpose !== event.data.purpose ||
+        call.provider !== event.data.provider ||
+        call.model !== event.data.model ||
+        call.timestamp !== event.timestamp
+      ) {
+        throw new Error('Identitas accounting event tidak cocok');
+      }
+    }
+  }
 
   if (
     (event.durationMs === null && (!terminal || event.data.outcome !== 'UNKNOWN')) ||

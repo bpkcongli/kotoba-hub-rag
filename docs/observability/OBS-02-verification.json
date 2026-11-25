@@ -1,0 +1,123 @@
+{
+  "task": "OBS-02",
+  "date": "2026-11-25",
+  "status": "DONE",
+  "dependencies": [
+    "OBS-01"
+  ],
+  "environment": {
+    "nodeActual": "24.22.1",
+    "nodeProjectPin": "24.22.3",
+    "npm": "11.19.1",
+    "pinChanged": false
+  },
+  "implemented": [
+    "Strict normalized token usage and actual billable units, missing values preserved as null",
+    "Dated USD price snapshot bound by provider/model/purpose/profile/time and canonical SHA-256",
+    "Decimal-string amounts with BigInt fixed precision and half-up component rounding at 12 decimal places",
+    "Tariff estimates separated from provider-reported amounts and hosting-covered calls",
+    "obs-02-v1 model attempt accounting, durable price/resource records, legacy obs-01-v1 parsing without backfill",
+    "Explicit HF phase/retry context snapshot before await, no automatic retry or inference payload change",
+    "Execution/parent/run aggregation from raw leaf records with conflict detection, missing coverage and no double counting",
+    "Explicit resource allocations and residual preservation, separate indexing/judge/warmup/idle/startup",
+    "Offline obs:costs export and existing v1 wire-cost mapping"
+  ],
+  "checks": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "runtimeTests": 94,
+      "runtimePassed": 94,
+      "runtimeFailed": 0,
+      "newObs02Tests": 16,
+      "includes": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ]
+    },
+    {
+      "command": "node --import tsx --test tests/accounting.test.ts tests/observability.test.ts tests/hf-inference.test.ts",
+      "exitCode": 0,
+      "tests": 43
+    },
+    {
+      "command": "compiled pricing module smoke import from dist/observability/pricing.js",
+      "exitCode": 0,
+      "priceSnapshotId": "obs-02-2026-11-25-v1",
+      "entries": 4
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "priceSnapshot": {
+    "file": "configs/pricing/obs-02-v1.json",
+    "id": "obs-02-2026-11-25-v1",
+    "asOf": "2026-11-25",
+    "currency": "USD",
+    "canonicalJsonSha256": "936450e31b06481f1c07f71a9a866b8a5afd26dd24069efe0013bbae562c74ee",
+    "canonicalHashIsNotFileByteHash": true,
+    "sources": [
+      {
+        "url": "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+        "context": "Standard text token rates, cache write multiplier, input ceiling excluding long-context pricing"
+      },
+      {
+        "url": "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+        "context": "Standard text token rates, cache write multiplier, input ceiling excluding long-context pricing"
+      },
+      {
+        "url": "https://huggingface.co/docs/inference-providers/pricing#hf-inference-cost",
+        "context": "HF compute-time/hardware billing; project billable compute and hardware tariff remain unobserved"
+      }
+    ],
+    "hfHardwareTariff": null,
+    "hfBillableCompute": null,
+    "accountAccessOrServedRevisionConfirmed": false,
+    "historicalData03CostsBackfilled": false
+  },
+  "review": {
+    "mode": "Read-only algorithm and literal source excerpts",
+    "confirmedUnresolvedFindings": [],
+    "limitations": "Reviewer filesystem tools unavailable; main agent inspected files and executed tests. This is not a full independent source review or human research validation."
+  },
+  "limits": [
+    "Node patch differs from project pin; pin and dependency versions unchanged",
+    "HF actual usage/cost/compute/hardware rates remain null; tariff estimates do not confirm invoice settlement",
+    "Default OpenAI tariff profile excludes input above 272000, unsupported tiers/tools/modalities/cache billing policies",
+    "Resource inventory completeness and allocation policy require explicit audited run inputs before main freeze",
+    "API-01/BASE-01 provider operations and EXP-00 full schedule/parent/rejection export remain separate tasks",
+    "Legacy unaccounted attempts retain incomplete totals; DATA-03 journal and historical evidence unchanged",
+    "Dockerfile packages snapshot directory; image was not rebuilt in this verification",
+    "OBS-01 local single-writer filesystem requirements and TD-001 recovery guard limitation remain applicable"
+  ],
+  "paidProviderCalls": 0,
+  "qdrantCalls": 0,
+  "externalRepositoryWrites": 0,
+  "researchFrozen": false,
+  "filesSha256": {
+    "src/observability/accounting-types.ts": "5f1ce50d7ef48a1159b0a21919430dfc9bd163b951cd5399aa0b90d476e66915",
+    "src/observability/accounting-schema.ts": "ca14c5cc285bcb87045db49ee0f4c843196fd324523cfbd0c0825c711d7e5e5d",
+    "src/observability/money.ts": "e3d98062624c29628963e7e94666dfcf9b031ae86867476925c8498c8b81d97f",
+    "src/observability/pricing.ts": "07541555318ae22ac9295ea365891bda4a7b6e1ead00735abcdd21f2dd6fd631",
+    "src/observability/aggregation.ts": "d36ff421f75c62a9736e4087c58e373f478cd7711924b302c432abdb55f8659f",
+    "src/observability/cost-cli.ts": "860eda0fb50a6ca1a7a264a63192396bcb3c2273e850a69071e65eea87c892cc",
+    "src/observability/events.ts": "ed50766663ca1571c0d435c7a6344b80654d6dc28ced4f3c2ca845cbeab4c9f4",
+    "src/observability/store.ts": "c0d0687dace105b39fc3209b9d0d47901b72524ca38316221c1c3c745a0c0bbe",
+    "src/shared/ports.ts": "1fe73be25bea0486f59de410fc4bc7ac7892617bb96152367dd18fa4e1c8ed4e",
+    "src/adapters/hf-inference.ts": "e4fb0df30310db0fdbd4016ce965edfc0b0ce82b6872d21d3b05d4c63d5b2bec",
+    "configs/pricing/obs-02-v1.json": "1a395abb0add4c2172af2f03e538bda7e2ddaafbafee1f15a6adbc19cc5fd625",
+    "tests/accounting-fixture.ts": "5006e6ea28a3c61e53f69980783786e78ae06c5fcbaeb20abc9cedf87c0bc6e9",
+    "tests/accounting.test.ts": "44e2cc36dc4d1d278f7a1cf105720aa79c1d8c816e6b457463925255598f379e",
+    "tests/observability.test.ts": "b833f44d4f31a8222934b0d96ee83e7c8b08b1cd738f721c10d1b116e78ec40e",
+    "package.json": "317d4581e29b5806a5726733d6017e827a78247e4cda3dd1f1f328f3820174ad",
+    "Dockerfile": "06733f260c46525b30d15fedb51f74cfa11374a12a28e418a016c70f1854f9ba"
+  }
+}

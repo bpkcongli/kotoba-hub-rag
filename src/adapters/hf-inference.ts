@@ -58,12 +58,39 @@ export interface InferenceAttempt {
   readonly remoteOutcome: 'response_received' | 'unknown';
   readonly usage: null;
   readonly costUsd: null;
+  readonly accountingContext?: NonNullable<CallContext['accounting']>;
 }
 
 export interface HfDependencies {
   readonly onAttempt: (attempt: InferenceAttempt, signal: AbortSignal) => Promise<void>;
   readonly fetch?: typeof globalThis.fetch;
   readonly clock?: Clock;
+}
+
+function snapshotCallContext(
+  context: CallContext,
+  purpose: 'document' | 'query' | 'rerank',
+): CallContext {
+  const phase =
+    context.accounting?.phase ?? (purpose === 'document' ? 'DOCUMENT_INDEXING' : 'ONLINE');
+  const retryKind = context.accounting?.retryKind ?? 'INITIAL';
+
+  if (
+    !['INITIAL', 'PROVIDER_RETRY', 'SCHEMA_RETRY'].includes(retryKind) ||
+    !(
+      phase === 'WARMUP' ||
+      (purpose === 'document' ? phase === 'DOCUMENT_INDEXING' : phase === 'ONLINE')
+    )
+  ) {
+    throw new InferenceError('INVALID_INPUT');
+  }
+
+  return {
+    executionId: context.executionId,
+    signal: context.signal,
+    deadlineAt: context.deadlineAt,
+    accounting: Object.freeze({ phase, retryKind }),
+  };
 }
 
 export interface HfInference {
@@ -348,6 +375,7 @@ export function createHfInference(config: HfConfig, dependencies: HfDependencies
       remoteOutcome: responseReceived ? 'response_received' : 'unknown',
       usage: null,
       costUsd: null,
+      ...(context.accounting === undefined ? {} : { accountingContext: context.accounting }),
     });
 
     lastAttempt = attempt;
@@ -392,7 +420,10 @@ export function createHfInference(config: HfConfig, dependencies: HfDependencies
 
   const embedding: EmbeddingPort = {
     async embed(texts, purpose, context) {
+      context = snapshotCallContext(context, purpose);
+
       const deadline = clock.monotonicMs() + remaining(context);
+
       validateCount(texts.length);
 
       const inputs = Array.from(texts);
@@ -426,7 +457,10 @@ export function createHfInference(config: HfConfig, dependencies: HfDependencies
 
   const reranker: RerankerPort = {
     async rerank(query, candidates, context) {
+      context = snapshotCallContext(context, 'rerank');
+
       const deadline = clock.monotonicMs() + remaining(context);
+
       validateCount(candidates.length);
 
       const inputs = Array.from(candidates, (candidate) => ({ ...candidate }));
