@@ -4,6 +4,7 @@ export interface AppConfig {
   readonly port: number;
   readonly logLevel: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace' | 'silent';
   readonly shutdownTimeoutMs: number;
+  readonly observationDirectory: string;
 }
 
 export class ConfigError extends Error {
@@ -64,8 +65,18 @@ export function readConfig(env: Readonly<Record<string, unknown>>): AppConfig {
 
   const port = integer('PORT', 3000, 1, 65535);
   const shutdownTimeoutMs = integer('SHUTDOWN_TIMEOUT_MS', 10000, 100, 30000);
+  const observationDirectory = env.OBSERVATION_DIRECTORY ?? 'artifacts/observability/service';
 
-  if (invalid.length || typeof host !== 'string') {
+  if (
+    typeof observationDirectory !== 'string' ||
+    observationDirectory.length === 0 ||
+    observationDirectory.length > 4096 ||
+    [...observationDirectory].some((character) => character.charCodeAt(0) < 32)
+  ) {
+    invalid.push('OBSERVATION_DIRECTORY');
+  }
+
+  if (invalid.length || typeof host !== 'string' || typeof observationDirectory !== 'string') {
     throw new ConfigError(invalid);
   }
 
@@ -75,5 +86,6 @@ export function readConfig(env: Readonly<Record<string, unknown>>): AppConfig {
     port,
     logLevel,
     shutdownTimeoutMs,
+    observationDirectory,
   });
 }

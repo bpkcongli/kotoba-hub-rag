@@ -28,6 +28,7 @@
     "data:prepare": "node --import tsx src/ingestion/cli.ts",
     "data:index": "node --import tsx --env-file-if-exists=.env src/ingestion/index-cli.ts",
     "data:smoke": "node tools/data-03/smoke.mjs",
+    "obs:reconcile": "node --import tsx src/observability/cli.ts",
     "test:store": "node tools/store-01/run-integration.mjs",
     "test:data02": "node --import tsx --test tests/ingestion.integration.ts",
     "test:data03": "node --import tsx tests/indexing-corpus.integration.ts"

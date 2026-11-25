@@ -1,0 +1,71 @@
+{
+  "task": "OBS-01",
+  "date": "2026-11-25",
+  "status": "DONE",
+  "dependencies": [
+    "BOOT-01",
+    "CON-01",
+    "RES-01"
+  ],
+  "environment": {
+    "node_actual": "24.22.1",
+    "node_project_pin": "24.22.3",
+    "npm": "11.19.1",
+    "platform": "Linux",
+    "pin_changed": false
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "exit_code": 0,
+      "includes": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "runtime_tests": 78,
+      "runtime_passed": 78,
+      "runtime_failed": 0,
+      "obs_01_tests": 12
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "behavior_evidence": [
+    "Concurrent canonical admission, conflicting mode/operation/body and service isolation",
+    "Stable execution/trace IDs and immutable terminal across reopen",
+    "UTC wall clock rollback preserves monotonic request/span/rejection duration",
+    "HF attempt metadata allowlist, provider ID hash and unknown usage/cost null",
+    "Sink failure and simultaneous terminal store outage retain admission and block reexecution",
+    "SIGKILL child process, stale local writer lock recovery and idempotent UNKNOWN reconciliation",
+    "Torn JSONL preserved and flagged INVALID; missing complete terminal line detected",
+    "Live writer lock exclusion and documented stale recovery guard procedure",
+    "Queue overflow during finalization stops execution and allows in-process reconciliation",
+    "Strict JSONL validation, concurrent writes and snapshot against caller mutation",
+    "Composition root prevents transport before admission; mock provider attempt durable"
+  ],
+  "review": {
+    "mode": "read-only snippets",
+    "limitation": "Subagent filesystem/tool access unavailable; main agent performed full source inspection and tests",
+    "findings": [
+      "Queue saturation IN_FLIGHT defect fixed and tested",
+      "Crash during recovery guard requires explicit operator procedure; tracked as TD-001"
+    ]
+  },
+  "limits": [
+    "Runtime patch differs from project pin; no pin/dependency change",
+    "Local Linux filesystem with hard-link and directory-fsync support; one writer per directory",
+    "TD-001: recovery guard interrupted by crash needs offline operator inspection/cleanup",
+    "HTTP auth/admission/error mapping and domain envelope replay remain API-01",
+    "Usage/pricing aggregation remains OBS-02; parent/child exports remain EXP-00",
+    "No paid provider calls, Qdrant calls, external repository mutation or research freeze"
+  ],
+  "paid_provider_calls": 0
+}

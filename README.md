@@ -57,7 +57,7 @@ curl -i http://127.0.0.1:3000/health/live
 curl -i http://127.0.0.1:3000/health/ready
 ```
 
-Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 `{"status":"not_ready"}` karena dependency/pipeline belum terpasang. Empat endpoint operasi v1 belum terdaftar. Probe tidak memanggil inferensi, Qdrant atau jaringan provider. Bind default `127.0.0.1`; batas body tetap 1 MiB. Auth/registry/deadline eksekusi menyeluruh adalah scope API-01/ADP-03.
+Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 `{"status":"not_ready"}` karena dependency/pipeline belum terpasang. Empat endpoint operasi v1 belum terdaftar. Probe tidak memanggil inferensi, Qdrant atau jaringan provider. Bind default `127.0.0.1`; batas body tetap 1 MiB. Registry admission/terminal tersedia pada OBS-01; auth, replay envelope dan deadline eksekusi menyeluruh tetap API-01/ADP-03.
 
 | Environment | Default | Validasi |
 | --- | --- | --- |
@@ -66,6 +66,7 @@ Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 
 | `PORT` | `3000` | Integer desimal 1–65535 |
 | `LOG_LEVEL` | `info` | `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent` |
 | `SHUTDOWN_TIMEOUT_MS` | `10000` | Integer desimal 100–30000; batas shutdown SIGTERM/SIGINT |
+| `OBSERVATION_DIRECTORY` | `artifacts/observability/service` | Path tidak kosong/tanpa control characters; satu writer lokal, volume persisten diperlukan saat operasi dipasang |
 
 INF-02 menambahkan client HF opt-in melalui `HF_INFERENCE_ENABLED=true` dan secret `HF_TOKEN`. Startup tetap tidak memanggil provider. Provider/model/endpoint dipin pada `HF_IDENTITY`; override yang berbeda ditolak. Adapter yang sama menyediakan embedding dokumen/query dan reranker; orkestrator mode belum tersedia. Lihat [konfigurasi dan batas klien](docs/inference/INF-02-adapter.md). Tipe di `src/contracts/v1.generated.ts` dibangkitkan dari snapshot CON-01 dengan `npm run contracts:generate`; `contracts:check` menolak drift. Validator menerima `unknown` tanpa coercion/default/removal dan memeriksa schema, korelasi ID, target N5/N4 serta sisa deadline. Refinement domain dan admission lengkap tetap task UC/API.
 
@@ -124,6 +125,19 @@ npm run test:store
 ```
 
 Run remote memerlukan scope pengiriman corpus dan budget eksplisit, HF/Qdrant opt-in serta `--max-new-calls N` per invocation. Replay cache memakai batas nol; provider tidak di-retry otomatis. Served revisions HF tetap unknown, sehingga promosi terblokir. Sample tidak dapat dipromosikan menjadi index penuh. Readiness HTTP tetap 503 sampai corpus/pipeline siap.
+
+## Trace dan rekonsiliasi OBS-01
+
+[OBS-01](docs/observability/OBS-01-tracing.md) menyediakan event strict, JSONL durable, admission/terminal store terpisah dan redaction. Attempt HF pada composition root memerlukan admission aktif sebelum jaringan. Trace failure atau crash mempertahankan UNKNOWN tanpa menjalankan inferensi ulang. Rekonsiliasi offline tidak mengubah trace asli atau memanggil provider:
+
+```bash
+# Hentikan writer lebih dahulu; direktori harus sudah ada.
+npm run obs:reconcile -- --directory artifacts/observability/service
+# Setelah crash, hanya melepas lock host lokal dengan PID terbukti tidak ada.
+npm run obs:reconcile -- --directory artifacts/observability/service --recover-stale-lock
+```
+
+Laporan mencakup terminal UNKNOWN, admission failures dan trace invalid. Bila recovery ikut crash meninggalkan `recovery.lock`, ikuti [prosedur pemeriksaan operator](docs/observability/OBS-01-tracing.md#rekonsiliasi-operator) sebelum membersihkan guard tersebut. Endpoint operasi dan replay envelope tetap API-01; accounting biaya OBS-02. Indexing DATA-03 memakai journal sendiri.
 
 ## Stack dan rencana kelanjutan
 

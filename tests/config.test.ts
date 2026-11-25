@@ -10,6 +10,7 @@ await test('default bootstrap lokal dan override valid diparse tanpa coercion lo
     port: 3000,
     logLevel: 'info',
     shutdownTimeoutMs: 10000,
+    observationDirectory: 'artifacts/observability/service',
   });
 
   const config = readConfig({
@@ -41,6 +42,9 @@ await test('config invalid ditolak, termasuk kosong, non-string, rentang dan enu
     { LOG_LEVEL: 'verbose' },
     { SHUTDOWN_TIMEOUT_MS: '99' },
     { SHUTDOWN_TIMEOUT_MS: '30001' },
+    { OBSERVATION_DIRECTORY: '' },
+    { OBSERVATION_DIRECTORY: '/tmp/invalid\npath' },
+    { OBSERVATION_DIRECTORY: {} },
   ];
 
   for (const env of invalid) {

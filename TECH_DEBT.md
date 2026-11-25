@@ -1,11 +1,12 @@
 # Tech Debt — KotobaHub RAG
 
-Status awal: belum ada entri. Dokumen ini hanya menyediakan format register; backlog implementasi berada di [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
+Satu kompromi operasional OBS-01 dicatat di bawah. Backlog implementasi tetap berada di [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 ## Register
 
 | ID | Judul | Area | Bukti/lokasi | Dampak | Prioritas | Alasan penundaan | Rencana penyelesaian | Dependensi/task | Owner | Status | Tanggal dibuat | Target penyelesaian | Bukti penutupan |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| TD-001 | Guard recovery setelah crash memerlukan pemeriksaan operator | observability/operasional | `src/observability/store.ts` recovery lock; test guard tertinggal | Recovery terblokir sampai guard diperiksa/dibersihkan secara offline; admission tetap aman tanpa inference ulang | P2 | Pelepasan lock otomatis lintas proses/host tanpa primitive OS yang sesuai berisiko membuka dua writer | Evaluasi OS advisory lock atau prosedur recovery terintegrasi pada deployment; uji crash di setiap fase recovery | OPS-01, sebelum EXP-02 | backend-coder | Open | 25 November 2026 | OPS-01 / sebelum freeze | [Prosedur sementara dan batas](docs/observability/OBS-01-tracing.md#rekonsiliasi-operator) |
 
 ## Aturan pengisian
 

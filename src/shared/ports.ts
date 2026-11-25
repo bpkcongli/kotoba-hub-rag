@@ -1,4 +1,5 @@
-import type { Mode, Operation } from '@/contracts/validator';
+import type { Operation } from '@/contracts/validator';
+import type { TraceEvent } from '@/observability/events';
 
 // Each adapter attempt is observed separately; orchestration owns provider retries.
 export interface CallContext {
@@ -89,14 +90,7 @@ export interface GeneratorPort {
 }
 
 export interface TraceSink {
-  write(event: {
-    readonly executionId: string;
-    readonly mode: Mode;
-    readonly timestamp: string;
-    readonly name: string;
-    readonly attributes: Readonly<Record<string, unknown>>;
-  }): Promise<void>;
-
+  write(event: TraceEvent): Promise<void>;
   close(): Promise<void>;
 }
 
