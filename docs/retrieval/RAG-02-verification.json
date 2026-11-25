@@ -1,0 +1,101 @@
+{
+  "task_id": "RAG-02",
+  "date": "2026-11-26",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "dependencies": [
+    "RAG-01",
+    "BASE-01"
+  ],
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "exit_code": 0,
+      "runtime_tests": 137,
+      "runtime_tests_before_rag02": 123,
+      "new_runtime_tests": 14,
+      "components": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "log": "evidence/rag-02-check.log"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "sandbox_note": "Initial sandbox run did not provide complete child-test output and failed tests needing local HTTP/process operations. Final npm run check used approved escalation for local fixture tests; no paid inference or public deployment.",
+  "defaults": {
+    "policy_version": "rag-02-v1",
+    "planning_counter": "utf8-bytes-v1",
+    "context_window_tokens": 32768,
+    "evidence_cap_tokens": 8192,
+    "safety_margin_tokens": 1024,
+    "output_reserve_source": "OpenAiConfig.maxOutputTokens",
+    "default_output_reserve_tokens": 4096,
+    "input_char_limit_source": "OpenAiConfig.maxInputChars",
+    "default_input_char_limit": 100000,
+    "max_candidates": 64,
+    "same_config_for_both_rag_modes": true
+  },
+  "acceptance": {
+    "fixed_reserves_include": [
+      "system_instructions",
+      "json_schema",
+      "structured_input_profile",
+      "output_cap",
+      "safety_margin"
+    ],
+    "serialized_evidence_overhead_counted": true,
+    "generator_and_budget_share_serializer": true,
+    "dedup": [
+      "chunk_id",
+      "identical_text_checksum"
+    ],
+    "selection": "uncovered_target_skill_count_then_caller_order",
+    "whole_chunks_only": true,
+    "all_candidates_reconciled": true,
+    "coverage_missing_explicit": true,
+    "citations_derived_from_selected_only": true,
+    "strict_durable_context_event": "context_built / obs-02-v1",
+    "admission_fingerprint_and_monotonic_deadline_checked": true,
+    "fixed_input_overflow_explicit": true
+  },
+  "accounting": {
+    "new_paid_provider_calls": 0,
+    "planning_units_reported_as_usage_or_cost": false,
+    "unknown_usage_and_cost_replaced": false
+  },
+  "review": {
+    "scope": "Independent reviewer received concrete parent-supplied source excerpts; filesystem tools were unavailable in reviewer session.",
+    "finding": "P2: chunk identity conflicts could bypass validation after a previous occurrence was dropped for duplicate content.",
+    "resolution": "Register all validated chunk identities before drop decisions; regression covers duplicate-content and out-of-scope predecessors.",
+    "independent_filesystem_review": false
+  },
+  "dependency_fix": {
+    "file": "src/ingestion/index-job.ts",
+    "before": "TS2459: EMBEDDING_CONFIG_ID imported from index-plan after RAG-01 moved it.",
+    "after": "Import directly from adapters/bge-configuration; value/index policy unchanged."
+  },
+  "limits": [
+    "UTF-8 byte count is conservative local planning, not a verified generative-model tokenizer or provider token usage.",
+    "Context limits and coverage policy are initial service configuration awaiting pilot, not frozen model capacity or semantic quality thresholds.",
+    "READY means nonempty selection; final evidence sufficiency and terminal outcome belong to RAG-03/ADP.",
+    "No end-to-end RAG pipeline, HTTP operation endpoint, paid inference, reindex, application database mutation, deployment or main experiment was run.",
+    "Durable writes use existing OBS-01 queue/filesystem; helper checks elapsed deadline after awaiting the write.",
+    "Qdrant integration was not repeated because retrieval query/index/filter behavior did not change."
+  ]
+}

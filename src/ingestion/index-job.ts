@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import { mkdir, open, readFile, rename, rm } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
+import { EMBEDDING_CONFIG_ID } from '@/adapters/bge-configuration';
 import { validateEmbeddingBatch } from '@/adapters/hf-validation';
 import type { IngestionPlan } from '@/ingestion/index-plan';
-import { EMBEDDING_CONFIG_ID, IndexingError, readBounded } from '@/ingestion/index-plan';
+import { IndexingError, readBounded } from '@/ingestion/index-plan';
 import { canonical, hash, object } from '@/ingestion/validation';
 import type { CallContext, EmbeddingPort, EmbeddingVector } from '@/shared/ports';
 import type { IndexManifest } from '@/storage/index-manifest';

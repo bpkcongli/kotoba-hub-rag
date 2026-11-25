@@ -2,6 +2,7 @@ import { readHfConfig } from '@/adapters/hf-config';
 import { readOpenAiConfig } from '@/adapters/openai-config';
 import { systemClock } from '@/adapters/system-clock';
 import { createApplication } from '@/app';
+import { readContextConfig } from '@/context/config';
 import { readRetrievalConfig } from '@/retrieval/config';
 import { ConfigError, readConfig } from '@/shared/config';
 import { readQdrantConfig } from '@/storage/qdrant-config';
@@ -13,6 +14,7 @@ async function main(): Promise<void> {
   const qdrantConfig = readQdrantConfig(process.env);
   const openAiConfig = readOpenAiConfig(process.env);
   const retrievalConfig = await readRetrievalConfig(process.env);
+  const contextConfig = openAiConfig ? readContextConfig(process.env, openAiConfig) : null;
 
   const { server } = createApplication(
     config,
@@ -22,6 +24,7 @@ async function main(): Promise<void> {
     undefined,
     openAiConfig,
     retrievalConfig,
+    contextConfig,
   );
 
   let closing = false;

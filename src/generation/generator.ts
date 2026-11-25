@@ -1,6 +1,7 @@
 import type { OpenAiConfig } from '@/adapters/openai-config';
 import { GenerationError } from '@/adapters/openai-responses';
 import type { Operation, Requests } from '@/contracts/validator';
+import { generationInput } from '@/generation/input';
 import { aiInstructions } from '@/generation/prompt';
 import { operationSchema, SCHEMA_NAMES, validateOutput } from '@/generation/schema';
 import type { CallContext, Evidence, GeneratorPort } from '@/shared/ports';
@@ -18,29 +19,7 @@ export function createOperationGenerator(provider: GeneratorPort, config: OpenAi
     evidence: readonly Evidence[],
     context: CallContext,
   ) => {
-    // Project domain fields only; metadata and experiment/evaluator labels never enter the prompt.
-    const parameters =
-      'questionCount' in request.payload
-        ? {
-            questionCount: request.payload.questionCount,
-            difficultyBand: request.payload.difficultyBand,
-            questionMix: request.payload.questionMix ?? {
-              WEAK: 0.6,
-              REINFORCEMENT: 0.3,
-              STRETCH: 0.1,
-            },
-          }
-        : 'question' in request.payload
-          ? { question: request.payload.question, userAnswer: request.payload.userAnswer }
-          : 'note' in request.payload
-            ? { note: request.payload.note.trim() }
-            : {};
-    const serialized = JSON.stringify({
-      context: request.payload.context,
-      language: request.payload.language,
-      ...parameters,
-      evidence: evidence.map(({ sourceId, chunkId, text }) => ({ sourceId, chunkId, text })),
-    });
+    const serialized = generationInput(request, evidence);
     const result = await provider.generate(
       {
         operation,

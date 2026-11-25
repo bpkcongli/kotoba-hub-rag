@@ -1,8 +1,10 @@
 import { Ajv } from 'ajv';
 import { default as formats } from 'ajv-formats';
+import type { ContextTrace } from '@/context/types';
 import type { Mode, Operation } from '@/contracts/validator';
 import { callAccountingSchema, parseCallAccounting } from '@/observability/accounting-schema';
 import type { CallAccounting } from '@/observability/accounting-types';
+import { contextEventSchema, validContextTrace } from '@/observability/context-event';
 import { retrievalEventSchema, validRetrievalTrace } from '@/observability/retrieval-event';
 import type { RetrievalTrace } from '@/retrieval/types';
 
@@ -45,6 +47,7 @@ export type TraceCode =
   | 'CRASH_RECOVERY';
 
 export type EventData =
+  | ContextTrace
   | RetrievalTrace
   | { readonly kind: 'request_started'; readonly fingerprint: string }
   | {
@@ -199,6 +202,7 @@ export const traceEventSchema = object({
     oneOf: [
       object({ kind: { const: 'request_started' }, fingerprint: hash }),
       retrievalEventSchema,
+      contextEventSchema,
       object({
         kind: { const: 'span_completed' },
         spanId: uuid,
@@ -236,6 +240,14 @@ export function parseTraceEvent(value: unknown): TraceEvent {
   }
 
   const event = value;
+
+  if (
+    event.data.kind === 'context_built' &&
+    (event.schemaVersion !== 'obs-02-v1' || !validContextTrace(event.data))
+  ) {
+    throw new Error('Invariant context trace tidak valid');
+  }
+
   if (
     event.data.kind === 'retrieval_completed' &&
     (event.schemaVersion !== 'obs-02-v1' || !validRetrievalTrace(event.data))

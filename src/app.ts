@@ -9,6 +9,9 @@ import type { OpenAiConfig } from '@/adapters/openai-config';
 import { createOpenAiGenerator, GenerationError } from '@/adapters/openai-responses';
 import type { OpenAiGenerator } from '@/adapters/openai-responses';
 import { systemClock } from '@/adapters/system-clock';
+import { readContextConfig } from '@/context/config';
+import { createContextBuilder } from '@/context/observed-builder';
+import type { ContextConfig } from '@/context/types';
 import { createContractValidators } from '@/contracts/validator';
 import type { ContractValidators } from '@/contracts/validator';
 import { createBaselineRunner } from '@/generation/baseline';
@@ -35,6 +38,7 @@ export interface Application {
   readonly baseline: ReturnType<typeof createBaselineRunner> | null;
   readonly retriever: QdrantRetriever | null;
   readonly retrievalStage: ReturnType<typeof createRetrievalStage> | null;
+  readonly contextBuilder: ReturnType<typeof createContextBuilder> | null;
 }
 
 export function createApplication(
@@ -45,6 +49,7 @@ export function createApplication(
   observations: ObservationStore = new ObservationStore(config.observationDirectory, clock),
   openAiConfig: OpenAiConfig | null = null,
   retrievalConfig: RetrievalConfig | null = null,
+  contextConfig: ContextConfig | null = openAiConfig ? readContextConfig({}, openAiConfig) : null,
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -172,6 +177,10 @@ export function createApplication(
     generator && openAiConfig
       ? createBaselineRunner(createOperationGenerator(generator, openAiConfig), observations, clock)
       : null;
+  const contextBuilder =
+    openAiConfig && contextConfig
+      ? createContextBuilder(contextConfig, openAiConfig, observations, clock)
+      : null;
 
   server.addHook('onClose', async () => {
     inferenceClosed = true;
@@ -197,5 +206,6 @@ export function createApplication(
     baseline,
     retriever,
     retrievalStage,
+    contextBuilder,
   };
 }

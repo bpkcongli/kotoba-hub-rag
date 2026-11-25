@@ -136,6 +136,7 @@ await test('OpenAI enabled dirangkai tanpa call pada startup/probe dan memerluka
 
   assert.ok(app.generator);
   assert.ok(app.baseline);
+  assert.ok(app.contextBuilder);
 
   await app.server.inject('/health/live');
 
