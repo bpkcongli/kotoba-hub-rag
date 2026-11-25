@@ -456,6 +456,17 @@ export class ObservationStore {
     }
   }
 
+  activeCorrelation(executionId: string): Correlation {
+    this.assertActive(executionId);
+    const entry = this.byExecution.get(executionId);
+
+    if (!entry) {
+      throw new ObservationError('EXECUTION_NOT_ACTIVE');
+    }
+
+    return structuredClone(entry.start.correlation);
+  }
+
   assertAdmittedRequest(
     executionId: string,
     input: Omit<AdmissionInput, 'serviceId'>,

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFile, realpath, stat } from 'node:fs/promises';
 import { dirname, isAbsolute, resolve, sep } from 'node:path';
+import { EMBEDDING_CONFIGURATION, EMBEDDING_CONFIG_ID } from '@/adapters/bge-configuration';
 import { HF_IDENTITY } from '@/adapters/hf-config';
 import { buildPreparation } from '@/ingestion/prepare';
 import { BGE_TOKENIZER } from '@/ingestion/tokenizer';
@@ -91,22 +92,6 @@ export async function loadPreparedCorpus(repoRoot: string) {
 
   return { ...preparation, manifestSha256: hash(body) };
 }
-
-export const EMBEDDING_CONFIGURATION = Object.freeze({
-  identity: HF_IDENTITY,
-  profile: 'DENSE',
-  sparseEnabled: false,
-  normalize: true,
-  truncate: false,
-  documentPurpose: 'document',
-  queryPurpose: 'query',
-  instructionPrefix: null,
-  dimensions: 1024,
-  inferencePrecision: null,
-  usageScope: 'document_indexing_separate_from_online_requests',
-} as const);
-
-export const EMBEDDING_CONFIG_ID = `bge-m3-${hash(canonical(EMBEDDING_CONFIGURATION)).slice(0, 32)}`;
 
 export interface IngestionPlan {
   readonly schemaVersion: 'data-03-plan-v1';

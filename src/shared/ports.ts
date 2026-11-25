@@ -1,6 +1,7 @@
 import type { Operation } from '@/contracts/validator';
 import type { CallMeasurement } from '@/observability/accounting-types';
 import type { TraceEvent } from '@/observability/events';
+import type { RetrievalResult } from '@/retrieval/types';
 
 // Each adapter attempt is observed separately; orchestration owns provider retries.
 export interface CallContext {
@@ -52,7 +53,7 @@ export interface RetrieverPort {
     filter: RetrievalFilter,
     limit: number,
     context: CallContext,
-  ): Promise<readonly Evidence[]>;
+  ): Promise<RetrievalResult>;
 }
 
 export interface RerankerPort {

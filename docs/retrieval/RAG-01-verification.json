@@ -1,0 +1,175 @@
+{
+  "task_id": "RAG-01",
+  "date": "2026-11-26",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "dependencies": ["DATA-03", "OBS-01"],
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1",
+    "node_source": "https://nodejs.org/dist/v24.22.3/",
+    "node_archive_sha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb",
+    "checksum_verified": true
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "runtime_tests": 123,
+      "runtime_tests_before_rag01": 110,
+      "new_runtime_tests": 13,
+      "components": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "log": "evidence/check.log"
+    },
+    {
+      "command": "npm run test:rag01",
+      "result": "PASS",
+      "integration_tests": 6,
+      "provider_calls": 0,
+      "log": "evidence/retrieval-integration.log",
+      "metadata": "evidence/retrieval-integration.json"
+    },
+    {
+      "command": "npm run test:store",
+      "result": "PASS",
+      "integration_tests": 10,
+      "provider_calls": 0,
+      "log": "evidence/storage-regression.log",
+      "metadata": "evidence/storage-regression.json"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "sandbox_note": "Child-process/loopback and temporary Docker checks used approved sandbox escalation. No paid inference or public deployment.",
+  "qdrant": {
+    "task": "RAG-01",
+    "startedAt": "2026-11-25T18:10:23.082Z",
+    "server": {
+      "title": "qdrant - vector search engine",
+      "version": "1.20.2",
+      "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+    },
+    "clientVersion": "1.20.0",
+    "completedAt": "2026-11-25T18:10:30.856Z",
+    "exitCode": 0,
+    "cleanupSucceeded": true,
+    "image": "qdrant/qdrant:v1.20.2@sha256:c5e32ee251293d2e1f4dd34890ad75eeee5a4f3821a121d6d8b7e4323448b386",
+    "platform": "linux/amd64",
+    "loopbackOnly": true,
+    "newProviderCalls": 0
+  },
+  "profile": {
+    "active": "DENSE",
+    "production_hf_hybrid_enabled": false,
+    "synthetic_hybrid_tested": true,
+    "provider_fallback": false,
+    "profile_downgrade": false,
+    "automatic_retries": 0,
+    "embedding_config_id": "bge-m3-f1f90a1a509991ff2a7cff668817f3fa",
+    "shared_ingestion_query_config": true
+  },
+  "defaults": {
+    "candidate_limit_per_branch": 20,
+    "final_limit": 5,
+    "hnsw_ef": 128,
+    "exact": false,
+    "rrf_k": 60,
+    "rrf_position_base": 0,
+    "trace_rank_base": 1,
+    "max_concurrency": 1,
+    "search_timeout_ms": 5000,
+    "max_response_bytes": 8388608,
+    "pilot_calibrated": false,
+    "research_frozen": false
+  },
+  "acceptance": {
+    "queries_ja_en_id": "PASS_DETERMINISTIC_PROVIDER_FIXTURES",
+    "hard_filters": "PASS_REAL_TEMPORARY_QDRANT_DENSE_AND_HYBRID",
+    "profile_mode_stage_parity": "PASS_SHARED_HELPER_CONFIG_AND_TESTS",
+    "no_auto_downgrade": "PASS_MISSING_SPARSE_AND_INCOMPATIBLE_INDEX_FAIL_EXPLICITLY",
+    "raw_score_not_confidence": "PASS_TYPED_BRANCH_SCORES_AND_STRICT_TRACE",
+    "one_round_one_stage": "PASS_ONE_RETRIEVAL_EVENT_PER_DENSE_OR_HYBRID_ROUND"
+  },
+  "coverage": [
+    "published/corpus/N5-N4/skill intersection/embedding config hard filters on every branch",
+    "JA/EN/ID query embedding purpose and SINGLE_STAGE/ADAPTIVE parity",
+    "stage 1/2 identical configurationHash and scope",
+    "DENSE ignores optional valid sparse; HYBRID rejects missing sparse without fallback",
+    "raw dense/sparse ranks and scores plus fixed local RRF golden results",
+    "strict schema rejects confidence and trace payload extras",
+    "physical collection pin, version/schema/metadata mismatch and alias rejection",
+    "invalid checksum/payload/order/nonfinite score/duplicate chunk and metadata disagreement",
+    "429/5xx/malformed JSON/response bytes/body timeout/cancellation/close/capacity",
+    "uncooperative transport retains slot until completion",
+    "embedding and search failure retain one ONLINE INITIAL model attempt with null usage/cost",
+    "LLM_ONLY/unadmitted calls fail before model or storage IO",
+    "candidate null revisions can retrieve while promotion remains rejected",
+    "startup/readiness no network or inference"
+  ],
+  "subagent_review": {
+    "scope": "description and supplied snippets only",
+    "filesystem_tools_available": false,
+    "independent_diff_review": false,
+    "main_agent_diff_review_and_test_execution": true
+  },
+  "new_provider_calls": 0,
+  "real_hf_query_smoke": {
+    "executed": false,
+    "semantic_retrieval_quality_measured": false,
+    "served_model_revision": null,
+    "served_tokenizer_revision": null,
+    "served_processing_revision": null,
+    "cost_usd": null
+  },
+  "limits": [
+    "Internal retrieval round only; no full SINGLE_STAGE/ADAPTIVE pipeline or HTTP operation endpoint.",
+    "Pipeline owner still enforces total stage count/order, rewrite, context cap, evidence gate and terminal.",
+    "HYBRID integration uses synthetic vectors; no HF sparse capability or new cohort activation.",
+    "Runtime validates collection compatibility and returned hits; complete inventory/count/digest remains offline lifecycle validation.",
+    "Candidate access with matching null revisions does not satisfy promotion or research freeze.",
+    "No paid calls, persistent corpus mutation, sibling repository writes or semantic-quality/performance claims."
+  ],
+  "implementation_sha256": {
+    ".env.example": "5d99d0683bdffcde330a978fa8c6305366ee3ed3aa4bfc86580bb3390c4f26bf",
+    "package.json": "54a9a0bdb2b61003da37cb3dc9e52a07a46161a83f97c9dcf5b8a29852bffe66",
+    "eslint.config.mjs": "bfc8ddf4fe77675e858e81bbecbd78d62817cb2a53454575a03827e048b9f8fc",
+    "src/app.ts": "1faccc92bd0c07b3b3a7a6a2b8f0bd6f3667c90cd7ce937f863b3d736f143ba9",
+    "src/main.ts": "63ae7f2b1c58775cc3e9430a10bfd55185550566032cc504744daca706ca1b5c",
+    "src/adapters/bge-configuration.ts": "bc6edb7ebe8afe047910e633fbfa3351cc1ab1c9c8c813bb25c7f7ae165d8834",
+    "src/ingestion/index-plan.ts": "b446c316cffe32c475be23b4aa648825017ad82dfe719d32e29f755a125f2315",
+    "src/observability/events.ts": "5bd66afb61ce12d24c70a9990459b4a6cc2b13bcc4b1abd189e8623c9802c965",
+    "src/observability/retrieval-event.ts": "cc794204857689ac3ca675a0b2bc5bc09dcf52600e4097f1308ab2cb1a74456f",
+    "src/observability/store.ts": "ddf6b6e562b20329bc1a0b7fb3407f92fcce654dd329229ab10529bf6b023631",
+    "src/shared/ports.ts": "8d6a7f28306eb0e20c37ffcc62f922545c7af47d49897e5adda11ac0497d6122",
+    "src/storage/qdrant-index.ts": "a763812ff91b768bf1d92de3d48d835ad1c79da6e80ff1e56316b64f1e06ce4d",
+    "tests/app.test.ts": "be018456aa3a89b8fe42cfc6ed80f06aee8e010ddd479002d4e9436380dec4c0",
+    "tests/retrieval-fixture.ts": "5cc42d3437c59540ebbf196b3d8eed1fc938320eb9294cfdfa69c2303fd188b2",
+    "tests/retrieval.test.ts": "cb864c2b3801d534d6472c296fef06ee7ac7d2ea4f7936fc2b5a06a71e5dec2b",
+    "tests/retrieval.integration.ts": "a18c9c03a5901e6c1a4294d20cb150ae3785f752b707d3355abd1d66c367b938",
+    "tools/rag-01/run-integration.mjs": "28a63002ab89bc5dca5327ba8e51f1c392c5155243e4d3c9fd83152fa41b0174",
+    "src/retrieval/config.ts": "70e45d618a62ed76a81cfce33fb516739a5c4fe8b60dec284a03a8e88ef8b03f",
+    "src/retrieval/qdrant-retriever.ts": "d208ed81e0e26ccb5d7e154c65918b8bfde462fecad27ddccb6c7b9f8858e4e8",
+    "src/retrieval/ranking.ts": "e6faf19f854c74bc3977c086a26f77da2352bb1da09a4a27890fd224f63dece0",
+    "src/retrieval/stage.ts": "d842ff5f333c69154e4b7b69fbf0ae2952b3deb1a0ef670be01b2ced930abcbf",
+    "src/retrieval/types.ts": "dedbcfbb26c36045b844ab76998f3599306f00dc72d4aabbc37deda2d1254aa6"
+  },
+  "unchanged_data03_manifest_sha256": "3436d289e6d715cd907173e12624eb72f2ac71b411c054a33e17f6ec35b4a018",
+  "evidence_sha256": {
+    "evidence/check.log": "fb5f7e4f3ebe364a7cf5dcdc0decd542a92ff23952a8c36e3d5f038c2cbe6310",
+    "evidence/retrieval-integration.json": "756775775f3c3dac1b620df5f4fb9fc6db886a5734a4eaf27ecd9ed9ea6ea1ee",
+    "evidence/retrieval-integration.log": "fbb638f97c920b61565901868dab0c50f04474e23214a15a6eb9493d2866b141",
+    "evidence/storage-regression.json": "a921188c551d865c5ac5666a88e04bec17c177b584805250531faeb634d17c92",
+    "evidence/storage-regression.log": "6abee1a8e964c9a6f45caa3b7574237f53b166ff9b2f37b819c240756edff27a"
+  }
+}

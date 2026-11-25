@@ -48,13 +48,39 @@ function metadata(manifest: IndexManifest): Record<string, unknown> {
   };
 }
 
-function checkCollection(
-  info: Schemas['CollectionInfo'],
+export function checkCollection(
+  info: unknown,
   manifest: IndexManifest,
   requireIndexes: boolean,
 ): void {
-  const vectors: unknown = info.config.params.vectors;
-  const sparse = info.config.params.sparse_vectors ?? {};
+  if (
+    !object(info) ||
+    !object(info.config) ||
+    !object(info.config.params) ||
+    !object(info.config.hnsw_config) ||
+    !object(info.config.metadata) ||
+    !object(info.payload_schema)
+  ) {
+    throw new StoreError('INCOMPATIBLE_INDEX');
+  }
+
+  const config = info.config;
+  const params = config.params;
+  const hnsw = config.hnsw_config;
+  const meta = config.metadata;
+  const payloadSchema = info.payload_schema;
+
+  // Recheck nested values locally so this boundary accepts untrusted HTTP JSON.
+  if (!object(params) || !object(hnsw) || !object(meta)) {
+    throw new StoreError('INCOMPATIBLE_INDEX');
+  }
+
+  const vectors = params.vectors;
+  const sparse = params.sparse_vectors ?? {};
+
+  if (!object(sparse)) {
+    throw new StoreError('INCOMPATIBLE_INDEX');
+  }
 
   if (
     !object(vectors) ||
@@ -66,13 +92,13 @@ function checkCollection(
     vectors.dense.multivector_config != null ||
     vectors.dense.hnsw_config != null ||
     vectors.dense.quantization_config != null ||
-    info.config.quantization_config != null ||
-    info.config.hnsw_config.m !== 16 ||
-    info.config.hnsw_config.ef_construct !== 100 ||
-    info.config.hnsw_config.full_scan_threshold !== 10000 ||
-    info.config.params.shard_number !== 1 ||
-    info.config.params.replication_factor !== 1 ||
-    info.config.params.write_consistency_factor !== 1 ||
+    config.quantization_config != null ||
+    hnsw.m !== 16 ||
+    hnsw.ef_construct !== 100 ||
+    hnsw.full_scan_threshold !== 10000 ||
+    params.shard_number !== 1 ||
+    params.replication_factor !== 1 ||
+    params.write_consistency_factor !== 1 ||
     (manifest.retrievalProfile === 'DENSE'
       ? Object.keys(sparse).length !== 0
       : Object.keys(sparse).length !== 1 ||
@@ -80,27 +106,24 @@ function checkCollection(
         sparse.sparse.modifier != null ||
         !object(sparse.sparse.index) ||
         sparse.sparse.index.datatype !== 'float32') ||
-    info.config.metadata?.schema_version !== INDEX_SCHEMA_VERSION ||
-    info.config.metadata.fingerprint !== manifestFingerprint(manifest) ||
-    JSON.stringify(info.config.metadata.manifest) === undefined
+    meta.schema_version !== INDEX_SCHEMA_VERSION ||
+    meta.fingerprint !== manifestFingerprint(manifest) ||
+    JSON.stringify(meta.manifest) === undefined
   ) {
     throw new StoreError('INCOMPATIBLE_INDEX');
   }
 
   // Check metadata contents as well as the recorded hash; neither may drift independently.
-  if (
-    manifestFingerprint(parseIndexManifest(info.config.metadata.manifest)) !==
-    manifestFingerprint(manifest)
-  ) {
+  if (manifestFingerprint(parseIndexManifest(meta.manifest)) !== manifestFingerprint(manifest)) {
     throw new StoreError('INCOMPATIBLE_INDEX');
   }
 
   for (const [field, type] of Object.entries(PAYLOAD_INDEXES)) {
-    const actual = info.payload_schema[field];
+    const actual = payloadSchema[field];
 
     if (
       (requireIndexes && actual === undefined) ||
-      (actual !== undefined && actual.data_type !== type)
+      (actual !== undefined && (!object(actual) || actual.data_type !== type))
     ) {
       throw new StoreError('INCOMPATIBLE_INDEX');
     }

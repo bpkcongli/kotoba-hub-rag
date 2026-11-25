@@ -3,6 +3,8 @@ import { default as formats } from 'ajv-formats';
 import type { Mode, Operation } from '@/contracts/validator';
 import { callAccountingSchema, parseCallAccounting } from '@/observability/accounting-schema';
 import type { CallAccounting } from '@/observability/accounting-types';
+import { retrievalEventSchema, validRetrievalTrace } from '@/observability/retrieval-event';
+import type { RetrievalTrace } from '@/retrieval/types';
 
 export interface Correlation {
   readonly requestId: string | null;
@@ -43,6 +45,7 @@ export type TraceCode =
   | 'CRASH_RECOVERY';
 
 export type EventData =
+  | RetrievalTrace
   | { readonly kind: 'request_started'; readonly fingerprint: string }
   | {
       readonly kind: 'span_completed';
@@ -195,6 +198,7 @@ export const traceEventSchema = object({
   data: {
     oneOf: [
       object({ kind: { const: 'request_started' }, fingerprint: hash }),
+      retrievalEventSchema,
       object({
         kind: { const: 'span_completed' },
         spanId: uuid,
@@ -232,6 +236,13 @@ export function parseTraceEvent(value: unknown): TraceEvent {
   }
 
   const event = value;
+  if (
+    event.data.kind === 'retrieval_completed' &&
+    (event.schemaVersion !== 'obs-02-v1' || !validRetrievalTrace(event.data))
+  ) {
+    throw new Error('Invariant retrieval trace tidak valid');
+  }
+
   const terminal = event.data.kind === 'terminal' || event.data.kind === 'admission_rejected';
 
   if (event.data.kind === 'model_attempt') {

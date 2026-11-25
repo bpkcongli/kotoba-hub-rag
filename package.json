@@ -12,9 +12,9 @@
     "contracts:generate": "node tools/boot-01/generate-types.mjs",
     "contracts:check": "node tools/boot-01/generate-types.mjs --check",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src tests eslint.config.mjs tools/boot-01 tools/inf-01 tools/store-01 tools/data-01 tools/data-03",
-    "format": "prettier --write .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json",
-    "format:check": "prettier --check .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json",
+    "lint": "eslint src tests eslint.config.mjs tools/boot-01 tools/inf-01 tools/store-01 tools/data-01 tools/data-03 tools/rag-01",
+    "format": "prettier --write .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs",
+    "format:check": "prettier --check .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs",
     "build": "tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js",
     "test": "node --import tsx --test tests/*.test.ts",
     "inf:check": "node tools/inf-01/audit.test.mjs && node tools/inf-01/smoke.test.mjs && node tools/inf-01/verify.mjs && node tools/inf-01/capture.mjs",
@@ -33,6 +33,7 @@
     "test:store": "node tools/store-01/run-integration.mjs",
     "test:data02": "node --import tsx --test tests/ingestion.integration.ts",
     "test:data03": "node --import tsx tests/indexing-corpus.integration.ts",
+    "test:rag01": "node tools/rag-01/run-integration.mjs",
     "base:smoke": "node --import tsx --env-file-if-exists=.env src/generation/smoke.ts"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.16 · 25 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. Diagram pipeline dan endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
+Versi 0.17 · 26 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. Diagram pipeline dan endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
 
 ## 1. Dasar keputusan
 
@@ -268,6 +268,16 @@ flowchart TD
 Filter wajib: pinned corpus, published/eligible material, allowed levels dan katalog/skill caller. Deep path tidak melepas batas silabus. DENSE mengambil kandidat dari dense search tanpa RRF; HYBRID memakai dense+sparse BGE-M3 dan RRF jika dipilih untuk versi run lain. Profil tidak boleh berganti mengikuti respons/case/mode. Raw score/rank dicatat menurut cabang yang berlaku, bukan dijumlahkan sebagai confidence.
 
 `SINGLE_STAGE` selalu berhenti setelah putaran awal. Deduplikasi dan token budgeting berlaku pada semua mode RAG. Jika evidence tidak cukup, single-stage memberi error yang tercatat; tidak meniru deep path atau fallback LLM-only. Pembanding tambahan single-stage+reranker boleh menjadi ablation, tetapi tidak menggantikan baseline utama setelah main run dimulai.
+
+### Implementasi RAG-01
+
+[Retrieval internal RAG-01](docs/retrieval/RAG-01-retrieval.md) memisahkan adapter query runtime dari lifecycle admin STORE-01. Manifest fisik eksplisit mengikat profil, corpus, schema/fingerprint dan konfigurasi embedding yang sama dengan ingestion. Setiap round memeriksa versi server, nama collection fisik, metadata dan schema; inventory/count/digest lengkap tetap diperiksa melalui DATA-03/STORE-01. Hasil memerlukan payload strict, scope yang cocok dan checksum teks valid. Candidate dengan served revisions null boleh dibaca bila binding identik, tanpa melewati guard promosi/freeze.
+
+DENSE memakai named dense search; HYBRID memakai batch dense+sparse dengan filter identik dan fusion lokal tetap `sum(1 / (60 + rank - 1))`, rank trace mulai 1. Default pool 20/final 5 dan HNSW ef 128, exact false, masih parameter awal sebelum pilot. Tidak ada pemilihan profil dari output, downgrade atau retry otomatis. HF composition root hanya menerima DENSE; verifikasi HYBRID memakai vector sintetis pada Qdrant nyata.
+
+Helper stage membutuhkan admission aktif, menolak LLM_ONLY, lalu menjalankan satu query embedding dan satu round search. Event strict `retrieval_completed` pada obs-02-v1 menyimpan stage, profile/configuration hash, scope, raw branch/final rank dan score; raw query, vector dan teks evidence tidak ditulis. Dua cabang HYBRID tetap satu event/round. Attempt HF tetap masuk accounting ONLINE, termasuk kegagalan dan unknown cost. Deadline, response size dan concurrency dibatasi; startup/probe tidak memanggil jaringan/inference.
+
+Helper menerima nomor stage 1/2; pipeline pemanggil tetap harus membatasi urutan/jumlah total stage, rewrite, context dan terminal evidence. Belum ada pipeline SINGLE_STAGE/ADAPTIVE lengkap atau endpoint operasi. RAG-02/RAG-03/ADP/API tetap mengerjakan bagian tersebut. Trace skor mentah bukan retrieval quality atau confidence; pengujian fixture belum mengukur mutu semantik.
 
 ### Router adaptive
 

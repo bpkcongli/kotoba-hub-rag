@@ -162,3 +162,54 @@ await test('OpenAI enabled dirangkai tanpa call pada startup/probe dan memerluka
 
   assert.equal(calls, 0);
 });
+
+await test('retrieval enabled tetap tanpa I/O jaringan pada startup/health dan menolak non-admitted calls', async (t) => {
+  const { readFile } = await import('node:fs/promises');
+  const { retrievalConfig } = await import('@/retrieval/config');
+  const index: unknown = JSON.parse(
+    await readFile('research/indexing/data-03-v1/index-manifest.json', 'utf8'),
+  );
+  const original = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = () => {
+    calls++;
+    return Promise.reject(new Error('No network'));
+  };
+  t.after(() => {
+    globalThis.fetch = original;
+  });
+  const { readQdrantConfig } = await import('@/storage/qdrant-config');
+  const app = createApplication(
+    readConfig({ NODE_ENV: 'test', LOG_LEVEL: 'silent' }),
+    undefined,
+    readHfConfig({ HF_INFERENCE_ENABLED: 'true', HF_TOKEN: 'fixture-key' }),
+    readQdrantConfig({ QDRANT_ENABLED: 'true' }),
+    undefined,
+    null,
+    retrievalConfig(index),
+  );
+  t.after(() => app.server.close());
+
+  assert.ok(app.retriever);
+  assert.ok(app.retrievalStage);
+
+  await app.server.inject('/health/live');
+
+  assert.equal((await app.server.inject('/health/ready')).statusCode, 503);
+  await assert.rejects(
+    async () =>
+      app.retriever?.retrieve(
+        { dense: [] },
+        { published: true, corpusVersion: 'x', targetLevel: 'JLPT_N5', skillCodes: ['x'] },
+        5,
+        {
+          executionId: 'unrecorded',
+          signal: new AbortController().signal,
+          deadlineAt: new Date(Date.now() + 1000).toISOString(),
+        },
+      ),
+    { code: 'EXECUTION_NOT_ACTIVE' },
+  );
+
+  assert.equal(calls, 0);
+});

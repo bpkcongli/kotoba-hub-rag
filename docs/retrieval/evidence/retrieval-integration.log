@@ -1,0 +1,18 @@
+
+> kotoba-hub-rag@0.1.0 test:rag01
+> node tools/rag-01/run-integration.mjs
+
+✔ runtime DENSE nyata mengisolasi published/corpus/level/skill/config tanpa sparse/fusion (1306.676541ms)
+✔ runtime HYBRID nyata memakai raw dense/sparse, fixed RRF dan satu result round (1074.572298ms)
+✔ HYBRID hard filter menolak sparse-only top match di luar scope di kedua cabang (1036.765552ms)
+✔ manifest/profile/config drift dan alias sebagai pengganti physical pin ditolak pada server nyata (970.549094ms)
+✔ runtime mendeteksi checksum/payload rusak walau record terambil dari Qdrant nyata (1008.872655ms)
+✔ candidate null revisions dapat dibaca dengan konfigurasi cocok; guard promosi tetap menolak (1010.34447ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6724.145088

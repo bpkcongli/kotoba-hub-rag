@@ -1,6 +1,8 @@
 import Fastify, { LogController } from 'fastify';
 import type { FastifyInstance } from 'fastify';
+import { EMBEDDING_CONFIG_ID } from '@/adapters/bge-configuration';
 import type { HfConfig } from '@/adapters/hf-config';
+import { HF_IDENTITY } from '@/adapters/hf-config';
 import { createHfInference, InferenceError } from '@/adapters/hf-inference';
 import type { HfInference } from '@/adapters/hf-inference';
 import type { OpenAiConfig } from '@/adapters/openai-config';
@@ -12,6 +14,11 @@ import type { ContractValidators } from '@/contracts/validator';
 import { createBaselineRunner } from '@/generation/baseline';
 import { createOperationGenerator } from '@/generation/generator';
 import { ObservationStore } from '@/observability/store';
+import type { RetrievalConfig } from '@/retrieval/config';
+import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
+import type { QdrantRetriever } from '@/retrieval/qdrant-retriever';
+import { createRetrievalStage } from '@/retrieval/stage';
+import { RetrievalError } from '@/retrieval/types';
 import type { AppConfig } from '@/shared/config';
 import type { CallContext, Clock } from '@/shared/ports';
 import type { QdrantConfig } from '@/storage/qdrant-config';
@@ -26,6 +33,8 @@ export interface Application {
   readonly observations: ObservationStore;
   readonly generator: OpenAiGenerator | null;
   readonly baseline: ReturnType<typeof createBaselineRunner> | null;
+  readonly retriever: QdrantRetriever | null;
+  readonly retrievalStage: ReturnType<typeof createRetrievalStage> | null;
 }
 
 export function createApplication(
@@ -35,6 +44,7 @@ export function createApplication(
   qdrantConfig: QdrantConfig | null = null,
   observations: ObservationStore = new ObservationStore(config.observationDirectory, clock),
   openAiConfig: OpenAiConfig | null = null,
+  retrievalConfig: RetrievalConfig | null = null,
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -96,6 +106,48 @@ export function createApplication(
 
   const storage = qdrantConfig ? new QdrantIndexStore(qdrantConfig) : null;
 
+  if (retrievalConfig && (!qdrantConfig || !inference || hfConfig?.profile !== 'DENSE')) {
+    throw new RetrievalError('INCOMPATIBLE_INDEX');
+  }
+
+  const rawRetriever =
+    retrievalConfig && qdrantConfig
+      ? createQdrantRetriever(retrievalConfig, qdrantConfig, { clock })
+      : null;
+  const retriever: QdrantRetriever | null =
+    rawRetriever === null
+      ? null
+      : {
+          close: () => rawRetriever.close(),
+          retrieve: (vector, filter, limit, context) => {
+            const correlation = observations.activeCorrelation(context.executionId);
+            if (inferenceClosed || correlation.mode === 'LLM_ONLY') {
+              throw new RetrievalError('INVALID_INPUT');
+            }
+
+            return rawRetriever.retrieve(vector, filter, limit, context);
+          },
+        };
+  const retrievalStage =
+    retrievalConfig && retriever && inference
+      ? createRetrievalStage(
+          retrievalConfig,
+          {
+            profile: 'DENSE',
+            configId: EMBEDDING_CONFIG_ID,
+            modelRevision: HF_IDENTITY.servedModelRevision,
+            tokenizerRevision: HF_IDENTITY.tokenizerRevision,
+            processingRevision: HF_IDENTITY.processingRevision,
+            sparseCapabilityVerified: false,
+            sparseTokenMappingId: null,
+          },
+          inference.embedding,
+          retriever,
+          observations,
+          clock,
+        )
+      : null;
+
   const rawGenerator = openAiConfig
     ? createOpenAiGenerator(openAiConfig, {
         clock,
@@ -125,13 +177,25 @@ export function createApplication(
     inferenceClosed = true;
     inference?.close();
     generator?.close();
+    retriever?.close();
     await observations.close();
   });
 
   server.get('/health/live', () => ({ status: 'live' }));
 
-  // Capability is local evidence, not live provider health. Index and pipeline are still absent.
+  // Internal adapters do not prove operation readiness; complete pipelines are still absent.
   server.get('/health/ready', (_request, reply) => reply.code(503).send({ status: 'not_ready' }));
 
-  return { server, clock, contracts, inference, storage, observations, generator, baseline };
+  return {
+    server,
+    clock,
+    contracts,
+    inference,
+    storage,
+    observations,
+    generator,
+    baseline,
+    retriever,
+    retrievalStage,
+  };
 }

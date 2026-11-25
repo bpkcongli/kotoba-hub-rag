@@ -1,0 +1,22 @@
+
+> kotoba-hub-rag@0.1.0 test:store
+> node tools/store-01/run-integration.mjs
+
+✔ DATA-03 real Qdrant ingestion, replay, filter, immutable config, promotion guard and candidate removal (1542.138652ms)
+✔ server/client, collection DENSE dan payload indexes nyata; prepare idempotent tanpa menghapus point (1360.710799ms)
+✔ hard filters mengisolasi unpublished, corpus, level, skill, dan embedding config pada dense search (998.276163ms)
+✔ index incompatible ditolak tanpa recreate; dimensi, profil, manifest dan index type diperiksa (1347.386696ms)
+✔ HYBRID membutuhkan materialisasi sparse setiap point dan hard filter pada kedua cabang RRF (1112.869012ms)
+✔ HYBRID menolak sparse index precision yang berubah meski fingerprint metadata dipertahankan (1105.009898ms)
+✔ audit menolak checksum drift, label evaluasi/profil learner dan chunk ID duplikat (1531.439432ms)
+✔ promosi atomik alias menjaga physical pin; delete collection beralias ditolak (1859.744332ms)
+✔ CLI prepare/validate berfungsi pada manifest file dan Qdrant nyata tanpa inference (1417.73733ms)
+✔ named volumes mempertahankan schema, point dan query setelah restart container nyata (1210.623171ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12286.201465
