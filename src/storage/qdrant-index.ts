@@ -30,6 +30,12 @@ export interface IndexValidation {
   readonly searchSmokePassed: boolean;
 }
 
+export interface IndexPoint {
+  readonly id: string;
+  readonly payload: Readonly<Record<string, unknown>>;
+  readonly vector: EmbeddingVector;
+}
+
 function object(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
 }
@@ -393,6 +399,79 @@ export class QdrantIndexStore {
           manifest.processingRevision !== null,
         searchSmokePassed: sample !== undefined,
       });
+    });
+  }
+
+  async assertWritable(value: IndexManifest): Promise<void> {
+    const manifest = parseIndexManifest(value);
+
+    return this.guarded(async () => {
+      await this.assertVersion();
+      await this.inspect(manifest);
+
+      if (
+        (await this.client.getCollectionAliases(manifest.physicalCollection)).aliases.length !== 0
+      ) {
+        throw new StoreError('UNSAFE_LIFECYCLE');
+      }
+    });
+  }
+
+  async upsert(value: IndexManifest, points: readonly IndexPoint[]): Promise<void> {
+    const manifest = parseIndexManifest(value);
+
+    if (
+      !points.length ||
+      points.length > 32 ||
+      new Set(points.map((point) => point.id)).size !== points.length
+    ) {
+      throw new StoreError('INVALID_CONTENT');
+    }
+
+    const rows = points.map((point) => {
+      if (!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(point.id)) {
+        throw new StoreError('INVALID_CONTENT');
+      }
+
+      const row = {
+        id: point.id,
+        payload: { ...point.payload },
+        vector: {
+          dense: [...point.vector.dense],
+          ...(point.vector.sparse === undefined
+            ? {}
+            : {
+                sparse: {
+                  indices: [...point.vector.sparse.indices],
+                  values: [...point.vector.sparse.values],
+                },
+              }),
+        },
+      };
+
+      checkPoint(row, manifest);
+
+      return row;
+    });
+
+    return this.guarded(async () => {
+      await this.assertVersion();
+      await this.inspect(manifest);
+
+      if (
+        (await this.client.getCollectionAliases(manifest.physicalCollection)).aliases.length !== 0
+      ) {
+        throw new StoreError('UNSAFE_LIFECYCLE');
+      }
+
+      const result = await this.client.upsert(manifest.physicalCollection, {
+        points: rows,
+        wait: true,
+      });
+
+      if (result.status !== 'completed') {
+        throw new StoreError('DEPENDENCY_ERROR');
+      }
     });
   }
 

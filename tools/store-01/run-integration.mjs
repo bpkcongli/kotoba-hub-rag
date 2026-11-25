@@ -63,7 +63,7 @@ try {
   const version = await (await fetch(url)).json();
   const result = spawnSync(
     process.execPath,
-    ['--import', 'tsx', '--test', 'tests/store.integration.ts'],
+    ['--import', 'tsx', '--test', 'tests/store.integration.ts', 'tests/indexing.integration.ts'],
     {
       cwd: root,
       env: { ...env, STORE01_QDRANT_URL: url, STORE01_CONTAINER_ID: container },

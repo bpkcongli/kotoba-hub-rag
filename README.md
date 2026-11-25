@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 24 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 tersedia secara offline. Runtime HTTP tetap health-only; endpoint operasi, index corpus terisi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 25 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -18,6 +18,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [STORE-01](docs/storage/STORE-01-qdrant.md) | Compose Qdrant, manifest/lifecycle index dan bukti filter/persistensi pada server nyata |
 | [DATA-01](docs/data/DATA-01-corpus-audit.md) | Audit read-only 20 lesson N5/N4, manifest 736 dokumen dan persetujuan penggunaan penelitian internal |
 | [DATA-02](docs/data/DATA-02-chunking.md) | Parser/normalizer/chunker offline, tokenizer BGE-M3 terpin dan manifest 98 chunk N5/N4 EN/ID |
+| [DATA-03](docs/data/DATA-03-ingestion.md) | DONE; CLI ingestion batch/resume, accounting dan lifecycle; index candidate penuh 98 point tervalidasi |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -108,6 +109,21 @@ npm run test:data02
 `data:tokenizer` mengambil dua file publik tokenizer BGE-M3 terpin dan memeriksa hash, tanpa inference atau model weights. `data:prepare` membaca snapshot lokal, tanpa database/jaringan, lalu menulis `artifacts/data-02/preparation-v2/`; direktori existing ditolak. Gunakan `-- --out artifacts/data-02/reproduction-01` untuk output baru, atau `--config` untuk konfigurasi pilot lain. `test:data02` terpisah dari check standar karena memerlukan snapshot/tokenizer lokal.
 
 Batas awal 512 token termasuk dua special tokens, overlap maksimal 96 content tokens/dua unit, belum dituning pada pilot. Tokenizer native lokal lulus 15 golden samples JA/EN/ID/Unicode; pin lokal tidak mengonfirmasi served revision HF atau billing. Embedding, pengisian index dan retrieval smoke tetap DATA-03; penelitian belum freeze.
+
+## Ingestion DATA-03
+
+DATA-03 **DONE** pada 25 November 2026 sesuai perubahan acceptance pengguna: tidak perlu menunggu served model/tokenizer/processing revision. Nilai yang belum terkonfirmasi tetap null/unverified; guard promosi dan freeze penelitian tetap berlaku.
+
+CLI memverifikasi preparation, membuat plan index fisik, lalu menjalankan embedding batch HF dan upsert idempoten dengan journal/cache untuk resume. [Laporan DATA-03](docs/data/DATA-03-ingestion.md) memuat command, batas biaya dan strategi reindex/retire. Seluruh 98 chunk sudah di-embed melalui 98 POST HF HTTP 200 dan tersimpan pada collection fisik `kotoba_data03_full_v1` di `http://127.0.0.1:6333`. Hasil JSON pengujian yang disimpan adalah run penuh 98 chunk; JSON sampel awal telah dihapus sesuai permintaan pengguna. Volume ingestion penuh dipertahankan. Index tetap 98 point setelah restart dan replay tanpa call tambahan. [Manifest index](research/indexing/data-03-v1/index-manifest.json) serta [state candidate](research/indexing/data-03-v1/index-state.json) tersedia; biaya unknown dan served revisions null tetap dicatat.
+
+```bash
+# Offline; pilih direktori/revision baru.
+npm run data:index -- plan --job artifacts/data-03/my-index --revision my_index_v1
+npm run test:data03
+npm run test:store
+```
+
+Run remote memerlukan scope pengiriman corpus dan budget eksplisit, HF/Qdrant opt-in serta `--max-new-calls N` per invocation. Replay cache memakai batas nol; provider tidak di-retry otomatis. Served revisions HF tetap unknown, sehingga promosi terblokir. Sample tidak dapat dipromosikan menjadi index penuh. Readiness HTTP tetap 503 sampai corpus/pipeline siap.
 
 ## Stack dan rencana kelanjutan
 

@@ -1,0 +1,15 @@
+{
+  "contentDigest": "369c2a21554c71844b1acaa89b8adffb4f954b4d07a125b53bdd220be048d9d9",
+  "corpusVersion": "kotobahub-n5n4-data01-20261124-v2",
+  "embeddingConfigId": "bge-m3-f1f90a1a509991ff2a7cff668817f3fa",
+  "embeddingModelRevision": null,
+  "expectedPointCount": 98,
+  "indexRevision": "data03_full_v1",
+  "physicalCollection": "kotoba_data03_full_v1",
+  "processingRevision": null,
+  "retrievalProfile": "DENSE",
+  "schemaVersion": "qdrant-store-01-v1",
+  "sparseCapabilityVerified": false,
+  "sparseTokenMappingId": null,
+  "tokenizerRevision": null
+}

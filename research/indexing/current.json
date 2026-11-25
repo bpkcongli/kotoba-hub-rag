@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "data-03-index-pointer-v1",
+  "status": "VALIDATED_CANDIDATE_NOT_PROMOTED",
+  "indexManifest": "data-03-v1/index-manifest.json",
+  "indexManifestSha256": "3436d289e6d715cd907173e12624eb72f2ac71b411c054a33e17f6ec35b4a018",
+  "stateManifest": "data-03-v1/index-state.json",
+  "stateManifestSha256": "b504aa039f40c4c6a5f1fc45871d5729a2437788ddf62683b056ef86e86c304c",
+  "physicalCollection": "kotoba_data03_full_v1",
+  "experimentFrozen": false
+}

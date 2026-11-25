@@ -1,0 +1,152 @@
+{
+  "checkedAt": "2026-11-25T02:58:39.539Z",
+  "server": {
+    "title": "qdrant - vector search engine",
+    "version": "1.20.2",
+    "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+  },
+  "physicalCollection": "kotoba_data03_full_v1",
+  "pointCount": 98,
+  "uniqueIds": 98,
+  "afterRestart": true,
+  "checks": [
+    {
+      "kind": "positive",
+      "level": "JLPT_N5",
+      "locale": "EN",
+      "pointCount": 3
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "EN",
+      "field": "published",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "EN",
+      "field": "corpus_version",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "EN",
+      "field": "embedding_config_id",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "EN",
+      "field": "skill_codes",
+      "pointCount": 0
+    },
+    {
+      "kind": "positive",
+      "level": "JLPT_N5",
+      "locale": "ID",
+      "pointCount": 2
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "ID",
+      "field": "published",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "ID",
+      "field": "corpus_version",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "ID",
+      "field": "embedding_config_id",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N5",
+      "locale": "ID",
+      "field": "skill_codes",
+      "pointCount": 0
+    },
+    {
+      "kind": "positive",
+      "level": "JLPT_N4",
+      "locale": "EN",
+      "pointCount": 2
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "EN",
+      "field": "published",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "EN",
+      "field": "corpus_version",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "EN",
+      "field": "embedding_config_id",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "EN",
+      "field": "skill_codes",
+      "pointCount": 0
+    },
+    {
+      "kind": "positive",
+      "level": "JLPT_N4",
+      "locale": "ID",
+      "pointCount": 2
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "ID",
+      "field": "published",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "ID",
+      "field": "corpus_version",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "ID",
+      "field": "embedding_config_id",
+      "pointCount": 0
+    },
+    {
+      "kind": "negative",
+      "level": "JLPT_N4",
+      "locale": "ID",
+      "field": "skill_codes",
+      "pointCount": 0
+    }
+  ],
+  "checksPassed": 20,
+  "inferenceCalls": 0
+}

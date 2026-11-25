@@ -7,11 +7,10 @@ import { BGE_TOKENIZER, loadBgeTokenCounter } from '@/ingestion/tokenizer';
 import { IngestionError } from '@/ingestion/types';
 import { canonical, hash, parseChunkConfig } from '@/ingestion/validation';
 
-export async function prepareCorpus(options: {
+export async function buildPreparation(options: {
   readonly repoRoot: string;
   readonly configPath: string;
   readonly tokenizerDirectory: string;
-  readonly outputDirectory: string;
 }) {
   const config = parseChunkConfig(JSON.parse(await readFile(options.configPath, 'utf8')));
   const corpus = await loadApprovedCorpus(options.repoRoot);
@@ -113,6 +112,17 @@ export async function prepareCorpus(options: {
       ]),
     ),
   };
+
+  return { manifest, files, chunks, corpus };
+}
+
+export async function prepareCorpus(options: {
+  readonly repoRoot: string;
+  readonly configPath: string;
+  readonly tokenizerDirectory: string;
+  readonly outputDirectory: string;
+}) {
+  const { manifest, files } = await buildPreparation(options);
 
   try {
     await mkdir(resolve(options.outputDirectory, '..'), { recursive: true });

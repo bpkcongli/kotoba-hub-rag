@@ -1,0 +1,260 @@
+{
+  "task": "DATA-03",
+  "date": "2026-11-24",
+  "status": "DONE",
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1",
+    "typescript": "5.9.3"
+  },
+  "implemented": [
+    "verified preparation regeneration before plan",
+    "strict payload and stable UUIDs with source/unit/overlap sidecar",
+    "fixed HF DENSE semantic config identity",
+    "serial batches with explicit per-invocation call ceiling",
+    "durable intents and sanitized provider attempts",
+    "vector cache, recovered receipt reconciliation and idempotent waited upserts",
+    "candidate alias guards and full STORE-01 validation",
+    "opt-in sample smoke driver and documented promotion/reindex/retirement strategy"
+  ],
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "passed_after_smoke_runner_environment_and_lifecycle_fixes",
+      "runtimeTests": 66,
+      "newData03Tests": 10,
+      "inf01OfflineToolingTests": 15,
+      "data01ToolingTests": 11,
+      "contracts": "no drift",
+      "typecheck": "passed",
+      "lint": "passed",
+      "format": "passed",
+      "build": "passed",
+      "executionNote": "Node test child processes run under approved escalation; sandbox-only --test reported files rather than behavior tests and was not used as acceptance evidence",
+      "lastRun": "2026-11-25"
+    },
+    {
+      "command": "npm run test:data03",
+      "result": "passed",
+      "tests": 1,
+      "requiresLocalApprovedCorpusAndTokenizer": true,
+      "providerCalls": 0
+    },
+    {
+      "command": "npm run test:store",
+      "result": "passed",
+      "tests": 10,
+      "newData03Tests": 1,
+      "server": {
+        "title": "qdrant - vector search engine",
+        "version": "1.20.2",
+        "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+      },
+      "clientVersion": "1.20.0",
+      "loopbackOnly": true,
+      "cleanupSucceeded": true,
+      "providerCalls": 0
+    },
+    {
+      "command": "npm run typecheck && npm run lint && npm run format:check && npm run build",
+      "result": "passed_after_cache_recovery_and_cli_status_fixes"
+    },
+    {
+      "command": "node --import tsx tests/indexing.test.ts",
+      "result": "passed",
+      "tests": 10,
+      "includes": "recovered cache receipt hash checked again on later resume"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "node --import tsx artifacts/data-03/full-v1/run-local.mjs ingest",
+      "result": "passed",
+      "providerCalls": 98,
+      "pointCount": 98,
+      "date": "2026-11-25"
+    },
+    {
+      "command": "restart Qdrant; run-local.mjs validate; run-local.mjs replay",
+      "result": "passed",
+      "pointCountAfterRestart": 98,
+      "additionalProviderCalls": 0
+    },
+    {
+      "command": "node --import tsx artifacts/data-03/full-v1/inspect-index.mjs",
+      "result": "passed",
+      "liveFilterChecks": 20,
+      "providerCalls": 0
+    }
+  ],
+  "fullCorpusPlan": {
+    "status": "VALIDATED_CANDIDATE",
+    "summary": "research/indexing/data-03-v1/plan-summary.json",
+    "points": 98,
+    "uniquePointIds": 98,
+    "coveredSourceDocuments": 736,
+    "overlapUnitOccurrences": 48,
+    "physicalCollection": "kotoba_data03_full_v1",
+    "collectionCreated": true,
+    "newProviderCalls": 98,
+    "planSummaryIsHistorical": true,
+    "indexManifest": "research/indexing/data-03-v1/index-manifest.json",
+    "indexState": "research/indexing/data-03-v1/index-state.json",
+    "validation": {
+      "contentDigest": "369c2a21554c71844b1acaa89b8adffb4f954b4d07a125b53bdd220be048d9d9",
+      "fingerprint": "b00f70985f7b23883a8c593a761b93a6e1ef8a113d65b45d1ab87991a8df5c6b",
+      "indexRevision": "data03_full_v1",
+      "modelRevisionsRecorded": false,
+      "physicalCollection": "kotoba_data03_full_v1",
+      "pointCount": 98,
+      "retrievalProfile": "DENSE",
+      "searchSmokePassed": true
+    }
+  },
+  "revisions": {
+    "servedModel": null,
+    "servedTokenizer": null,
+    "servedProcessing": null,
+    "promotionBlocked": true,
+    "freezeBlocked": true
+  },
+  "review": {
+    "scope": "read-only review of ledger/cache excerpts supplied in messages; reviewer filesystem tools unavailable",
+    "findingsAddressed": [
+      "reconcile cache written before vectors_saved receipt to original intent",
+      "sync directory after atomic rename and journal append"
+    ],
+    "notClaimed": [
+      "full independent source review",
+      "power-loss test",
+      "human Japanese validation",
+      "real HF behavior"
+    ]
+  },
+  "limitations": [
+    "No production delete CLI or frozen reference registry",
+    "No live query embedding/retrieval quality benchmark",
+    "Retirement requires audit of all frozen run references",
+    "Paid budgets apply per invocation, not automatically across retries",
+    "Full candidate index is local and unpromoted; served revisions remain unverified and block promotion/freeze, but are waived for DATA-03 task closure"
+  ],
+  "preservedUntrackedUserFiles": [
+    "docs/Andrian_41522120004_TA_Draft.docx",
+    "docs/[TRANSCRIPT] Production RAG with LangChain & Vector Databases – Full Course.txt"
+  ],
+  "filesSha256": {
+    "src/ingestion/index-plan.ts": "fb9d28e20be2dcdf1ddc7a64c41ec546c71c1bb6ba3d02bf918b4218d7959cd8",
+    "src/ingestion/index-job.ts": "97bed0d429af45809b8ea257a84a5c65c35f83876811fd3cc477c922d8f68358",
+    "src/ingestion/index-cli.ts": "6c20805bb0879aae24a8156a839803606432871701f4bbd5e35610d3dc4cb2b0",
+    "src/ingestion/prepare.ts": "d07a6388f8f65f49598c121c7f4c8c2104b692f05b3b8db7baea3772f0dc42b2",
+    "src/storage/qdrant-index.ts": "2ef15bdd8e145b7a6004c71f4bb5cb6d09075761eaad5629328e7b7266bd11aa",
+    "tests/indexing.test.ts": "3a8e2a08c69b8f1c02cff48609d596c5101c0c154769a36928681172ad591a7b",
+    "tests/indexing.integration.ts": "39dec62da81fa308a542a3ce577c98990e4509ee5f517ae697f5fcc233b5d476",
+    "tests/indexing-corpus.integration.ts": "861e8bedf5bd7f274b673a7630df9795e33a1310d318bf7903339d1dd7cb3201",
+    "tests/indexing-fixture.ts": "abb48ebd7b2c12b81556e1cac1ba6b7690d673aa4aaa766ac7431eaa32eaca4a",
+    "tools/data-03/smoke.mjs": "76542fb671961b5e1dec9e0d0b3881aa9ee9196381332612ec2ccd74df008075",
+    "tools/store-01/run-integration.mjs": "411489a4852b282ed2a144a9832134dd9337b07cb13f060dc0b13a987df5d5e6",
+    "research/indexing/data-03-v1/plan-summary.json": "28796c315b998619a5309af0d63eeaa7bfa1954f8f023ea58b0e65d4bdfff270",
+    "docs/data/runs/2026-11-25-data03-full-01/manifest.json": "42fb5ce159feeb6e51a2d71153bbfb5ec7fec3a9a071eedb0449726c97ac7cf7",
+    "docs/data/runs/2026-11-25-data03-full-01/initial-report.json": "971689451eb7c5c401941dfd6fd98abda5d3f2a30b1527bcac65d6db401e1ce0",
+    "docs/data/runs/2026-11-25-data03-full-01/replay-report.json": "0f3f5d2bcaef4d0f2507ad6f8c5ef6aa6ce3b9418f63a96807cd73502fd7a20b",
+    "docs/data/runs/2026-11-25-data03-full-01/attempts.json": "e200534afe45d45bdd0716119bda1c7bceed6b78e4f0aea79d8e3d2d94b3d027",
+    "docs/data/runs/2026-11-25-data03-full-01/live-validation.json": "15ce45c209e816eae452bb142c429d87b5b10b8dbe9fc27583757c6caf24dc8b",
+    "research/indexing/current.json": "3faf90d3068afd10f5b09efc8159beff6cd3b24007f8fba05806e8ac7484c6e3",
+    "research/indexing/data-03-v1/index-manifest.json": "3436d289e6d715cd907173e12624eb72f2ac71b411c054a33e17f6ec35b4a018",
+    "research/indexing/data-03-v1/index-state.json": "b504aa039f40c4c6a5f1fc45871d5729a2437788ddf62683b056ef86e86c304c"
+  },
+  "lastUpdated": "2026-11-25",
+  "fullIngestion": {
+    "status": "VALIDATED_CANDIDATE",
+    "date": "2026-11-25",
+    "userExplicitlyAuthorizedInternalCorpusPayload": true,
+    "evidenceManifest": "docs/data/runs/2026-11-25-data03-full-01/manifest.json",
+    "maxPost": 98,
+    "newProviderCalls": 98,
+    "http200": 98,
+    "retryPost": 0,
+    "queryEmbeddingPost": 0,
+    "rerankerPost": 0,
+    "pointCount": 98,
+    "dimensions": 1024,
+    "indexingCostUsd": null,
+    "providerUsage": null,
+    "knownCostCoverage": 0,
+    "replayAdditionalCalls": 0,
+    "persistenceAfterRestart": true,
+    "liveFilterChecksPassed": 20,
+    "storage": {
+      "composeProject": "kotoba-data03-corpus",
+      "url": "http://127.0.0.1:6333",
+      "physicalCollection": "kotoba_data03_full_v1",
+      "server": {
+        "title": "qdrant - vector search engine",
+        "version": "1.20.2",
+        "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+      },
+      "running": true,
+      "volumesRetained": [
+        "kotoba-data03-corpus_qdrant_storage",
+        "kotoba-data03-corpus_qdrant_snapshots"
+      ],
+      "aliasPromoted": false
+    },
+    "promotionEligible": false,
+    "servedRevisionsVerified": false,
+    "executionHelper": "artifacts/data-03/full-v1/run-local.mjs"
+  },
+  "totalDocumentEmbeddingPostRecordedForDATA03": 101,
+  "totalCostUsd": null,
+  "accountingNote": "Three earlier smoke POSTs and 98 new full-ingestion POSTs are separate; all unknown cost retained as null. No corpus cache reused across plans.",
+  "artifactRetention": {
+    "policy": "Retain full 98-chunk run JSON; remove three-chunk sample JSON per user request",
+    "deletedSampleJsonCount": 16,
+    "retainedFullRunJsonCount": 5,
+    "fullRunJsonHashesUnchanged": true,
+    "priorSamplePostCount": 3,
+    "priorSampleCostUsd": null,
+    "sampleJsonRetained": false,
+    "historicalSampleJournalRetainedLocally": true
+  },
+  "completionAssessment": {
+    "status": "DONE",
+    "fullCorpusIngestionAndValidation": "complete",
+    "idempotencyResumeAndRateLimitTests": "passed",
+    "attemptAndUnknownCostAccounting": "recorded",
+    "lifecycleStrategy": "documented_and_guarded",
+    "remainingRequirement": null,
+    "servedModelRevision": null,
+    "servedTokenizerRevision": null,
+    "servedProcessingRevision": null,
+    "promotionEligible": false,
+    "acceptanceChanged": true,
+    "servedRevisionConfirmationRequiredForTaskClosure": false,
+    "documentQueryConfiguration": "SHARED_EMBEDDING_CONFIG_AND_ADAPTER_CONTRACT_RETAINED"
+  },
+  "completedOn": "2026-11-25",
+  "taskComplete": true,
+  "readyForFreeze": false,
+  "acceptanceDecision": {
+    "date": "2026-11-25",
+    "authority": "USER_EXPLICIT_ACCEPTANCE_REQUIREMENTS_CHANGE",
+    "userInstruction": "Tolong lansung tandai task DATA-03 selesai, tidak perlu menunggu served revision model/tokenizer/processing",
+    "servedModelRevisionRequiredForTaskClosure": false,
+    "servedTokenizerRevisionRequiredForTaskClosure": false,
+    "servedProcessingRevisionRequiredForTaskClosure": false,
+    "acceptedLimitation": "Served model/tokenizer/processing revisions remain null and unverified",
+    "completionBasis": [
+      "CLI_AND_FAILURE_RESUME_TESTS_PASSED",
+      "98_DOCUMENT_POST_HTTP_200_AND_FULL_INDEX_VALIDATED",
+      "PERSISTENCE_RESTART_AND_ZERO_CALL_REPLAY_PASSED",
+      "20_LIVE_FILTER_CHECKS_PASSED",
+      "USER_WAIVED_SERVED_REVISION_CONFIRMATION_FOR_DATA03_CLOSURE"
+    ],
+    "historicalFullRunEvidenceUnchanged": true,
+    "runtimePromotionGuardUnchanged": true,
+    "researchFreezeGateUnchanged": true,
+    "additionalInferenceCalls": 0
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "data-03-index-state-v1",
+  "status": "VALIDATED_CANDIDATE_NOT_PROMOTED",
+  "lastUpdated": "2026-11-25",
+  "corpusVersion": "kotobahub-n5n4-data01-20261124-v2",
+  "physicalCollection": "kotoba_data03_full_v1",
+  "embeddingConfigId": "bge-m3-f1f90a1a509991ff2a7cff668817f3fa",
+  "pointCount": 98,
+  "providerAttemptCount": 98,
+  "replayAdditionalCalls": 0,
+  "persistenceAfterRestart": true,
+  "url": "http://127.0.0.1:6333",
+  "composeProject": "kotoba-data03-corpus",
+  "evidenceManifest": "docs/data/runs/2026-11-25-data03-full-01/manifest.json",
+  "evidenceManifestSha256": "42fb5ce159feeb6e51a2d71153bbfb5ec7fec3a9a071eedb0449726c97ac7cf7",
+  "jobDirectory": "artifacts/data-03/full-v1",
+  "servedRevisionsVerified": false,
+  "promotionEligible": false,
+  "indexingCostUsd": null,
+  "experimentFrozen": false
+}
