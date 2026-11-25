@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 25 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 25 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -19,6 +19,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [DATA-01](docs/data/DATA-01-corpus-audit.md) | Audit read-only 20 lesson N5/N4, manifest 736 dokumen dan persetujuan penggunaan penelitian internal |
 | [DATA-02](docs/data/DATA-02-chunking.md) | Parser/normalizer/chunker offline, tokenizer BGE-M3 terpin dan manifest 98 chunk N5/N4 EN/ID |
 | [DATA-03](docs/data/DATA-03-ingestion.md) | DONE; CLI ingestion batch/resume, accounting dan lifecycle; index candidate penuh 98 point tervalidasi |
+| [BASE-01](docs/generation/BASE-01-baseline.md) | Adapter Responses API, generator/validator bersama dan baseline internal tanpa retrieval; empat smoke nyata berhasil dalam budget USD 0,10 |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -151,6 +152,16 @@ npm run obs:costs -- --directory artifacts/observability/service --resource-inve
 ```
 
 CLI menulis laporan immutable tanpa inference. Bukti legacy tanpa accounting tetap ditandai belum lengkap; journal DATA-03 tidak diimpor atau diubah. Phase document indexing, judge, warmup dan kategori idle/startup dipisahkan; parent/schedule eksperimen lengkap tetap EXP-00.
+
+## Baseline internal BASE-01
+
+`OPENAI_ENABLED=true` merangkai provider dan runner LLM_ONLY di composition root; `OPENAI_API_KEY` diinject melalui environment. Model tetap Terra untuk generate/evaluate/recommend dan Luna untuk normalize. Startup/probe tidak melakukan inference, dan endpoint operasi masih milik API-01. [Laporan BASE-01](docs/generation/BASE-01-baseline.md) memuat validasi domain, batas call/deadline/concurrency dan accounting.
+
+```bash
+npm run base:smoke
+```
+
+Perintah default hanya plan offline, tanpa provider. Eksekusi nyata memerlukan `--execute --max-calls=4 --max-budget-usd=0.10` setelah budget disetujui; tanpa retry, maksimal 768 output tokens per call setelah koreksi guard cache write. BASE-01 DONE: 110 test proyek dan empat smoke nyata lulus. Run awal memakai 1.024 output tokens; estimasi tarif usage USD 0,008266, settlement null. [Bukti run](docs/generation/runs/2026-11-25-base01-smoke-01/manifest.json) mempertahankan koreksi plan awal tanpa call ulang. Izin empat call tersebut sudah digunakan; run baru memerlukan budget baru.
 
 ## Stack dan rencana kelanjutan
 

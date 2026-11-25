@@ -1,0 +1,51 @@
+{
+  "schema_version": "1",
+  "request_id": "e177b73d-e24b-45be-ad39-21cd71e7575e",
+  "execution_id": "2def23e4-1ac8-4d55-aad2-d418da9b5c98",
+  "mode": "LLM_ONLY",
+  "data": {
+    "recommendedTrackSlug": "synthetic-track",
+    "recommendedUnitSlug": "synthetic-unit",
+    "nextLessonSlug": "synthetic-lesson",
+    "targetSkillCodes": [
+      "synthetic_copula"
+    ],
+    "difficultyBand": "REMEDIAL",
+    "allowedQuestionTypes": [
+      "SHORT_FREE_RESPONSE",
+      "SLOT_FILL",
+      "ARRANGE_TOKEN",
+      "FREE_RESPONSE"
+    ]
+  },
+  "meta": {
+    "trace_id": "684816b3-aece-4a32-ae83-de2f2594489d",
+    "corpus_version": "synthetic-contract-v1",
+    "path": "LLM_ONLY",
+    "sources": [],
+    "duration_ms": 1923.187872999999,
+    "usage": {
+      "input_tokens": 473,
+      "cached_input_tokens": 0,
+      "output_tokens": 72,
+      "total_tokens": 545
+    },
+    "cost": {
+      "currency": "USD",
+      "inference_total_usd": 0.00181,
+      "query_embedding_usd": 0,
+      "rerank_usd": 0,
+      "total_online_usd": 0.00181,
+      "known_subtotal_usd": 0.00181,
+      "status": "KNOWN"
+    },
+    "counters": {
+      "retrieval_stage_count": 0,
+      "rewrite_call_count": 0,
+      "rerank_call_count": 0,
+      "provider_retry_count": 0,
+      "schema_retry_count": 0,
+      "model_call_count": 1
+    }
+  }
+}

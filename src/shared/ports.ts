@@ -76,6 +76,7 @@ export interface GeneratorPort {
       readonly model: string;
       readonly instructions: string;
       readonly input: string;
+      readonly schemaName: string;
       readonly jsonSchema: Readonly<Record<string, unknown>>;
     },
     context: CallContext,
@@ -87,6 +88,7 @@ export interface GeneratorPort {
       readonly cachedInputTokens: number | null;
       readonly outputTokens: number | null;
       readonly totalTokens: number | null;
+      readonly reasoningTokens?: number | null;
     } | null;
   }>;
 }

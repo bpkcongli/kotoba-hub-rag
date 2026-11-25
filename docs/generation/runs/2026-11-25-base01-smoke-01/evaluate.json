@@ -1,0 +1,41 @@
+{
+  "schema_version": "1",
+  "request_id": "266c48c9-2ec4-4afd-a43c-6ae0f4824ce7",
+  "execution_id": "54214143-66ac-435a-930d-b953137c2669",
+  "mode": "LLM_ONLY",
+  "data": {
+    "isCorrect": true,
+    "numericScore": 100,
+    "feedbackText": "Correct! わたしはがくせいです。 means “I am a student.”"
+  },
+  "meta": {
+    "trace_id": "890d9c45-6400-4783-b0fb-cde79eb5b519",
+    "corpus_version": "synthetic-contract-v1",
+    "path": "LLM_ONLY",
+    "sources": [],
+    "duration_ms": 1709.3651320000008,
+    "usage": {
+      "input_tokens": 541,
+      "cached_input_tokens": 0,
+      "output_tokens": 45,
+      "total_tokens": 586
+    },
+    "cost": {
+      "currency": "USD",
+      "inference_total_usd": 0.001622,
+      "query_embedding_usd": 0,
+      "rerank_usd": 0,
+      "total_online_usd": 0.001622,
+      "known_subtotal_usd": 0.001622,
+      "status": "KNOWN"
+    },
+    "counters": {
+      "retrieval_stage_count": 0,
+      "rewrite_call_count": 0,
+      "rerank_call_count": 0,
+      "provider_retry_count": 0,
+      "schema_retry_count": 0,
+      "model_call_count": 1
+    }
+  }
+}

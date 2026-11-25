@@ -1,4 +1,5 @@
 import { readHfConfig } from '@/adapters/hf-config';
+import { readOpenAiConfig } from '@/adapters/openai-config';
 import { systemClock } from '@/adapters/system-clock';
 import { createApplication } from '@/app';
 import { ConfigError, readConfig } from '@/shared/config';
@@ -9,8 +10,16 @@ async function main(): Promise<void> {
   const config = readConfig(process.env);
   const hfConfig = readHfConfig(process.env);
   const qdrantConfig = readQdrantConfig(process.env);
+  const openAiConfig = readOpenAiConfig(process.env);
 
-  const { server } = createApplication(config, systemClock, hfConfig, qdrantConfig);
+  const { server } = createApplication(
+    config,
+    systemClock,
+    hfConfig,
+    qdrantConfig,
+    undefined,
+    openAiConfig,
+  );
 
   let closing = false;
 

@@ -1,0 +1,19 @@
+{
+  "task": "BASE-01",
+  "execute": true,
+  "calls": 4,
+  "maxCalls": 4,
+  "maxBudgetUsd": 0.1,
+  "estimatedCeilingUsd": 0.09136640000000001,
+  "maxOutputTokens": 1024,
+  "providerRetries": 0,
+  "schemaRetries": 0,
+  "modes": [
+    "LLM_ONLY"
+  ],
+  "models": {
+    "generation": "gpt-5.6-terra",
+    "normalization": "gpt-5.6-luna"
+  },
+  "priceAsOf": "2026-11-25"
+}

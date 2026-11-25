@@ -1,0 +1,44 @@
+{
+  "schema_version": "1",
+  "request_id": "7b26265d-8343-4621-bc14-97afe8fdd5d3",
+  "execution_id": "7033795c-c3cd-41c1-a806-90fb3a75ce91",
+  "mode": "LLM_ONLY",
+  "data": {
+    "suggestedKnownSkillClaims": [
+      {
+        "skillCode": "synthetic_copula",
+        "confidence": 0.95
+      }
+    ]
+  },
+  "meta": {
+    "trace_id": "75da183a-763e-4c85-891a-916b33a22ba6",
+    "corpus_version": "synthetic-contract-v1",
+    "path": "LLM_ONLY",
+    "sources": [],
+    "duration_ms": 1540.0355680000011,
+    "usage": {
+      "input_tokens": 421,
+      "cached_input_tokens": 0,
+      "output_tokens": 64,
+      "total_tokens": 485
+    },
+    "cost": {
+      "currency": "USD",
+      "inference_total_usd": 0.000161,
+      "query_embedding_usd": 0,
+      "rerank_usd": 0,
+      "total_online_usd": 0.000161,
+      "known_subtotal_usd": 0.000161,
+      "status": "KNOWN"
+    },
+    "counters": {
+      "retrieval_stage_count": 0,
+      "rewrite_call_count": 0,
+      "rerank_call_count": 0,
+      "provider_retry_count": 0,
+      "schema_retry_count": 0,
+      "model_call_count": 1
+    }
+  }
+}

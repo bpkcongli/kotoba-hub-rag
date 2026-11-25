@@ -111,3 +111,54 @@ await test('HF enabled dirangkai tanpa inference pada startup, capability dan pr
 
   assert.equal(calls, 0);
 });
+
+await test('OpenAI enabled dirangkai tanpa call pada startup/probe dan memerlukan admission aktif', async (t) => {
+  const { readOpenAiConfig } = await import('@/adapters/openai-config');
+  const originalFetch = globalThis.fetch;
+
+  let calls = 0;
+  globalThis.fetch = () => {
+    calls++;
+    return Promise.reject(new Error('Network dilarang pada health'));
+  };
+  t.after(() => {
+    globalThis.fetch = originalFetch;
+  });
+  const app = createApplication(
+    readConfig({ NODE_ENV: 'test', LOG_LEVEL: 'silent' }),
+    undefined,
+    null,
+    null,
+    undefined,
+    readOpenAiConfig({ OPENAI_ENABLED: 'true', OPENAI_API_KEY: 'fixture-token' }),
+  );
+  t.after(() => app.server.close());
+
+  assert.ok(app.generator);
+  assert.ok(app.baseline);
+
+  await app.server.inject('/health/live');
+
+  assert.equal((await app.server.inject('/health/ready')).statusCode, 503);
+  await assert.rejects(
+    async () =>
+      app.generator?.generate(
+        {
+          operation: 'evaluate',
+          model: 'gpt-5.6-terra',
+          instructions: 'fixture',
+          input: '{}',
+          schemaName: 'fixture',
+          jsonSchema: {},
+        },
+        {
+          executionId: 'not-admitted',
+          signal: new AbortController().signal,
+          deadlineAt: new Date(Date.now() + 10000).toISOString(),
+        },
+      ),
+    { code: 'EXECUTION_NOT_ACTIVE' },
+  );
+
+  assert.equal(calls, 0);
+});

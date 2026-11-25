@@ -3,6 +3,8 @@ import { open, readFile, readdir, unlink } from 'node:fs/promises';
 import { hostname } from 'node:os';
 import { resolve } from 'node:path';
 import type { InferenceAttempt } from '@/adapters/hf-inference';
+import { OPENAI_ENDPOINT } from '@/adapters/openai-config';
+import type { GenerationAttempt } from '@/adapters/openai-responses';
 import { systemClock } from '@/adapters/system-clock';
 import type { Mode, Operation } from '@/contracts/validator';
 import { parsePriceSnapshot, parseResourceCharge } from '@/observability/accounting-schema';
@@ -454,6 +456,90 @@ export class ObservationStore {
     }
   }
 
+  assertAdmittedRequest(
+    executionId: string,
+    input: Omit<AdmissionInput, 'serviceId'>,
+  ): Correlation {
+    this.assertActive(executionId);
+    const entry = this.byExecution.get(executionId);
+    const fingerprint = hashValue(
+      canonical([input.operation, input.mode, input.experiment ?? null, input.request]),
+    );
+
+    if (
+      !entry ||
+      entry.start.data.fingerprint !== fingerprint ||
+      entry.start.correlation.requestId !== input.requestId
+    ) {
+      throw new ObservationError('IDEMPOTENCY_CONFLICT');
+    }
+
+    return structuredClone(entry.start.correlation);
+  }
+
+  async recordGenerationAttempt(attempt: GenerationAttempt): Promise<void> {
+    const accounting = await this.priceCall({
+      attemptId: attempt.attemptId,
+      purpose: attempt.operation,
+      phase: attempt.accountingContext.phase,
+      retryKind: attempt.accountingContext.retryKind,
+      provider: 'openai',
+      model: attempt.model,
+      billingProfile: attempt.billingProfile,
+      timestamp: attempt.timestamp,
+      usage: attempt.usage,
+      billableUnits: [],
+      reportedCost: null,
+      hostingChargeId: null,
+    });
+
+    await this.record(
+      attempt.executionId,
+      {
+        kind: 'model_attempt',
+        attemptId: attempt.attemptId,
+        purpose: attempt.operation,
+        provider: 'openai',
+        model: attempt.model,
+        configVersion: 'base-01-v1',
+        configurationHash: hashValue(
+          canonical({
+            ...attempt.configuration,
+            promptHash: attempt.promptHash,
+            schemaHash: attempt.schemaHash,
+            servedModel: attempt.servedModel,
+          }),
+        ),
+        endpointHash: hashValue(OPENAI_ENDPOINT),
+        profile: null,
+        // A returned model alias does not establish a pinned/verified model revision.
+        servedRevision: null,
+        itemCount: 1,
+        httpStatus: attempt.httpStatus,
+        retryAfterMs: attempt.retryAfterMs,
+        providerRequestIdHash:
+          attempt.providerRequestId === null ? null : hashValue(attempt.providerRequestId),
+        errorCode: attempt.errorCode,
+        remoteOutcome: attempt.remoteOutcome,
+        accounting,
+      },
+      attempt.durationMs,
+      attempt.timestamp,
+    );
+  }
+
+  failExecutionTrace(executionId: string): Promise<never> {
+    return this.run(async () => {
+      const entry = this.byExecution.get(executionId);
+
+      if (!entry || !entry.active) {
+        throw new ObservationError('TRACE_WRITE_FAILED');
+      }
+
+      return this.traceFailure(entry);
+    });
+  }
+
   private async traceFailure(entry: Entry): Promise<never> {
     entry.active = false;
     const event = this.event(entry.start.correlation, this.duration(entry), {
@@ -591,6 +677,32 @@ export class ObservationStore {
       }
 
       return Promise.resolve(accountCall(copy, this.priceSnapshot));
+    });
+  }
+
+  executionAccounting(executionId: string): Promise<readonly CallAccounting[]> {
+    return this.run(async () => {
+      this.assertActive(executionId);
+      const raw = await readFile(this.path('events', `${executionId}.jsonl`), 'utf8');
+      const calls: CallAccounting[] = [];
+
+      for (const line of raw.trimEnd().split('\n')) {
+        const event = parseTraceEvent(JSON.parse(line));
+
+        if (event.correlation.executionId !== executionId) {
+          throw new Error('Trace execution tidak cocok');
+        }
+
+        if (event.data.kind === 'model_attempt') {
+          if (!('accounting' in event.data)) {
+            throw new Error('Accounting attempt hilang');
+          }
+
+          calls.push(event.data.accounting);
+        }
+      }
+
+      return calls;
     });
   }
 

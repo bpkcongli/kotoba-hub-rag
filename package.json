@@ -32,7 +32,8 @@
     "obs:costs": "node --import tsx src/observability/cost-cli.ts",
     "test:store": "node tools/store-01/run-integration.mjs",
     "test:data02": "node --import tsx --test tests/ingestion.integration.ts",
-    "test:data03": "node --import tsx tests/indexing-corpus.integration.ts"
+    "test:data03": "node --import tsx tests/indexing-corpus.integration.ts",
+    "base:smoke": "node --import tsx --env-file-if-exists=.env src/generation/smoke.ts"
   },
   "dependencies": {
     "@qdrant/js-client-rest": "1.20.0",

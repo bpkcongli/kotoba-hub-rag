@@ -1,0 +1,182 @@
+{
+  "task_id": "BASE-01",
+  "date": "2026-11-25",
+  "run_id": "7987d373-cfdc-4f43-8a38-51c8d3ae61ce",
+  "status": "PASS",
+  "authorization": {
+    "max_calls": 4,
+    "estimated_budget_usd": "0.10",
+    "scope": "Satu call sintetis per operasi, tanpa retry; persetujuan eksplisit pengguna pada sesi BASE-01."
+  },
+  "actual_calls": 4,
+  "http_200": 4,
+  "provider_retries": 0,
+  "schema_retries": 0,
+  "retrieval_stages": 0,
+  "mode": "LLM_ONLY",
+  "template_version": "base-01-v1",
+  "configuration": {
+    "generationModel": "gpt-5.6-terra",
+    "normalizationModel": "gpt-5.6-luna",
+    "timeoutMs": 30000,
+    "maxOutputTokens": 1024,
+    "maxInputChars": 100000,
+    "maxResponseBytes": 2097152,
+    "maxConcurrency": 1,
+    "store": false,
+    "service_tier": "default"
+  },
+  "cost": {
+    "currency": "USD",
+    "origin": "TARIFF_ESTIMATE",
+    "total_usd": "0.008266",
+    "actual_settlement_usd": null,
+    "within_authorized_estimated_budget": true,
+    "price_snapshot_id": "obs-02-2026-11-25-v1"
+  },
+  "usage": {
+    "inputTokens": 2748,
+    "cachedInputTokens": 0,
+    "cacheWriteInputTokens": 1310,
+    "outputTokens": 297,
+    "reasoningTokens": 30,
+    "totalTokens": 3045
+  },
+  "operations": [
+    {
+      "operation": "generate",
+      "execution_id": "bf35346a-bdf4-416e-a9a8-61ed2c3df902",
+      "model": "gpt-5.6-terra",
+      "http_status": 200,
+      "schema_valid": true,
+      "domain_valid": true,
+      "usage": {
+        "inputTokens": 1313,
+        "cachedInputTokens": 0,
+        "cacheWriteInputTokens": 1310,
+        "outputTokens": 116,
+        "reasoningTokens": 0,
+        "totalTokens": 1429
+      },
+      "tariff_estimate_usd": "0.004673",
+      "served_revision": null,
+      "remote_outcome": "response_received",
+      "timestamp": "2026-11-25T07:43:36.176Z"
+    },
+    {
+      "operation": "evaluate",
+      "execution_id": "54214143-66ac-435a-930d-b953137c2669",
+      "model": "gpt-5.6-terra",
+      "http_status": 200,
+      "schema_valid": true,
+      "domain_valid": true,
+      "usage": {
+        "inputTokens": 541,
+        "cachedInputTokens": 0,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 45,
+        "reasoningTokens": 0,
+        "totalTokens": 586
+      },
+      "tariff_estimate_usd": "0.001622",
+      "served_revision": null,
+      "remote_outcome": "response_received",
+      "timestamp": "2026-11-25T07:43:42.445Z"
+    },
+    {
+      "operation": "normalize",
+      "execution_id": "7033795c-c3cd-41c1-a806-90fb3a75ce91",
+      "model": "gpt-5.6-luna",
+      "http_status": 200,
+      "schema_valid": true,
+      "domain_valid": true,
+      "usage": {
+        "inputTokens": 421,
+        "cachedInputTokens": 0,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 64,
+        "reasoningTokens": 30,
+        "totalTokens": 485
+      },
+      "tariff_estimate_usd": "0.000161",
+      "served_revision": null,
+      "remote_outcome": "response_received",
+      "timestamp": "2026-11-25T07:43:44.164Z"
+    },
+    {
+      "operation": "recommend",
+      "execution_id": "2def23e4-1ac8-4d55-aad2-d418da9b5c98",
+      "model": "gpt-5.6-terra",
+      "http_status": 200,
+      "schema_valid": true,
+      "domain_valid": true,
+      "usage": {
+        "inputTokens": 473,
+        "cachedInputTokens": 0,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 72,
+        "reasoningTokens": 0,
+        "totalTokens": 545
+      },
+      "tariff_estimate_usd": "0.00181",
+      "served_revision": null,
+      "remote_outcome": "response_received",
+      "timestamp": "2026-11-25T07:43:45.712Z"
+    }
+  ],
+  "plan_correction": {
+    "historical_plan_preserved": true,
+    "historical_plan_ceiling_usd": "0.0913664",
+    "historical_plan_included_cache_write_premium": false,
+    "corrected_reservation_for_historical_1024_output_cap_usd": "0.1046848",
+    "explanation": "Plan awal memakai tarif input biasa; premium cache write belum direservasi. Actual estimated total USD 0.008266 berada di bawah izin USD 0.10. Guard diperbaiki setelah run, tanpa paid call tambahan. CLI berikutnya memakai 768 output tokens/call dan ceiling USD 0.0951616 termasuk tarif cache write."
+  },
+  "credential_handling": "Key lokal aplikasi dipakai read-only melalui environment; tidak dicetak/disalin ke artefak atau service .env.",
+  "implementation_sha256_at_run": {
+    "src/adapters/openai-config.ts": "95681540974f8f6f8e5243d37b5417f418d45e1c090601242618d7ce42fa23d6",
+    "src/adapters/openai-responses.ts": "28a3dba70652bde82389b32f8e6e99ee047469b372b8d7e83431a266495eedb9",
+    "src/adapters/provider-json.ts": "204097b16b6229ef5fb2d172ecc98dc83abdf6c86dc9e3714471a014fe5e0d64",
+    "src/app.ts": "bddf4455db9f5a663762ffbfe24a720a572871a0dff3c3607c666cc23018a6b6",
+    "src/generation/baseline.ts": "595a2da86ebed282f8077c3fcaa09a376096278c3ec3086425e36a006aa7a81d",
+    "src/generation/generator.ts": "df41696eacdc1bc97e82d9cd6645587e3628f88fbf5b3792bbeef6d921868a43",
+    "src/generation/prompt.ts": "c918f1f4d70a31920c7a5990c796b4bf7a1ff497073aac1e1807fc227df68c8e",
+    "src/generation/question.ts": "6e3e4ea97b01b1c46a82243c37399af9aaf20306fcc2799e7dae775c7263bc2e",
+    "src/generation/schema.ts": "10eac72013150363096dba1b5317937ecd253d2d6274bef5d0c2f84832ff5992",
+    "src/generation/smoke.ts": "a461496226f2af66f1a3b085789f4507a8f792ddaf4601d0b0642edd8b6ebc84",
+    "src/main.ts": "268c2489c9bb9df99bc9ece408ff720373f377f384c7cac68be7a8b99b2cdea2",
+    "src/observability/store.ts": "ad243bfce1e99732aa51e7f20aa22e8f9cb9ee8988e13666946642daebc5e049",
+    "src/shared/ports.ts": "cc0fb83518d2929a72f38adc825873e9480679c3c5871279e340e08cf72f1eec",
+    "tests/app.test.ts": "64a5c2a8bac403067492b3ceca09dc031dab5c1bad783698dc3ac1850f6bf2ee",
+    "tests/generation-fixture.ts": "983c1926abc44d7dee9a8b8d671e77060c16308c005a1caeb36fd380b4cc21c6",
+    "tests/generation-smoke.test.ts": "b86e68ec19867ac46c0bb7626b83100cc545476bc17540314fadd67193bf478c",
+    "tests/generation.test.ts": "ec5d29cd39f7404d6a2503725fb1cdb0c04002bd7302e15c8608deb48dd0bfa1",
+    "tests/openai-responses.test.ts": "b9fa7009cd12bce4f3b0bbe243925d504741b6ceeae9eb9dacde3f4472b365af"
+  },
+  "artifact_sha256": {
+    "evaluate.json": "572b2533c5f2e92af0fcd8a4cf251924c6d3d7731672deea74314016e02d05ca",
+    "generate.json": "0971d00d9c25a48f4bce74d16bd94f3b50b34a9fabeb244ec079ae2e8718025b",
+    "normalize.json": "3c364e81f48d41e5c7cca0387a19cfc32553556790f6ecb43b99df1b80fc6628",
+    "observations/admissions/16043ffc805a5524e22bcf6a1241044f31bfe92217aef73c9385ca7252fc86cc.json": "d8c58c6244afd3fd44a66e5a73b877aae262a683b1ca41b0b2b67507a882060f",
+    "observations/admissions/40d0dd3965c4756e33be427c4243f2df73b46e63605eefd1e179d440f401b1f5.json": "acb08e2bde75983939d89530be172e57d72d58b16a2ffb31f15536f62ccf1a9d",
+    "observations/admissions/f40efd7e408ac1467adbb74392dab50f0b539b09b4fea432a7583546a79765f2.json": "edac2c9f46edbb704a6c74c97caee52842451324485785340818c4385771167e",
+    "observations/admissions/fbd6b5c407c44c3c277345f7ccdae4ec53fd847f6e27999bc27691cbbaa74f1a.json": "cd868b06ee74d06ee9f668d018a6512ab190f0c91cc6aff765d2a5ce0ac98680",
+    "observations/events/2def23e4-1ac8-4d55-aad2-d418da9b5c98.jsonl": "0f333babdcda1c1a45d4c530c664c57f4a13724b0a7a33e249a95044664b12b9",
+    "observations/events/54214143-66ac-435a-930d-b953137c2669.jsonl": "c6e8121fbf2a022e7585a15fe3daa0c61c9d0a5d1cc65915240993d287c974e6",
+    "observations/events/7033795c-c3cd-41c1-a806-90fb3a75ce91.jsonl": "f9884940c7f4b4dfad13a4d39e646720c97417939665da239d7166466d32b9d1",
+    "observations/events/bf35346a-bdf4-416e-a9a8-61ed2c3df902.jsonl": "6a7bfa660f8bf907eaf52134ae3d8b222e789ec871efcf5f03dfeca26a84ae08",
+    "observations/prices/936450e31b06481f1c07f71a9a866b8a5afd26dd24069efe0013bbae562c74ee.json": "54ce133500f227d6568149c71d5404f0d8207ca0d15c5b9959470a8a879cf410",
+    "observations/terminals/2def23e4-1ac8-4d55-aad2-d418da9b5c98.json": "ceca4a9e6a1a479cc9392d2bbfac66765dfe4d9dfa8b505d190e578f22115e21",
+    "observations/terminals/54214143-66ac-435a-930d-b953137c2669.json": "e258ba2e5500c34f3930451706345e4aa02b730901cd61ff3a9228a4e1cb53b0",
+    "observations/terminals/7033795c-c3cd-41c1-a806-90fb3a75ce91.json": "90578311a2d671bad0b3a05504c010f22c43b3433f4578d575fc678172d4789c",
+    "observations/terminals/bf35346a-bdf4-416e-a9a8-61ed2c3df902.json": "69b60ef92dbb9f14836bbaf836b60627ba08a85391afe11d7266fad1a74d655c",
+    "plan.json": "3eb2147475f5daa4ed435cf469bc2c06e2cdf68ce6de06f38c5d475e7d1bd1e4",
+    "recommend.json": "60988567ffde4053509aea279481a0efb6c63f274ecfea829bb941d15cff62fe",
+    "result.json": "f5648a84321d6c53093df7edfbbd5b602d24b909b7ac476648cbc6dea4878fdf"
+  },
+  "limits": [
+    "Empat input sintetis berbahasa EN; EN/ID N5/N4 dibuktikan 16 fixtures mock, bukan live exhaustive.",
+    "Alias model bukan served revision; revision tetap null dan freeze belum terpenuhi.",
+    "Tariff estimate bukan settlement provider; region/retensi belum diverifikasi.",
+    "Tidak ada expert validation Jepang, pipeline RAG atau eksperimen penelitian dari smoke ini."
+  ]
+}

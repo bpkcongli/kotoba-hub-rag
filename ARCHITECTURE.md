@@ -302,6 +302,12 @@ Structured output diparse dan diperiksa terhadap JSON Schema/Zod hasil kontrak. 
 
 Hasil tidak langsung mengubah profil, mastery, atau sesi. KotobaHub tetap mengotorisasi dan memvalidasi sebelum menyimpannya. Onboarding claims memerlukan konfirmasi learner sesuai flow aplikasi.
 
+### Implementasi BASE-01
+
+[BASE-01](docs/generation/BASE-01-baseline.md) menyediakan adapter HTTP Responses API pada endpoint/model tetap, `store:false`, Structured Outputs strict, tier default dan output cap. Generator empat operasi menerima selected evidence dari caller; mode tidak mengubah template/schema/model. Runner internal LLM_ONLY mengirim evidence kosong dan tidak memiliki dependency retrieval. Schema CON-01 serta domain refinements aplikasi diperiksa lokal; schema/domain failure dipisahkan. Composition root mengaktifkan generator/baseline hanya melalui OPENAI_ENABLED, tanpa call startup/probe.
+
+Versi awal membatasi satu attempt per operasi, tanpa provider/schema retry; cap ini berlaku sama pada generator bersama. Timeout mencakup connection/body/cancellation; slot concurrency ditahan sampai transport selesai. OBS-02 mencatat usage, cache/reasoning, harga dan failure per attempt; tier/model respons yang tidak membuktikan profile standard menahan estimasi. Alias tidak mengonfirmasi revision, dan empat smoke nyata berizin telah membuktikan akses/Structured Outputs pada empat operasi. Estimasi tarif dari usage USD 0,008266 berada di bawah izin USD 0,10; settlement tetap null, tanpa claim freeze. Runner membutuhkan admission aktif dengan fingerprint request identik; HTTP/auth/corpus/replay tetap API-01. Context budgeting evidence tetap RAG-02 dan generator bersama belum membuktikan pipeline RAG.
+
 ## 9. Retry, deadline, cache, dan fallback
 
 - Deadline dimulai pada adapter KotobaHub menerima permintaan; propagasikan `deadline_at` UTC dan remaining `timeout_ms`. Service membatasi deadline dengan minimum budget client/server, lalu memakai monotonic clock untuk durasi/sisa lokal; catat clock skew dan network overhead. Antrean, backoff, validasi dan pencatatan termasuk budget. Setiap call/stage memakai remaining budget; deadline memicu cancellation bila didukung.

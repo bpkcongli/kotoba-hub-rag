@@ -3,9 +3,14 @@ import type { FastifyInstance } from 'fastify';
 import type { HfConfig } from '@/adapters/hf-config';
 import { createHfInference, InferenceError } from '@/adapters/hf-inference';
 import type { HfInference } from '@/adapters/hf-inference';
+import type { OpenAiConfig } from '@/adapters/openai-config';
+import { createOpenAiGenerator, GenerationError } from '@/adapters/openai-responses';
+import type { OpenAiGenerator } from '@/adapters/openai-responses';
 import { systemClock } from '@/adapters/system-clock';
 import { createContractValidators } from '@/contracts/validator';
 import type { ContractValidators } from '@/contracts/validator';
+import { createBaselineRunner } from '@/generation/baseline';
+import { createOperationGenerator } from '@/generation/generator';
 import { ObservationStore } from '@/observability/store';
 import type { AppConfig } from '@/shared/config';
 import type { CallContext, Clock } from '@/shared/ports';
@@ -19,6 +24,8 @@ export interface Application {
   readonly inference: HfInference | null;
   readonly storage: QdrantIndexStore | null;
   readonly observations: ObservationStore;
+  readonly generator: OpenAiGenerator | null;
+  readonly baseline: ReturnType<typeof createBaselineRunner> | null;
 }
 
 export function createApplication(
@@ -27,6 +34,7 @@ export function createApplication(
   hfConfig: HfConfig | null = null,
   qdrantConfig: QdrantConfig | null = null,
   observations: ObservationStore = new ObservationStore(config.observationDirectory, clock),
+  openAiConfig: OpenAiConfig | null = null,
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -88,8 +96,35 @@ export function createApplication(
 
   const storage = qdrantConfig ? new QdrantIndexStore(qdrantConfig) : null;
 
+  const rawGenerator = openAiConfig
+    ? createOpenAiGenerator(openAiConfig, {
+        clock,
+        onAttempt: (attempt) => observations.recordGenerationAttempt(attempt),
+      })
+    : null;
+  const generator: OpenAiGenerator | null =
+    rawGenerator === null
+      ? null
+      : {
+          close: () => rawGenerator.close(),
+          generate: (input, context) => {
+            if (inferenceClosed) {
+              throw new GenerationError('DEPENDENCY_NOT_READY');
+            }
+            observations.assertActive(context.executionId);
+
+            return rawGenerator.generate(input, context);
+          },
+        };
+  const baseline =
+    generator && openAiConfig
+      ? createBaselineRunner(createOperationGenerator(generator, openAiConfig), observations, clock)
+      : null;
+
   server.addHook('onClose', async () => {
+    inferenceClosed = true;
     inference?.close();
+    generator?.close();
     await observations.close();
   });
 
@@ -98,5 +133,5 @@ export function createApplication(
   // Capability is local evidence, not live provider health. Index and pipeline are still absent.
   server.get('/health/ready', (_request, reply) => reply.code(503).send({ status: 'not_ready' }));
 
-  return { server, clock, contracts, inference, storage, observations };
+  return { server, clock, contracts, inference, storage, observations, generator, baseline };
 }

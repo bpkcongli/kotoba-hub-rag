@@ -1,0 +1,172 @@
+{
+  "task_id": "BASE-01",
+  "date": "2026-11-25",
+  "status": "DONE",
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1",
+    "node_source": "https://nodejs.org/dist/v24.22.3/",
+    "node_archive_sha256": "4f2b175a6d53a5c617a80dba2676238a0688cef28c6da4eba35c7d844e66fcfb",
+    "checksum_verified": true
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "runtime_tests": 110,
+      "runtime_tests_before_base01": 94,
+      "new_runtime_tests": 16,
+      "components": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "sandbox_note": "Child process and loopback tests require sandbox escalation; initial sandbox attempts failed EPERM."
+    },
+    {
+      "command": "npm run base:smoke",
+      "result": "PASS_OFFLINE_PLAN_ONLY",
+      "paid_calls": 0,
+      "planned_calls": 4,
+      "estimated_tariff_ceiling_usd": "0.0951616",
+      "max_output_tokens_per_call": 768
+    },
+    {
+      "command": "node dist/generation/smoke.js",
+      "result": "PASS_OFFLINE_PLAN_ONLY",
+      "paid_calls": 0,
+      "estimated_tariff_ceiling_usd": "0.0951616",
+      "max_output_tokens_per_call": 768
+    },
+    {
+      "command": "node tools/con-01/run.mjs verify",
+      "result": "BLOCKED_HISTORICAL_MANIFEST_WORKING_TREE_DRIFT",
+      "reason": "Sibling working_tree_status differs from historical snapshot; no snapshot regenerated.",
+      "audited_file_checksums_match": 24,
+      "audited_file_checksum_mismatches": 0
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    },
+    {
+      "command": "node --import tsx --env-file=<local-app-env> src/generation/smoke.ts --execute --max-calls=4 --max-budget-usd=0.10",
+      "result": "PASS",
+      "calls": 4,
+      "http_200": 4,
+      "note": "Executed once with 1024 output cap before cache-write reservation correction; no live rerun."
+    }
+  ],
+  "coverage": [
+    "16 EN/ID N5/N4 fixtures across four operations",
+    "strict request identity and admitted fingerprint",
+    "no retrieval port on LLM_ONLY",
+    "shared model/prompt/schema parity",
+    "schema/domain failure separation",
+    "question count/skill/type/difficulty/kana/blank/options/permutation/direction/catalog relationships",
+    "usage/cost missing remains null; partial components retained",
+    "unverified billing tier has no matching tariff",
+    "429/5xx/auth/refusal/incomplete/invalid JSON; no retry",
+    "bounded response bytes/body timeout/uncooperative fetch/concurrency slots",
+    "observer failure retains UNKNOWN without retry",
+    "HTTP fixture on loopback",
+    "no startup/readiness inference",
+    "input/context mutation snapshot"
+  ],
+  "subagent_review": {
+    "scope": "design description only",
+    "filesystem_tools_available": false,
+    "independent_diff_review": false,
+    "expert_japanese_validation": false
+  },
+  "real_provider": {
+    "calls": 4,
+    "http_200": 4,
+    "model_access": "VERIFIED_ON_SYNTHETIC_SMOKE",
+    "structured_output": "FOUR_OPERATION_SCHEMAS_VALIDATED",
+    "served_revision": null,
+    "actual_settlement_usd": null,
+    "tariff_estimate_usd": "0.008266",
+    "authorized_estimated_budget_usd": "0.10",
+    "provider_retries": 0,
+    "schema_retries": 0,
+    "live_smoke": "PASS",
+    "manifest": "runs/2026-11-25-base01-smoke-01/manifest.json"
+  },
+  "models": {
+    "generation": "gpt-5.6-terra",
+    "normalization": "gpt-5.6-luna"
+  },
+  "retry_policy": {
+    "attempts_per_operation": 1,
+    "provider_retries": 0,
+    "schema_retries": 0
+  },
+  "source_file_hashes_match_historical_con01": {
+    "package.json": "99899c8c8cba7e23688458c618047d6169b05eca0ac83f81a281387e362284b5",
+    "bun.lock": "397ef8ab3a6dda26b7dc11b3c81224ae8d876841690493ddfbaa1a63513c9f39",
+    "tsconfig.json": "7bd35331dfcce82853dd473dbb39b36526635da514fa7b491895fd039d062140",
+    "src/backend/shared/application/helpers/ai-schemas.ts": "16e933668af72b4428802b44b6c7759311736dea6df3261f7addc86097a4a916",
+    "src/backend/shared/application/helpers/ai-templates.ts": "795f2a97eee3af62b334941bc94be419ea954f2c83820ec690bdb5ec5412b33f",
+    "src/backend/shared/application/services/requests/ai-request.ts": "5dbff1a4c90494f4411fef365d01369cfaa831528edbc716ad55b94c94d665b7",
+    "src/backend/shared/application/services/responses/ai-response.ts": "73c7a31b48868253192953209288180f831df51b03e67047eeaf978bdcbcc1cf",
+    "src/backend/shared/application/services/ai.service.ts": "2460056137b47c7a35386bc685794bafb97dcf75ca85facad4dd23bc6b5b5e29",
+    "src/backend/shared/application/services/impl/ai.service.impl.ts": "ece3887f24554ae5aec066d687a636984f470740406928f28f5bc4d7cc6eb6e8",
+    "src/backend/shared/application/ports/ai-provider.port.ts": "966cb96ec5c8dc4f8b1ef2922f7a77a3bd0c88dba3e3682ec71265f0261456e6",
+    "src/backend/shared/domain/exceptions/ai-failure.ts": "cb6dad091a0b0e471a9701c30902ac0244ba3d7fb78999734d3738a8b878a2aa",
+    "src/backend/shared/domain/repositories/ai-request-log.repository.ts": "713f39dae7b338cf8dcab1d4a29134de35683c05177f637ef001b0b30583ea7e",
+    "src/backend/shared/interface/secondary/ai/openai-provider.ts": "8d35276a3f6b32555c03352aeea799197bcac6c3ec7625da82ba61653ba0afb3",
+    "src/backend/shared/interface/secondary/persistence/drizzle-ai-request-log.repository.ts": "9fb483d26e313bf1c505239ca3392f443d191ffdfd219658f331359065c9d350",
+    "src/backend/shared/infrastructure/config/ai-env.ts": "b59eb39353b028c5346d27d7f85ab98ea51c02de9e570a0ff90fdbabe7a70e50",
+    "src/backend/shared/infrastructure/di/index.ts": "2b09920259bb8121b43e0b58e627c34c881fcd793edb9a5016f0d12dbdf1b6b6",
+    "src/backend/shared/infrastructure/database/ai-schema.ts": "9ee2bee8b7cd4987e3ce1e74ff334bd70a39ae20b4b0d806f8d8ea8cd223accb",
+    "src/backend/practice/interface/secondary/ai/practice-ai.adapter.ts": "dc49017edf26c8f54986992a5831cb4187f600a70f2c5bfe5951a6d0b7428833",
+    "src/backend/practice/application/services/impl/practice.service.impl.ts": "1862309147f329da34c118148bc6b9f5af27dcc64fe74008f209fb165682ce62",
+    "src/backend/practice/infrastructure/di/index.ts": "586fda6c06bff3e6bd6d064246efbce185b55650c72f0aeb19b1f03a7a149d2a",
+    "src/backend/personalization/interface/secondary/ai/placement-normalization.adapter.ts": "f2a5dfb0f7a24ff88546b1bb8043d38679efcd8e7464e17e440450323fe32980",
+    "src/backend/personalization/application/services/impl/assessment.service.impl.ts": "672da95d659a7a132114e0970c69ab5d1ca8f0b59c60ab8bbcb24652b6b25bf1",
+    "src/backend/personalization/application/services/impl/recommendation.service.impl.ts": "cbe3165c6773781fc067531b03dc029c34a46d5c324c9c6967177b1a1d095d5b",
+    "src/backend/personalization/infrastructure/di/index.ts": "fa1bce8e6a503592738308e41bd1b5b140cb29d3d1f3aaa31033f89c5bcf4193"
+  },
+  "implementation_sha256": {
+    "src/adapters/openai-config.ts": "95681540974f8f6f8e5243d37b5417f418d45e1c090601242618d7ce42fa23d6",
+    "src/adapters/openai-responses.ts": "28a3dba70652bde82389b32f8e6e99ee047469b372b8d7e83431a266495eedb9",
+    "src/adapters/provider-json.ts": "204097b16b6229ef5fb2d172ecc98dc83abdf6c86dc9e3714471a014fe5e0d64",
+    "src/app.ts": "bddf4455db9f5a663762ffbfe24a720a572871a0dff3c3607c666cc23018a6b6",
+    "src/generation/baseline.ts": "595a2da86ebed282f8077c3fcaa09a376096278c3ec3086425e36a006aa7a81d",
+    "src/generation/generator.ts": "df41696eacdc1bc97e82d9cd6645587e3628f88fbf5b3792bbeef6d921868a43",
+    "src/generation/prompt.ts": "c918f1f4d70a31920c7a5990c796b4bf7a1ff497073aac1e1807fc227df68c8e",
+    "src/generation/question.ts": "6e3e4ea97b01b1c46a82243c37399af9aaf20306fcc2799e7dae775c7263bc2e",
+    "src/generation/schema.ts": "10eac72013150363096dba1b5317937ecd253d2d6274bef5d0c2f84832ff5992",
+    "src/generation/smoke.ts": "d8c4cb9a2307dd342e110eacbe370e496ed710c7d09d50f49306e5229efd8fc6",
+    "src/main.ts": "268c2489c9bb9df99bc9ece408ff720373f377f384c7cac68be7a8b99b2cdea2",
+    "src/observability/store.ts": "ad243bfce1e99732aa51e7f20aa22e8f9cb9ee8988e13666946642daebc5e049",
+    "src/shared/ports.ts": "cc0fb83518d2929a72f38adc825873e9480679c3c5871279e340e08cf72f1eec",
+    "tests/app.test.ts": "64a5c2a8bac403067492b3ceca09dc031dab5c1bad783698dc3ac1850f6bf2ee",
+    "tests/generation-fixture.ts": "983c1926abc44d7dee9a8b8d671e77060c16308c005a1caeb36fd380b4cc21c6",
+    "tests/generation-smoke.test.ts": "bc843ad33fa53477427d637ae4cd222f4bb85023c8a13ae2cc09ec38d985292e",
+    "tests/generation.test.ts": "ec5d29cd39f7404d6a2503725fb1cdb0c04002bd7302e15c8608deb48dd0bfa1",
+    "tests/openai-responses.test.ts": "b9fa7009cd12bce4f3b0bbe243925d504741b6ceeae9eb9dacde3f4472b365af"
+  },
+  "limits": [
+    "Internal admitted baseline only; HTTP/auth/corpus eligibility/durable result replay API-01.",
+    "No research freeze, RAG pipeline/context budgeting, database mutation or paid main run.",
+    "Late transport completion does not rewrite an unknown attempt; separate evidence reconciliation remains necessary.",
+    "Live smoke covers four synthetic EN requests; locale/level matrix remains offline fixture evidence. Revision, region/retention and settlement remain unverified."
+  ],
+  "plan_correction": {
+    "historical_run_plan_preserved": true,
+    "historical_plan_ceiling_usd": "0.0913664",
+    "corrected_reservation_for_historical_1024_cap_usd": "0.1046848",
+    "actual_tariff_estimate_usd": "0.008266",
+    "current_cli_output_cap": 768,
+    "current_cli_ceiling_usd": "0.0951616",
+    "paid_reruns": 0,
+    "regression_test": "Budget USD 0.092 rejected before dispatch."
+  }
+}
