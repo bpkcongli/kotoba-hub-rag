@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.22 · 26 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. SINGLE_STAGE internal tersedia pada RAG-03; router ADP-01 dan runner/deep path internal ADP-02 tersedia; lifecycle/retry terpadu ADP-03 tersedia; endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
+Versi 0.23 · 27 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. SINGLE_STAGE internal tersedia pada RAG-03; router ADP-01 dan runner/deep path internal ADP-02 tersedia; lifecycle/retry terpadu ADP-03 tersedia; endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown. Boundary DDD REF-01 direncanakan sebelum API-01 dan belum diimplementasikan.
 
 ## 1. Dasar keputusan
 
@@ -106,7 +106,9 @@ Diperiksa dari `/home/user/Testing/kotoba-hub` pada 21 November 2026; path berik
 
 Dokumen aplikasi `docs/drafts/ai-adapter-llm-only-and-rag-plus-llm.md` berguna sebagai desain awal, tetapi contoh `AiAdapter` di sana bukan bukti interface runtime terpasang. Audit ulang [CON-01](docs/contracts/CON-01.md) pada 23 November 2026 mengunci commit/source hashes, mengekspor schema/fixture dan menguji domain validator aktual. Temuan tambahan: rekomendasi consumer aplikasi masih deterministik; method AI rekomendasi belum terhubung, timeout existing per-attempt dan schema/domain failure masih digabung. Rencana adapter service-level dan perubahan v1 tercatat pada laporan; repository aplikasi tidak diedit.
 
-## 4. Struktur yang diusulkan
+## 4. Struktur aktual dan target REF-01
+
+Runtime saat ini memakai folder fitur top-level `pipelines`, `retrieval`, `context`, `generation`, `ingestion`, `storage`, `observability`, `adapters`, `shared` dan `contracts` di `src/`. [Rencana REF-01](docs/architecture/REF-01-ddd-refactor-plan.md) menetapkan target pemisahan DDD sebelum API-01; tree berikut adalah target, bukan hasil migrasi. TOOLS-DDD-01 hanya menyiapkan skill/instruksi dan dokumentasinya.
 
 ```text
 kotoba-hub-rag/
@@ -121,16 +123,16 @@ kotoba-hub-rag/
   .codex/agents/                   # target install role Codex
   .agents/skills/                  # target install skill proyek
   src/
+    main.ts                       # lifecycle proses
     app.ts                        # bootstrap/composition root
-    contracts/                    # wire schema, generated OpenAPI
+    contracts/                    # wire CON-01 dan generated types
     modules/
-      generation/                 # operasi generate/grade/onboarding
-      retrieval/                  # dense default; hybrid/fusion opsional per run
-      routing/                    # policy fast/deep
-      context/                    # budgeting, citations, dedup
-      observability/              # trace, usage, pricing
-    shared/                       # errors, config, clock, ports
-    adapters/                     # Qdrant, remote embedding/rerank HTTP, OpenAI, file sink
+      knowledge/                  # corpus/chunking/provenance/index lifecycle
+      rag/                        # retrieval/context/generation/router/evidence
+      execution/                  # admission/terminal/deadline/retry/call budget
+      observability/              # pendukung trace/accounting/reconciliation
+      # Tiap modul memakai domain/application/interface/infrastructure
+    shared/                       # primitive/clock; tidak mengimpor modul fitur
   inference/                      # opsional: hanya bila perlu handler/service sendiri
     pyproject.toml                # Python/FlagEmbedding; FastAPI jika transport sendiri
     src/                          # remote custom handlers atau service; no routing
@@ -149,7 +151,11 @@ kotoba-hub-rag/
   artifacts/                      # generated runs, ignored by Git
 ```
 
-BOOT-01 sudah membuat `src/main.ts` sebagai entrypoint, `src/app.ts` sebagai composition root Fastify health-only, `src/shared/config.ts`, enam port pada `src/shared/ports.ts`, adapter `system-clock.ts`, tipe kontrak generated dan validator Ajv di `src/contracts/`, serta `tests/`. Struktur modul/pipeline di atas masih rencana; tidak dibuat folder kosong untuk backlog. Port adalah boundary awal yang dilengkapi capability/accounting saat task INF/OBS, tanpa implementasi provider palsu. `spikes/dec-01/` tetap fixture/evidence historis, terpisah dari root runtime. Domain/policy tidak boleh mengimpor SDK HTTP, Qdrant, atau OpenAI; adapter dipilih di composition root.
+BOOT-01 membuat entrypoint/composition root health-only, konfigurasi dan port awal, clock adapter, tipe kontrak generated, validator Ajv serta tests. Task INF/STORE/DATA/OBS/BASE/RAG/ADP kemudian menambahkan implementasi pada folder fitur aktual di atas. Target DDD belum dibuat; tidak ada folder kosong untuk backlog. `spikes/dec-01/` tetap fixture/evidence historis, terpisah dari root runtime.
+
+Target REF-01 memisahkan `domain` murni, `application` untuk use case/kontrak dependency, `interface/primary` untuk REST/CLI, `interface/secondary` untuk adapter dan `infrastructure` untuk konfigurasi/wiring. Kontrak service eksplisit menggantikan dependency caller pada tipe factory atau adapter konkret secara bertahap. Consumer-owned port diimplementasikan adapter consumer yang memanggil facade application pemilik; repository/file internal tidak diakses lintas modul. Domain/application tidak mengimpor SDK, filesystem atau composition root. Shared hanya berisi abstraksi netral.
+
+`rag` memakai facade knowledge/execution serta port audit; execution menerima callback pekerjaan sehingga tidak mengimpor runner RAG. Observability menerima record audit netral; koordinator rekonsiliasi CLI merangkai query registry execution dan audit dari boundary bootstrap. Invariant wire/prompt/model, topology tiga mode, deadline/retry, durable registry/recovery dan accounting harus tetap sama. Ownership, pemetaan source, resource lifecycle dan acceptance dependency/regresi dirinci pada rencana REF-01. Endpoint operasi tetap task API-01 setelah refactor diverifikasi.
 
 Manifest/lock root mengambil versi exact ADR-001; Ajv 8.20.0 dan ajv-formats 3.0.1 mengikuti validator CON-01. TypeScript strict memakai `noUncheckedIndexedAccess`, `exactOptionalPropertyTypes`, NodeNext dan native type stripping pada dev/test, lalu emit JavaScript untuk produksi. `.env.example` mencakup konfigurasi bootstrap saja; salah enum/tipe/rentang ditolak sebelum listen. Dockerfile menggunakan Node Debian 12 Linux amd64 melalui digest, build dengan npm 11.19.1 dan menjalankan runtime non-root. [Laporan dan bukti BOOT-01](docs/BOOT-01-bootstrap.md) mencatat checks, smoke terisolasi dan batasnya. HF dipilih melalui DOC-INF-03; verifikasi/konfigurasi endpoint tetap INF-01/02, tanpa inferensi startup.
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "RAG Backend Boundaries"
+  short_description: "Boundary DDD dan adapter backend KotobaHub RAG"
+  default_prompt: "Gunakan $kotoba-rag-backend-boundaries untuk menilai atau mengubah boundary backend RAG sesuai scope task yang diberikan."

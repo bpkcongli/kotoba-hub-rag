@@ -26,11 +26,14 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [ADP-01](docs/adaptive/ADP-01-router.md) | Router/initial stage, fitur dan policy/version/reason codes; prosedur kalibrasi pilot-only, threshold masih provisional |
 | [ADP-02](docs/adaptive/ADP-02-deep-path.md) | Runner ADAPTIVE FAST/DEEP internal, dua stages/satu rewrite opsional, BGE rerank/gate/terminal dan accounting seluruh batch |
 | [ADP-03](docs/adaptive/ADP-03-execution-policy.md) | Lifecycle tiga mode, deadline/cancellation, shared retry/call budget, terminal dan accounting seluruh attempts |
+| [Rencana REF-01](docs/architecture/REF-01-ddd-refactor-plan.md) | Target boundary DDD, ownership, tahapan migrasi dan acceptance sebelum API-01; refactor belum dijalankan |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
 
 Dokumentasi utama berada di root repository. Mulai dari PRD dan arsitektur, lalu ambil task yang dependensinya selesai. `AGENTS.md` memuat pedoman kerja lengkap. Folder `docs/` menyimpan referensi dan laporan keputusan; `contracts/v1/` memuat artefak CON-01, `research/protocol-v1/` memuat plan/template/source manifest/evidence RES-01.
+
+TOOLS-DDD-01 menyiapkan skill `kotoba-rag-backend-boundaries` pada paket `agent-tooling` dan instalasi `.agents/skills`. Panduan ini mengikuti stack RAG dan menjadi acuan REF-01; pemasangan skill tidak menjalankan refactor. Source paket memuat sembilan skill dan lima role. Verifikasi instalasi, batas discovery serta perbedaan lama skill TypeScript tercatat pada [bukti tooling](agent-tooling/TOOLS-DDD-01-verification.json).
 
 ## Konfigurasi penelitian
 

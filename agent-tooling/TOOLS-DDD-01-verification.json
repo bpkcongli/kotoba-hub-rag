@@ -1,0 +1,210 @@
+{
+  "task_id": "TOOLS-DDD-01",
+  "verified_on": "2026-11-27",
+  "scope": "Skill boundary backend, tiga role teknis dan rencana REF-01; tanpa refactor runtime.",
+  "checks": {
+    "source_skill_validation": {
+      "anti-slop-copy": "Skill is valid!",
+      "kotoba-rag-backend-boundaries": "Skill is valid!",
+      "kotoba-rag-contracts": "Skill is valid!",
+      "kotoba-rag-experiments": "Skill is valid!",
+      "kotoba-rag-ingestion": "Skill is valid!",
+      "kotoba-rag-pipelines": "Skill is valid!",
+      "kotoba-rag-verification": "Skill is valid!",
+      "python-pro": "Skill is valid!",
+      "typescript-pro": "Skill is valid!"
+    },
+    "toml_yaml_parsed": [
+      "agent-tooling/.codex/agents/backend-coder.toml",
+      "agent-tooling/.codex/agents/code-reviewer.toml",
+      "agent-tooling/.codex/agents/japanese-content-reviewer.toml",
+      "agent-tooling/.codex/agents/research-evaluator.toml",
+      "agent-tooling/.codex/agents/sdet.toml",
+      "agent-tooling/.codex/config.toml",
+      "agent-tooling/.agents/skills/anti-slop-copy/agents/openai.yaml",
+      "agent-tooling/.agents/skills/kotoba-rag-backend-boundaries/agents/openai.yaml",
+      "agent-tooling/.agents/skills/kotoba-rag-contracts/agents/openai.yaml",
+      "agent-tooling/.agents/skills/kotoba-rag-experiments/agents/openai.yaml",
+      "agent-tooling/.agents/skills/kotoba-rag-ingestion/agents/openai.yaml",
+      "agent-tooling/.agents/skills/kotoba-rag-pipelines/agents/openai.yaml",
+      "agent-tooling/.agents/skills/kotoba-rag-verification/agents/openai.yaml",
+      "agent-tooling/.agents/skills/python-pro/agents/openai.yaml",
+      "agent-tooling/.agents/skills/typescript-pro/agents/openai.yaml",
+      ".codex/agents/backend-coder.toml",
+      ".codex/agents/code-reviewer.toml",
+      ".codex/agents/japanese-content-reviewer.toml",
+      ".codex/agents/research-evaluator.toml",
+      ".codex/agents/sdet.toml",
+      ".codex/config.toml",
+      ".agents/skills/anti-slop-copy/agents/openai.yaml",
+      ".agents/skills/kotoba-rag-contracts/agents/openai.yaml",
+      ".agents/skills/kotoba-rag-experiments/agents/openai.yaml",
+      ".agents/skills/kotoba-rag-ingestion/agents/openai.yaml",
+      ".agents/skills/kotoba-rag-pipelines/agents/openai.yaml",
+      ".agents/skills/kotoba-rag-verification/agents/openai.yaml",
+      ".agents/skills/python-pro/agents/openai.yaml",
+      ".agents/skills/typescript-pro/agents/openai.yaml"
+    ],
+    "temporary_scoped_install": [
+      {
+        "action": "--check",
+        "exit_code": 0,
+        "stdout": "Check: 6 files; 6 missing; no content conflicts.\nThis check does not establish filesystem writability or client discovery.\n",
+        "stderr": ""
+      },
+      {
+        "action": "--install",
+        "exit_code": 0,
+        "stdout": "Installed 6 files into /tmp/kotoba-ddd-install-1zguf036; identical files preserved.\nOpen a new Codex session and verify agent/skill discovery before marking INIT-02 done.\n",
+        "stderr": ""
+      },
+      {
+        "action": "--install",
+        "exit_code": 0,
+        "stdout": "Installed 0 files into /tmp/kotoba-ddd-install-1zguf036; identical files preserved.\nOpen a new Codex session and verify agent/skill discovery before marking INIT-02 done.\n",
+        "stderr": ""
+      },
+      {
+        "action": "--check",
+        "exit_code": 0,
+        "stdout": "Check: 6 files; 0 missing; no content conflicts.\nThis check does not establish filesystem writability or client discovery.\n",
+        "stderr": ""
+      },
+      {
+        "action": "--install with changed local role",
+        "destination_unchanged": true,
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "CONFLICT: different existing destination: .codex/agents/backend-coder.toml\nNo files written. Inspect and merge existing configuration explicitly.\n"
+      }
+    ],
+    "runtime_before_file_count": 150,
+    "active_scoped_install": [
+      {
+        "action": "explicit role merge",
+        "precondition_hashes_matched": true,
+        "files": [
+          ".codex/agents/backend-coder.toml",
+          ".codex/agents/code-reviewer.toml",
+          ".codex/agents/sdet.toml"
+        ]
+      },
+      {
+        "action": "--install",
+        "exit_code": 0,
+        "stdout": "Installed 3 files into /home/user/Testing/kotoba-hub-rag; identical files preserved.\nOpen a new Codex session and verify agent/skill discovery before marking INIT-02 done.\n",
+        "stderr": ""
+      },
+      {
+        "action": "--check",
+        "exit_code": 0,
+        "stdout": "Check: 6 files; 0 missing; no content conflicts.\nThis check does not establish filesystem writability or client discovery.\n",
+        "stderr": ""
+      },
+      {
+        "action": "--install repeat",
+        "exit_code": 0,
+        "stdout": "Installed 0 files into /home/user/Testing/kotoba-hub-rag; identical files preserved.\nOpen a new Codex session and verify agent/skill discovery before marking INIT-02 done.\n",
+        "stderr": ""
+      }
+    ],
+    "source_active_identical_in_scope": 6,
+    "runtime_tests_tools_contracts_and_manifests_unchanged": true,
+    "full_package_preflight": {
+      "expected_conflict_from_preserved_drift": true,
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "CONFLICT: different existing destination: .agents/skills/typescript-pro/SKILL.md\nNo files written. Inspect and merge existing configuration explicitly.\n"
+    },
+    "runtime_checks": "Tidak dijalankan; task hanya mengubah tooling dan dokumentasi, bukan runtime.",
+    "active_new_skill_validation": "passed",
+    "final_role_toml_and_new_skill_yaml_parse": "passed",
+    "local_links_and_code_fences": {
+      "status": "passed",
+      "local_links_checked": 214,
+      "files": [
+        "AGENTS.md",
+        "ARCHITECTURE.md",
+        "PRD.md",
+        "README.md",
+        "TASK_BREAKDOWN.md",
+        "docs/architecture/REF-01-ddd-refactor-plan.md",
+        "agent-tooling/.agents/skills/kotoba-rag-backend-boundaries/SKILL.md",
+        "agent-tooling/.agents/skills/kotoba-rag-backend-boundaries/PROVENANCE.md",
+        ".agents/skills/kotoba-rag-backend-boundaries/SKILL.md"
+      ]
+    },
+    "git_diff_whitespace": "git diff --check dan git diff --cached --check passed"
+  },
+  "discovery": {
+    "new_skill_client_discovery_verified": false,
+    "updated_role_reload_verified": false
+  },
+  "source_skill_count": 9,
+  "source_role_count": 5,
+  "installed_files": [
+    {
+      "path": ".agents/skills/kotoba-rag-backend-boundaries/PROVENANCE.md",
+      "sha256": "73992e5a45caf2c1aa257165745a3cb03187e7bca27b4cf6d1e7ee53a198af41"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-backend-boundaries/SKILL.md",
+      "sha256": "5b151f999abee641ce6218621d8572a111a256a36f6654690a5ff20a9f827bf8"
+    },
+    {
+      "path": ".agents/skills/kotoba-rag-backend-boundaries/agents/openai.yaml",
+      "sha256": "acace343c5a52553b103b9b546f0e8531525f9d9a6d30d640927f56991538cfe"
+    },
+    {
+      "path": ".codex/agents/sdet.toml",
+      "sha256": "80e61e2d9e90d644f82acc6975dbf3c3d7c8933b174922579ab9a7eebb52c70b"
+    },
+    {
+      "path": ".codex/agents/code-reviewer.toml",
+      "sha256": "4f4578b78229ace3ac37d2104988de35c2fb61a041db0777a0c6e43287584392"
+    },
+    {
+      "path": ".codex/agents/backend-coder.toml",
+      "sha256": "408a6a8aedd45f647706760010ade6dbd71bb7b28cfa6947fbc30f1a202707e7"
+    }
+  ],
+  "pre_existing_drift": [
+    {
+      "path": ".agents/skills/typescript-pro/SKILL.md",
+      "source_sha256": "de1bf33d3b91f32450de5d58499e454d15a250adaf43aac2c76e33833fb82471",
+      "active_sha256": "13704fd6c956216efbee72f85d01919601f2581df7b2cd2adb8a84158f4df620",
+      "preserved_from_before_task": true
+    }
+  ],
+  "limits": [
+    "Discovery skill baru dan reload role memerlukan sesi client baru.",
+    "Full package install tidak dijalankan karena drift typescript-pro existing; pemasangan dibatasi pada skill baru dan tiga role.",
+    "Tidak ada refactor REF-01, implementasi API-01, paid provider call, database/index mutation atau deployment."
+  ],
+  "active_skill_count": 9,
+  "review": {
+    "role": "code-reviewer",
+    "mode": "forward-test pada instruksi skill, kutipan dependency plan dan signature runner yang diteruskan parent",
+    "result": "Tidak menemukan konflik substantif pada skenario pemisahan SINGLE_STAGE dari ObservationStore tanpa implementasi endpoint.",
+    "limitation": "Role tidak memiliki tool filesystem. Bukan review diff/berkas penuh atau verifikasi runtime/import graph. Parent memeriksa syntax, provenance, links, source/active equality dan hash berkas terlindungi."
+  },
+  "source_reference": {
+    "checkout": "/home/user/Testing/kotoba-hub",
+    "head": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "read_only": true,
+    "files": [
+      {
+        "path": ".agents/skills/kotoba-backend-boundaries/SKILL.md",
+        "sha256": "c17f7bcd69b773c82b78f5bcc4e76b0a59ddfbaaf2992b2796c6492664eeac42"
+      },
+      {
+        "path": "ARCHITECTURE.md",
+        "sha256": "aff0af519543f49c144de18841cff35f0e7d9248fd322268086883a7ad11b4cc"
+      },
+      {
+        "path": "docs/architecture-foundation.md",
+        "sha256": "219c1b01c0805076f05b1efa5273b52aab8cc632e0bc9aa2e3ec971e88c85d76"
+      }
+    ]
+  }
+}
