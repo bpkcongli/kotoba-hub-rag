@@ -1,0 +1,14 @@
+
+> kotoba-hub-rag@0.1.0 test:rag03
+> node tools/rag-01/run-integration.mjs --single-stage
+
+✔ SINGLE_STAGE Qdrant nyata: filtered retrieval ke selected context/generation/terminal (1021.008633ms)
+✔ SINGLE_STAGE Qdrant nyata: empty evidence gagal tanpa generation (772.33772ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2226.552768

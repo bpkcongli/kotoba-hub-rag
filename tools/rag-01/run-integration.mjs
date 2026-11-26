@@ -4,8 +4,14 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 
 const root = new URL('../../', import.meta.url);
+const singleStage = process.argv[2] === '--single-stage';
+if (process.argv.length > (singleStage ? 3 : 2)) {
+  throw new Error('Argument integration runner tidak valid');
+}
+const task = singleStage ? 'RAG-03' : 'RAG-01';
+const artifactPath = singleStage ? '../../artifacts/rag-03/' : '../../artifacts/rag-01/';
 const compose = new URL('../../compose.yaml', import.meta.url).pathname;
-const project = `rag01-${process.pid}-${randomBytes(4).toString('hex')}`;
+const project = `${singleStage ? 'rag03' : 'rag01'}-${process.pid}-${randomBytes(4).toString('hex')}`;
 const env = { ...process.env, QDRANT_HTTP_PORT: '0' };
 const args = ['compose', '--file', compose, '--project-name', project];
 
@@ -27,7 +33,7 @@ function docker(command) {
 const startedAt = new Date().toISOString();
 let exitCode = 1;
 let cleanupSucceeded = false;
-let report = { task: 'RAG-01', startedAt, server: null, clientVersion: null };
+let report = { task, startedAt, server: null, clientVersion: null };
 
 try {
   docker(['up', '--detach', 'qdrant']);
@@ -63,7 +69,12 @@ try {
   const version = await (await fetch(url)).json();
   const result = spawnSync(
     process.execPath,
-    ['--import', 'tsx', '--test', 'tests/retrieval.integration.ts'],
+    [
+      '--import',
+      'tsx',
+      '--test',
+      singleStage ? 'tests/single-stage.integration.ts' : 'tests/retrieval.integration.ts',
+    ],
     {
       cwd: root,
       env: { ...env, RAG01_QDRANT_URL: url, RAG01_CONTAINER_ID: container },
@@ -76,7 +87,7 @@ try {
   process.stderr.write(result.stderr ?? '');
   exitCode = result.status ?? 1;
 
-  const output = new URL('../../artifacts/rag-01/', import.meta.url);
+  const output = new URL(artifactPath, import.meta.url);
   await mkdir(output, { recursive: true });
   await writeFile(
     new URL('integration.log', output),
@@ -106,7 +117,7 @@ try {
   }
 }
 
-const output = new URL('../../artifacts/rag-01/', import.meta.url);
+const output = new URL(artifactPath, import.meta.url);
 await mkdir(output, { recursive: true });
 await writeFile(
   new URL('integration.json', output),

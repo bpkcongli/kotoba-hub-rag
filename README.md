@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 26 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 26 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -22,6 +22,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [BASE-01](docs/generation/BASE-01-baseline.md) | Adapter Responses API, generator/validator bersama dan baseline internal tanpa retrieval; empat smoke nyata berhasil dalam budget USD 0,10 |
 | [RAG-01](docs/retrieval/RAG-01-retrieval.md) | Retrieval DENSE terfilter, HYBRID RRF eksplisit dan trace skor mentah; verifikasi Qdrant sementara tanpa paid call |
 | [RAG-02](docs/retrieval/RAG-02-context.md) | Context builder bersama, chunk utuh, budget konservatif, selected/dropped sources dan trace; konfigurasi dan batas verifikasi |
+| [RAG-03](docs/retrieval/RAG-03-single-stage.md) | SINGLE_STAGE internal, satu retrieval round, low-evidence handling, accounting/terminal trace dan integrasi Qdrant fixture |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -163,13 +164,26 @@ CLI menulis laporan immutable tanpa inference. Bukti legacy tanpa accounting tet
 npm run test:rag01
 ```
 
-Perintah ini memakai Qdrant sementara, port loopback dan volume milik runner sendiri, lalu membersihkannya. Enam integrasi memakai vector sintetis, tanpa provider berbayar. Pada verifikasi RAG-01, `npm run check` mencakup 123 test runtime, termasuk fixture query JA/EN/ID dan parity mode; `npm run test:store` menguji regresi lifecycle secara terpisah. [Laporan RAG-01](docs/retrieval/RAG-01-retrieval.md) memuat profil, batas, trace dan evidence. HF aktif tetap DENSE; HYBRID memerlukan capability/index/pilot dan versi run terpisah. Context builder tersedia pada RAG-02; pipeline lengkap tetap RAG-03/ADP.
+Perintah ini memakai Qdrant sementara, port loopback dan volume milik runner sendiri, lalu membersihkannya. Enam integrasi memakai vector sintetis, tanpa provider berbayar. Pada verifikasi RAG-01, `npm run check` mencakup 123 test runtime, termasuk fixture query JA/EN/ID dan parity mode; `npm run test:store` menguji regresi lifecycle secara terpisah. [Laporan RAG-01](docs/retrieval/RAG-01-retrieval.md) memuat profil, batas, trace dan evidence. HF aktif tetap DENSE; HYBRID memerlukan capability/index/pilot dan versi run terpisah. Context builder tersedia pada RAG-02 dan SINGLE_STAGE internal pada RAG-03; adaptive tetap ADP.
 
 ## Context builder internal RAG-02
 
 `OPENAI_ENABLED=true` juga menyediakan `Application.contextBuilder`, dengan admission aktif dan fingerprint request lengkap. Kedua mode RAG memakai builder/config yang sama untuk dedup, coverage skill dan pemilihan chunk utuh. Sumber sitasi hanya berasal dari selected context; trace menyimpan selected/dropped IDs/reasons dan skill yang belum tercakup.
 
-`.env.example` memuat window awal 32768, evidence cap 8192 dan margin 1024. Reserve output serta batas karakter mengikuti konfigurasi generator. Counter UTF-8 konservatif adalah estimasi perencanaan, bukan tokenizer model atau usage provider terverifikasi. Input wajib yang melampaui budget menghasilkan status eksplisit; builder tidak memotong profil atau pola Jepang. [Laporan/config RAG-02](docs/retrieval/RAG-02-context.md) menjelaskan rumus budget dan status hasil. `npm run check` lulus 137 test, termasuk 14 test baru; [bukti](docs/retrieval/RAG-02-verification.json) tanpa provider berbayar. Pipeline dan evidence gate tetap RAG-03/ADP.
+`.env.example` memuat window awal 32768, evidence cap 8192 dan margin 1024. Reserve output serta batas karakter mengikuti konfigurasi generator. Counter UTF-8 konservatif adalah estimasi perencanaan, bukan tokenizer model atau usage provider terverifikasi. Input wajib yang melampaui budget menghasilkan status eksplisit; builder tidak memotong profil atau pola Jepang. [Laporan/config RAG-02](docs/retrieval/RAG-02-context.md) menjelaskan rumus budget dan status hasil. `npm run check` lulus 137 test, termasuk 14 test baru; [bukti](docs/retrieval/RAG-02-verification.json) tanpa provider berbayar. SINGLE_STAGE/gate struktural tersedia pada RAG-03; adaptive tetap ADP.
+
+## Pipeline SINGLE_STAGE internal RAG-03
+
+`Application.singleStage` tersedia jika HF, Qdrant/retrieval, context builder dan OpenAI aktif. Runner memerlukan admission OBS-01 dan mode SINGLE_STAGE; tepat satu retrieval round, tanpa router/rewrite/rerank, lalu selected context/gate dan generator bersama. Hasil evidence kosong/di bawah batas ditutup sebagai INSUFFICIENT_EVIDENCE tanpa generation atau fallback. Sumber sitasi hanya dari selected context dan unknown cost tetap null.
+
+Gate awal `RAG_MIN_UNIQUE_CHUNKS=1`/`RAG_MIN_COVERED_SKILLS=1` memeriksa struktur, belum kualitas semantik terkalibrasi. Scope internal maksimal 64 skill (code 128 karakter) dan query 8192 karakter; pelanggaran ditolak sebelum inference tanpa menyempitkan scope diam-diam. [Laporan RAG-03](docs/retrieval/RAG-03-single-stage.md) memuat query mapping, status, deadline dan batasnya. HTTP/auth/replay serta adaptive belum terpasang; readiness tetap 503 dan probe tanpa provider calls.
+
+```sh
+npm run check
+npm run test:rag03
+```
+
+Checks 153 test lulus termasuk 16 test baru; dua integrasi pipeline memakai Qdrant sementara nyata dan provider fixture, tanpa paid inference atau perubahan index persistent. [Bukti verifikasi](docs/retrieval/RAG-03-verification.json) juga mencatat enam regresi retrieval pada runner bersama.
 
 ## Baseline internal BASE-01
 
@@ -232,7 +246,7 @@ Manifest/lock runtime root, `.env.example`, health endpoint dan perintah start t
 1. Mulai sesi Codex baru untuk menggunakan tooling; instalasi dan discovery `INIT-02` sudah terverifikasi.
 2. `DEC-01` dan `CON-01` selesai untuk desain/spike dan kontrak v1. [CON-01](docs/contracts/CON-01.md) mencatat 127 pemeriksaan, 16 pasangan fixture melalui wire dan domain validator aplikasi. [RES-01](docs/research/RES-01-protocol.md) menyusun protokol dan matriks requirement; baseline komposit/angka keberhasilan TA diselaraskan, bukan hasil eksperimen. BOOT-01 menyediakan fondasi runtime; lanjutkan task corpus/dataset sesuai dependensi; provider aktual dan pilot tetap gate terpisah.
 3. INF-01/02, STORE-01 dan DATA-01 selesai: audit 20 lesson N5/N4 menyediakan 368 owner / 736 dokumen bilingual dengan persetujuan isi serta penerimaan keterbatasan sumber untuk penelitian internal. DATA-02 juga selesai: [preparation offline](docs/data/DATA-02-chunking.md) menghasilkan 98 chunk dengan source mapping dan tokenizer terpin. Gunakan [manifest preparation](research/chunking/data-02-v1/preparation-manifest.json) untuk DATA-03. Unknown lisensi tetap dicatat, tanpa izin redistribusi publik; metadata provider dan parameter pilot masih gate freeze.
-4. DATA-03, BASE-01, RAG-01 dan RAG-02 selesai. Lanjutkan pipeline RAG-03, adaptive, integrasi dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
+4. DATA-03, BASE-01, RAG-01/02/03 selesai. Lanjutkan adaptive, integrasi dan harness sesuai [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md).
 
 Spike terisolasi lulus typecheck, lint, format, build dan tiga smoke tests (Fastify schema, import SDK OpenAI tanpa call, Qdrant dense+sparse RRF nyata). Container berlimit 2 vCPU/4 GiB mencatat peak memory sekitar 640 MiB pada workload kecil ini; ukuran awal app/Qdrant dipilih 2 vCPU/4 GiB tanpa GPU. Ini bukan kapasitas produksi. [Evidence](spikes/dec-01/evidence.json) dan petunjuk reproduksi pada ADR memuat batas pengukuran; kapasitas corpus dan hardware endpoint remote tetap diuji kemudian.
 

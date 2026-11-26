@@ -1,0 +1,17 @@
+{
+  "task": "RAG-03",
+  "startedAt": "2026-11-25T19:43:42.863Z",
+  "server": {
+    "title": "qdrant - vector search engine",
+    "version": "1.20.2",
+    "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+  },
+  "clientVersion": "1.20.0",
+  "completedAt": "2026-11-25T19:43:45.834Z",
+  "exitCode": 0,
+  "cleanupSucceeded": true,
+  "image": "qdrant/qdrant:v1.20.2@sha256:c5e32ee251293d2e1f4dd34890ad75eeee5a4f3821a121d6d8b7e4323448b386",
+  "platform": "linux/amd64",
+  "loopbackOnly": true,
+  "newProviderCalls": 0
+}

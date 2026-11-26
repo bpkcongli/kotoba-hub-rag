@@ -5,7 +5,9 @@ import type { Mode, Operation } from '@/contracts/validator';
 import { callAccountingSchema, parseCallAccounting } from '@/observability/accounting-schema';
 import type { CallAccounting } from '@/observability/accounting-types';
 import { contextEventSchema, validContextTrace } from '@/observability/context-event';
+import { evidenceEventSchema, validEvidenceAssessment } from '@/observability/evidence-event';
 import { retrievalEventSchema, validRetrievalTrace } from '@/observability/retrieval-event';
+import type { EvidenceAssessment } from '@/pipelines/evidence';
 import type { RetrievalTrace } from '@/retrieval/types';
 
 export interface Correlation {
@@ -47,6 +49,7 @@ export type TraceCode =
   | 'CRASH_RECOVERY';
 
 export type EventData =
+  | EvidenceAssessment
   | ContextTrace
   | RetrievalTrace
   | { readonly kind: 'request_started'; readonly fingerprint: string }
@@ -203,6 +206,7 @@ export const traceEventSchema = object({
       object({ kind: { const: 'request_started' }, fingerprint: hash }),
       retrievalEventSchema,
       contextEventSchema,
+      evidenceEventSchema,
       object({
         kind: { const: 'span_completed' },
         spanId: uuid,
@@ -240,6 +244,13 @@ export function parseTraceEvent(value: unknown): TraceEvent {
   }
 
   const event = value;
+
+  if (
+    event.data.kind === 'evidence_assessed' &&
+    (event.schemaVersion !== 'obs-02-v1' || !validEvidenceAssessment(event.data))
+  ) {
+    throw new Error('Invariant evidence assessment tidak valid');
+  }
 
   if (
     event.data.kind === 'context_built' &&

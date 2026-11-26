@@ -1,0 +1,180 @@
+{
+  "task_id": "RAG-03",
+  "date": "2026-11-26",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "dependencies": [
+    "RAG-02",
+    "RAG-01",
+    "BASE-01",
+    "OBS-01",
+    "OBS-02"
+  ],
+  "runtime": {
+    "node": "24.22.3",
+    "npm": "11.19.1"
+  },
+  "baseline_commit": "7ebb33ca7bff6e226c63644d1c14ef0309d813cc",
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "exit_code": 0,
+      "runtime_tests": 153,
+      "runtime_tests_before_rag03": 137,
+      "new_runtime_tests": 16,
+      "contract_fixture_combinations_in_new_suite": 16,
+      "components": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "log": "evidence/rag-03-check.log"
+    },
+    {
+      "command": "npm run test:rag03",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 2,
+      "log": "evidence/rag-03-integration.log",
+      "metadata": "evidence/rag-03-integration.json"
+    },
+    {
+      "command": "npm run test:rag01",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 6,
+      "log": "evidence/rag-03-retrieval-regression.log",
+      "metadata": "evidence/rag-03-retrieval-regression.json"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "sandbox_note": "Final checks and disposable Qdrant integration used approved sandbox escalation for child processes, loopback and Docker. Providers remained fixtures; no paid calls or public deployment.",
+  "pipeline": {
+    "mode": "SINGLE_STAGE",
+    "operations": [
+      "generate",
+      "evaluate",
+      "normalize",
+      "recommend"
+    ],
+    "query_policy_version": "rag-03-query-v1",
+    "evidence_policy_version": "rag-03-evidence-v1",
+    "retrieval_rounds_per_valid_execution": 1,
+    "retrieval_stage": 1,
+    "max_generation_attempts": 1,
+    "rewrite_calls": 0,
+    "reranker_calls": 0,
+    "router_calls": 0,
+    "provider_retries": 0,
+    "schema_retries": 0,
+    "fallback": false,
+    "shared_retrieval_context_generator": true,
+    "domain_and_wire_validation": true,
+    "citations_from_selected_context_only": true,
+    "strict_event": "evidence_assessed / obs-02-v1",
+    "exact_success_attempt_inventory": [
+      "query",
+      "operation"
+    ],
+    "execution_fingerprint_bound": true,
+    "single_execution_guard": true,
+    "failure_terminal_preserved": true,
+    "trace_or_ledger_failure_outcome": "UNKNOWN"
+  },
+  "defaults": {
+    "min_selected_unique_chunks": 1,
+    "min_covered_skills": 1,
+    "gate_type": "structural_initial_not_semantically_calibrated",
+    "partial_target_coverage_allowed_and_traced": true,
+    "raw_score_confidence_threshold": null,
+    "max_target_skill_codes": 64,
+    "max_skill_code_chars": 128,
+    "max_query_chars": 8192
+  },
+  "accounting": {
+    "new_paid_provider_calls": 0,
+    "llm_usage_only_in_wire_summary": true,
+    "unknown_embedding_cost": null,
+    "unknown_component_keeps_total_null": true,
+    "known_subtotal_separate": true,
+    "rerank_cost_when_not_called": 0,
+    "decimal_sums": "OBS-02 sumMoney / bigint precision",
+    "indexing_judge_hosting": "separate offline ledger"
+  },
+  "qdrant": {
+    "task": "RAG-03",
+    "startedAt": "2026-11-25T19:43:42.863Z",
+    "server": {
+      "title": "qdrant - vector search engine",
+      "version": "1.20.2",
+      "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+    },
+    "clientVersion": "1.20.0",
+    "completedAt": "2026-11-25T19:43:45.834Z",
+    "exitCode": 0,
+    "cleanupSucceeded": true,
+    "image": "qdrant/qdrant:v1.20.2@sha256:c5e32ee251293d2e1f4dd34890ad75eeee5a4f3821a121d6d8b7e4323448b386",
+    "platform": "linux/amd64",
+    "loopbackOnly": true,
+    "newProviderCalls": 0
+  },
+  "retrieval_regression": {
+    "task": "RAG-01",
+    "startedAt": "2026-11-25T19:44:41.209Z",
+    "server": {
+      "title": "qdrant - vector search engine",
+      "version": "1.20.2",
+      "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+    },
+    "clientVersion": "1.20.0",
+    "completedAt": "2026-11-25T19:44:46.398Z",
+    "exitCode": 0,
+    "cleanupSucceeded": true,
+    "image": "qdrant/qdrant:v1.20.2@sha256:c5e32ee251293d2e1f4dd34890ad75eeee5a4f3821a121d6d8b7e4323448b386",
+    "platform": "linux/amd64",
+    "loopbackOnly": true,
+    "newProviderCalls": 0
+  },
+  "review": {
+    "method": "Concrete parent-supplied source excerpts; reviewer filesystem tools unavailable.",
+    "independent_filesystem_review": false,
+    "confirmed_defects": [],
+    "follow_up": "Use runner start wall/monotonic timestamps to avoid subtracting validation time twice; UNKNOWN persistence verified by parent sink/ledger failure tests."
+  },
+  "files_sha256": {
+    ".env.example": "1387e96d9ab07ad1d713b6056465cc3b76e16b6cf96866b0cbe602f07c8df270",
+    "package.json": "2f3a6b59d2a593f9f8392808aad996e47dd71657590aa23549881de8026173ac",
+    "src/app.ts": "1cf8e0e36e760a4592518cde0ea6e15488fabd247ff3e0b942b5a06e0ebef653",
+    "src/main.ts": "02cf12ed4da8b07a62f1bdaca64ec84f267f9f17bc6b68394c3d438147dcca5d",
+    "src/observability/events.ts": "f2e3a97e02a3563f76b4fe625496a30b2aa4cfca7e04e26a24cd9541f17fffd3",
+    "src/observability/evidence-event.ts": "e281772559cc378c828562348c788669227ab43e029521a2d2113166f6b245b4",
+    "src/pipelines/evidence.ts": "e487c0b025f061c77db3f6f1f757bf51b08d72a684d4c81df567838d324a16e0",
+    "src/pipelines/metadata.ts": "909ec84dd969338a04bcf6c5c8061853014696ac0d41282887681991c4f90203",
+    "src/pipelines/retrieval-plan.ts": "ab09032b109dabb7a130a64d173b25d2b9538196ebc2fc987bf279fefacee3df",
+    "src/pipelines/single-stage.ts": "9515d8beecfb3bf047071b3407fbdc469e782c062a1644605db72256b2b02c00",
+    "tests/app.test.ts": "09ecd529ee79a469a08d337305f7d054b1e8a86ab49919200b297475d689381a",
+    "tests/single-stage-fixture.ts": "d57095177bdceee2dc75da41ce5844980d7d9317b3748042ab9bef4d66a975ed",
+    "tests/single-stage.integration.ts": "92844f881a8734c35d2446420994b591cb94aae226fa497f4f671e53ed40eda7",
+    "tests/single-stage.test.ts": "a9f4cb2f72b063f49860d9663ac7b42d0a31d01a3194556dba68365b4a97ca83",
+    "tools/rag-01/run-integration.mjs": "7b5946b36ce42bf8f791dc38e2599590fd37ed9bd63e2adab76dac7149b68ef3"
+  },
+  "limits": [
+    "Structural gate does not establish semantic evidence quality; policy tuning/calibration remains pilot before freeze.",
+    "SINGLE_STAGE internal only. ADAPTIVE, authenticated HTTP endpoints/replay and experiment harness remain pending tasks.",
+    "Non-grading catalog scope >64, skill codes >128 characters or query JSON >8192 characters is rejected explicitly before inference; wire schema still permits up to500 catalog entries.",
+    "UTF-8 planning counter from RAG-02 is unchanged and is not a verified generative tokenizer or provider usage.",
+    "Timer/monotonic checks bound inference stages; durable OBS-01 filesystem writes/terminal commit cannot be cancelled like HTTP transport.",
+    "Provider/served revisions and unknown billing remain unverified; no freeze or semantic quality/performance claim.",
+    "No paid inference, public deployment, persistent corpus reindex, sibling source/database mutation, pilot or main experiment was run."
+  ]
+}

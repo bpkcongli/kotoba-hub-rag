@@ -34,6 +34,7 @@
     "test:data02": "node --import tsx --test tests/ingestion.integration.ts",
     "test:data03": "node --import tsx tests/indexing-corpus.integration.ts",
     "test:rag01": "node tools/rag-01/run-integration.mjs",
+    "test:rag03": "node tools/rag-01/run-integration.mjs --single-stage",
     "base:smoke": "node --import tsx --env-file-if-exists=.env src/generation/smoke.ts"
   },
   "dependencies": {

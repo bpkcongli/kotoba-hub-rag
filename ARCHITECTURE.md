@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.18 · 26 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. Diagram pipeline dan endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
+Versi 0.19 · 26 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. SINGLE_STAGE internal tersedia pada RAG-03; cabang adaptive dan endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
 
 ## 1. Dasar keputusan
 
@@ -258,7 +258,9 @@ flowchart TD
     Evidence -->|Yes| Pack
     Evidence -->|No| Failure[Structured insufficient evidence]
     Structured --> Generate[Same generator and output schema]
-    Pack --> Generate
+    Pack --> ContextGate{Selected evidence meets policy?}
+    ContextGate -->|Yes| Generate
+    ContextGate -->|No| Failure
     Generate --> Validate[Schema and domain validation]
     Validate --> Terminal[Result or bounded retry then failure]
 ```
@@ -277,7 +279,17 @@ DENSE memakai named dense search; HYBRID memakai batch dense+sparse dengan filte
 
 Helper stage membutuhkan admission aktif, menolak LLM_ONLY, lalu menjalankan satu query embedding dan satu round search. Event strict `retrieval_completed` pada obs-02-v1 menyimpan stage, profile/configuration hash, scope, raw branch/final rank dan score; raw query, vector dan teks evidence tidak ditulis. Dua cabang HYBRID tetap satu event/round. Attempt HF tetap masuk accounting ONLINE, termasuk kegagalan dan unknown cost. Deadline, response size dan concurrency dibatasi; startup/probe tidak memanggil jaringan/inference.
 
-Helper menerima nomor stage 1/2; pipeline pemanggil tetap harus membatasi urutan/jumlah total stage, rewrite, context dan terminal evidence. Belum ada pipeline SINGLE_STAGE/ADAPTIVE lengkap atau endpoint operasi. RAG-02 menyediakan context builder pada bagian 8; RAG-03/ADP/API tetap mengerjakan pipeline dan endpoint lengkap. Trace skor mentah bukan retrieval quality atau confidence; pengujian fixture belum mengukur mutu semantik.
+Helper menerima nomor stage 1/2; pipeline pemanggil tetap harus membatasi urutan/jumlah total stage, rewrite, context dan terminal evidence. RAG-03 menyediakan pipeline SINGLE_STAGE internal di bawah dan RAG-02 menyediakan context builder pada bagian 8. ADAPTIVE dan endpoint operasi tetap ADP/API. Trace skor mentah bukan retrieval quality atau confidence; pengujian fixture belum mengukur mutu semantik.
+
+### Implementasi RAG-03
+
+[Runner SINGLE_STAGE internal](docs/retrieval/RAG-03-single-stage.md) mengikat admission fingerprint lengkap, memvalidasi request/domain/corpus, lalu menjalankan tepat satu helper retrieval stage 1, context builder RAG-02, gate struktural dan satu generator BASE-01. Template/schema/model/parameter serta validator bersama tetap sama dengan baseline. Tidak ada dependency router, rewrite atau reranker; tidak ada provider/schema retry atau fallback. Response CON-01 memakai path SINGLE_STAGE dan citation IDs hanya dari selected context.
+
+Planner query `rag-03-query-v1` mengambil field domain yang diperlukan: grading memakai skill soal tunggal dan source/reference/normalized answer; operasi lain memakai katalog beserta difficulty/types/weak skills, note, atau current unit sesuai operasi. Filter published/corpus/level/skill tidak dilepas. Scope maksimal 64 skill/code 128 karakter dan query JSON 8192 karakter berasal dari batas retrieval; request yang melampaui batas ditolak sebelum inference, tanpa truncation scope atau perubahan schema wire 500 catalog entries. Planner terpisah dari mode untuk initial retrieval adaptive mendatang.
+
+Gate `rag-03-evidence-v1` memeriksa selected chunk unik dan covered skill setelah dedup/budget. Default `RAG_MIN_UNIQUE_CHUNKS=1` dan `RAG_MIN_COVERED_SKILLS=1` adalah kebijakan struktural awal; partial coverage tetap tercatat dan skor similarity tidak menjadi confidence/ambang kualitas. EMPTY/low evidence menghasilkan INSUFFICIENT_EVIDENCE tanpa generator; fixed input overflow menghasilkan INVALID_INPUT. Kalibrasi semantik serta kesetaraan adaptive tetap ADP/pilot. Event strict `evidence_assessed` merekam hash policy/context, counts, thresholds, reason codes dan keputusan tanpa raw text.
+
+Runner memeriksa deadline monotonic/cancellation di batas tahap dan meneruskan satu signal/timer ke adapter. Terminal success memerlukan output schema/domain valid dan tepat dua attempts ONLINE/INITIAL (query lalu generator). Unknown embedding cost menahan total null; token usage hanya LLM, biaya indexing/judge/hosting terpisah. Sink atau ledger rusak menjadi UNKNOWN OBS-01 tanpa inference ulang. Caller masih memiliki auth/admission/replay API-01; I/O durable tidak dapat dibatalkan seperti transport HTTP. Checks 153 test, dua integrasi pipeline Qdrant nyata dan enam regresi retrieval lulus dengan provider fixture.
 
 ### Router adaptive
 
@@ -316,13 +328,13 @@ Hasil tidak langsung mengubah profil, mastery, atau sesi. KotobaHub tetap mengot
 
 [BASE-01](docs/generation/BASE-01-baseline.md) menyediakan adapter HTTP Responses API pada endpoint/model tetap, `store:false`, Structured Outputs strict, tier default dan output cap. Generator empat operasi menerima selected evidence dari caller; mode tidak mengubah template/schema/model. Runner internal LLM_ONLY mengirim evidence kosong dan tidak memiliki dependency retrieval. Schema CON-01 serta domain refinements aplikasi diperiksa lokal; schema/domain failure dipisahkan. Composition root mengaktifkan generator/baseline hanya melalui OPENAI_ENABLED, tanpa call startup/probe.
 
-Versi awal membatasi satu attempt per operasi, tanpa provider/schema retry; cap ini berlaku sama pada generator bersama. Timeout mencakup connection/body/cancellation; slot concurrency ditahan sampai transport selesai. OBS-02 mencatat usage, cache/reasoning, harga dan failure per attempt; tier/model respons yang tidak membuktikan profile standard menahan estimasi. Alias tidak mengonfirmasi revision, dan empat smoke nyata berizin telah membuktikan akses/Structured Outputs pada empat operasi. Estimasi tarif dari usage USD 0,008266 berada di bawah izin USD 0,10; settlement tetap null, tanpa claim freeze. Runner membutuhkan admission aktif dengan fingerprint request identik; HTTP/auth/corpus/replay tetap API-01. Context budgeting evidence tersedia pada RAG-02; generator bersama belum membuktikan pipeline RAG lengkap.
+Versi awal membatasi satu attempt per operasi, tanpa provider/schema retry; cap ini berlaku sama pada generator bersama. Timeout mencakup connection/body/cancellation; slot concurrency ditahan sampai transport selesai. OBS-02 mencatat usage, cache/reasoning, harga dan failure per attempt; tier/model respons yang tidak membuktikan profile standard menahan estimasi. Alias tidak mengonfirmasi revision, dan empat smoke nyata berizin telah membuktikan akses/Structured Outputs pada empat operasi. Estimasi tarif dari usage USD 0,008266 berada di bawah izin USD 0,10; settlement tetap null, tanpa claim freeze. Runner membutuhkan admission aktif dengan fingerprint request identik; HTTP/auth/corpus/replay tetap API-01. Context budgeting evidence tersedia pada RAG-02; generator bersama telah dirangkai pada SINGLE_STAGE internal RAG-03; adaptive dan HTTP tetap task lanjutan.
 
 ### Implementasi RAG-02
 
 [Context builder RAG-02](docs/retrieval/RAG-02-context.md) memakai serializer input yang sama dengan generator untuk keempat operasi. Kedua mode RAG berbagi satu konfigurasi: window awal 32768, evidence cap 8192, margin 1024; reserve output dan batas karakter mengikuti konfigurasi generator. Instruksi sistem, JSON Schema, input terstruktur, JSON escaping/IDs evidence, output dan margin dihitung sebelum chunk dipilih. Counter `utf8-bytes-v1` adalah estimasi perencanaan konservatif, bukan tokenizer generatif terverifikasi atau usage/billing provider; pilot harus memeriksa kebijakan ini sebelum freeze.
 
-Builder memeriksa checksum/identitas seluruh kandidat, melakukan dedup chunk dan teks identik, mengutamakan cakupan target skill baru lalu urutan caller, serta memilih/membuang chunk utuh. Overlap parsial tidak dipotong. Maksimal 64 kandidat; target skill wajib subset katalog request. Coverage tetap menyebut skill uncovered. Sumber metadata CON-01 dibentuk hanya dari selected evidence. `READY` berarti evidence tidak kosong, `EMPTY` berarti tidak terpilih, dan `INPUT_BUDGET_EXCEEDED` berarti reserve/input wajib melewati cap. Kecukupan semantik serta pemetaan terminal error masih dimiliki RAG-03/ADP, tanpa fallback baseline.
+Builder memeriksa checksum/identitas seluruh kandidat, melakukan dedup chunk dan teks identik, mengutamakan cakupan target skill baru lalu urutan caller, serta memilih/membuang chunk utuh. Overlap parsial tidak dipotong. Maksimal 64 kandidat; target skill wajib subset katalog request. Coverage tetap menyebut skill uncovered. Sumber metadata CON-01 dibentuk hanya dari selected evidence. `READY` berarti evidence tidak kosong, `EMPTY` berarti tidak terpilih, dan `INPUT_BUDGET_EXCEEDED` berarti reserve/input wajib melewati cap. RAG-03 menerapkan gate struktural dan terminal error SINGLE_STAGE; kalibrasi semantik dan adaptive tetap ADP/pilot, tanpa fallback baseline.
 
 Composition root menyediakan `contextBuilder` saat OpenAI aktif, tanpa inference startup/probe. Wrapper memeriksa fingerprint admission, kecocokan output/input limits generator, cancellation dan deadline monotonic. Event strict `context_built` obs-02-v1 merekam komponen budget, retrieved/selected/dropped IDs/reasons dan coverage tanpa raw text/profil. Trace/cost historis tidak diubah; nilai estimasi context tidak masuk accounting usage. Checks 137 test lulus termasuk 14 test RAG-02, tanpa paid inference atau perubahan index/provider.
 

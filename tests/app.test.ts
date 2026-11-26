@@ -165,6 +165,7 @@ await test('OpenAI enabled dirangkai tanpa call pada startup/probe dan memerluka
 });
 
 await test('retrieval enabled tetap tanpa I/O jaringan pada startup/health dan menolak non-admitted calls', async (t) => {
+  const { readOpenAiConfig } = await import('@/adapters/openai-config');
   const { readFile } = await import('node:fs/promises');
   const { retrievalConfig } = await import('@/retrieval/config');
   const index: unknown = JSON.parse(
@@ -186,13 +187,14 @@ await test('retrieval enabled tetap tanpa I/O jaringan pada startup/health dan m
     readHfConfig({ HF_INFERENCE_ENABLED: 'true', HF_TOKEN: 'fixture-key' }),
     readQdrantConfig({ QDRANT_ENABLED: 'true' }),
     undefined,
-    null,
+    readOpenAiConfig({ OPENAI_ENABLED: 'true', OPENAI_API_KEY: 'fixture-key' }),
     retrievalConfig(index),
   );
   t.after(() => app.server.close());
 
   assert.ok(app.retriever);
   assert.ok(app.retrievalStage);
+  assert.ok(app.singleStage);
 
   await app.server.inject('/health/live');
 

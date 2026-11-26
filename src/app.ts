@@ -17,6 +17,9 @@ import type { ContractValidators } from '@/contracts/validator';
 import { createBaselineRunner } from '@/generation/baseline';
 import { createOperationGenerator } from '@/generation/generator';
 import { ObservationStore } from '@/observability/store';
+import { readEvidencePolicy } from '@/pipelines/evidence';
+import type { EvidencePolicy } from '@/pipelines/evidence';
+import { createSingleStageRunner } from '@/pipelines/single-stage';
 import type { RetrievalConfig } from '@/retrieval/config';
 import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
 import type { QdrantRetriever } from '@/retrieval/qdrant-retriever';
@@ -39,6 +42,7 @@ export interface Application {
   readonly retriever: QdrantRetriever | null;
   readonly retrievalStage: ReturnType<typeof createRetrievalStage> | null;
   readonly contextBuilder: ReturnType<typeof createContextBuilder> | null;
+  readonly singleStage: ReturnType<typeof createSingleStageRunner> | null;
 }
 
 export function createApplication(
@@ -50,6 +54,7 @@ export function createApplication(
   openAiConfig: OpenAiConfig | null = null,
   retrievalConfig: RetrievalConfig | null = null,
   contextConfig: ContextConfig | null = openAiConfig ? readContextConfig({}, openAiConfig) : null,
+  evidencePolicy: EvidencePolicy = readEvidencePolicy(),
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -181,6 +186,18 @@ export function createApplication(
     openAiConfig && contextConfig
       ? createContextBuilder(contextConfig, openAiConfig, observations, clock)
       : null;
+  const singleStage =
+    retrievalConfig && retrievalStage && contextBuilder && generator && openAiConfig
+      ? createSingleStageRunner(
+          retrievalConfig.index,
+          retrievalStage,
+          contextBuilder,
+          createOperationGenerator(generator, openAiConfig),
+          observations,
+          evidencePolicy,
+          clock,
+        )
+      : null;
 
   server.addHook('onClose', async () => {
     inferenceClosed = true;
@@ -192,7 +209,7 @@ export function createApplication(
 
   server.get('/health/live', () => ({ status: 'live' }));
 
-  // Internal adapters do not prove operation readiness; complete pipelines are still absent.
+  // Adaptive/auth/HTTP admission and operation endpoints remain API-01; probes never run inference.
   server.get('/health/ready', (_request, reply) => reply.code(503).send({ status: 'not_ready' }));
 
   return {
@@ -207,5 +224,6 @@ export function createApplication(
     retriever,
     retrievalStage,
     contextBuilder,
+    singleStage,
   };
 }
