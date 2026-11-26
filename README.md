@@ -59,6 +59,12 @@ npm start
 
 Format runtime mengikuti `.prettierrc.json`. Jalankan `npm run format` untuk menerapkan format atau `npm run format:check` untuk memeriksanya; pemeriksaan ini juga masuk `npm run check`.
 
+Struktur `tests/` mengikuti tanggung jawab modul di `src/`:
+
+- `unit/<fitur>/`: test app, shared, tooling, adapters, contracts, storage, ingestion, observability, generation, retrieval, context dan pipelines. `npm test` menemukan seluruh `*.test.ts` secara rekursif di sini.
+- `integration/<fitur>/`: test storage, ingestion, retrieval dan pipelines. Jalankan lewat script `test:store`, `test:data02`, `test:data03`, `test:rag01`, `test:rag03`, `test:adp02` atau `test:adp03` sesuai dependensi lokalnya.
+- `__fixtures__/`: fixture/helper bersama untuk unit dan integration test, diimpor melalui `@tests/__fixtures__/<nama>`. Fixture kontrak bersama aplikasi tetap berada di `contracts/v1/`.
+
 ```bash
 curl -i http://127.0.0.1:3000/health/live
 curl -i http://127.0.0.1:3000/health/ready

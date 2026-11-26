@@ -75,7 +75,7 @@ Jangan jalankan recovery pada volume writer host lain. Registry tidak memiliki e
 ## Verifikasi dan batas bukti
 
 ```bash
-node --import tsx --test tests/observability.test.ts
+node --import tsx --test tests/unit/observability/observability.test.ts
 npm run check
 ```
 

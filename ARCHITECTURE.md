@@ -142,7 +142,10 @@ kotoba-hub-rag/
   prompts/                        # main templates and rewrite prompts
   configs/                        # retrieval/routing/pricing versions
   datasets/                       # reviewed pilot/main manifests
-  tests/                          # unit, integration, contract
+  tests/
+    __fixtures__/                 # fixture/helper bersama unit dan integration
+    unit/<fitur>/                 # test menurut tanggung jawab modul, termasuk contracts
+    integration/<fitur>/          # storage, ingestion, retrieval dan pipelines
   artifacts/                      # generated runs, ignored by Git
 ```
 

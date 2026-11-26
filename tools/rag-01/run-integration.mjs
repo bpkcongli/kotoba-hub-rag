@@ -82,10 +82,10 @@ try {
       'tsx',
       '--test',
       adaptive
-        ? 'tests/adaptive.integration.ts'
+        ? 'tests/integration/pipelines/adaptive.integration.ts'
         : singleStage
-          ? 'tests/single-stage.integration.ts'
-          : 'tests/retrieval.integration.ts',
+          ? 'tests/integration/pipelines/single-stage.integration.ts'
+          : 'tests/integration/retrieval/retrieval.integration.ts',
     ],
     {
       cwd: root,
