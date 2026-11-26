@@ -94,6 +94,8 @@ export async function setupAdaptive(
     undefined,
     options.deepPolicy ?? readDeepPolicy(),
     options.clock ?? clock,
+    options.executionPolicy,
+    options.scheduling,
   );
 
   return { ...state, adaptive, rerankWire };

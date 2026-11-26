@@ -23,6 +23,8 @@ import { readDeepPolicy } from '@/pipelines/deep-config';
 import type { DeepPolicy } from '@/pipelines/deep-config';
 import { readEvidencePolicy } from '@/pipelines/evidence';
 import type { EvidencePolicy } from '@/pipelines/evidence';
+import { readExecutionPolicy } from '@/pipelines/execution-policy';
+import type { ExecutionPolicy } from '@/pipelines/execution-policy';
 import { createQueryRewriter } from '@/pipelines/rewrite';
 import { readRouterPolicy } from '@/pipelines/router';
 import type { RouterPolicy } from '@/pipelines/router';
@@ -66,6 +68,7 @@ export function createApplication(
   evidencePolicy: EvidencePolicy = readEvidencePolicy(),
   routerPolicy: RouterPolicy = readRouterPolicy(),
   deepPolicy: DeepPolicy = readDeepPolicy(),
+  executionPolicy: ExecutionPolicy = readExecutionPolicy(),
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -191,7 +194,12 @@ export function createApplication(
         };
   const baseline =
     generator && openAiConfig
-      ? createBaselineRunner(createOperationGenerator(generator, openAiConfig), observations, clock)
+      ? createBaselineRunner(
+          createOperationGenerator(generator, openAiConfig),
+          observations,
+          clock,
+          executionPolicy,
+        )
       : null;
   const contextBuilder =
     openAiConfig && contextConfig
@@ -208,6 +216,7 @@ export function createApplication(
           observations,
           evidencePolicy,
           clock,
+          executionPolicy,
         )
       : null;
   const adaptiveInitialStage =
@@ -236,6 +245,7 @@ export function createApplication(
           routerPolicy,
           deepPolicy,
           clock,
+          executionPolicy,
         )
       : null;
 

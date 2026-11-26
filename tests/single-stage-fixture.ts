@@ -19,6 +19,8 @@ import { ObservationStore } from '@/observability/store';
 import type { ObservationOptions } from '@/observability/store';
 import { readEvidencePolicy } from '@/pipelines/evidence';
 import type { EvidencePolicy } from '@/pipelines/evidence';
+import type { Scheduling } from '@/pipelines/execution-control';
+import type { ExecutionPolicy } from '@/pipelines/execution-policy';
 import { createSingleStageRunner } from '@/pipelines/single-stage';
 import { retrievalConfig } from '@/retrieval/config';
 import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
@@ -41,6 +43,8 @@ export async function setupSingleStage(
     generatorFetch?: typeof fetch;
     context?: Partial<ContextConfig>;
     policy?: EvidencePolicy;
+    executionPolicy?: ExecutionPolicy;
+    scheduling?: Scheduling;
     observationOptions?: ObservationOptions;
     clock?: Clock;
   } = {},
@@ -163,6 +167,8 @@ export async function setupSingleStage(
     observations,
     options.policy ?? readEvidencePolicy(),
     timer,
+    options.executionPolicy,
+    options.scheduling,
   );
   t.after(async () => {
     hf.close();

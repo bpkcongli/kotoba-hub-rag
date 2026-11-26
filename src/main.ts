@@ -5,6 +5,7 @@ import { createApplication } from '@/app';
 import { readContextConfig } from '@/context/config';
 import { readDeepPolicy } from '@/pipelines/deep-config';
 import { readEvidencePolicy } from '@/pipelines/evidence';
+import { readExecutionPolicy } from '@/pipelines/execution-policy';
 import { readRouterPolicy } from '@/pipelines/router';
 import { readRetrievalConfig } from '@/retrieval/config';
 import { ConfigError, readConfig } from '@/shared/config';
@@ -21,6 +22,7 @@ async function main(): Promise<void> {
   const evidencePolicy = readEvidencePolicy(process.env);
   const routerPolicy = readRouterPolicy(process.env);
   const deepPolicy = readDeepPolicy(process.env);
+  const executionPolicy = readExecutionPolicy(process.env);
 
   const { server } = createApplication(
     config,
@@ -34,6 +36,7 @@ async function main(): Promise<void> {
     evidencePolicy,
     routerPolicy,
     deepPolicy,
+    executionPolicy,
   );
 
   let closing = false;

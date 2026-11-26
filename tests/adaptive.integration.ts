@@ -25,6 +25,7 @@ import { createOperationGenerator } from '@/generation/generator';
 import { ObservationStore } from '@/observability/store';
 import { createAdaptiveRunner } from '@/pipelines/adaptive';
 import { readDeepPolicy } from '@/pipelines/deep-config';
+import { readExecutionPolicy } from '@/pipelines/execution-policy';
 import { createQueryRewriter } from '@/pipelines/rewrite';
 import { readRouterPolicy } from '@/pipelines/router';
 import { retrievalConfig } from '@/retrieval/config';
@@ -34,13 +35,16 @@ import { parseIndexManifest } from '@/storage/index-manifest';
 import { QdrantIndexStore } from '@/storage/qdrant-index';
 
 const url = process.env.RAG01_QDRANT_URL;
+const retries = process.env.ADP03_RETRY_FIXTURE === 'true';
 
 assert.ok(url, 'Gunakan npm run test:adp02 untuk Qdrant sementara');
 assert.equal(new URL(url).hostname, '127.0.0.1');
 
 for (const empty of [false, true]) {
-  await test(`ADAPTIVE DEEP Qdrant nyata: ${empty ? 'terminal insufficient evidence' : 'rewrite preserves scope, dedup/rerank/context/generation success'}`, async (t) => {
-    const directory = await mkdtemp(join(tmpdir(), 'adp02-integration-'));
+  await test(`${retries ? 'ADP-03 retries' : 'ADP-02'} ADAPTIVE DEEP Qdrant nyata: ${empty ? 'terminal insufficient evidence' : 'rewrite preserves scope, dedup/rerank/context/generation success'}`, async (t) => {
+    const directory = await mkdtemp(
+      join(tmpdir(), retries ? 'adp03-integration-' : 'adp02-integration-'),
+    );
     const observations = new ObservationStore(directory);
     const index = parseIndexManifest({
       ...manifest(),
@@ -84,6 +88,11 @@ for (const empty of [false, true]) {
         }
 
         embeddingCalls++;
+
+        if (retries && embeddingCalls === 1) {
+          return Promise.resolve(Response.json({}, { status: 429 }));
+        }
+
         return Promise.resolve(Response.json([dense()]));
       },
       onAttempt: (attempt) => observations.recordHfAttempt(attempt),
@@ -104,6 +113,14 @@ for (const empty of [false, true]) {
         }
 
         generationCalls++;
+
+        if (retries && generationCalls === 1) {
+          return Promise.resolve(Response.json({}, { status: 503 }));
+        }
+
+        if (retries && generationCalls === 2) {
+          return Promise.resolve(providerResponse({}));
+        }
 
         return Promise.resolve(providerResponse(outputFor('generate')));
       },
@@ -139,6 +156,16 @@ for (const empty of [false, true]) {
       undefined,
       readRouterPolicy({ ADAPTIVE_MIN_UNIQUE_CANDIDATES: '2' }),
       readDeepPolicy({ ADAPTIVE_REWRITE_ENABLED: 'true' }),
+      undefined,
+      retries
+        ? readExecutionPolicy({
+            PIPELINE_MAX_PROVIDER_RETRIES: '2',
+            PIPELINE_MAX_SCHEMA_RETRIES: '1',
+            PIPELINE_MAX_TOTAL_RETRIES: '3',
+            PIPELINE_BACKOFF_BASE_MS: '0',
+            PIPELINE_BACKOFF_MAX_MS: '0',
+          })
+        : readExecutionPolicy(),
     );
     t.after(async () => {
       hf.close();
@@ -161,13 +188,16 @@ for (const empty of [false, true]) {
       assert.ok(createContractValidators().responses.generate(response));
       assert.deepEqual(response.meta.sources, [{ source_id: 'source-1', chunk_id: 'chunk-1' }]);
       assert.equal(response.meta.path, 'DEEP');
-      assert.equal(response.meta.counters.model_call_count, 5);
+      assert.equal(response.meta.counters.model_call_count, retries ? 8 : 5);
       assert.equal(response.meta.counters.rewrite_call_count, 1);
       assert.equal(response.meta.counters.rerank_call_count, 1);
+      assert.equal(response.meta.counters.provider_retry_count, retries ? 2 : 0);
+      assert.equal(response.meta.counters.schema_retry_count, retries ? 1 : 0);
+      assert.equal(response.meta.usage.total_tokens, retries ? null : 280);
     }
 
-    assert.equal(embeddingCalls, 2);
-    assert.equal(generationCalls, empty ? 0 : 1);
+    assert.equal(embeddingCalls, retries ? 3 : 2);
+    assert.equal(generationCalls, empty ? 0 : retries ? 3 : 1);
 
     const events = await trace(directory, id);
     const retrieval = events.filter((event) => event.data.kind === 'retrieval_completed');
@@ -195,6 +225,13 @@ for (const empty of [false, true]) {
     assert.equal(path.data.rewriteCallCount, 1);
     assert.equal(path.data.retrievalStageCount, 2);
     assert.equal(path.data.rerankCallCount, empty ? 0 : 1);
+    assert.equal(path.data.version, 'adp-03-v1');
+    assert.equal(path.data.providerRetryCount, retries ? (empty ? 1 : 2) : 0);
+    assert.equal(path.data.schemaRetryCount, retries && !empty ? 1 : 0);
+    assert.equal(
+      events.filter((event) => event.data.kind === 'retry_scheduled').length,
+      retries ? (empty ? 1 : 3) : 0,
+    );
 
     const reranked = events.find((row) => row.data.kind === 'deep_reranked');
 

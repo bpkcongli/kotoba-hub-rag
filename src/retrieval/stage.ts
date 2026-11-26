@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { InferenceError } from '@/adapters/hf-inference';
 import { validateEmbeddingBatch } from '@/adapters/hf-validation';
+import { GenerationError } from '@/adapters/openai-responses';
 import { systemClock } from '@/adapters/system-clock';
 import { ObservationError, hashValue } from '@/observability/store';
 import type { ObservationStore } from '@/observability/store';
@@ -107,6 +108,7 @@ export function createRetrievalStage(
       executionId: context.executionId,
       deadlineAt: context.deadlineAt,
       signal: context.signal,
+      ...(context.control === undefined ? {} : { control: context.control }),
       accounting: {
         phase: context.accounting?.phase ?? 'ONLINE',
         retryKind: context.accounting?.retryKind ?? 'INITIAL',
@@ -156,13 +158,16 @@ export function createRetrievalStage(
       }
     } catch (error) {
       failure =
-        error instanceof InferenceError || error instanceof RetrievalError
+        error instanceof InferenceError ||
+        error instanceof RetrievalError ||
+        error instanceof GenerationError
           ? error
           : new RetrievalError('DEPENDENCY_ERROR');
 
       if (
         error instanceof ObservationError ||
-        (error instanceof InferenceError && error.code === 'ATTEMPT_OBSERVER_FAILED')
+        (error instanceof InferenceError && error.code === 'ATTEMPT_OBSERVER_FAILED') ||
+        (error instanceof GenerationError && error.code === 'TRACE_WRITE_FAILED')
       ) {
         await observations.failExecutionTrace(context.executionId).catch(() => undefined);
         clearTimeout(timer);
@@ -172,6 +177,7 @@ export function createRetrievalStage(
       code =
         signal.aborted ||
         (error instanceof RetrievalError && error.code === 'TIMEOUT') ||
+        (error instanceof GenerationError && error.code === 'TIMEOUT') ||
         (error instanceof InferenceError && ['DEADLINE_EXCEEDED', 'CANCELLED'].includes(error.code))
           ? 'TIMEOUT'
           : phase === 'embedding'

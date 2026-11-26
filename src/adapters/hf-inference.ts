@@ -90,6 +90,7 @@ function snapshotCallContext(
     signal: context.signal,
     deadlineAt: context.deadlineAt,
     accounting: Object.freeze({ phase, retryKind }),
+    ...(context.control === undefined ? {} : { control: context.control }),
   };
 }
 
@@ -250,7 +251,22 @@ export function createHfInference(config: HfConfig, dependencies: HfDependencies
     }
   }
 
-  async function request<T>(
+  function request<T>(
+    operation: InferenceAttempt['operation'],
+    purpose: InferenceAttempt['purpose'],
+    itemCount: number,
+    payload: unknown,
+    parse: (value: unknown) => T,
+    context: CallContext,
+    deadline: number,
+  ): Promise<T> {
+    const call = (attemptContext: CallContext) =>
+      requestAttempt(operation, purpose, itemCount, payload, parse, attemptContext, deadline);
+
+    return context.control ? context.control.provider(purpose, context, call) : call(context);
+  }
+
+  async function requestAttempt<T>(
     operation: InferenceAttempt['operation'],
     purpose: InferenceAttempt['purpose'],
     itemCount: number,
@@ -382,7 +398,7 @@ export function createHfInference(config: HfConfig, dependencies: HfDependencies
 
     const observerController = new AbortController();
     const observerBudget = Math.max(
-      1,
+      context.control?.traceGraceMs ?? 1,
       Math.min(settings.timeoutMs, deadline - clock.monotonicMs()),
     );
     let observerTimer: ReturnType<typeof setTimeout> | undefined;

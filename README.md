@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 26 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. Retry terpadu tetap ADP-03. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 26 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -25,6 +25,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [RAG-03](docs/retrieval/RAG-03-single-stage.md) | SINGLE_STAGE internal, satu retrieval round, low-evidence handling, accounting/terminal trace dan integrasi Qdrant fixture |
 | [ADP-01](docs/adaptive/ADP-01-router.md) | Router/initial stage, fitur dan policy/version/reason codes; prosedur kalibrasi pilot-only, threshold masih provisional |
 | [ADP-02](docs/adaptive/ADP-02-deep-path.md) | Runner ADAPTIVE FAST/DEEP internal, dua stages/satu rewrite opsional, BGE rerank/gate/terminal dan accounting seluruh batch |
+| [ADP-03](docs/adaptive/ADP-03-execution-policy.md) | Lifecycle tiga mode, deadline/cancellation, shared retry/call budget, terminal dan accounting seluruh attempts |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -63,7 +64,7 @@ curl -i http://127.0.0.1:3000/health/live
 curl -i http://127.0.0.1:3000/health/ready
 ```
 
-Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 `{"status":"not_ready"}` karena dependency/pipeline belum terpasang. Empat endpoint operasi v1 belum terdaftar. Probe tidak memanggil inferensi, Qdrant atau jaringan provider. Bind default `127.0.0.1`; batas body tetap 1 MiB. Registry admission/terminal tersedia pada OBS-01; auth, replay envelope dan deadline eksekusi menyeluruh tetap API-01/ADP-03.
+Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 `{"status":"not_ready"}` karena dependency/pipeline belum terpasang. Empat endpoint operasi v1 belum terdaftar. Probe tidak memanggil inferensi, Qdrant atau jaringan provider. Bind default `127.0.0.1`; batas body tetap 1 MiB. Registry admission/terminal tersedia pada OBS-01; auth dan replay envelope tetap API-01; deadline/cancellation runner internal tersedia pada ADP-03.
 
 | Environment | Default | Validasi |
 | --- | --- | --- |
@@ -178,7 +179,7 @@ Perintah ini memakai Qdrant sementara, port loopback dan volume milik runner sen
 
 `Application.singleStage` tersedia jika HF, Qdrant/retrieval, context builder dan OpenAI aktif. Runner memerlukan admission OBS-01 dan mode SINGLE_STAGE; tepat satu retrieval round, tanpa router/rewrite/rerank, lalu selected context/gate dan generator bersama. Hasil evidence kosong/di bawah batas ditutup sebagai INSUFFICIENT_EVIDENCE tanpa generation atau fallback. Sumber sitasi hanya dari selected context dan unknown cost tetap null.
 
-Gate awal `RAG_MIN_UNIQUE_CHUNKS=1`/`RAG_MIN_COVERED_SKILLS=1` memeriksa struktur, belum kualitas semantik terkalibrasi. Scope internal maksimal 64 skill (code 128 karakter) dan query 8192 karakter; pelanggaran ditolak sebelum inference tanpa menyempitkan scope diam-diam. [Laporan RAG-03](docs/retrieval/RAG-03-single-stage.md) memuat query mapping, status, deadline dan batasnya. HTTP/auth/replay serta adaptive belum terpasang; readiness tetap 503 dan probe tanpa provider calls.
+Gate awal `RAG_MIN_UNIQUE_CHUNKS=1`/`RAG_MIN_COVERED_SKILLS=1` memeriksa struktur, belum kualitas semantik terkalibrasi. Scope internal maksimal 64 skill (code 128 karakter) dan query 8192 karakter; pelanggaran ditolak sebelum inference tanpa menyempitkan scope diam-diam. [Laporan RAG-03](docs/retrieval/RAG-03-single-stage.md) memuat query mapping, status, deadline dan batasnya. HTTP/auth/replay belum terpasang; adaptive internal tersedia melalui ADP-02/03; readiness tetap 503 dan probe tanpa provider calls.
 
 ```sh
 npm run check
@@ -189,7 +190,7 @@ Checks 153 test lulus termasuk 16 test baru; dua integrasi pipeline memakai Qdra
 
 ## Router dan initial adaptive — ADP-01
 
-`Application.adaptiveInitialStage` memakai planner, retrieval stage 1 dan context builder yang sama dengan SINGLE_STAGE. Hasilnya state internal dan initial decision FAST/DEEP; deep path, generation adaptive, final path dan terminal runner lengkap tetap ADP-02/03. Caller memiliki admission, invocation caps dan terminal closure. Helper ini belum endpoint operasi.
+`Application.adaptiveInitialStage` memakai planner, retrieval stage 1 dan context builder yang sama dengan SINGLE_STAGE. Hasilnya state internal dan initial decision FAST/DEEP; deep path, generation adaptive, final path dan terminal runner lengkap tersedia melalui `Application.adaptive` ADP-02/03. Caller memiliki admission, invocation caps dan terminal closure. Helper ini belum endpoint operasi.
 
 Threshold `ADAPTIVE_MIN_UNIQUE_CANDIDATES=1`, `ADAPTIVE_MIN_SELECTED_CHUNKS=1`, `ADAPTIVE_MIN_SKILL_COVERAGE=1` adalah policy struktural PROVISIONAL. Count/coverage selected evidence menentukan keputusan; skor/gap hanya diagnostik. Trace menyimpan fitur, threshold, policy/hash dan reason codes tanpa label evaluator atau teks learner; finalPath tetap null. [Prosedur kalibrasi](docs/research/ADP-01-router-calibration.md) hanya memakai 24 pilot, belum dijalankan. [Laporan dan bukti](docs/adaptive/ADP-01-router.md) menjelaskan batas, parity fixtures serta integrasi Qdrant sementara tanpa provider berbayar. Checks ADP-01 lulus 169 test proyek (16 baru) dan dua integrasi Qdrant. Runtime verifikasi Node 24.22.1/npm 11.19.1; pin Node 24.22.3 tetap dan belum diuji pada sesi ini.
 
@@ -197,7 +198,16 @@ Threshold `ADAPTIVE_MIN_UNIQUE_CANDIDATES=1`, `ADAPTIVE_MIN_SELECTED_CHUNKS=1`, 
 
 `Application.adaptive` tersedia ketika retrieval/context/HF/OpenAI aktif, dengan admission OBS-01 dan input mode ADAPTIVE. FAST memakai context awal; DEEP maksimal dua retrieval stages total, satu rewrite opsional, merge/dedup pool, BGE rerank dan context/gate bersama. Hasil domain valid atau failure memiliki terminal; evidence kurang menghasilkan INSUFFICIENT_EVIDENCE tanpa generation/fallback. HTTP operasi tetap API-01.
 
-Default policy PROVISIONAL: `ADAPTIVE_REWRITE_ENABLED=false`, `ADAPTIVE_REWRITE_MODEL=gpt-5.6-terra`, `ADAPTIVE_RERANK_POOL_LIMIT=10`. Semua actual rerank batch attempts serta rewrite masuk usage/cost/counters sekali; unknown tetap null. Belum ada automatic retry atau kalibrasi pilot. Jalankan `npm run check`, `npm run test:adp02`, dan regresi `npm run test:rag03` tanpa paid provider. Checks 185 test, dua integrasi deep Qdrant nyata dan dua regresi baseline lulus pada Node 24.22.1/npm 11.19.1; pin Node 24.22.3 belum diuji pada sesi ini. [Laporan/bukti ADP-02](docs/adaptive/ADP-02-deep-path.md) memuat batas scope dan handoff ADP-03.
+Default policy PROVISIONAL: `ADAPTIVE_REWRITE_ENABLED=false`, `ADAPTIVE_REWRITE_MODEL=gpt-5.6-terra`, `ADAPTIVE_RERANK_POOL_LIMIT=10`. Semua actual rerank batch attempts serta rewrite masuk usage/cost/counters sekali; unknown tetap null. Default retry tetap nol; policy opt-in tersedia pada ADP-03. Kalibrasi pilot belum dilakukan. Jalankan `npm run check`, `npm run test:adp02`, dan regresi `npm run test:rag03` tanpa paid provider. Checks 185 test, dua integrasi deep Qdrant nyata dan dua regresi baseline lulus pada Node 24.22.1/npm 11.19.1; pin Node 24.22.3 belum diuji pada sesi ini. [Laporan/bukti ADP-02](docs/adaptive/ADP-02-deep-path.md) memuat batas scope dan handoff ADP-03.
+
+
+## Kebijakan eksekusi bersama — ADP-03
+
+Ketiga runner memakai lifecycle dan snapshot `adp-03-v1` yang sama: deadline monotonic/cancellation, admission binding, budget retry global, cap actual work dan terminal/UNKNOWN. Provider retry hanya mengulang HTTP attempt transient 408/429/5xx; schema retry mengulang generator dengan input/evidence/prompt/model/schema identik. Maksimum dua retrieval stages/satu actual rewrite tetap berlaku; rewrite tidak di-retry, dan tidak ada fallback mode/provider/model.
+
+Konfigurasi `.env.example`: `PIPELINE_MAX_PROVIDER_RETRIES=0`, `PIPELINE_MAX_SCHEMA_RETRIES=0`, `PIPELINE_MAX_TOTAL_RETRIES=0`, `PIPELINE_MAX_MODEL_CALLS=72`, backoff base/max 250/2000 ms dan grace callback audit 1000 ms. Retry provider/schema berbagi batas total maksimal tiga tambahan attempt. Grace hanya untuk pencatatan attempt, tanpa inference baru setelah deadline. Semua attempts tetap masuk metadata/ledger, dengan unknown usage/cost null.
+
+`npm run check`, `npm run test:adp03`, `npm run test:adp02` dan `npm run test:rag03` lulus: 201 test proyek dan enam integrasi Qdrant sementara, tanpa paid call. Node aktual 24.22.1/npm 11.19.1; pin Node 24.22.3 belum diuji. [Laporan dan bukti ADP-03](docs/adaptive/ADP-03-execution-policy.md) merinci policy dan batas audit/timeout. HTTP API-01, pilot/kalibrasi dan freeze tetap terbuka.
 
 ## Baseline internal BASE-01
 

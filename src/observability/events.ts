@@ -13,6 +13,13 @@ import {
 } from '@/observability/adaptive-event';
 import { contextEventSchema, validContextTrace } from '@/observability/context-event';
 import { evidenceEventSchema, validEvidenceAssessment } from '@/observability/evidence-event';
+import type { ExecutionPolicyTrace, RetryTrace } from '@/observability/execution-event';
+import {
+  executionPolicyEventSchema,
+  retryEventSchema,
+  validExecutionPolicyTrace,
+  validRetryTrace,
+} from '@/observability/execution-event';
 import { retrievalEventSchema, validRetrievalTrace } from '@/observability/retrieval-event';
 import { routingEventSchema, validRoutingDecision } from '@/observability/routing-event';
 import type { EvidenceAssessment } from '@/pipelines/evidence';
@@ -58,6 +65,8 @@ export type TraceCode =
   | 'CRASH_RECOVERY';
 
 export type EventData =
+  | ExecutionPolicyTrace
+  | RetryTrace
   | DeepRerankTrace
   | AdaptivePathTrace
   | RoutingDecision
@@ -223,6 +232,8 @@ export const traceEventSchema = object({
       routingEventSchema,
       deepRerankSchema,
       adaptivePathSchema,
+      executionPolicyEventSchema,
+      retryEventSchema,
       object({
         kind: { const: 'span_completed' },
         spanId: uuid,
@@ -270,6 +281,16 @@ export function parseTraceEvent(value: unknown): TraceEvent {
   }
 
   const event = value;
+
+  if (
+    (event.data.kind === 'execution_policy' || event.data.kind === 'retry_scheduled') &&
+    (event.schemaVersion !== 'obs-02-v1' ||
+      (event.data.kind === 'execution_policy'
+        ? !validExecutionPolicyTrace(event.data)
+        : !validRetryTrace(event.data)))
+  ) {
+    throw new Error('Invariant execution policy tidak valid');
+  }
 
   if (
     (event.data.kind === 'deep_reranked' || event.data.kind === 'adaptive_path_completed') &&

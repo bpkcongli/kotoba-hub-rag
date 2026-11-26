@@ -190,7 +190,7 @@ await test('unknown usage/cost tetap null dan baseline menolak mode lain serta f
   const id = await admit(state.observations, 'evaluate', request);
 
   await assert.rejects(state.baseline('evaluate', { ...request, mode: 'ADAPTIVE' }, id, signal), {
-    code: 'INVALID_INPUT',
+    code: 'IDEMPOTENCY_CONFLICT',
   });
   await assert.rejects(
     state.baseline(

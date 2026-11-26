@@ -5,18 +5,21 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const root = new URL('../../', import.meta.url);
 const singleStage = process.argv[2] === '--single-stage';
-const adaptive = process.argv[2] === '--adaptive';
+const execution = process.argv[2] === '--execution';
+const adaptive = process.argv[2] === '--adaptive' || execution;
 if (process.argv.length > 3 || (process.argv[2] !== undefined && !singleStage && !adaptive)) {
   throw new Error('Argument integration runner tidak valid');
 }
-const task = adaptive ? 'ADP-02' : singleStage ? 'RAG-03' : 'RAG-01';
-const artifactPath = adaptive
-  ? '../../artifacts/adp-02/'
-  : singleStage
-    ? '../../artifacts/rag-03/'
-    : '../../artifacts/rag-01/';
+const task = execution ? 'ADP-03' : adaptive ? 'ADP-02' : singleStage ? 'RAG-03' : 'RAG-01';
+const artifactPath = execution
+  ? '../../artifacts/adp-03/'
+  : adaptive
+    ? '../../artifacts/adp-02/'
+    : singleStage
+      ? '../../artifacts/rag-03/'
+      : '../../artifacts/rag-01/';
 const compose = new URL('../../compose.yaml', import.meta.url).pathname;
-const project = `${adaptive ? 'adp02' : singleStage ? 'rag03' : 'rag01'}-${process.pid}-${randomBytes(4).toString('hex')}`;
+const project = `${execution ? 'adp03' : adaptive ? 'adp02' : singleStage ? 'rag03' : 'rag01'}-${process.pid}-${randomBytes(4).toString('hex')}`;
 const env = { ...process.env, QDRANT_HTTP_PORT: '0' };
 const args = ['compose', '--file', compose, '--project-name', project];
 
@@ -86,7 +89,12 @@ try {
     ],
     {
       cwd: root,
-      env: { ...env, RAG01_QDRANT_URL: url, RAG01_CONTAINER_ID: container },
+      env: {
+        ...env,
+        RAG01_QDRANT_URL: url,
+        RAG01_CONTAINER_ID: container,
+        ADP03_RETRY_FIXTURE: execution ? 'true' : 'false',
+      },
       encoding: 'utf8',
       timeout: 120000,
     },

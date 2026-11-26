@@ -1,0 +1,344 @@
+{
+  "task_id": "ADP-03",
+  "date": "2026-11-26",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "dependencies": [
+    "ADP-02",
+    "OBS-02"
+  ],
+  "baseline_commit": "acaff234f7c8fa3bc0171189f1e54a5c1d2f7b09",
+  "runtime": {
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "project_node_pin": "24.22.3",
+    "exact_project_node_pin_verified": false,
+    "project_pin_changed": false
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "exit_code": 0,
+      "runtime_tests": 201,
+      "runtime_tests_before_adp03": 185,
+      "new_adp03_tests": 16,
+      "schema_retry_path_operation_combinations": 16,
+      "components": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "log": "evidence/adp-03-check.log"
+    },
+    {
+      "command": "npm run test:adp03",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 2,
+      "log": "evidence/adp-03-integration.log",
+      "metadata": "evidence/adp-03-integration.json",
+      "scope": "real temporary Qdrant, embedding 429 / generation 503 / schema retry; unchanged hard scope and 2 stages / 1 rewrite; 8-call success and empty terminal failure"
+    },
+    {
+      "command": "npm run test:adp02",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 2,
+      "log": "evidence/adp-03-deep-regression.log",
+      "metadata": "evidence/adp-03-deep-regression.json",
+      "scope": "default zero-retry DEEP success and insufficient evidence regression"
+    },
+    {
+      "command": "npm run test:rag03",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 2,
+      "log": "evidence/adp-03-baseline-regression.log",
+      "metadata": "evidence/adp-03-baseline-regression.json",
+      "scope": "SINGLE_STAGE and initial adaptive parity / empty evidence regression"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "command": "new report local links, verification checksums and Qdrant cleanup",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "implementation": {
+    "runners": [
+      "LLM_ONLY",
+      "SINGLE_STAGE",
+      "ADAPTIVE FAST",
+      "ADAPTIVE DEEP"
+    ],
+    "operations": [
+      "generate",
+      "evaluate",
+      "normalize",
+      "recommend"
+    ],
+    "execution_policy_version": "adp-03-v1",
+    "default_policy": {
+      "maxProviderRetries": 0,
+      "maxSchemaRetries": 0,
+      "maxTotalRetries": 0,
+      "maxModelCalls": 72,
+      "backoffBaseMs": 250,
+      "backoffMaxMs": 2000,
+      "traceGraceMs": 1000
+    },
+    "hard_bounds": {
+      "retrieval_stages_max": 2,
+      "actual_rewrite_calls_max": 1,
+      "provider_retries_max": 3,
+      "schema_retries_max": 2,
+      "shared_extra_attempts_max": 3,
+      "configurable_model_call_reservations_max": 128
+    },
+    "retry_owner": "execution control; provider wrapper per HTTP attempt / failed batch; schema wrapper only domain generation / output validation",
+    "retryable_provider_responses": [
+      "HTTP_408",
+      "HTTP_429",
+      "HTTP_5XX"
+    ],
+    "nonretryable": [
+      "rewrite",
+      "unknown network outcome",
+      "local timeout",
+      "cancellation",
+      "auth",
+      "refusal",
+      "malformed or incomplete provider output",
+      "capacity limit",
+      "trace failure",
+      "Qdrant search failure",
+      "request validation",
+      "evidence gate"
+    ],
+    "schema_retry": "identical input/evidence/main prompt/model/parameters/schema, SCHEMA_PARSE_FAILED or POST_VALIDATION_FAILED only; one shared total budget with provider retry",
+    "deadline": "monotonic budget begins at internal runner invocation before validation; min(request timeout, absolute deadline remaining, 120000 ms); one orchestration signal/timer plus leaf transport caps",
+    "audit_grace": "minimum bounded callback budget for recording an already incurred attempt; never grants new inference/retry after request deadline; durable filesystem I/O cannot be cancelled atomically",
+    "mode_integrity": "full admitted request binding and same-mode topology / actual ledger validation; no fallback or mode switch",
+    "trace": [
+      "execution_policy with canonical SHA256",
+      "retry_scheduled decision distinct from actual attempt",
+      "adaptive_path_completed adp-03-v1 with actual query/LLM/provider/schema counts; legacy adp-02-v1 readable"
+    ],
+    "accounting": "all actual HTTP attempts once; retry kinds mutually exclusive; missing LLM usage keeps all 4 aggregate token fields null; missing costs null and known subtotal retained",
+    "historical_evidence_rewritten": false
+  },
+  "verification_scope": [
+    "same schema/domain retry across four paths and four operations, exact provider body parity",
+    "provider then schema and schema then provider sequences share total budget",
+    "exhaustion, model call cap, default zero retry, no fallback",
+    "query retries do not add retrieval stages; rerank retries only failed batch",
+    "single actual rewrite even when retry budgets remain",
+    "Retry-After minimum, jitter, cancellation during backoff, insufficient remaining deadline",
+    "post-generation deadline refuses success and retains paid attempt accounting",
+    "auth/refusal/network unknown/incomplete are not auto-retried",
+    "trace/retry/terminal failure UNKNOWN without inference replay",
+    "strict policy/hash/event invariants and mode/execution binding"
+  ],
+  "review": {
+    "kind": "subagent excerpt-only review",
+    "independent_filesystem_review": false,
+    "confirmed_defects_in_excerpt": 0,
+    "limitation": "Reviewer had no filesystem/exec tools; parent inspected implementation and ran checks. This is not an independent repository review.",
+    "suggestions_covered": [
+      "call cap 1",
+      "cancellation during backoff",
+      "deadline after generation",
+      "trace/ledger failure",
+      "partial rerank batch"
+    ]
+  },
+  "sandbox_note": "Checks used approved escalation for child processes, HTTP loopback and Docker. Unique disposable Qdrant projects/volumes were cleaned; persistent DATA-03 candidate index was not changed.",
+  "boundaries": {
+    "new_paid_provider_calls": 0,
+    "new_provider_smoke": false,
+    "providers_in_tests": "HF and OpenAI fixtures",
+    "persistent_index_mutated": false,
+    "external_kotobahub_repo_mutated": false,
+    "public_deployment": false,
+    "http_operation_endpoints_implemented": false,
+    "research_calibration_executed": false,
+    "research_freeze_completed": false,
+    "human_japanese_validation_claimed": false,
+    "untracked_user_docx_and_transcript_untouched": true
+  },
+  "remaining": [
+    "API-01 HTTP/auth/admission/replay integration",
+    "KotobaHub adapter integration in assigned task",
+    "dataset/harness/evaluator, pilot and calibration",
+    "verified served revisions and research freeze gates",
+    "exact Node 24.22.3 verification"
+  ],
+  "file_checksums": [
+    {
+      "path": ".env.example",
+      "sha256": "b0e10f1004a73094ba676d042a538511003407575e3dacaaac372a886cf7a0b8"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "sha256": "ade5b8339e45bf3b46cf035ec8cb3bf459ab152a96de3748fe6145fbb6c1c9a1"
+    },
+    {
+      "path": "PRD.md",
+      "sha256": "a25d07e57d61dea7b619a62574d2eac8cd8c8f169e65d9a803a149b322b9dd33"
+    },
+    {
+      "path": "README.md",
+      "sha256": "59a32feba7ed3bf1b4a78f7f71d117571c1cbebc9590d61b1564adb87cfc4940"
+    },
+    {
+      "path": "TASK_BREAKDOWN.md",
+      "sha256": "394d84c07348288dc937034938bb2e2cc7f5375255dcf94cbccd901c956eaa92"
+    },
+    {
+      "path": "docs/adaptive/ADP-03-execution-policy.md",
+      "sha256": "6860bddfaaed64da73df38f3210bf37c7b261c406bd072e94879ebf36b801ef2"
+    },
+    {
+      "path": "docs/adaptive/evidence/adp-03-baseline-regression.json",
+      "sha256": "5477e572a30ec4ea0f1f772c5be5bb825c22d8eb977284cd5af1444091a2c325"
+    },
+    {
+      "path": "docs/adaptive/evidence/adp-03-baseline-regression.log",
+      "sha256": "520cc8d863b199cf69556bf83e7b7d12615512b7b61f2bb603d705c7d9779218"
+    },
+    {
+      "path": "docs/adaptive/evidence/adp-03-check.log",
+      "sha256": "0a776d2139a52a00c29ceabb31e8ac6614144e1e59331395cc6df4ae951e1cd6"
+    },
+    {
+      "path": "docs/adaptive/evidence/adp-03-deep-regression.json",
+      "sha256": "390e2f8bbd5740c13a59a9146684dd9329878a82ceb0aa1d8465bd589adad68d"
+    },
+    {
+      "path": "docs/adaptive/evidence/adp-03-deep-regression.log",
+      "sha256": "05a54beab4f0d646da7d7ae35daf2ef8fd712c4ad7f90e868d6d6200aa89acb4"
+    },
+    {
+      "path": "docs/adaptive/evidence/adp-03-integration.json",
+      "sha256": "347c28975665d785e374a95a998e47c9ab470a1ff72e1a05b6710bf59bf0cec1"
+    },
+    {
+      "path": "docs/adaptive/evidence/adp-03-integration.log",
+      "sha256": "e99804c23ab84bde1ac564d597dacb6ccf9a001a3a23badda350447ef5a30488"
+    },
+    {
+      "path": "package.json",
+      "sha256": "776c59b011aa16e91065a4861892cfd8bf38bd43e68c5e0c0d2feffea10ee281"
+    },
+    {
+      "path": "src/adapters/hf-inference.ts",
+      "sha256": "66e8bcbb32f349851cbab238e134e876ef32bfd047428c0fdda1e9f6450792c1"
+    },
+    {
+      "path": "src/adapters/openai-responses.ts",
+      "sha256": "458040a1262a36759bf887f2b035ecae757610d0719d4a5a6d607dcb6e4bd71c"
+    },
+    {
+      "path": "src/app.ts",
+      "sha256": "ecb04bd4f79b74fff116f3a56ff921aea3717fdf0f22325b7eac74b9f4fe0c4a"
+    },
+    {
+      "path": "src/generation/baseline.ts",
+      "sha256": "35a86d719a153e8dc01a203309f3817ab5b854a0d50654770798928cd68efe4a"
+    },
+    {
+      "path": "src/generation/generator.ts",
+      "sha256": "93da79aa7c7f88cab97650720aef510cd1159e9155aab2f8dd56760cd1783e79"
+    },
+    {
+      "path": "src/main.ts",
+      "sha256": "3d68c932aa73f4239bc42fc2c8527622dec2ce70e3f2559ce368be13953c23b5"
+    },
+    {
+      "path": "src/observability/adaptive-event.ts",
+      "sha256": "776425192cfc5678e5bf474e01095999248036134a6c3639a833a0323ec22c91"
+    },
+    {
+      "path": "src/observability/events.ts",
+      "sha256": "eac6652724f5abdd64b1d15b83d1407702cf04e3d2a34fc1f472408f0764fbba"
+    },
+    {
+      "path": "src/observability/execution-event.ts",
+      "sha256": "4153a50341517c8126ca477d146283582660c218aaac90f2ad767c4089579c7c"
+    },
+    {
+      "path": "src/pipelines/adaptive-initial.ts",
+      "sha256": "49db4524ae142c1418fcf4f10f2cdfdbfe9ee36542281623ef5a9ac971587df8"
+    },
+    {
+      "path": "src/pipelines/adaptive.ts",
+      "sha256": "c15e35da276655390dcffcbf161cafd44b90a02dd77bd27a728f5c2d2327bce5"
+    },
+    {
+      "path": "src/pipelines/execution-control.ts",
+      "sha256": "697b45177232f720fe8c8f8d715779fb748c7d762480e1aa4b1f3ea4ba08f4cc"
+    },
+    {
+      "path": "src/pipelines/execution-policy.ts",
+      "sha256": "822f971bc54adc401e6f0da7d5207a1c9bea049307eb4fefedd1be0c11774461"
+    },
+    {
+      "path": "src/pipelines/execution.ts",
+      "sha256": "78cc22cb650c0bb0856bd9ebe745e0b5b026ea3270d47d460d33ca6c7b6cc4e5"
+    },
+    {
+      "path": "src/pipelines/metadata.ts",
+      "sha256": "6c782308d3d9926d8d237815bcdc14ba2027220d3cfa773de443c6b123b27d86"
+    },
+    {
+      "path": "src/pipelines/single-stage.ts",
+      "sha256": "c1de765fda4cfedbb755b2a6ddee96dd68651cf921df5549f9e2ee63cfe7f9ad"
+    },
+    {
+      "path": "src/pipelines/steps.ts",
+      "sha256": "c4a21be69b2d6f84e56b671ddb91b43740316ea9dee3500705a81170c2e2a5bb"
+    },
+    {
+      "path": "src/retrieval/stage.ts",
+      "sha256": "f184d0e906d238533fda36086110206ac841c402c147a9c695718b6aa40650b2"
+    },
+    {
+      "path": "src/shared/ports.ts",
+      "sha256": "07cf70f79aa22b8923fe0d22ba28a42a064a87c90e2b75bd77e972e08a2d1af8"
+    },
+    {
+      "path": "tests/adaptive-fixture.ts",
+      "sha256": "f894fab8628e6932afc107030d3c3b403f6c9ab7d15562ef7d3579e01c0c03b6"
+    },
+    {
+      "path": "tests/adaptive.integration.ts",
+      "sha256": "e55fb73c1b14788adcf199657327a169e8cc0dbef62d3a45bd32fe4649729901"
+    },
+    {
+      "path": "tests/execution.test.ts",
+      "sha256": "c6147b090a79d6fc7a3449db14b8a704970ed2912d1f5988c4bd9b9d981e2d4e"
+    },
+    {
+      "path": "tests/generation.test.ts",
+      "sha256": "2549e2e34bd68d84930037ab26c5563f5946628f15bccb68ebc009cf4b458c9f"
+    },
+    {
+      "path": "tests/single-stage-fixture.ts",
+      "sha256": "cba4961f950a6ccc917969afab36fb1a261de8b9b0ea07a8ca85244ae38eca1c"
+    },
+    {
+      "path": "tools/rag-01/run-integration.mjs",
+      "sha256": "a0384848d312667cca49e1d1b97c8415656dc25a75064ff27801b8a90bf3be19"
+    }
+  ]
+}

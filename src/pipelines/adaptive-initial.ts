@@ -74,6 +74,8 @@ export function createAdaptiveInitialStage(
     const controller = new AbortController();
     const signal = AbortSignal.any([context.signal, controller.signal]);
     const checkDeadline = (): void => {
+      context.control?.check();
+
       if (
         !Number.isFinite(remaining) ||
         remaining <= 0 ||
@@ -85,10 +87,12 @@ export function createAdaptiveInitialStage(
     };
 
     checkDeadline();
-    const timer = setTimeout(
-      () => controller.abort(),
-      Math.max(1, remaining - (clock.monotonicMs() - started)),
-    );
+    const timer = context.control
+      ? undefined
+      : setTimeout(
+          () => controller.abort(),
+          Math.max(1, remaining - (clock.monotonicMs() - started)),
+        );
     const callContext: CallContext = {
       executionId: context.executionId,
       deadlineAt: new Date(
@@ -98,6 +102,7 @@ export function createAdaptiveInitialStage(
         ),
       ).toISOString(),
       signal,
+      ...(context.control === undefined ? {} : { control: context.control }),
       accounting: { phase: 'ONLINE', retryKind: 'INITIAL' },
     };
 

@@ -1,18 +1,18 @@
 import { GenerationError } from '@/adapters/openai-responses';
 import { systemClock } from '@/adapters/system-clock';
 import type { createContextBuilder } from '@/context/observed-builder';
-import { createContractValidators, validateRequest } from '@/contracts/validator';
-import type { Operation, Responses } from '@/contracts/validator';
 import type { createOperationGenerator } from '@/generation/generator';
-import { validPayload, validateOutput } from '@/generation/schema';
 import type { ObservationStore } from '@/observability/store';
-import { assessEvidence, readEvidencePolicy } from '@/pipelines/evidence';
+import { readEvidencePolicy } from '@/pipelines/evidence';
 import type { EvidencePolicy } from '@/pipelines/evidence';
-import { pipelineFailure } from '@/pipelines/failure';
-import { singleStageMetadata } from '@/pipelines/metadata';
+import { createExecutionRunner } from '@/pipelines/execution';
+import type { Scheduling } from '@/pipelines/execution-control';
+import { readExecutionPolicy } from '@/pipelines/execution-policy';
+import type { ExecutionPolicy } from '@/pipelines/execution-policy';
 import { retrievalPlan } from '@/pipelines/retrieval-plan';
+import { observedStep, requireEvidence } from '@/pipelines/steps';
 import type { createRetrievalStage } from '@/retrieval/stage';
-import type { CallContext, Clock } from '@/shared/ports';
+import type { Clock } from '@/shared/ports';
 import type { IndexManifest } from '@/storage/index-manifest';
 
 export function createSingleStageRunner(
@@ -23,6 +23,8 @@ export function createSingleStageRunner(
   observations: ObservationStore,
   policy: EvidencePolicy = readEvidencePolicy(),
   clock: Clock = systemClock,
+  executionPolicy: ExecutionPolicy = readExecutionPolicy(),
+  scheduling?: Scheduling,
 ) {
   index = structuredClone(index);
   policy = structuredClone(policy);
@@ -36,204 +38,34 @@ export function createSingleStageRunner(
     RAG_MIN_COVERED_SKILLS: String(policy.minCoveredSkills),
   });
 
-  const validators = createContractValidators();
-  const running = new Set<string>();
-
-  // API-01 owns auth/admission/replay. Once fingerprint-bound, this runner owns terminal closure.
-  return async <K extends Operation>(
-    operation: K,
-    input: unknown,
-    executionId: string,
-    signal: AbortSignal,
-  ): Promise<Responses[K]> => {
-    const started = clock.monotonicMs();
-    const startedAt = clock.now().getTime();
-    const correlation = observations.activeCorrelation(executionId);
-
-    if (correlation.requestId === null) {
-      throw new GenerationError('INVALID_INPUT');
-    }
-
-    observations.assertAdmittedRequest(executionId, {
-      requestId: correlation.requestId,
-      operation,
-      mode: correlation.mode ?? 'SINGLE_STAGE',
-      request: input,
-      experiment: correlation.experiment,
-    });
-
-    if (running.has(executionId)) {
-      throw new GenerationError('IDEMPOTENCY_CONFLICT');
-    }
-
-    running.add(executionId);
-    const controller = new AbortController();
-    const totalSignal = AbortSignal.any([signal, controller.signal]);
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    let remainingMs = Infinity;
-    let span: ReturnType<ObservationStore['startSpan']> | null = null;
-    const expired = (): boolean =>
-      totalSignal.aborted || clock.monotonicMs() - started >= remainingMs;
-    const checkDeadline = (): void => {
-      if (expired()) {
-        throw new GenerationError('TIMEOUT');
-      }
-    };
-    const finishSpan = async (): Promise<void> => {
-      const current = span;
-      span = null;
-      await current?.finish('SUCCESS', null);
-    };
-
-    try {
-      span = observations.startSpan(executionId, 'validation');
-      const admitted = validateRequest(validators, operation, input, clock.now().getTime());
-
-      if (!admitted.ok) {
-        throw new GenerationError(admitted.code);
-      }
-
-      const request = structuredClone(admitted.request);
-
-      if (request.mode !== 'SINGLE_STAGE' || !validPayload(operation, request)) {
-        throw new GenerationError('INVALID_INPUT');
-      }
-
-      if (request.corpus_version !== index.corpusVersion) {
-        throw new GenerationError('SNAPSHOT_MISMATCH');
-      }
-
-      remainingMs = Math.min(request.timeout_ms, Date.parse(request.deadline_at) - startedAt);
-      checkDeadline();
-      timer = setTimeout(
-        () => controller.abort(),
-        Math.max(1, remainingMs - (clock.monotonicMs() - started)),
-      );
-      const deadlineAt = new Date(
-        Math.min(
-          Date.parse(request.deadline_at),
-          clock.now().getTime() + Math.max(0, remainingMs - (clock.monotonicMs() - started)),
-        ),
-      ).toISOString();
-      const context: CallContext = {
-        executionId,
-        signal: totalSignal,
-        deadlineAt,
-        accounting: { phase: 'ONLINE', retryKind: 'INITIAL' },
-      };
+  return createExecutionRunner(
+    'SINGLE_STAGE',
+    async (operation, request, context, state) => {
       const plan = retrievalPlan(operation, request);
-      await finishSpan();
-      checkDeadline();
-
-      // Exactly one round; no router, rewrite or reranker dependency is available to this runner.
+      state.choose('SINGLE_STAGE');
+      state.stage(1);
       const retrieved = await retrieve(plan.query, plan.filter, 1, context);
-      checkDeadline();
-
-      span = observations.startSpan(executionId, 'context');
-      const built = await buildContext(
-        operation,
-        request,
-        retrieved.candidates,
-        plan.targetSkillCodes,
+      const built = await observedStep(observations, context, 'context', () =>
+        buildContext(operation, request, retrieved.candidates, plan.targetSkillCodes, context),
+      );
+      await requireEvidence(
+        policy,
+        retrieved.candidates.length,
+        built,
+        observations,
         context,
+        clock,
       );
-      checkDeadline();
-      const assessment = assessEvidence(policy, retrieved.candidates.length, built);
-      await observations.record(
-        executionId,
-        assessment,
-        Math.max(0, clock.monotonicMs() - started),
+      const result = await observedStep(observations, context, 'generation', () =>
+        generate(operation, request, built.evidence, context),
       );
-      checkDeadline();
 
-      if (assessment.decision === 'REJECT') {
-        throw new GenerationError(
-          built.status === 'INPUT_BUDGET_EXCEEDED' ? 'INVALID_INPUT' : 'INSUFFICIENT_EVIDENCE',
-        );
-      }
-
-      await finishSpan();
-      checkDeadline();
-
-      span = observations.startSpan(executionId, 'generation');
-      const result = await generate(operation, request, built.evidence, context);
-      checkDeadline();
-      await finishSpan();
-
-      span = observations.startSpan(executionId, 'validation');
-      const outputFailure = validateOutput(operation, request, result.data);
-
-      if (outputFailure !== null) {
-        throw new GenerationError(outputFailure);
-      }
-
-      const calls = await observations
-        .executionAccounting(executionId)
-        .catch(() => observations.failExecutionTrace(executionId));
-
-      if (
-        calls.length !== 2 ||
-        calls[0]?.purpose !== 'query' ||
-        calls[1]?.purpose !== operation ||
-        calls.some((call) => call.phase !== 'ONLINE' || call.retryKind !== 'INITIAL')
-      ) {
-        throw new GenerationError('POST_VALIDATION_FAILED');
-      }
-
-      const response: unknown = {
-        schema_version: '1',
-        request_id: request.request_id,
-        execution_id: executionId,
-        mode: 'SINGLE_STAGE',
-        data: result.data,
-        meta: {
-          trace_id: correlation.traceId,
-          corpus_version: request.corpus_version,
-          path: 'SINGLE_STAGE',
-          sources: built.sources,
-          duration_ms: Math.max(0, clock.monotonicMs() - started),
-          ...singleStageMetadata(calls),
-        },
-      };
-
-      if (!validators.responses[operation](response)) {
-        throw new GenerationError('POST_VALIDATION_FAILED');
-      }
-
-      await finishSpan();
-      checkDeadline();
-      await observations.finish(executionId, 'SUCCESS', null);
-
-      return response;
-    } catch (error) {
-      const failure = pipelineFailure(error, expired());
-
-      if (failure.code === 'TRACE_WRITE_FAILED') {
-        await observations.failExecutionTrace(executionId).catch(() => undefined);
-        throw failure;
-      }
-
-      try {
-        if (span !== null) {
-          const current = span;
-          span = null;
-          await current.finish(failure.code === 'TIMEOUT' ? 'TIMEOUT' : 'FAILED', failure.code);
-        }
-
-        await observations.finish(
-          executionId,
-          failure.code === 'TIMEOUT' ? 'TIMEOUT' : 'FAILED',
-          failure.code,
-        );
-      } catch {
-        await observations.failExecutionTrace(executionId).catch(() => undefined);
-        throw new GenerationError('TRACE_WRITE_FAILED');
-      }
-
-      throw failure;
-    } finally {
-      clearTimeout(timer);
-      running.delete(executionId);
-    }
-  };
+      return { data: result.data, sources: built.sources };
+    },
+    observations,
+    clock,
+    executionPolicy,
+    index.corpusVersion,
+    scheduling,
+  );
 }
