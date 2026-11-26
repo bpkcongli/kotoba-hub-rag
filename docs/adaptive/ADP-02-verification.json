@@ -1,0 +1,255 @@
+{
+  "task_id": "ADP-02",
+  "date": "2026-11-26",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "dependencies": [
+    "ADP-01",
+    "INF-02"
+  ],
+  "baseline_commit": "d7cd666831925eb27ead56eb466f5df3aabfcfa7",
+  "runtime": {
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "project_node_pin": "24.22.3",
+    "exact_project_node_pin_verified": false,
+    "project_pin_changed": false
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "exit_code": 0,
+      "runtime_tests": 185,
+      "runtime_tests_before_adp02": 169,
+      "new_adp02_tests": 16,
+      "fast_deep_fixture_combinations": 32,
+      "components": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "log": "evidence/adp-02-check.log"
+    },
+    {
+      "command": "npm run test:adp02",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 2,
+      "log": "evidence/adp-02-integration.log",
+      "metadata": "evidence/adp-02-integration.json",
+      "scope": "real temporary Qdrant, adversarial rewrite retains hard scope, repeated candidates dedup/rerank/selected context/domain success; empty terminal failure"
+    },
+    {
+      "command": "npm run test:rag03",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 2,
+      "log": "evidence/adp-02-baseline-regression.log",
+      "metadata": "evidence/adp-02-baseline-regression.json",
+      "scope": "SINGLE_STAGE and initial ADAPTIVE regression with shared context/failure mapping"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "command": "new report local links, verification checksums and Qdrant cleanup",
+      "result": "PASS",
+      "exit_code": 0,
+      "markdown_links": 1,
+      "file_checksums": 28
+    }
+  ],
+  "sandbox_note": "Final suite used approved escalation for child processes, HTTP loopback and Docker. Providers are fixtures; Docker projects/volumes/ports are unique and disposable; both cleanup records verified.",
+  "implementation": {
+    "runner": "Application.adaptive / createAdaptiveRunner",
+    "operations": [
+      "generate",
+      "evaluate",
+      "normalize",
+      "recommend"
+    ],
+    "paths": [
+      "FAST",
+      "DEEP"
+    ],
+    "deep_policy_version": "adp-02-deep-v1",
+    "calibration_status": "PROVISIONAL",
+    "defaults": {
+      "rewriteEnabled": false,
+      "rewriteModel": "gpt-5.6-terra",
+      "rerankPoolLimit": 10
+    },
+    "caps": {
+      "retrieval_stages": 2,
+      "actual_rewrite_calls": 1,
+      "rerank_pool": 64,
+      "provider_retries": 0,
+      "schema_retries": 0
+    },
+    "initial_parity": "same ADP-01 stage helper, retrieval instance/config/filter/profile, context and generator configuration",
+    "stage2_scope": "original published/corpus/level/allowed skills and embedding configuration; trace scope/config/profile/index fingerprint checked",
+    "merge": "interleave stage ranks; dedup chunk/checksum; reject conflicting metadata; explicit pool drops",
+    "reranker": "BAAI/bge-reranker-v2-m3 / hf-inference, exact ID bijection, finite raw logit, stable ties; no confidence threshold",
+    "final_gate": "shared rag-03-evidence-v1 on selected context after budget, structural provisional; insufficient evidence terminal FAILED without generator",
+    "trace_events": [
+      "deep_reranked",
+      "adaptive_path_completed"
+    ],
+    "initial_prediction_source": "routing_decided from ADP-01; not rewritten",
+    "accounting": "all actual rewrite/query/rerank batches/generator ONLINE/INITIAL; LLM token sum includes rewrite; unknown remains null; separate indexing/judge/hosting",
+    "lifecycle": "fingerprint binding/concurrent invocation guard/terminal response; failure or timeout explicit; sink/ledger failure UNKNOWN; no fallback"
+  },
+  "verification_scope": [
+    "32 operation x EN/ID x N5/N4 x FAST/DEEP fixtures validate schema/domain/citations/actual counters",
+    "rewrite may change query text only, cannot broaden filter or mutate generator request",
+    "merge identity conflicts/duplicate chunk/content/pool caps; rerank unordered IDs/negative logits/stable ties and invalid mapping",
+    "empty or insufficient final evidence, invalid request/corpus/scope, rewrite schema/429, no retries/fallback",
+    "first rerank batch HTTP200 then second HTTP429 retained as two billed/unknown attempts, no generation",
+    "sink failure on deep_reranked/path/terminal yields UNKNOWN; deadline during stage2 stops before rerank",
+    "concurrent invocation and terminal replay cannot create another sequence",
+    "real Qdrant filtered retrieval on stage1/stage2, domain output success or insufficient terminal, baseline regression"
+  ],
+  "review": {
+    "mode": "excerpt-only subagent plus parent source review and behavior tests",
+    "independent_filesystem_review": false,
+    "limitation": "Reviewer had no filesystem/exec tools; no independent source approval or Japanese/human validation claimed.",
+    "suggestion_addressed": "partial rerank batch failure retained both actual attempts in targeted tests; all active Qdrant hard filters verified on real disposable server"
+  },
+  "external_actions": {
+    "paid_provider_calls": 0,
+    "public_deployment": false,
+    "persistent_index_mutated": false,
+    "other_repository_mutated": false,
+    "main_experiment": false,
+    "freeze": false
+  },
+  "remaining": [
+    "ADP-03 unified retry/deadline/cancellation/schema retry fairness across modes",
+    "API-01 operation HTTP/auth/admission/replay envelopes",
+    "DS/EVAL/EXP harness and pilot-only threshold/pool calibration",
+    "exact Node 24.22.3 verification",
+    "served provider/model revisions and existing research freeze gates unchanged"
+  ],
+  "files": [
+    {
+      "path": "src/pipelines/adaptive.ts",
+      "sha256": "453b314c9024164bf3951c4bec121210b52f1d357e28198555979263c9719c97"
+    },
+    {
+      "path": "src/pipelines/deep-candidates.ts",
+      "sha256": "59c0ce9dae4d6ece96381d653466a8e92abb8a54ff313da53a8b0aa2053d9000"
+    },
+    {
+      "path": "src/pipelines/deep-config.ts",
+      "sha256": "da7a8f76d0cb83a3937d9b881501f8cd8500e86c85459c80010b344a59eabb53"
+    },
+    {
+      "path": "src/pipelines/rewrite.ts",
+      "sha256": "5551c43118b88033641c86c11d3e601e2156b6ff4695e39345dd41dd7bc300bd"
+    },
+    {
+      "path": "src/pipelines/failure.ts",
+      "sha256": "32a6a7f0efe8379f163fa2d036d9ca4082edee5ecb7c5ae29b7c180c66d75587"
+    },
+    {
+      "path": "src/pipelines/metadata.ts",
+      "sha256": "4859409fb5463ed1ebe2013dc156553ec038468acf604420a5b0d84eef9a2098"
+    },
+    {
+      "path": "src/pipelines/single-stage.ts",
+      "sha256": "678b9feafe60bca1bf74f7915a3f21399e665cb2c996f4f4b717937983757eb0"
+    },
+    {
+      "path": "src/observability/adaptive-event.ts",
+      "sha256": "528e2d489444a86e0305761b96593180746808a97c7b40cbcb8f2623fbe39976"
+    },
+    {
+      "path": "src/observability/events.ts",
+      "sha256": "ee7a0053cd1cb5ab100371f3f577b7e53139a347e6edc795cb572e51f04e81aa"
+    },
+    {
+      "path": "src/observability/store.ts",
+      "sha256": "a54db1d41342fc70dbac6702a7007eaffe00cf064ed37556a4ba06dd05c091a4"
+    },
+    {
+      "path": "src/context/builder.ts",
+      "sha256": "0f26375cae3ba639a6bbfcc5fe9f824f124accaf645120139993b4c109c1fadc"
+    },
+    {
+      "path": "src/context/observed-builder.ts",
+      "sha256": "fa3db17729be73080a4595e2a91c6a00b3effa7188ccf15d791a9d75fe68a81d"
+    },
+    {
+      "path": "src/retrieval/types.ts",
+      "sha256": "b5121b3fc2324523ad3e092fa68f1bb06619d50c67f9c5d0e44ce290ad0fd79f"
+    },
+    {
+      "path": "src/shared/ports.ts",
+      "sha256": "e67089f69965d23cb010d198b902f02e2c377325791adb8608d2e5009a8d6137"
+    },
+    {
+      "path": "src/app.ts",
+      "sha256": "0b63b9149073822025468fb21a88682b6960879e94434c4055e67a9772d5fd1a"
+    },
+    {
+      "path": "src/main.ts",
+      "sha256": "74e31b60f975907e28a99b2e1f78f894f99ab746fea6fc07a499fe38809a5e6d"
+    },
+    {
+      "path": "tests/adaptive-fixture.ts",
+      "sha256": "8382ae08ccc8e04c52709f792d946439c9ec579c52c54a0a89307d3afa5b5863"
+    },
+    {
+      "path": "tests/adaptive.test.ts",
+      "sha256": "5f5177f7a6f3c18c0590dd1c929ff7930673c94d67fba7b61e24522052b94ff1"
+    },
+    {
+      "path": "tests/adaptive.integration.ts",
+      "sha256": "b11cea2e18933a74370b1d8114c7ddbcc90eea046709725f28eb4d94410d2f9f"
+    },
+    {
+      "path": "tests/single-stage-fixture.ts",
+      "sha256": "e27563996a4ea31ac65f503097309c91ac649008bd1988771d74a8e51c4f5437"
+    },
+    {
+      "path": "tools/rag-01/run-integration.mjs",
+      "sha256": "b340034b4978a8f6b081e2ca61573d0363047358a2da6c3260f87b8d132be837"
+    },
+    {
+      "path": "package.json",
+      "sha256": "d60cb873ad8808a476a880b3a7b8262e29c1bfd94c084066c6029f0d945d69d3"
+    },
+    {
+      "path": ".env.example",
+      "sha256": "f15fd9c530f962b6eb02d7a1737ac471d36334519f7551c3e0b32fde8715a270"
+    },
+    {
+      "path": "docs/adaptive/ADP-02-deep-path.md",
+      "sha256": "4a72319260a36b7bfc0b5faec18e3a3d6b8639ab1086ee6bca683b897b466a28"
+    },
+    {
+      "path": "PRD.md",
+      "sha256": "c9a90332e25978d15ff428d89a294a12a8eeb5cbe1ba6cffce69f9c24cf315be"
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "sha256": "43556ea72c818f75adef25df97816309114bce1b71afe12a611776eaf7c08316"
+    },
+    {
+      "path": "README.md",
+      "sha256": "a3b0f1bbe22a48d5a13ad2cad529800dbb71ab69ab7cfe08cdc28930d55f1d85"
+    },
+    {
+      "path": "TASK_BREAKDOWN.md",
+      "sha256": "8dcc3500eb6335e9dc48ced9adbb3388208a1d134c1c49496b9f0d834d078794"
+    }
+  ]
+}

@@ -57,3 +57,60 @@ export function singleStageMetadata(
     },
   };
 }
+
+export function adaptiveMetadata(
+  calls: readonly CallAccounting[],
+  stageCount: 1 | 2,
+): Pick<Meta, 'usage' | 'cost' | 'counters'> {
+  const llm = calls.filter((row) => !['query', 'rerank'].includes(row.purpose));
+  const query = calls.filter((row) => row.purpose === 'query');
+  const rerank = calls.filter((row) => row.purpose === 'rerank');
+  const sum = (rows: readonly CallAccounting[]): string | null =>
+    rows.every((row) => row.cost.kind === 'PER_CALL' && row.cost.totalUsd !== null)
+      ? sumMoney(
+          rows.flatMap((row) =>
+            row.cost.kind === 'PER_CALL' && row.cost.totalUsd !== null ? [row.cost.totalUsd] : [],
+          ),
+        )
+      : null;
+  const known = sumMoney(
+    calls.flatMap((row) => (row.cost.kind === 'PER_CALL' ? [row.cost.knownSubtotalUsd] : [])),
+  );
+  const total = sum(calls);
+  const tokens = (
+    key: 'inputTokens' | 'cachedInputTokens' | 'outputTokens' | 'totalTokens',
+  ): number | null =>
+    llm.every((row) => row.usage?.[key] !== null && row.usage?.[key] !== undefined)
+      ? llm.reduce((acc, row) => acc + (row.usage?.[key] ?? 0), 0)
+      : null;
+  const amount = (rows: readonly CallAccounting[]): number | null => {
+    const value = sum(rows);
+    return value === null ? null : Number(value);
+  };
+
+  return {
+    usage: {
+      input_tokens: tokens('inputTokens'),
+      cached_input_tokens: tokens('cachedInputTokens'),
+      output_tokens: tokens('outputTokens'),
+      total_tokens: tokens('totalTokens'),
+    },
+    cost: {
+      currency: 'USD',
+      inference_total_usd: amount(llm),
+      query_embedding_usd: amount(query),
+      rerank_usd: amount(rerank),
+      total_online_usd: total === null ? null : Number(total),
+      known_subtotal_usd: Number(known),
+      status: total !== null ? 'KNOWN' : Number(known) > 0 ? 'PARTIAL' : 'UNKNOWN',
+    },
+    counters: {
+      retrieval_stage_count: stageCount,
+      rewrite_call_count: calls.filter((row) => row.purpose === 'rewrite').length,
+      rerank_call_count: rerank.length,
+      provider_retry_count: calls.filter((row) => row.retryKind === 'PROVIDER_RETRY').length,
+      schema_retry_count: calls.filter((row) => row.retryKind === 'SCHEMA_RETRY').length,
+      model_call_count: calls.length,
+    },
+  };
+}

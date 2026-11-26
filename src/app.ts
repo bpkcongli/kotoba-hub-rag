@@ -17,9 +17,13 @@ import type { ContractValidators } from '@/contracts/validator';
 import { createBaselineRunner } from '@/generation/baseline';
 import { createOperationGenerator } from '@/generation/generator';
 import { ObservationStore } from '@/observability/store';
+import { createAdaptiveRunner } from '@/pipelines/adaptive';
 import { createAdaptiveInitialStage } from '@/pipelines/adaptive-initial';
+import { readDeepPolicy } from '@/pipelines/deep-config';
+import type { DeepPolicy } from '@/pipelines/deep-config';
 import { readEvidencePolicy } from '@/pipelines/evidence';
 import type { EvidencePolicy } from '@/pipelines/evidence';
+import { createQueryRewriter } from '@/pipelines/rewrite';
 import { readRouterPolicy } from '@/pipelines/router';
 import type { RouterPolicy } from '@/pipelines/router';
 import { createSingleStageRunner } from '@/pipelines/single-stage';
@@ -47,6 +51,7 @@ export interface Application {
   readonly contextBuilder: ReturnType<typeof createContextBuilder> | null;
   readonly singleStage: ReturnType<typeof createSingleStageRunner> | null;
   readonly adaptiveInitialStage: ReturnType<typeof createAdaptiveInitialStage> | null;
+  readonly adaptive: ReturnType<typeof createAdaptiveRunner> | null;
 }
 
 export function createApplication(
@@ -60,6 +65,7 @@ export function createApplication(
   contextConfig: ContextConfig | null = openAiConfig ? readContextConfig({}, openAiConfig) : null,
   evidencePolicy: EvidencePolicy = readEvidencePolicy(),
   routerPolicy: RouterPolicy = readRouterPolicy(),
+  deepPolicy: DeepPolicy = readDeepPolicy(),
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -216,6 +222,23 @@ export function createApplication(
         )
       : null;
 
+  const adaptive =
+    retrievalConfig && retrievalStage && contextBuilder && generator && openAiConfig && inference
+      ? createAdaptiveRunner(
+          retrievalConfig.index,
+          retrievalStage,
+          contextBuilder,
+          createOperationGenerator(generator, openAiConfig),
+          createQueryRewriter(generator),
+          inference.reranker,
+          observations,
+          evidencePolicy,
+          routerPolicy,
+          deepPolicy,
+          clock,
+        )
+      : null;
+
   server.addHook('onClose', async () => {
     inferenceClosed = true;
     inference?.close();
@@ -243,5 +266,6 @@ export function createApplication(
     contextBuilder,
     singleStage,
     adaptiveInitialStage,
+    adaptive,
   };
 }

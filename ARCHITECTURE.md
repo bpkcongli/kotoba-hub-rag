@@ -1,6 +1,6 @@
 # Architecture — KotobaHub RAG
 
-Versi 0.20 · 26 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. SINGLE_STAGE internal tersedia pada RAG-03; router/initial stage ADP-01 tersedia, deep path/runner adaptive dan endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
+Versi 0.21 · 26 November 2026 · Status: desain dengan runtime health-only BOOT-01 dan adapter HTTP HF INF-02 serta Compose/lifecycle Qdrant STORE-01 opt-in dan preparation corpus offline DATA-02. [ADR-002](docs/ADR-002-hf-dense-optional-sparse.md) memilih HF Serverless, dense wajib/sparse opsional; [protokol v2-dense](docs/research/RES-02-dense-amendment.md) belum freeze. SINGLE_STAGE internal tersedia pada RAG-03; router ADP-01 dan runner/deep path internal ADP-02 tersedia; retry terpadu ADP-03 serta endpoint operasi tetap rancangan; INF-01 DONE menurut acceptance pengguna 24 November 2026; metadata provider yang belum terkonfirmasi tetap unknown.
 
 ## 1. Dasar keputusan
 
@@ -307,6 +307,16 @@ Kontrak v1 membatasi maksimum dua retrieval stage total dan satu actual rewrite 
 
 Rewrite mengubah query pencarian, bukan target skill, difficulty, locale, atau kebenaran jawaban. Candidate reference answer dari kontrak grading adalah konteks domain yang sah; jawaban acuan rahasia milik dataset evaluasi tetap terpisah. Model rewrite, jika dipakai, dipin dan biaya/latensinya masuk request total.
 
+### Implementasi ADP-02
+
+[Runner ADAPTIVE internal ADP-02](docs/adaptive/ADP-02-deep-path.md) tersedia sebagai `Application.adaptive`. Runner memiliki admission fingerprint binding, invocation guard dan terminal lifecycle, memakai helper initial ADP-01 serta generator/context/gate bersama. FAST satu round; DEEP maksimal dua round total dan satu optional actual rewrite. Default `ADAPTIVE_REWRITE_ENABLED=false`, `ADAPTIVE_REWRITE_MODEL=gpt-5.6-terra`, `ADAPTIVE_RERANK_POOL_LIMIT=10` pada policy PROVISIONAL `adp-02-deep-v1`; model rewrite dicatat terpisah tanpa mengubah pemetaan model generator domain. Rewrite aktif memakai Responses dengan schema strict query saja, maksimal 8192 karakter; filter/corpus/level/skill/difficulty/locale domain tidak dapat diganti model.
+
+Stage 2 memakai instance/configuration retrieval awal, hard filter asli dan profil DENSE aktif. Tanpa rewrite, query/pool per-round tetap sama; tidak ada perluasan limit tersembunyi. Merge menginterleave rank tiap stage, dedup chunk/checksum dan menolak identitas konflik; pool dibatasi 1–64 sebelum BGE rerank. Skor finite/ID bijektif wajib, raw logit HF negatif valid, ties stabil; tidak dinormalisasi menjadi confidence. `ContextCandidate` membawa score type reranker tanpa mengubah schema retrieval trace. Builder bersama mengutamakan coverage lalu urutan rank, menjaga chunk utuh dan selected citations. Gate RAG-03 sesudah packing tetap struktural; empty/low evidence terminal INSUFFICIENT_EVIDENCE tanpa generation/fallback.
+
+Event `deep_reranked` menyimpan pool/drop/score dan hashes tanpa raw text; `adaptive_path_completed` menyimpan path aktual/counters/outcome, sementara initial prediction tetap pada `routing_decided`. Final path null bila initial helper tidak mengembalikan state/cabang belum dimulai, meskipun prediction sempat ditulis. Semua HTTP batch reranker, query embedding, optional rewrite dan generator masuk accounting sekali. Counter rerank menghitung actual model attempts, bukan invocation port; missing usage/cost tetap null. Sink/ledger failure UNKNOWN; terminal replay tidak membuat call baru. Error mapping dan context dipakai bersama RAG-03 tanpa mengganti baseline.
+
+Satu attempt per tahap, nol provider/schema retry. Clock monotonic/signal runner diteruskan seluruh dependency dan deadline diperiksa sebelum finalisasi; operasi durable filesystem tidak dapat dibatalkan atomik seperti HTTP. Penyatuan policy retry/deadline/cancellation lintas mode tetap ADP-03. Checks 185 test dan dua integrasi deep plus dua regresi baseline Qdrant sementara lulus tanpa paid calls; Node aktual 24.22.1 berbeda dari pin 24.22.3. Runtime HTTP masih health-only; API/auth/replay envelope, pilot serta freeze belum tersedia dari task ini.
+
 ## 8. Context dan generasi
 
 Pemilihan model mengikuti pemetaan operasi pada `AiServiceImpl` KotobaHub saat ini:
@@ -318,7 +328,7 @@ Pemilihan model mengikuti pemetaan operasi pada `AiServiceImpl` KotobaHub saat i
 | `SUMMARIZE_PLACEMENT` | `OPENAI_NORMALIZATION_MODEL` | `gpt-5.6-luna` |
 | `GENERATE_STUDY_RECOMMENDATION` | `OPENAI_GENERATION_MODEL` | `gpt-5.6-terra` |
 
-Pemetaan model dan parameter per operasi harus sama pada `LLM_ONLY`, `SINGLE_STAGE`, dan `ADAPTIVE`. Model rewrite dan evaluator, jika digunakan, dikonfigurasi serta dicatat terpisah dari dua konfigurasi di atas.
+Pemetaan model dan parameter per operasi harus sama pada `LLM_ONLY`, `SINGLE_STAGE`, dan `ADAPTIVE`. Model rewrite dicatat terpisah melalui policy deep (Terra terpin pada ADP-02); evaluator tetap konfigurasi terpisah dari dua pemetaan generator di atas.
 
 Main prompt memisahkan instruksi sistem, context bundle, retrieved evidence dengan source IDs, dan data learner. Ketiga mode memakai template/operation schema yang sama, dengan retrieved evidence kosong pada baseline. Snapshot katalog yang diizinkan tetap menjadi hard constraint.
 

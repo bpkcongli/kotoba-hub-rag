@@ -5,13 +5,18 @@ import { setTimeout as delay } from 'node:timers/promises';
 
 const root = new URL('../../', import.meta.url);
 const singleStage = process.argv[2] === '--single-stage';
-if (process.argv.length > (singleStage ? 3 : 2)) {
+const adaptive = process.argv[2] === '--adaptive';
+if (process.argv.length > 3 || (process.argv[2] !== undefined && !singleStage && !adaptive)) {
   throw new Error('Argument integration runner tidak valid');
 }
-const task = singleStage ? 'RAG-03' : 'RAG-01';
-const artifactPath = singleStage ? '../../artifacts/rag-03/' : '../../artifacts/rag-01/';
+const task = adaptive ? 'ADP-02' : singleStage ? 'RAG-03' : 'RAG-01';
+const artifactPath = adaptive
+  ? '../../artifacts/adp-02/'
+  : singleStage
+    ? '../../artifacts/rag-03/'
+    : '../../artifacts/rag-01/';
 const compose = new URL('../../compose.yaml', import.meta.url).pathname;
-const project = `${singleStage ? 'rag03' : 'rag01'}-${process.pid}-${randomBytes(4).toString('hex')}`;
+const project = `${adaptive ? 'adp02' : singleStage ? 'rag03' : 'rag01'}-${process.pid}-${randomBytes(4).toString('hex')}`;
 const env = { ...process.env, QDRANT_HTTP_PORT: '0' };
 const args = ['compose', '--file', compose, '--project-name', project];
 
@@ -73,7 +78,11 @@ try {
       '--import',
       'tsx',
       '--test',
-      singleStage ? 'tests/single-stage.integration.ts' : 'tests/retrieval.integration.ts',
+      adaptive
+        ? 'tests/adaptive.integration.ts'
+        : singleStage
+          ? 'tests/single-stage.integration.ts'
+          : 'tests/retrieval.integration.ts',
     ],
     {
       cwd: root,

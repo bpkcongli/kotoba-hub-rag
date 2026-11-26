@@ -73,7 +73,7 @@ export interface RerankerPort {
 export interface GeneratorPort {
   generate(
     input: {
-      readonly operation: Operation;
+      readonly operation: Operation | 'rewrite';
       readonly model: string;
       readonly instructions: string;
       readonly input: string;

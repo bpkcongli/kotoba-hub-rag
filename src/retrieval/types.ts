@@ -21,6 +21,11 @@ export interface RetrievedEvidence extends Omit<Evidence, 'scoreType'>, RankedHi
   readonly tokenCount: number;
 }
 
+// Context can receive cross-encoder scores while retrieval traces retain their branch score types.
+export type ContextCandidate = Omit<RetrievedEvidence, 'scoreType'> & {
+  readonly scoreType: string;
+};
+
 export interface RetrievalResult {
   readonly candidates: readonly RetrievedEvidence[];
   readonly dense: readonly RankedHit[];

@@ -6,7 +6,7 @@ import type { ContextConfig } from '@/context/types';
 import type { Operation, Requests } from '@/contracts/validator';
 import { validPayload } from '@/generation/schema';
 import type { ObservationStore } from '@/observability/store';
-import type { RetrievedEvidence } from '@/retrieval/types';
+import type { ContextCandidate } from '@/retrieval/types';
 import type { CallContext, Clock } from '@/shared/ports';
 
 export function createContextBuilder(
@@ -28,7 +28,7 @@ export function createContextBuilder(
   return async (
     operation: Operation,
     request: Requests[Operation],
-    candidates: readonly RetrievedEvidence[],
+    candidates: readonly ContextCandidate[],
     targetSkillCodes: readonly string[],
     context: CallContext,
   ) => {

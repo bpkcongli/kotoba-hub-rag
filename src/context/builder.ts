@@ -11,7 +11,7 @@ import type { Operation, Requests } from '@/contracts/validator';
 import { generationInput } from '@/generation/input';
 import { aiInstructions } from '@/generation/prompt';
 import { operationSchema } from '@/generation/schema';
-import type { RetrievedEvidence } from '@/retrieval/types';
+import type { ContextCandidate } from '@/retrieval/types';
 import type { Evidence } from '@/shared/ports';
 
 const hash = (text: string): string => createHash('sha256').update(text).digest('hex');
@@ -28,7 +28,7 @@ export function buildContext(
   config: ContextConfig,
   operation: Operation,
   request: Requests[Operation],
-  candidates: readonly RetrievedEvidence[],
+  candidates: readonly ContextCandidate[],
   targetSkillCodes: readonly string[],
 ): BuiltContext {
   const targets = [...new Set(targetSkillCodes)];
@@ -60,8 +60,8 @@ export function buildContext(
     chunkId: row.chunkId,
   }));
   const dropped: (ContextSource & { reason: DropReason })[] = [];
-  const unique: { row: RetrievedEvidence; ref: ContextSource }[] = [];
-  const chunks = new Map<string, RetrievedEvidence>();
+  const unique: { row: ContextCandidate; ref: ContextSource }[] = [];
+  const chunks = new Map<string, ContextCandidate>();
   const contents = new Set<string>();
 
   for (const [index, row] of candidates.entries()) {

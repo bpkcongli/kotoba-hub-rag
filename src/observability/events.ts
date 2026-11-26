@@ -4,6 +4,13 @@ import type { ContextTrace } from '@/context/types';
 import type { Mode, Operation } from '@/contracts/validator';
 import { callAccountingSchema, parseCallAccounting } from '@/observability/accounting-schema';
 import type { CallAccounting } from '@/observability/accounting-types';
+import type { AdaptivePathTrace, DeepRerankTrace } from '@/observability/adaptive-event';
+import {
+  adaptivePathSchema,
+  deepRerankSchema,
+  validAdaptivePath,
+  validDeepRerank,
+} from '@/observability/adaptive-event';
 import { contextEventSchema, validContextTrace } from '@/observability/context-event';
 import { evidenceEventSchema, validEvidenceAssessment } from '@/observability/evidence-event';
 import { retrievalEventSchema, validRetrievalTrace } from '@/observability/retrieval-event';
@@ -51,6 +58,8 @@ export type TraceCode =
   | 'CRASH_RECOVERY';
 
 export type EventData =
+  | DeepRerankTrace
+  | AdaptivePathTrace
   | RoutingDecision
   | EvidenceAssessment
   | ContextTrace
@@ -60,7 +69,8 @@ export type EventData =
       readonly kind: 'span_completed';
       readonly spanId: string;
       readonly parentSpanId: string | null;
-      readonly stage: 'retrieval' | 'routing' | 'context' | 'rewrite' | 'generation' | 'validation';
+      readonly stage:
+        'retrieval' | 'routing' | 'context' | 'rewrite' | 'rerank' | 'generation' | 'validation';
       readonly outcome: 'SUCCESS' | 'FAILED' | 'TIMEOUT';
       readonly code: TraceCode | null;
     }
@@ -211,11 +221,23 @@ export const traceEventSchema = object({
       contextEventSchema,
       evidenceEventSchema,
       routingEventSchema,
+      deepRerankSchema,
+      adaptivePathSchema,
       object({
         kind: { const: 'span_completed' },
         spanId: uuid,
         parentSpanId: nullable(uuid),
-        stage: { enum: ['retrieval', 'routing', 'context', 'rewrite', 'generation', 'validation'] },
+        stage: {
+          enum: [
+            'retrieval',
+            'routing',
+            'context',
+            'rewrite',
+            'rerank',
+            'generation',
+            'validation',
+          ],
+        },
         outcome: { enum: ['SUCCESS', 'FAILED', 'TIMEOUT'] },
         code,
       }),
@@ -248,6 +270,17 @@ export function parseTraceEvent(value: unknown): TraceEvent {
   }
 
   const event = value;
+
+  if (
+    (event.data.kind === 'deep_reranked' || event.data.kind === 'adaptive_path_completed') &&
+    (event.schemaVersion !== 'obs-02-v1' ||
+      event.correlation.mode !== 'ADAPTIVE' ||
+      (event.data.kind === 'deep_reranked'
+        ? !validDeepRerank(event.data)
+        : !validAdaptivePath(event.data)))
+  ) {
+    throw new Error('Invariant adaptive trace tidak valid');
+  }
 
   if (
     event.data.kind === 'routing_decided' &&

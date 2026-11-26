@@ -512,7 +512,7 @@ export class ObservationStore {
         purpose: attempt.operation,
         provider: 'openai',
         model: attempt.model,
-        configVersion: 'base-01-v1',
+        configVersion: attempt.operation === 'rewrite' ? 'adp-02-rewrite-v1' : 'base-01-v1',
         configurationHash: hashValue(
           canonical({
             ...attempt.configuration,

@@ -3,6 +3,7 @@ import { readOpenAiConfig } from '@/adapters/openai-config';
 import { systemClock } from '@/adapters/system-clock';
 import { createApplication } from '@/app';
 import { readContextConfig } from '@/context/config';
+import { readDeepPolicy } from '@/pipelines/deep-config';
 import { readEvidencePolicy } from '@/pipelines/evidence';
 import { readRouterPolicy } from '@/pipelines/router';
 import { readRetrievalConfig } from '@/retrieval/config';
@@ -19,6 +20,7 @@ async function main(): Promise<void> {
   const contextConfig = openAiConfig ? readContextConfig(process.env, openAiConfig) : null;
   const evidencePolicy = readEvidencePolicy(process.env);
   const routerPolicy = readRouterPolicy(process.env);
+  const deepPolicy = readDeepPolicy(process.env);
 
   const { server } = createApplication(
     config,
@@ -31,6 +33,7 @@ async function main(): Promise<void> {
     contextConfig,
     evidencePolicy,
     routerPolicy,
+    deepPolicy,
   );
 
   let closing = false;

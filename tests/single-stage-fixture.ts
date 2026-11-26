@@ -35,7 +35,7 @@ export async function setupSingleStage(
     fixtureIndex?: number;
     points?:
       | readonly ReturnType<typeof hit>[]
-      | ((index: ReturnType<typeof manifest>) => readonly ReturnType<typeof hit>[]);
+      | ((index: ReturnType<typeof manifest>, round: number) => readonly ReturnType<typeof hit>[]);
     hfFetch?: typeof fetch;
     qdrantFetch?: typeof fetch;
     generatorFetch?: typeof fetch;
@@ -85,7 +85,9 @@ export async function setupSingleStage(
   const defaultTransport = transport(index, () =>
     Response.json({
       result: {
-        points: (typeof options.points === 'function' ? options.points(index) : options.points) ?? [
+        points: (typeof options.points === 'function'
+          ? options.points(index, requests.search.length)
+          : options.points) ?? [
           hit(index, 1, 0.8, {
             skill_codes: [skill],
             jlpt_level: request.payload.context.targetLevel,
@@ -170,7 +172,19 @@ export async function setupSingleStage(
     await rm(directory, { recursive: true, force: true });
   });
 
-  return { directory, observations, index, requests, run, request, build, generate, stage };
+  return {
+    directory,
+    observations,
+    index,
+    requests,
+    run,
+    request,
+    build,
+    generate,
+    stage,
+    generator,
+    hf,
+  };
 }
 
 export async function trace(directory: string, executionId: string) {
