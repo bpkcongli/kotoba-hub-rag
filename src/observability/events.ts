@@ -7,7 +7,9 @@ import type { CallAccounting } from '@/observability/accounting-types';
 import { contextEventSchema, validContextTrace } from '@/observability/context-event';
 import { evidenceEventSchema, validEvidenceAssessment } from '@/observability/evidence-event';
 import { retrievalEventSchema, validRetrievalTrace } from '@/observability/retrieval-event';
+import { routingEventSchema, validRoutingDecision } from '@/observability/routing-event';
 import type { EvidenceAssessment } from '@/pipelines/evidence';
+import type { RoutingDecision } from '@/pipelines/router';
 import type { RetrievalTrace } from '@/retrieval/types';
 
 export interface Correlation {
@@ -49,6 +51,7 @@ export type TraceCode =
   | 'CRASH_RECOVERY';
 
 export type EventData =
+  | RoutingDecision
   | EvidenceAssessment
   | ContextTrace
   | RetrievalTrace
@@ -207,6 +210,7 @@ export const traceEventSchema = object({
       retrievalEventSchema,
       contextEventSchema,
       evidenceEventSchema,
+      routingEventSchema,
       object({
         kind: { const: 'span_completed' },
         spanId: uuid,
@@ -244,6 +248,15 @@ export function parseTraceEvent(value: unknown): TraceEvent {
   }
 
   const event = value;
+
+  if (
+    event.data.kind === 'routing_decided' &&
+    (event.schemaVersion !== 'obs-02-v1' ||
+      event.correlation.mode !== 'ADAPTIVE' ||
+      !validRoutingDecision(event.data))
+  ) {
+    throw new Error('Invariant routing decision tidak valid');
+  }
 
   if (
     event.data.kind === 'evidence_assessed' &&

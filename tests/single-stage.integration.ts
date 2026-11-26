@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -23,6 +24,7 @@ import { createContextBuilder } from '@/context/observed-builder';
 import { createContractValidators } from '@/contracts/validator';
 import { createOperationGenerator } from '@/generation/generator';
 import { ObservationStore } from '@/observability/store';
+import { createAdaptiveInitialStage } from '@/pipelines/adaptive-initial';
 import { createSingleStageRunner } from '@/pipelines/single-stage';
 import { retrievalConfig } from '@/retrieval/config';
 import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
@@ -36,7 +38,7 @@ assert.ok(url, 'Gunakan npm run test:rag03 untuk Qdrant sementara');
 assert.equal(new URL(url).hostname, '127.0.0.1');
 
 for (const empty of [false, true]) {
-  await test(`SINGLE_STAGE Qdrant nyata: ${empty ? 'empty evidence gagal tanpa generation' : 'filtered retrieval ke selected context/generation/terminal'}`, async (t) => {
+  await test(`SINGLE_STAGE/ADAPTIVE initial Qdrant nyata: ${empty ? 'empty evidence gagal baseline, route DEEP adaptive' : 'filtered retrieval/context parity, route FAST adaptive'}`, async (t) => {
     const directory = await mkdtemp(join(tmpdir(), 'rag03-integration-'));
     const observations = new ObservationStore(directory);
     const index = parseIndexManifest({
@@ -109,10 +111,11 @@ for (const empty of [false, true]) {
       observations,
     );
 
+    const build = createContextBuilder(readContextConfig({}, settings), settings, observations);
     const run = createSingleStageRunner(
       index,
       retrieve,
-      createContextBuilder(readContextConfig({}, settings), settings, observations),
+      build,
       createOperationGenerator(generator, settings),
       observations,
     );
@@ -155,5 +158,35 @@ for (const empty of [false, true]) {
     assert.ok(terminal?.data.kind === 'terminal');
     assert.equal(terminal.data.outcome, empty ? 'FAILED' : 'SUCCESS');
     assert.equal((await observations.inspect())[0]?.traceIntegrity, 'VALID');
+
+    const adaptive = structuredClone(request);
+    adaptive.mode = 'ADAPTIVE';
+    adaptive.request_id = randomUUID();
+    adaptive.payload.metadata.requestId = adaptive.request_id;
+    const adaptiveId = await admit(observations, 'generate', adaptive);
+    const initial = createAdaptiveInitialStage(index, retrieve, build, observations);
+
+    const result = await initial('generate', adaptive, {
+      executionId: adaptiveId,
+      signal,
+      deadlineAt: adaptive.deadline_at,
+    });
+
+    assert.equal(result.decision.initialDecision, empty ? 'DEEP' : 'FAST');
+    assert.equal(result.decision.finalPath, null);
+    assert.equal(result.decision.retrievalConfigurationHash, retrieval[0].data.configurationHash);
+    assert.deepEqual(result.retrieved.trace.scope, retrieval[0].data.scope);
+    assert.equal(result.retrieved.trace.queryHash, retrieval[0].data.queryHash);
+    assert.deepEqual(
+      result.built.sources,
+      empty ? [] : [{ source_id: 'source-1', chunk_id: 'chunk-1' }],
+    );
+    assert.equal(embeddingCalls, 2);
+    assert.equal(generationCalls, empty ? 0 : 1);
+    assert.equal((await observations.executionAccounting(adaptiveId)).length, 1);
+
+    // Test caller closes the partial execution explicitly; this is not an adaptive operation result.
+    await observations.finish(adaptiveId, 'FAILED', 'INSUFFICIENT_EVIDENCE');
+    assert.ok((await observations.inspect()).every((row) => row.traceIntegrity === 'VALID'));
   });
 }

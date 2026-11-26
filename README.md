@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 26 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 26 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik serta initial stage internal; deep path/runner adaptive lengkap belum tersedia. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -23,6 +23,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [RAG-01](docs/retrieval/RAG-01-retrieval.md) | Retrieval DENSE terfilter, HYBRID RRF eksplisit dan trace skor mentah; verifikasi Qdrant sementara tanpa paid call |
 | [RAG-02](docs/retrieval/RAG-02-context.md) | Context builder bersama, chunk utuh, budget konservatif, selected/dropped sources dan trace; konfigurasi dan batas verifikasi |
 | [RAG-03](docs/retrieval/RAG-03-single-stage.md) | SINGLE_STAGE internal, satu retrieval round, low-evidence handling, accounting/terminal trace dan integrasi Qdrant fixture |
+| [ADP-01](docs/adaptive/ADP-01-router.md) | Router/initial stage, fitur dan policy/version/reason codes; prosedur kalibrasi pilot-only, threshold masih provisional |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
@@ -184,6 +185,12 @@ npm run test:rag03
 ```
 
 Checks 153 test lulus termasuk 16 test baru; dua integrasi pipeline memakai Qdrant sementara nyata dan provider fixture, tanpa paid inference atau perubahan index persistent. [Bukti verifikasi](docs/retrieval/RAG-03-verification.json) juga mencatat enam regresi retrieval pada runner bersama.
+
+## Router dan initial adaptive — ADP-01
+
+`Application.adaptiveInitialStage` memakai planner, retrieval stage 1 dan context builder yang sama dengan SINGLE_STAGE. Hasilnya state internal dan initial decision FAST/DEEP; deep path, generation adaptive, final path dan terminal runner lengkap tetap ADP-02/03. Caller memiliki admission, invocation caps dan terminal closure. Helper ini belum endpoint operasi.
+
+Threshold `ADAPTIVE_MIN_UNIQUE_CANDIDATES=1`, `ADAPTIVE_MIN_SELECTED_CHUNKS=1`, `ADAPTIVE_MIN_SKILL_COVERAGE=1` adalah policy struktural PROVISIONAL. Count/coverage selected evidence menentukan keputusan; skor/gap hanya diagnostik. Trace menyimpan fitur, threshold, policy/hash dan reason codes tanpa label evaluator atau teks learner; finalPath tetap null. [Prosedur kalibrasi](docs/research/ADP-01-router-calibration.md) hanya memakai 24 pilot, belum dijalankan. [Laporan dan bukti](docs/adaptive/ADP-01-router.md) menjelaskan batas, parity fixtures serta integrasi Qdrant sementara tanpa provider berbayar. Checks ADP-01 lulus 169 test proyek (16 baru) dan dua integrasi Qdrant. Runtime verifikasi Node 24.22.1/npm 11.19.1; pin Node 24.22.3 tetap dan belum diuji pada sesi ini.
 
 ## Baseline internal BASE-01
 

@@ -277,7 +277,7 @@ await test('JA/EN/ID dan dua mode memakai stage/query provider sama, trace skor 
       request.executionId = admission.correlation.executionId;
 
       const result = await stage(query, scope, 1, request);
-      outputs.push(result);
+      outputs.push({ candidates: result.candidates, dense: result.dense, sparse: result.sparse });
       await observations.finish(request.executionId, 'SUCCESS', null);
 
       const text = await readFile(
@@ -291,6 +291,7 @@ await test('JA/EN/ID dan dua mode memakai stage/query provider sama, trace skor 
       const retrieval = events.find((event) => event.data.kind === 'retrieval_completed');
 
       assert.ok(retrieval?.data.kind === 'retrieval_completed');
+      assert.deepEqual(result.trace, retrieval.data);
       assert.equal(retrieval.data.stage, 1);
       assert.equal(retrieval.data.sparse, null);
       assert.equal(retrieval.data.dense[0]?.scoreType, 'cosine');

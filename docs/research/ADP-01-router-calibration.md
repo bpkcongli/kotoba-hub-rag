@@ -1,0 +1,40 @@
+# ADP-01 — Prosedur kalibrasi router
+
+Tanggal: 26 November 2026. Status: prosedur tersedia; pilot dan kalibrasi belum dijalankan. Acuan: [RES-01](RES-01-protocol.md), [amendemen DENSE](RES-02-dense-amendment.md), [router ADP-01](../adaptive/ADP-01-router.md), PRD §6–9 dan draf TA subbab 3.4.1/3.8/3.10.5. Dokumen ini tidak mengubah kriteria keberhasilan penelitian.
+
+## Populasi dan pemisahan data
+
+Kalibrasi hanya memakai 24 kasus pilot, dua kasus pada masing-masing sel tiga use case × empat kategori kompleksitas. DS-01 harus menyediakan label dan audit semantic-family/split sebelum pelaksanaan. Main set tetap 120 kasus, lima repetition dan tiga mode, total 1.800 parent terminal outcomes. Main set tidak digunakan untuk memilih fitur, threshold, top-k, context budget, model, atau failure policy.
+
+Peneliti meninjau label FAST/DEEP/NONE sebelum melihat prediksi router. Complexity tidak langsung menentukan route. Label, answer key, evaluator rubric dan judge score hanya tersedia pada evaluator; payload runtime dibangun dari allowlist kontrak CON-01. `experiment.case_id` hanya korelasi trace, tidak menjadi fitur atau isi query. Reference answer pada operasi grading adalah input domain yang sah, berbeda dari answer key dataset; teksnya tidak masuk fitur router.
+
+## Definisi fitur dan konfigurasi awal
+
+Implementasi `adp-01-features-v1` memakai identifier skill persis dari kontrak, tanpa trimming, stemming, normalisasi skor, atau pemetaan label. `targetSkillCount` adalah jumlah target unik planner `rag-03-query-v1`, bukan jumlah weak skills. Untuk evaluate, target adalah skill soal tunggal; operasi lain memakai katalog request. Target kosong/duplikat atau konteks tidak konsisten ditolak, bukan diberi coverage buatan.
+
+`uniqueCandidateCount` dihitung dari chunk ID unik pada hasil final stage 1, setelah hard filter dan retrieval limit, sebelum context packing. Ini bukan ukuran seluruh candidate pool dense/sparse. `selectedChunkCount` adalah chunk ID unik setelah dedup chunk/content dan budget RAG-02. Coverage adalah jumlah skill target yang tercakup metadata chunk terpilih dibagi jumlah target; evidence yang dibuang tidak menambah coverage. Rasio berada pada [0,1], dengan penyebut minimal satu. Perubahan pool, limit, chunking, dedup atau budget dapat mengubah distribusi fitur dan harus diikat pada manifest kalibrasi.
+
+Skor pertama dan gap dua kandidat unik pertama menurut rank dicatat bersama `scoreType` sebagai diagnostik. Empty retrieval mempunyai score/type/gap null; satu kandidat mempunyai gap null, bukan nol. Nol gap berarti dua kandidat mempunyai skor sama. Cosine/RRF/rerank score bukan probabilitas atau retrieval quality. Versi awal tidak melakukan thresholding skor atau kelengkapan profil learner.
+
+Policy `adp-01-router-v1` berstatus `PROVISIONAL`: minimum satu kandidat unik, satu chunk selected, coverage 1. Semua batas minimum memakai `>=`; nilai di bawahnya memilih DEEP. Ini asumsi struktural reversible untuk pengembangan, belum hasil pilot. FAST tetap memerlukan evidence gate bersama sebelum generation pada implementasi cabang berikutnya. Konfigurasi tidak boleh diklaim terkalibrasi dengan mengganti status; hasil kalibrasi memerlukan versi policy/artefak baru yang ditinjau dan diuji.
+
+## Pelaksanaan pilot
+
+1. Selesaikan DS-01, harness, metrik/judge, runtime adaptive serta guard provider/model/index dan budget. Verifikasi 24 pilot terpisah dari main, label tidak bocor, dan parameter initial retrieval/generator/context/validator kedua RAG identik.
+2. Sebelum melihat hasil, catat daftar kandidat threshold terbatas, operator batas, tujuan seleksi, tie-break, jumlah repetition pilot, urutan mode, concurrency/cache/warmup serta budget. Jumlah repetition pilot mengikuti manifest EXP-01; lima repetition utama bukan izin otomatis menjalankan pilot berbayar.
+3. Untuk pemeriksaan awal offline, contoh grid struktural adalah `minUniqueCandidates ∈ {1,2,3}`, `minSelectedChunks ∈ {1,2}`, `minSkillCoverage ∈ {0.5,0.75,1}`. Ini 18 kandidat usulan, bukan grid final atau izin menjalankan call. Peneliti menyetujui/mengubah grid sebelum pilot; singkirkan konfigurasi yang tidak mungkin dipenuhi limit atau gate secara apriori dengan alasan tercatat.
+4. Kumpulkan trace stage 1 berfitur lengkap pada pilot. Replay fungsi router murni terhadap fitur yang sama untuk membandingkan kandidat tanpa mengulang embedding. Ini hanya membuktikan keputusan routing; replay tidak mengukur kualitas, biaya atau latency final cabang yang belum dieksekusi. Counterfactual FAST/DEEP yang diperlukan harus direncanakan terpisah dan seluruh panggilannya dicatat dalam budget.
+5. Evaluator mencocokkan initial decision dengan label. Laporkan confusion matrix FAST/DEEP, accuracy, macro-F1, F1 DEEP, jumlah NONE, missing decision dan failure. Denominator accuracy adalah seluruh scheduled adaptive units berlabel FAST/DEEP; decision hilang tidak benar. Missing decision menjadi FN kelas label pada macro-F1; jangan mengubah label atau memindahkan kegagalan ke NONE. Label NONE hanya untuk kasus yang memang ditetapkan tidak eligible sebelum router.
+6. Pilih kandidat memakai tujuan/tie-break yang telah ditetapkan. Usulan tujuan: macro-F1 tertinggi pada pilot; pada nilai sama, gunakan kualitas output berpasangan dan biaya/latency teramati sesuai urutan tie-break yang disetujui sebelumnya. Tetap laporkan coverage biaya dan hasil semua kandidat. Jangan menganggap threshold yang selalu FAST sebagai efisien bila deep quality tidak terukur. Ambang keberhasilan TA pada RES-01 tetap terpisah dari target tuning.
+7. Validasi konfigurasi terpilih pada run pilot dengan kontrol bersama yang sama dan eksekusi cabang nyata. Laporkan kualitas, all-request failure, latency termasuk network/queue/cold-start serta biaya dengan coverage. Dua puluh empat kasus memberi keterbatasan generalisasi; hasil ini bukan estimasi final main set.
+8. Simpan feature/policy/query versions, threshold/hash, corpus/index/profile/retrieval/context/gate hashes, prompt/model/provider revisions, failure/deadline/retry policy, daftar kasus pilot, run/trace references, grid, hasil, alasan seleksi dan persetujuan peneliti. Bekukan pada EXP-02 sebelum main. Revisi setelah freeze membuat versi/cohort baru; tidak menulis ulang hasil sebelumnya.
+
+## Unit analisis, missing dan biaya
+
+Initial decision berbeda dari final executed path. Event ADP-01 mempunyai `finalPath:null`; pipeline berikutnya mencatat path aktual dan terminal success/failure/timeout/unknown. Keputusan DEEP belum membuktikan stage kedua dijalankan. Provider error sebelum keputusan adalah missing decision, bukan prediksi DEEP atau FAST buatan. Invalid schema/constraint dan fixed input overflow menjadi error eksplisit; empty/partial evidence yang valid dapat memilih DEEP. Tidak ada fallback baseline/provider/model.
+
+Onboarding normalize/recommend tetap child operations dalam satu case parent. Metrik operation/child diagnostik tidak menambah jumlah kasus independen. Stage/rewrite/rerank adalah bagian eksekusi operasi yang sama; eskalasi bukan provider retry dan bukan parent baru. Agregasi mengikuti applicability dan paired case-level RES-01; repetition diringkas di dalam kasus, bukan diperlakukan sebagai sampel independen. Jika memakai bootstrap, resample kasus sesuai protokol, bukan baris repetition/child.
+
+Simpan failed/timeout/unknown dan pasangan yang tidak lengkap. Analisis kualitas subset valid menyatakan denominator serta attrition di samping all-request reliability. Setiap call/retry termasuk query embedding, rewrite, rerank dan generator masuk online cost sekali. Indexing, judge, warmup dan hosting/alokasi terpisah tanpa double-count. Missing usage/cost tetap null; known subtotal dan coverage tidak menggantikan total lengkap. Pemilihan biaya dengan total unknown harus dilaporkan sebagai keterbatasan, bukan diasumsikan gratis.
+
+Dokumen ini belum melaporkan kalibrasi, kualitas pedagogis atau validasi manusia independen. Peneliti tetap validator final. Penyusunan dibantu subagent dari ringkasan parent tanpa akses filesystem; parent menyelaraskan istilah dengan kode dan protokol lokal.

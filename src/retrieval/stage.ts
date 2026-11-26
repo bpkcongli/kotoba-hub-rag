@@ -73,7 +73,7 @@ export function createRetrievalStage(
     filter: RetrievalFilter,
     stage: 1 | 2,
     context: CallContext,
-  ): Promise<RetrievalResult> => {
+  ): Promise<RetrievalResult & { readonly trace: RetrievalTrace }> => {
     const correlation = observations.activeCorrelation(context.executionId);
 
     if (
@@ -214,6 +214,6 @@ export function createRetrievalStage(
       throw failure;
     }
 
-    return result;
+    return { ...result, trace: data };
   };
 }

@@ -1,0 +1,199 @@
+{
+  "task_id": "ADP-01",
+  "date": "2026-11-26",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "dependencies": [
+    "RAG-03",
+    "RES-01"
+  ],
+  "baseline_commit": "8ea2eeba67bd5028a2b9b6a18b432f387bc4b4e0",
+  "runtime": {
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "project_node_pin": "24.22.3",
+    "exact_project_node_pin_verified": false,
+    "note": "Available local Node patch differs; project pin and dependencies were not changed."
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "exit_code": 0,
+      "runtime_tests": 169,
+      "runtime_tests_before_adp01": 153,
+      "new_router_tests": 16,
+      "components": [
+        "inf:check",
+        "data:test",
+        "contracts:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ],
+      "log": "evidence/adp-01-check.log"
+    },
+    {
+      "command": "npm run test:rag03",
+      "result": "PASS",
+      "exit_code": 0,
+      "integration_tests": 2,
+      "scope": "SINGLE_STAGE regression and ADAPTIVE initial-stage parity/empty filters on temporary real Qdrant",
+      "log": "evidence/adp-01-integration.log",
+      "metadata": "evidence/adp-01-integration.json"
+    },
+    {
+      "command": "node --import tsx tests/router.test.ts",
+      "result": "PASS",
+      "exit_code": 0,
+      "tests": 16,
+      "parity_fixture_combinations": 16,
+      "log": "evidence/adp-01-router.log"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "command": "local Markdown links and verification file checksums",
+      "result": "PASS",
+      "exit_code": 0,
+      "markdown_links": 5,
+      "file_checksums": 13
+    }
+  ],
+  "sandbox_note": "Final full checks and disposable Qdrant integration used approved escalation for child processes/loopback/Docker. No paid provider calls. Initial sandbox-only full suite had EPERM failures; no product workaround or test disabling.",
+  "implementation": {
+    "policy_version": "adp-01-router-v1",
+    "feature_version": "adp-01-features-v1",
+    "query_version": "rag-03-query-v1",
+    "calibration_status": "PROVISIONAL",
+    "thresholds": {
+      "minUniqueCandidates": 1,
+      "minSelectedChunks": 1,
+      "minSkillCoverage": 1
+    },
+    "boundary": "all minimum thresholds inclusive; failed minimum selects DEEP",
+    "score_thresholds": null,
+    "raw_scores": "diagnostics only, not confidence or retrieval quality",
+    "shared_initial_dependencies": [
+      "retrievalPlan",
+      "retrievalStage(stage=1)",
+      "contextBuilder"
+    ],
+    "leakage_boundary": "strict numeric feature allowlist; no expected_route/complexity/answer_key/judge_score/domain text/profile",
+    "trace_event": "routing_decided",
+    "trace_schema": "obs-02-v1",
+    "initial_decisions": [
+      "FAST",
+      "DEEP"
+    ],
+    "final_path": null,
+    "stage_count": 1,
+    "full_adaptive_runner_available": false,
+    "terminal_lifecycle_owner": "caller; full adaptive sequence/deep/final path/terminal deferred to ADP-02/03"
+  },
+  "verification_scope": [
+    "16 fixture operation x EN/ID x N5/N4 parity combinations: embedding/search requests, query/filter/config hashes, selected sources",
+    "inclusive threshold boundaries and strict policy/feature validation; dedup and selected coverage",
+    "empty/partial/context budget handling and domain conflicts rejected before inference",
+    "strict trace decision/reasons/configuration hash/mode/version; evaluator labels rejected",
+    "policy snapshot, cancellation/monotonic deadline, provider failure and null cost",
+    "routing event/span sink failures retain TRACE_WRITE_FAILED and UNKNOWN, no repeated inference",
+    "temporary Qdrant 1.20.2 real published/level/skill filters, FAST/empty-DEEP parity, cleanup confirmed"
+  ],
+  "calibration": {
+    "procedure": "../research/ADP-01-router-calibration.md",
+    "pilot_cases": 24,
+    "main_cases": 120,
+    "main_repetitions": 5,
+    "main_modes": 3,
+    "main_parent_outcomes": 1800,
+    "pilot_run": false,
+    "thresholds_calibrated": false,
+    "research_success_criteria_changed": false
+  },
+  "review": {
+    "mode": "subagent excerpt-only plus parent source review and runtime checks",
+    "independent_filesystem_review": false,
+    "limitation": "Subagent sessions exposed no filesystem/exec tools; evaluator supplied draft guidance and reviewer inspected parent summary only. No independent filesystem review or human Japanese validation claimed.",
+    "resolved_question": "Policy validated at helper construction, before provider calls, with behavior test.",
+    "parent_corrections": [
+      "Removed router/store module initialization cycle discovered by runtime import.",
+      "Adjusted retrieval parity assertion for additive per-execution trace; verifies exact durable trace separately.",
+      "Preserved trace sink error when routing span write fails; no duplicate span closure."
+    ]
+  },
+  "external_actions": {
+    "paid_provider_calls": 0,
+    "persistent_index_mutated": false,
+    "other_repository_mutated": false,
+    "public_deployment": false,
+    "main_experiment_run": false,
+    "freeze": false
+  },
+  "remaining": [
+    "ADP-02 deep path/rewrite/stage2/merge/rerank/evidence gate",
+    "ADP-03 full adaptive runner/lifecycle/bounded execution/final path",
+    "DS-01 pilot dataset and EXP-01 actual calibration",
+    "exact Node 24.22.3 runtime verification",
+    "served revisions and existing freeze gates unchanged"
+  ],
+  "files": [
+    {
+      "path": "src/pipelines/router.ts",
+      "sha256": "346827c6cfd13b43a5a62bd8e02389f9981ce5dff26ffb21e8258b4bda483304"
+    },
+    {
+      "path": "src/pipelines/adaptive-initial.ts",
+      "sha256": "77f9da53e2f22c381791afb4233a9b76e3feeabb43c417ff8896dc1a4e025b6b"
+    },
+    {
+      "path": "src/observability/routing-event.ts",
+      "sha256": "dc797b8bf5cb7d9b80195c0ed6b61c08c4436cf44e6beaeb1921ec696f17700b"
+    },
+    {
+      "path": "src/observability/events.ts",
+      "sha256": "f64bad751b7ce38cf6bc55030e4e067d69d1ea8f2a7fe9d420634f85d54f1dbb"
+    },
+    {
+      "path": "src/retrieval/stage.ts",
+      "sha256": "6808117bba519bb12b62cb1b1454d87984a8f18a57a735d18a91c1f9f31f17a1"
+    },
+    {
+      "path": "src/app.ts",
+      "sha256": "c15ab2095b64220a7f64b79c1320ef54fe15271e8f859b3daf3b769c75b3ff80"
+    },
+    {
+      "path": "src/main.ts",
+      "sha256": "b4d9f1a473bcfea59deaa3b0f56f57423e747d0b2d0c2d4072a274b4ae6370e6"
+    },
+    {
+      "path": "tests/router.test.ts",
+      "sha256": "79c0bc748a22f8fef23c5924b2b726925d9bec4a40b4ad43d05cf9a8677dcc1a"
+    },
+    {
+      "path": "tests/retrieval.test.ts",
+      "sha256": "8fb5b52f08ab5215a6e519099f4809e184a4876e2376491e6c4d3e4e643699ba"
+    },
+    {
+      "path": "tests/single-stage.integration.ts",
+      "sha256": "efcdd59b7073902b04a0e45f4df468a87bbd68379bedfb3c4f3e3c164eeda227"
+    },
+    {
+      "path": "docs/adaptive/ADP-01-router.md",
+      "sha256": "935590505a7a6fea0eb63e3bf7ef0570de7b9079c9b80585ba615c16280d8e33"
+    },
+    {
+      "path": "docs/research/ADP-01-router-calibration.md",
+      "sha256": "a80e37cd961de39192c5b8345ccf77a4cf3f0ce67e9e3ba8ee498f2d68123862"
+    },
+    {
+      "path": ".env.example",
+      "sha256": "44d2fb090ce9a921df98b6edb8c2abaaf82b7e5bf61a98341c81d43f4d17c8eb"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+✔ router inclusive threshold boundaries and stricter provisional configurations (155.296903ms)
+✔ empty retrieval, empty selected budget, partial coverage choose DEEP without invented scores (158.360535ms)
+✔ dedup and selected coverage, rather than repeated chunks or raw candidate metadata, drive route (58.491023ms)
+✔ raw cosine/fusion scores and gap are diagnostics without universal confidence thresholds (53.864208ms)
+✔ policy parser rejects invalid, nonfinite, extra and claimed calibrated configurations (0.516884ms)
+✔ feature boundary rejects evaluator labels, missing and inconsistent values rather than coercing zero (50.25504ms)
+✔ conflicting target/context and fixed input overflow reject without a routing decision (49.818515ms)
+✔ ADAPTIVE initial retrieval/context matches SINGLE_STAGE across four operations and locale/level fixtures (3422.060071ms)
+✔ initial helper rejects invalid mode, label leakage and contradictory domain constraints before inference (780.178082ms)
+✔ initial helper emits DEEP for empty or partial evidence without rewrite/rerank/generation (270.968462ms)
+✔ strict route trace rejects forged decisions, thresholds, reason codes, labels and legacy/mode mismatch (139.499817ms)
+✔ policy is validated before calls and snapshotted, cancellation/deadline prevent inference (138.880182ms)
+✔ claimed context coverage must match selected evidence metadata (81.18069ms)
+✔ failed retrieval preserves attempt accounting and has no fabricated route or generation (211.639957ms)
+✔ routing event/span sink failures preserve TRACE_WRITE_FAILED and UNKNOWN without repeating inference (306.807144ms)
+✔ monotonic deadline during embedding stops before routing with unchanged wall clock (147.110358ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6030.773348

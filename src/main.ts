@@ -4,6 +4,7 @@ import { systemClock } from '@/adapters/system-clock';
 import { createApplication } from '@/app';
 import { readContextConfig } from '@/context/config';
 import { readEvidencePolicy } from '@/pipelines/evidence';
+import { readRouterPolicy } from '@/pipelines/router';
 import { readRetrievalConfig } from '@/retrieval/config';
 import { ConfigError, readConfig } from '@/shared/config';
 import { readQdrantConfig } from '@/storage/qdrant-config';
@@ -17,6 +18,7 @@ async function main(): Promise<void> {
   const retrievalConfig = await readRetrievalConfig(process.env);
   const contextConfig = openAiConfig ? readContextConfig(process.env, openAiConfig) : null;
   const evidencePolicy = readEvidencePolicy(process.env);
+  const routerPolicy = readRouterPolicy(process.env);
 
   const { server } = createApplication(
     config,
@@ -28,6 +30,7 @@ async function main(): Promise<void> {
     retrievalConfig,
     contextConfig,
     evidencePolicy,
+    routerPolicy,
   );
 
   let closing = false;

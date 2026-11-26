@@ -17,8 +17,11 @@ import type { ContractValidators } from '@/contracts/validator';
 import { createBaselineRunner } from '@/generation/baseline';
 import { createOperationGenerator } from '@/generation/generator';
 import { ObservationStore } from '@/observability/store';
+import { createAdaptiveInitialStage } from '@/pipelines/adaptive-initial';
 import { readEvidencePolicy } from '@/pipelines/evidence';
 import type { EvidencePolicy } from '@/pipelines/evidence';
+import { readRouterPolicy } from '@/pipelines/router';
+import type { RouterPolicy } from '@/pipelines/router';
 import { createSingleStageRunner } from '@/pipelines/single-stage';
 import type { RetrievalConfig } from '@/retrieval/config';
 import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
@@ -43,6 +46,7 @@ export interface Application {
   readonly retrievalStage: ReturnType<typeof createRetrievalStage> | null;
   readonly contextBuilder: ReturnType<typeof createContextBuilder> | null;
   readonly singleStage: ReturnType<typeof createSingleStageRunner> | null;
+  readonly adaptiveInitialStage: ReturnType<typeof createAdaptiveInitialStage> | null;
 }
 
 export function createApplication(
@@ -55,6 +59,7 @@ export function createApplication(
   retrievalConfig: RetrievalConfig | null = null,
   contextConfig: ContextConfig | null = openAiConfig ? readContextConfig({}, openAiConfig) : null,
   evidencePolicy: EvidencePolicy = readEvidencePolicy(),
+  routerPolicy: RouterPolicy = readRouterPolicy(),
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -186,6 +191,7 @@ export function createApplication(
     openAiConfig && contextConfig
       ? createContextBuilder(contextConfig, openAiConfig, observations, clock)
       : null;
+
   const singleStage =
     retrievalConfig && retrievalStage && contextBuilder && generator && openAiConfig
       ? createSingleStageRunner(
@@ -195,6 +201,17 @@ export function createApplication(
           createOperationGenerator(generator, openAiConfig),
           observations,
           evidencePolicy,
+          clock,
+        )
+      : null;
+  const adaptiveInitialStage =
+    retrievalConfig && retrievalStage && contextBuilder
+      ? createAdaptiveInitialStage(
+          retrievalConfig.index,
+          retrievalStage,
+          contextBuilder,
+          observations,
+          routerPolicy,
           clock,
         )
       : null;
@@ -225,5 +242,6 @@ export function createApplication(
     retrievalStage,
     contextBuilder,
     singleStage,
+    adaptiveInitialStage,
   };
 }
