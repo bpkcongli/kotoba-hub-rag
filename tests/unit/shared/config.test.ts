@@ -6,6 +6,14 @@ import { ConfigError } from '@/shared/errors/config-error';
 
 await test('default bootstrap lokal dan override valid diparse tanpa coercion longgar', () => {
   assert.deepEqual(readConfig({}), {
+    api: {
+      serviceId: 'kotobahub',
+      token: null,
+      corpusVersion: null,
+      allowedModes: ['LLM_ONLY', 'SINGLE_STAGE', 'ADAPTIVE'],
+      maxConcurrent: 4,
+      maxDeadlineMs: 120000,
+    },
     environment: 'development',
     host: '127.0.0.1',
     port: 3000,
@@ -29,6 +37,15 @@ await test('default bootstrap lokal dan override valid diparse tanpa coercion lo
 
 await test('config invalid ditolak, termasuk kosong, non-string, rentang dan enum', () => {
   const invalid: Record<string, unknown>[] = [
+    { API_SERVICE_TOKEN: 'short' },
+    { API_SERVICE_TOKEN: 'secret with spaces' },
+    { API_SERVICE_TOKEN: {} },
+    { API_SERVICE_ID: '../other' },
+    { API_ALLOWED_MODES: 'LLM_ONLY,LLM_ONLY' },
+    { API_ALLOWED_MODES: 'INVALID' },
+    { API_MAX_CONCURRENT: '0' },
+    { API_MAX_DEADLINE_MS: '120001' },
+    { API_CORPUS_VERSION: '../other' },
     { PORT: '' },
     { PORT: '0' },
     { PORT: '65536' },

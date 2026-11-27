@@ -28,10 +28,12 @@ import { readContextConfig } from '@/modules/rag/infrastructure/config/context';
 import type { HfConfig } from '@/modules/rag/infrastructure/config/hf-config';
 import type { OpenAiConfig } from '@/modules/rag/infrastructure/config/openai-config';
 import { createRagModule } from '@/modules/rag/infrastructure/di/index';
+import { registerOperationRoutes } from '@/modules/rag/interface/primary/rest/routes';
 import type { HfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
 import type { OpenAiGenerator } from '@/modules/rag/interface/secondary/inference/openai-responses';
 import type { QdrantRetriever } from '@/modules/rag/interface/secondary/qdrant/retriever';
 import type { Clock } from '@/shared/clock';
+import type { Mode } from '@/shared/operations';
 import { systemClock } from '@/shared/system-clock';
 
 export interface Application {
@@ -131,10 +133,26 @@ export function createApplication(
     await observations.close();
   });
 
-  server.get('/health/live', () => ({ status: 'live' }));
+  const availableModes: Mode[] = [];
 
-  // Adaptive/auth/HTTP admission and operation endpoints remain API-01; probes never run inference.
-  server.get('/health/ready', (_request, reply) => reply.code(503).send({ status: 'not_ready' }));
+  if (baseline) {
+    availableModes.push('LLM_ONLY');
+  }
+  if (singleStage) {
+    availableModes.push('SINGLE_STAGE');
+  }
+  if (adaptive) {
+    availableModes.push('ADAPTIVE');
+  }
+
+  registerOperationRoutes(server, {
+    config: config.api,
+    clock,
+    contracts,
+    operations,
+    registry: observations,
+    availableModes,
+  });
 
   return {
     server,

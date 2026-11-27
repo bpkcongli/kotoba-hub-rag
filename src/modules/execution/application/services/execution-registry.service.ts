@@ -8,6 +8,12 @@ export type {
 } from '@/modules/execution/application/ports/execution-registry';
 
 export interface ExecutionRegistryService {
+  readonly lookup: ExecutionRegistryPort['lookup'];
+
+  readonly storeResponse: ExecutionRegistryPort['storeResponse'];
+
+  readonly readResponse: ExecutionRegistryPort['readResponse'];
+
   readonly admit: ExecutionRegistryPort['admit'];
 
   readonly assertActive: ExecutionRegistryPort['assertActive'];

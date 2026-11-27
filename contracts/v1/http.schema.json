@@ -1,0 +1,1564 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://kotobahub.invalid/contracts/v1/http.schema.json",
+  "definitions": {
+    "Meta": {
+      "type": "object",
+      "properties": {
+        "traceId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "corpusVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "path": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "FAST",
+            "DEEP"
+          ]
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sourceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "chunkId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "sourceId",
+              "chunkId"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0,
+          "maxItems": 100
+        },
+        "durationMs": {
+          "type": "number",
+          "minimum": 0
+        },
+        "usage": {
+          "type": "object",
+          "properties": {
+            "inputTokens": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "cachedInputTokens": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "outputTokens": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "totalTokens": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "inputTokens",
+            "cachedInputTokens",
+            "outputTokens",
+            "totalTokens"
+          ],
+          "additionalProperties": false
+        },
+        "cost": {
+          "type": "object",
+          "properties": {
+            "currency": {
+              "const": "USD"
+            },
+            "inferenceTotalUsd": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "queryEmbeddingUsd": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "rerankUsd": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "totalOnlineUsd": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "knownSubtotalUsd": {
+              "type": "number",
+              "minimum": 0
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "KNOWN",
+                "PARTIAL",
+                "UNKNOWN"
+              ]
+            }
+          },
+          "required": [
+            "currency",
+            "inferenceTotalUsd",
+            "queryEmbeddingUsd",
+            "rerankUsd",
+            "totalOnlineUsd",
+            "knownSubtotalUsd",
+            "status"
+          ],
+          "additionalProperties": false
+        },
+        "counters": {
+          "type": "object",
+          "properties": {
+            "retrievalStageCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rewriteCallCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rerankCallCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "providerRetryCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "schemaRetryCount": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "modelCallCount": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "retrievalStageCount",
+            "rewriteCallCount",
+            "rerankCallCount",
+            "providerRetryCount",
+            "schemaRetryCount",
+            "modelCallCount"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "traceId",
+        "corpusVersion",
+        "path",
+        "sources",
+        "durationMs",
+        "usage",
+        "cost",
+        "counters"
+      ],
+      "additionalProperties": false
+    },
+    "GeneratePayload": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "domain.schema.json#/definitions/AiContextBundle"
+        },
+        "language": {
+          "$ref": "domain.schema.json#/definitions/AiLanguage"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "requestId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "sourceEntityType": {
+              "type": "string",
+              "enum": [
+                "PRACTICE_SESSION",
+                "PRACTICE_ANSWER",
+                "PERSONALIZATION_ASSESSMENT"
+              ]
+            },
+            "sourceEntityId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "required": [
+            "requestId"
+          ],
+          "additionalProperties": false
+        },
+        "questionCount": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "difficultyBand": {
+          "$ref": "domain.schema.json#/definitions/DifficultyBand"
+        },
+        "questionMix": {
+          "type": "object",
+          "properties": {
+            "weak": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "reinforcement": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "stretch": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "weak",
+            "reinforcement",
+            "stretch"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "context",
+        "language",
+        "metadata",
+        "questionCount",
+        "difficultyBand"
+      ],
+      "additionalProperties": false
+    },
+    "GenerateRequest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "corpusVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 120000
+        },
+        "deadlineAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "experiment": {
+          "type": "object",
+          "properties": {
+            "experimentId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "caseId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "repetition": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "experimentId",
+            "caseId",
+            "repetition"
+          ],
+          "additionalProperties": false
+        },
+        "payload": {
+          "$ref": "#/definitions/GeneratePayload"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "mode",
+        "corpusVersion",
+        "timeoutMs",
+        "deadlineAt",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "GenerateResponse": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "executionId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "data": {
+          "$ref": "domain.schema.json#/definitions/GeneratedPracticeSession"
+        },
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "executionId",
+        "mode",
+        "data",
+        "meta"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluatePayload": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "domain.schema.json#/definitions/AiContextBundle"
+        },
+        "language": {
+          "$ref": "domain.schema.json#/definitions/AiLanguage"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "requestId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "sourceEntityType": {
+              "type": "string",
+              "enum": [
+                "PRACTICE_SESSION",
+                "PRACTICE_ANSWER",
+                "PERSONALIZATION_ASSESSMENT"
+              ]
+            },
+            "sourceEntityId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "required": [
+            "requestId"
+          ],
+          "additionalProperties": false
+        },
+        "question": {
+          "type": "object",
+          "properties": {
+            "skillCode": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "questionType": {
+              "const": "FREE_RESPONSE"
+            },
+            "promptLanguage": {
+              "type": "string",
+              "enum": [
+                "EN",
+                "ID"
+              ]
+            },
+            "answerLanguage": {
+              "const": "JA"
+            },
+            "sourceSentence": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "referenceAnswer": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            }
+          },
+          "required": [
+            "skillCode",
+            "questionType",
+            "promptLanguage",
+            "answerLanguage",
+            "sourceSentence",
+            "referenceAnswer"
+          ],
+          "additionalProperties": false
+        },
+        "userAnswer": {
+          "type": "object",
+          "properties": {
+            "rawInputRomaji": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "normalizedKana": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "normalizedKanji": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "rawInputRomaji",
+            "normalizedKana",
+            "normalizedKanji"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "context",
+        "language",
+        "metadata",
+        "question",
+        "userAnswer"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluateRequest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "corpusVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 120000
+        },
+        "deadlineAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "experiment": {
+          "type": "object",
+          "properties": {
+            "experimentId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "caseId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "repetition": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "experimentId",
+            "caseId",
+            "repetition"
+          ],
+          "additionalProperties": false
+        },
+        "payload": {
+          "$ref": "#/definitions/EvaluatePayload"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "mode",
+        "corpusVersion",
+        "timeoutMs",
+        "deadlineAt",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "EvaluateResponse": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "executionId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "data": {
+          "$ref": "domain.schema.json#/definitions/GradedPracticeAnswer"
+        },
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "executionId",
+        "mode",
+        "data",
+        "meta"
+      ],
+      "additionalProperties": false
+    },
+    "NormalizePayload": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "domain.schema.json#/definitions/AiContextBundle"
+        },
+        "language": {
+          "$ref": "domain.schema.json#/definitions/AiLanguage"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "requestId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "sourceEntityType": {
+              "type": "string",
+              "enum": [
+                "PRACTICE_SESSION",
+                "PRACTICE_ANSWER",
+                "PERSONALIZATION_ASSESSMENT"
+              ]
+            },
+            "sourceEntityId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "required": [
+            "requestId"
+          ],
+          "additionalProperties": false
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 5000
+        }
+      },
+      "required": [
+        "context",
+        "language",
+        "metadata",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "NormalizeRequest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "corpusVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 120000
+        },
+        "deadlineAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "experiment": {
+          "type": "object",
+          "properties": {
+            "experimentId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "caseId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "repetition": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "experimentId",
+            "caseId",
+            "repetition"
+          ],
+          "additionalProperties": false
+        },
+        "payload": {
+          "$ref": "#/definitions/NormalizePayload"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "mode",
+        "corpusVersion",
+        "timeoutMs",
+        "deadlineAt",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "NormalizeResponse": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "executionId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "data": {
+          "$ref": "domain.schema.json#/definitions/PlacementSummary"
+        },
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "executionId",
+        "mode",
+        "data",
+        "meta"
+      ],
+      "additionalProperties": false
+    },
+    "RecommendPayload": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "domain.schema.json#/definitions/AiContextBundle"
+        },
+        "language": {
+          "$ref": "domain.schema.json#/definitions/AiLanguage"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "requestId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "userId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "sourceEntityType": {
+              "type": "string",
+              "enum": [
+                "PRACTICE_SESSION",
+                "PRACTICE_ANSWER",
+                "PERSONALIZATION_ASSESSMENT"
+              ]
+            },
+            "sourceEntityId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "required": [
+            "requestId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "context",
+        "language",
+        "metadata"
+      ],
+      "additionalProperties": false
+    },
+    "RecommendRequest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "corpusVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "timeoutMs": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 120000
+        },
+        "deadlineAt": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        "experiment": {
+          "type": "object",
+          "properties": {
+            "experimentId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "caseId": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "repetition": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "experimentId",
+            "caseId",
+            "repetition"
+          ],
+          "additionalProperties": false
+        },
+        "payload": {
+          "$ref": "#/definitions/RecommendPayload"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "mode",
+        "corpusVersion",
+        "timeoutMs",
+        "deadlineAt",
+        "payload"
+      ],
+      "additionalProperties": false
+    },
+    "RecommendResponse": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "executionId": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "LLM_ONLY",
+            "SINGLE_STAGE",
+            "ADAPTIVE"
+          ]
+        },
+        "data": {
+          "$ref": "domain.schema.json#/definitions/StudyRecommendation"
+        },
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "executionId",
+        "mode",
+        "data",
+        "meta"
+      ],
+      "additionalProperties": false
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "const": "1"
+        },
+        "requestId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "executionId": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mode": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "LLM_ONLY",
+                "SINGLE_STAGE",
+                "ADAPTIVE"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "INVALID_INPUT"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "AUTH_FAILED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "FORBIDDEN"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "SNAPSHOT_MISMATCH"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "IDEMPOTENCY_CONFLICT"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "PAYLOAD_TOO_LARGE"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "UNSUPPORTED_MEDIA_TYPE"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "UNSUPPORTED_LEVEL"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "INSUFFICIENT_EVIDENCE"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "POST_VALIDATION_FAILED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "CAPACITY_LIMIT"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": true
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "INTERNAL_ERROR"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "RETRIEVAL_FAILED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": true
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "INFERENCE_FAILED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": true
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "PROVIDER_FAILED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": true
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "PROVIDER_REJECTED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "PROVIDER_REFUSED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "SCHEMA_PARSE_FAILED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "DEPENDENCY_NOT_READY"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": true
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "TRACE_WRITE_FAILED"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": false
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "const": "TIMEOUT"
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "retryable": {
+                  "const": true
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "meta": {
+          "type": "object",
+          "properties": {
+            "traceId": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "required": [
+            "traceId"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "requestId",
+        "executionId",
+        "mode",
+        "error",
+        "meta"
+      ],
+      "additionalProperties": false
+    },
+    "HealthResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "live",
+            "ready",
+            "not_ready"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

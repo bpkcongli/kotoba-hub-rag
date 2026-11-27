@@ -1,0 +1,118 @@
+{
+  "task_id": "API-01-OPENAPI",
+  "date": "2026-11-27",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "artifact": "openapi.yaml",
+  "openapi_version": "3.1.0",
+  "wire_schema_version_changed": false,
+  "historical_CON_01_artifacts_changed": false,
+  "runtime_changed": false,
+  "bundle": {
+    "paths": 6,
+    "operation_endpoints": 4,
+    "health_endpoints": 2,
+    "schemas": 23,
+    "examples_validated": 125,
+    "external_refs": 0
+  },
+  "checks": [
+    {
+      "command": "npm run contracts:check",
+      "result": "PASS",
+      "details": "Generated wire types unchanged; bundled OpenAPI matches generator; all references resolve; 125 request/response/error/health examples validate with Ajv."
+    },
+    {
+      "command": "Read-only Fastify route parity via tsx",
+      "result": "PASS",
+      "routes": 6,
+      "provider_calls": 0,
+      "details": "Four POST paths match operationPaths; all six documented methods/paths match server.hasRoute after ready."
+    },
+    {
+      "command": "npm run lint",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run format:check",
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    },
+    {
+      "command": "npm run openapi:generate",
+      "result": "PASS",
+      "details": "Only docs/api/openapi.yaml is generated; docs/api/openapi.json remains absent."
+    },
+    {
+      "command": "python3: yaml.safe_load(openapi.yaml), YAML checksum and JSON absence",
+      "result": "PASS",
+      "details": "YAML parses with six paths and 23 schemas; JSON output remains absent. Formatting preserves the complete document values."
+    },
+    {
+      "command": "prettier --check docs/api/openapi.yaml tools/boot-01/generate-openapi.mjs",
+      "result": "PASS",
+      "details": "Generator applies project Prettier YAML formatting before writing or checking the artifact."
+    },
+    {
+      "command": "PyYAML semantic comparison before/after formatting",
+      "result": "PASS",
+      "details": "Parsed documents are identical; only serialization changed."
+    },
+    {
+      "command": "jsonschema.Draft202012Validator with official OpenAPI 3.1 schema",
+      "result": "PASS",
+      "schema_url": "https://spec.openapis.org/oas/3.1/schema/2022-10-07",
+      "schema_sha256": "da01ba28852cac0de53893797cb8d1942bc3b05084f526dcc216717dec314ed0",
+      "structural_errors": 0
+    },
+    {
+      "command": "Installed Red Hat YAML extension 2.0.0 language server via LSP, modeline schema only",
+      "result": "PASS",
+      "schema_url": "https://spec.openapis.org/oas/3.1/schema/2022-10-07",
+      "diagnostics": 0,
+      "schema_store_disabled_in_test": true,
+      "manual_schema_mapping_in_test": false,
+      "details": "The generated modeline selects the official OpenAPI 3.1 schema; valid Media Type/Header example and examples fields are retained."
+    },
+    {
+      "command": "YAML language server negative control: OpenAPI version 9.9.9 in memory",
+      "result": "PASS",
+      "diagnostics": 1,
+      "expected_error": "OpenAPI version does not match ^3\\.1\\.\\d+(-.+)?$",
+      "schema_source": "https://spec.openapis.org/oas/3.1/schema/2022-10-07",
+      "details": "Only the LSP document buffer was altered; repository YAML was unchanged. Confirms that modeline validation is enabled."
+    }
+  ],
+  "scope": "Spesifikasi, generator/check command dan navigasi dokumentasi. Snapshot CON-01 serta bukti implementasi API-01 sebelumnya tetap historis.",
+  "limitations": [
+    "Struktur diperiksa dengan JSON Schema resmi OpenAPI 3.1; pemeriksaan ini bukan audit semantik menyeluruh oleh parser OpenAPI khusus.",
+    "Contoh bersifat sintetis dan memakai deadline historis; request live memerlukan UUID/deadline baru yang konsisten.",
+    "Tidak menambahkan Swagger UI atau endpoint baru untuk menyajikan spesifikasi.",
+    "Tidak menjalankan inference, deployment atau eksperimen; full runtime/integration suite tidak diulang untuk pelengkapan dokumentasi ini."
+  ],
+  "runtime": {
+    "node": "24.22.1",
+    "npm": "11.19.1"
+  },
+  "sha256": {
+    "contracts/v1/openapi.json": "c6bbef0fc206a4fbc995555106b63582d311cadb59abfbccf74d82d33d9d763b",
+    "contracts/v1/contract.schema.json": "2152875519f305a92a60a72f6468e6d20d87a9c77590ba396eba4e34bc4803ee",
+    "contracts/v1/domain.schema.json": "dd30836f920f73d62e65621569ec5162acef00a5d5fc03e5494c43b76dc64e6c",
+    "contracts/v1/fixtures.json": "c492946b7b042ea8880b5a14a4b9ccb3f5aac180f18e92fa954d59d921c1e999",
+    "contracts/v1/errors.json": "c851b2a67f11d6ef9affed0ba8fee85ebd82a2a5f943e1c22815d843e08ed445",
+    "tools/boot-01/generate-openapi.mjs": "4456a0ec8fbed3b1367533cad3fee278ff045e191b1e8fea09b7ba0562e00663",
+    "docs/api/openapi.yaml": "3d78abc81ae6825cf7cda426957e385415d3ec72f1748c5939db9179f8d50385"
+  },
+  "artifacts": [
+    "openapi.yaml"
+  ],
+  "editor_schema_association": {
+    "method": "yaml-language-server modeline",
+    "schema": "https://spec.openapis.org/oas/3.1/schema/2022-10-07",
+    "reference": "https://github.com/redhat-developer/yaml-language-server#using-a-modeline",
+    "schema_validation_disabled": false
+  }
+}

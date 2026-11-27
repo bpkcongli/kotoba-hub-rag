@@ -95,6 +95,7 @@ export class FileExecutionRegistry implements ExecutionRegistryPort {
       this.path('events'),
       this.path('prices'),
       this.path('resources'),
+      this.path('responses'),
     ]) {
       await ensureDirectory(path);
     }
@@ -399,6 +400,120 @@ export class FileExecutionRegistry implements ExecutionRegistryPort {
       }
 
       return structuredClone({ status: 'admitted', correlation, terminal: null });
+    });
+  }
+
+  lookup(input: AdmissionInput): Promise<AdmissionResult | null> {
+    const key = hashValue(canonical([input.serviceId, input.requestId]));
+    const fingerprint = RequestFingerprint.from(input).value;
+
+    return this.run(() => {
+      const entry = this.entries.get(key);
+
+      if (!entry) {
+        return Promise.resolve(null);
+      }
+
+      if (entry.start.data.fingerprint !== fingerprint) {
+        throw new ObservationError('IDEMPOTENCY_CONFLICT');
+      }
+
+      return Promise.resolve(
+        structuredClone({
+          status:
+            entry.terminal?.data.kind === 'terminal' && entry.terminal.data.outcome !== 'UNKNOWN'
+              ? 'TERMINAL'
+              : entry.active
+                ? 'IN_FLIGHT'
+                : 'UNKNOWN',
+          correlation: entry.start.correlation,
+          terminal: entry.terminal,
+        }),
+      );
+    });
+  }
+
+  storeResponse(executionId: string, response: unknown): Promise<void> {
+    const copy = structuredClone(response);
+
+    return this.run(async () => {
+      const entry = this.byExecution.get(executionId);
+
+      if (
+        !entry ||
+        entry.terminal?.data.kind !== 'terminal' ||
+        !entry.terminal.data.traceComplete ||
+        entry.terminal.data.outcome === 'UNKNOWN'
+      ) {
+        throw new ObservationError('TRACE_WRITE_FAILED');
+      }
+
+      const record = {
+        version: 'api-01-v1',
+        fingerprint: entry.start.data.fingerprint,
+        terminalHash: hashValue(canonical(entry.terminal)),
+        response: copy,
+        responseHash: hashValue(canonical(copy)),
+      };
+      const path = this.path('responses', `${executionId}.json`);
+
+      try {
+        const prior: unknown = JSON.parse(await readFile(path, 'utf8'));
+
+        if (canonical(prior) !== canonical(record)) {
+          throw new ObservationError('TRACE_WRITE_FAILED');
+        }
+      } catch (error) {
+        if (!isMissing(error)) {
+          throw error;
+        }
+
+        await publishJson(path, record);
+      }
+    });
+  }
+
+  async readResponse(executionId: string): Promise<unknown> {
+    const inspection = (await this.inspect()).find(
+      (row) => row.correlation.executionId === executionId,
+    );
+
+    if (inspection?.state !== 'TERMINAL' || inspection.traceIntegrity !== 'VALID') {
+      throw new ObservationError('IDEMPOTENCY_CONFLICT');
+    }
+
+    return this.run(async () => {
+      const entry = this.byExecution.get(executionId);
+      let record: unknown;
+
+      try {
+        record = JSON.parse(await readFile(this.path('responses', `${executionId}.json`), 'utf8'));
+      } catch (error) {
+        if (isMissing(error)) {
+          throw new ObservationError('IDEMPOTENCY_CONFLICT');
+        }
+
+        throw error;
+      }
+
+      if (
+        !entry ||
+        typeof record !== 'object' ||
+        record === null ||
+        !('version' in record) ||
+        record.version !== 'api-01-v1' ||
+        !('fingerprint' in record) ||
+        record.fingerprint !== entry.start.data.fingerprint ||
+        !('terminalHash' in record) ||
+        record.terminalHash !== hashValue(canonical(entry.terminal)) ||
+        !('response' in record) ||
+        !('responseHash' in record) ||
+        record.responseHash !== hashValue(canonical(record.response))
+      ) {
+        throw new ObservationError('TRACE_WRITE_FAILED');
+      }
+
+      return record.response;
     });
   }
 
@@ -853,6 +968,33 @@ export class FileExecutionRegistry implements ExecutionRegistryPort {
           traceIntegrity = isMissing(error) ? 'MISSING' : 'INVALID';
         }
 
+        let responseIntegrity: ObservationInspection['responseIntegrity'];
+
+        try {
+          const record: unknown = JSON.parse(
+            await readFile(
+              this.path('responses', `${entry.start.correlation.executionId ?? ''}.json`),
+              'utf8',
+            ),
+          );
+          responseIntegrity =
+            typeof record === 'object' &&
+            record !== null &&
+            'version' in record &&
+            record.version === 'api-01-v1' &&
+            'fingerprint' in record &&
+            record.fingerprint === entry.start.data.fingerprint &&
+            'terminalHash' in record &&
+            record.terminalHash === hashValue(canonical(entry.terminal)) &&
+            'response' in record &&
+            'responseHash' in record &&
+            record.responseHash === hashValue(canonical(record.response))
+              ? 'VALID'
+              : 'INVALID';
+        } catch (error) {
+          responseIntegrity = isMissing(error) ? 'MISSING' : 'INVALID';
+        }
+
         rows.push({
           correlation: entry.start.correlation,
           state:
@@ -863,6 +1005,7 @@ export class FileExecutionRegistry implements ExecutionRegistryPort {
                 : 'UNKNOWN',
           terminal: entry.terminal,
           traceIntegrity,
+          responseIntegrity,
           eventCount,
         });
       }

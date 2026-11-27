@@ -1,0 +1,162 @@
+{
+  "task_id": "API-01",
+  "date": "2026-11-27",
+  "timezone": "Asia/Jakarta",
+  "status": "DONE",
+  "dependencies": [
+    "REF-01",
+    "RAG-03",
+    "ADP-03",
+    "CON-01"
+  ],
+  "baseline_commit": "6cf63fc7835f8bfcb6b719cf716a20e18c813f21",
+  "runtime": {
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "project_node_pin": "24.22.3",
+    "exact_project_node_pin_verified": false,
+    "application_image_rebuilt": false
+  },
+  "checks": [
+    {
+      "command": "npm run check",
+      "result": "PASS",
+      "exit_code": 0,
+      "runtime_tests": 236,
+      "architecture_files": 142,
+      "log": "evidence/api-01-check.log",
+      "includes": [
+        "offline inference/data audits",
+        "contracts:check",
+        "architecture:check",
+        "typecheck",
+        "lint",
+        "format:check",
+        "test",
+        "build"
+      ]
+    },
+    {
+      "command": "node --import tsx tests/unit/app/api.test.ts",
+      "result": "PASS",
+      "exit_code": 0,
+      "tests": 27,
+      "http_mode_operation_locale_level_combinations": 48,
+      "replay_per_combination": true,
+      "log": "evidence/api-01-http.log",
+      "final_additional_checks": [
+        "typecheck",
+        "lint",
+        "format:check"
+      ]
+    },
+    {
+      "command": "npm run test:adp03",
+      "result": "PASS",
+      "exit_code": 0,
+      "tests": 2,
+      "temporary_real_qdrant": true,
+      "log": "evidence/api-01-adp03.log",
+      "report": "evidence/api-01-adp03.json",
+      "cleanup_succeeded": true
+    },
+    {
+      "command": "npm run test:rag03",
+      "result": "PASS",
+      "exit_code": 0,
+      "tests": 2,
+      "temporary_real_qdrant": true,
+      "log": "evidence/api-01-rag03.log",
+      "report": "evidence/api-01-rag03.json",
+      "cleanup_succeeded": true
+    },
+    {
+      "command": "node tools/ref-01/smoke-dist.mjs",
+      "result": "PASS",
+      "exit_code": 0,
+      "log": "evidence/api-01-dist.log"
+    },
+    {
+      "command": "SHA-256 comparison against CON-01 source manifest",
+      "result": "PASS",
+      "matching_files": 24,
+      "checked_files": 24,
+      "report": "evidence/api-01-source-compatibility.json",
+      "full_con_01_audit_repeated": false
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "wire_contract_changed": false,
+  "historical_admission_terminal_trace_changed": false,
+  "new_sidecar_version": "api-01-v1",
+  "new_sidecar_directory": "responses",
+  "inspection_addition": "responseIntegrity VALID/INVALID/MISSING",
+  "authorization": {
+    "single_service_principal": true,
+    "health_requires_bearer": true,
+    "mode_permissions_apply_to_replay": true,
+    "token_persisted_or_logged": false
+  },
+  "bounds": {
+    "body_bytes": 1048576,
+    "default_concurrent_executions": 4,
+    "default_deadline_ceiling_ms": 120000,
+    "http_retry_added": false,
+    "provider_retry_owner": "ADP-03"
+  },
+  "safety": {
+    "paid_provider_calls": 0,
+    "application_source_or_database_writes": false,
+    "persistent_index_mutated": false,
+    "public_deployment": false,
+    "research_run_performed": false
+  },
+  "review": {
+    "independent_subagent_review_completed": false,
+    "reason": "Kedua sesi subagent tidak menyediakan tools filesystem/exec. Implementasi dan verifikasi diambil alih agent utama."
+  },
+  "limitations": [
+    "Verifikasi pada Node 24.22.1; pin 24.22.3 dan image aplikasi belum diuji ulang.",
+    "Provider memakai fixture; kualitas pedagogis dan billing remote tidak diuji.",
+    "CON-01 penuh tidak diulang; 24 checksum source yang diaudit tetap cocok.",
+    "Readiness memakai cache sukses per mode pada proses berjalan, tanpa pemeriksaan remote pada probe.",
+    "Filesystem durable tidak dapat dibatalkan atomik; terminal tanpa envelope tetap konflik tanpa call baru.",
+    "Registry tetap satu writer lokal dengan guard recovery existing.",
+    "UC-01–03, INT-01, TEST-02, OPS-01, pilot dan freeze tidak ditutup oleh task ini."
+  ],
+  "source_sha256": {
+    ".env.example": "acd57dd7bb244534225f17fa3d45c3f2ffd18b7dc71b9232c200032ed1654508",
+    "Dockerfile": "9a54680771b12ea23a858f6b0c9a2918ad60b52471925f56a4a3019cae8d54ff",
+    "src/app.ts": "2c2c79cbc1b88ba377d029027f837fe371b755ea2fe8fea6e6de01a1b0172125",
+    "src/bootstrap/cli.ts": "a3c2f4e402654abcb16a9a23238e174d97b6c6f620a6ccaff783fdc9eb6fc4e7",
+    "src/bootstrap/config.ts": "73285b96a30fe4f0f300dbf05ebd21077bd014f5781b8f96cab5bc56c15af93e",
+    "src/modules/execution/application/ports/execution-registry.ts": "3115a4fcfe5309b685cab4942f1561f3b7c673b3e1a51795d1071d334cf35edd",
+    "src/modules/execution/application/services/execution-registry.service.ts": "5c11b52efaac7941387d8f35b12ee4220b7034d7c3f8f6f76413aac963d5aa0b",
+    "src/modules/execution/application/services/impl/execution-registry.service.impl.ts": "3766aef8aacd0391e60d23cfa7af0f00483c9166294193b3882a3eae6031b72e",
+    "src/modules/execution/interface/secondary/persistence/file-execution-registry.ts": "0d796b67e98f82227a4db4a1e718cd8417bf3425583fc388ac616f82db708778",
+    "src/modules/rag/interface/primary/rest/controller.ts": "b839b9b7e9a211508fac6a972027a42950f797035236f992328bd22905305672",
+    "src/modules/rag/interface/primary/rest/errors.ts": "0acea743a4a96669bfd2e6772921f43fa0bc6a7acdfa88056973ba96ed31d50d",
+    "src/modules/rag/interface/primary/rest/routes.ts": "b8cf90ad3eef3e6692f99387f76beb736e9dff2c9e7266803c653330f1dd6ec6",
+    "tests/unit/app/api.test.ts": "2b8257123350891124ce7f2c00985e73d52e577d92d7e1724ed21f090c6817c8",
+    "tests/unit/app/app.test.ts": "f5ecc3622a599c4aca563d8827b48a8d2bbc0a7e4369365a07bdc43d8e0aa2b2",
+    "tests/unit/shared/config.test.ts": "2329cd0a8d963688c09f7737cb1c4f32bcad82c4a1d412108ee62adb49f8d146",
+    "tests/unit/storage/store.test.ts": "71707ec518e0689a627e8de11db971ace90d20ec168a8a782a919cedeb464329",
+    "tools/boot-01/smoke-image.mjs": "6a12c3980feeccbef92848e747e3a7c4fcc32869b232a825dd3ceebce19ae1ac",
+    "tools/ref-01/check-boundaries.mjs": "e44a0ecb4eadc6fc48321a951630f331c99a0b0b574ba58eb6fd0e2381f3fa39",
+    "tools/ref-01/smoke-dist.mjs": "2b3b3215e9538cbdf4cf9db8deb42b11b8731fd0cb7382ddc5f3ec5e0ffebe96"
+  },
+  "evidence_sha256": {
+    "evidence/api-01-adp03.json": "0c21ca799a96c464690bc8025c03898538face0393b36e796e80e53ad009b26f",
+    "evidence/api-01-adp03.log": "171026280fc34639d4e7a9e33ebfc2ecf445415e187c269728fad1d892eb1f39",
+    "evidence/api-01-check.log": "328f2c159c9d32f1e02249d06b2a010245ac24f551ad836fd27cc6499787425e",
+    "evidence/api-01-dist.log": "0f009e226e5f7440d5c1dca61c5702dc2d836a1d3e49d5dfd6e9fec20326dc0d",
+    "evidence/api-01-http.log": "735dde3e11f9ab7aedfb4b165630735752b29497ca755fdf429a0df6555add88",
+    "evidence/api-01-rag03.json": "b506ea8476378cb8e6519d8b48e93d922f0f9d820d07f3ac20611f8360967912",
+    "evidence/api-01-rag03.log": "6e9dbfbcce1d97ca882c0882422be0a282b92bd5ca4ec815ff723f2b4c295c47",
+    "evidence/api-01-source-compatibility.json": "617f5e0e63b8ce4f1864b3cafd65e50a74e407cfa70deed1fa77e6a743a728f3"
+  }
+}

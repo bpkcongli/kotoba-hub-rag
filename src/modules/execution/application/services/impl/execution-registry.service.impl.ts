@@ -29,6 +29,18 @@ export class ExecutionRegistryServiceImpl implements ExecutionRegistryService {
     return this.registry.admit(input);
   }
 
+  lookup(input: AdmissionInput): Promise<AdmissionResult | null> {
+    return this.registry.lookup(input);
+  }
+
+  storeResponse(executionId: string, response: unknown): Promise<void> {
+    return this.registry.storeResponse(executionId, response);
+  }
+
+  readResponse(executionId: string): Promise<unknown> {
+    return this.registry.readResponse(executionId);
+  }
+
   assertActive(executionId: string): void {
     return this.registry.assertActive(executionId);
   }

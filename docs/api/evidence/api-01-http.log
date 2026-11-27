@@ -1,0 +1,36 @@
+▶ API-01: empat operasi × tiga mode × EN/ID × N5/N4 memakai runner nyata dan replay tanpa attempt tambahan
+  ✔ generate/0 (670.463122ms)
+  ✔ generate/1 (585.169293ms)
+  ✔ generate/2 (583.570815ms)
+  ✔ generate/3 (608.236853ms)
+  ✔ evaluate/0 (516.550713ms)
+  ✔ evaluate/1 (648.956224ms)
+  ✔ evaluate/2 (524.775018ms)
+  ✔ evaluate/3 (550.372546ms)
+  ✔ normalize/0 (609.796045ms)
+  ✔ normalize/1 (521.850406ms)
+  ✔ normalize/2 (551.69559ms)
+  ✔ normalize/3 (595.03496ms)
+  ✔ recommend/0 (636.796352ms)
+  ✔ recommend/1 (528.526817ms)
+  ✔ recommend/2 (575.703206ms)
+  ✔ recommend/3 (522.019528ms)
+✔ API-01: empat operasi × tiga mode × EN/ID × N5/N4 memakai runner nyata dan replay tanpa attempt tambahan (9233.82779ms)
+✔ API-01: auth health/operasi, transport JSON, body limit dan error redaction (22.241378ms)
+✔ API-01: schema/refinement, korelasi, level, corpus, mode, deadline ditolak sebelum inference (472.458014ms)
+✔ API-01: terminal failure direplay setelah restart/expiry, fingerprint konflik dan trace rusak tidak dieksekusi ulang (59.347534ms)
+✔ API-01: in-flight duplicate 409, request lain 429, slot dilepas setelah gagal (162.772757ms)
+✔ API-01: batas deadline server membatalkan runner, terminal timeout direplay (154.791225ms)
+✔ API-01: admission lama/UNKNOWN dan terminal tanpa envelope tetap konflik setelah restart (126.34302ms)
+✔ API-01: kegagalan persist envelope mempertahankan admission/terminal dan tidak mengulang call (77.348773ms)
+✔ API-01: trace sink gagal sebelum inference; admission UNKNOWN tetap memblokir duplicate (56.927738ms)
+✔ API-01: disconnect HTTP nyata membatalkan signal dan hasil terminal tidak dijalankan ulang (67.306451ms)
+✔ API-01: composition produksi merangkai baseline HTTP dan replay sukses setelah restart (218.320924ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10656.105012

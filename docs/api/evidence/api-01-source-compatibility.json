@@ -1,0 +1,9 @@
+{
+  "reference": "contracts/v1/source-manifest.json",
+  "files_checked": 24,
+  "matching_files": 24,
+  "different_files": [],
+  "application_repository_modified_by_task": false,
+  "full_con_01_runner_repeated": false,
+  "reason": "Node 24.22.3 runner pin tidak tersedia; compatibility evidence CON-01 dipertahankan sebagai historis. API memakai schema snapshot yang sama."
+}

@@ -6,7 +6,7 @@ import { promisify } from 'node:util';
 
 const execute = promisify(execFile);
 
-const image = process.argv[2] ?? 'kotoba-hub-rag:boot-01';
+const image = process.argv[2] ?? 'kotoba-hub-rag:api-01';
 const name = `kotoba-boot01-${randomUUID()}`;
 
 const docker = async (...args) =>
@@ -48,6 +48,12 @@ try {
     'LOG_LEVEL=silent',
     '--env',
     'PORT=8080',
+    '--env',
+    'API_SERVICE_TOKEN=api-fixture-token-123',
+    '--env',
+    'OBSERVATION_DIRECTORY=/tmp/observations',
+    '--tmpfs',
+    '/tmp:rw,noexec,nosuid,size=16m',
     image,
   );
 
@@ -63,24 +69,25 @@ try {
     import assert from 'node:assert/strict';
 
     const origin = 'http://127.0.0.1:' + process.env.PORT;
+    const headers = {authorization: 'Bearer ' + process.env.API_SERVICE_TOKEN};
     let response;
 
     for (let i = 0; i < 50; i++) {
-      try { response = await fetch(origin + '/health/live'); break; }
+      try { response = await fetch(origin + '/health/live', {headers}); break; }
       catch { await new Promise(r => setTimeout(r, 100)); }
     }
 
     assert.equal(response?.status, 200);
     assert.deepEqual(await response.json(), {status:'live'});
 
-    const ready = await fetch(origin + '/health/ready');
+    const ready = await fetch(origin + '/health/ready', {headers});
 
     assert.equal(ready.status, 503);
     assert.deepEqual(await ready.json(), {status:'not_ready'});
 
-    const operation = await fetch(origin + '/v1/practice/generate', {method:'POST', headers:{'content-type':'application/json'}, body:'{}'});
+    const operation = await fetch(origin + '/v1/practice/generate', {method:'POST', headers:{...headers, 'content-type':'application/json'}, body:'{}'});
 
-    assert.equal(operation.status, 404);
+    assert.equal(operation.status, 400);
 
     assert.equal(process.version, 'v24.22.3');
     assert.equal(process.getuid(), 1000);
@@ -150,7 +157,7 @@ const checksums = Object.fromEntries(
 );
 
 const evidence = {
-  task: 'BOOT-01',
+  task: 'API-01',
   verified_at: new Date().toISOString(),
   image: {
     tag: image,
@@ -172,13 +179,13 @@ const evidence = {
   invalid_config: invalidConfig,
   sha256: checksums,
   limitations: [
-    'Health-only bootstrap; readiness sengaja 503.',
-    'Tanpa model/provider, Qdrant, pipeline, auth, idempotency atau paid call.',
+    'Provider nonaktif; readiness 503 dan auth service berlaku pada semua probe.',
+    'Tanpa inferensi, Qdrant atau paid call; replay diuji terpisah melalui fixture API-01.',
     'Bukan uji kapasitas corpus/produksi atau freeze eksperimen.',
   ],
 };
 
-await writeFile('docs/verification/BOOT-01-image.json', JSON.stringify(evidence, null, 2) + '\n');
+await writeFile('docs/api/API-01-image.json', JSON.stringify(evidence, null, 2) + '\n');
 
 console.log(
   JSON.stringify({

@@ -49,6 +49,11 @@ async function main(): Promise<void> {
         rejectionCount: rejections.length,
         unknownCount: executions.filter((row) => row.state === 'UNKNOWN').length,
         invalidTraceCount: executions.filter((row) => row.traceIntegrity !== 'VALID').length,
+        terminalWithoutResponseCount: executions.filter(
+          (row) => row.state === 'TERMINAL' && row.responseIntegrity === 'MISSING',
+        ).length,
+        invalidResponseCount: executions.filter((row) => row.responseIntegrity === 'INVALID')
+          .length,
       })}\n`,
     );
   } finally {

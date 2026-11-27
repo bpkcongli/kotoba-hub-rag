@@ -53,10 +53,18 @@ export interface ObservationInspection {
 
   readonly traceIntegrity: 'VALID' | 'INVALID' | 'MISSING';
 
+  readonly responseIntegrity: 'VALID' | 'INVALID' | 'MISSING';
+
   readonly eventCount: number;
 }
 
 export interface ExecutionRegistryPort {
+  lookup(input: AdmissionInput): Promise<AdmissionResult | null>;
+
+  storeResponse(executionId: string, response: unknown): Promise<void>;
+
+  readResponse(executionId: string): Promise<unknown>;
+
   admit(input: AdmissionInput): Promise<AdmissionResult>;
 
   assertActive(executionId: string): void;

@@ -1,6 +1,23 @@
 import { ConfigError } from '@/shared/errors/config-error';
+import type { Mode } from '@/shared/operations';
+
+export interface ApiConfig {
+  readonly serviceId: string;
+
+  readonly token: string | null;
+
+  readonly corpusVersion: string | null;
+
+  readonly allowedModes: readonly Mode[];
+
+  readonly maxConcurrent: number;
+
+  readonly maxDeadlineMs: number;
+}
 
 export interface AppConfig {
+  readonly api: ApiConfig;
+
   readonly environment: 'development' | 'test' | 'production';
 
   readonly host: string;
@@ -63,6 +80,38 @@ export function readConfig(env: Readonly<Record<string, unknown>>): AppConfig {
   const port = integer('PORT', 3000, 1, 65535);
   const shutdownTimeoutMs = integer('SHUTDOWN_TIMEOUT_MS', 10000, 100, 30000);
   const observationDirectory = env.OBSERVATION_DIRECTORY ?? 'artifacts/observability/service';
+  const serviceId = env.API_SERVICE_ID ?? 'kotobahub';
+  const token = env.API_SERVICE_TOKEN === '' ? null : (env.API_SERVICE_TOKEN ?? null);
+  const corpusVersion = env.API_CORPUS_VERSION === '' ? null : (env.API_CORPUS_VERSION ?? null);
+  const rawModes = env.API_ALLOWED_MODES ?? 'LLM_ONLY,SINGLE_STAGE,ADAPTIVE';
+  const modes: readonly Mode[] = ['LLM_ONLY', 'SINGLE_STAGE', 'ADAPTIVE'];
+  const allowedModes =
+    typeof rawModes === 'string' ? modes.filter((mode) => rawModes.split(',').includes(mode)) : [];
+  const maxConcurrent = integer('API_MAX_CONCURRENT', 4, 1, 64);
+  const maxDeadlineMs = integer('API_MAX_DEADLINE_MS', 120000, 100, 120000);
+
+  if (typeof serviceId !== 'string' || !/^[a-zA-Z0-9._-]{1,100}$/.test(serviceId)) {
+    invalid.push('API_SERVICE_ID');
+  }
+
+  if (token !== null && (typeof token !== 'string' || !/^[\x21-\x7e]{16,512}$/.test(token))) {
+    invalid.push('API_SERVICE_TOKEN');
+  }
+
+  if (
+    corpusVersion !== null &&
+    (typeof corpusVersion !== 'string' || !/^[a-zA-Z0-9._-]{1,200}$/.test(corpusVersion))
+  ) {
+    invalid.push('API_CORPUS_VERSION');
+  }
+
+  if (
+    typeof rawModes !== 'string' ||
+    rawModes.split(',').length !== allowedModes.length ||
+    allowedModes.length === 0
+  ) {
+    invalid.push('API_ALLOWED_MODES');
+  }
 
   if (
     typeof observationDirectory !== 'string' ||
@@ -73,11 +122,26 @@ export function readConfig(env: Readonly<Record<string, unknown>>): AppConfig {
     invalid.push('OBSERVATION_DIRECTORY');
   }
 
-  if (invalid.length || typeof host !== 'string' || typeof observationDirectory !== 'string') {
+  if (
+    invalid.length ||
+    typeof host !== 'string' ||
+    typeof observationDirectory !== 'string' ||
+    typeof serviceId !== 'string' ||
+    (token !== null && typeof token !== 'string') ||
+    (corpusVersion !== null && typeof corpusVersion !== 'string')
+  ) {
     throw new ConfigError(invalid);
   }
 
   return Object.freeze({
+    api: Object.freeze({
+      serviceId,
+      token,
+      corpusVersion,
+      allowedModes: Object.freeze(allowedModes),
+      maxConcurrent,
+      maxDeadlineMs,
+    }),
     environment,
     host,
     port,

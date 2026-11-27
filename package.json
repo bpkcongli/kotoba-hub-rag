@@ -9,8 +9,6 @@
     "npm": "11.19.1"
   },
   "scripts": {
-    "contracts:generate": "node tools/boot-01/generate-types.mjs",
-    "contracts:check": "node tools/boot-01/generate-types.mjs --check",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src tests eslint.config.mjs tools/boot-01 tools/inf-01 tools/store-01 tools/data-01 tools/data-03 tools/rag-01 tools/ref-01",
     "format": "prettier --write .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs tools/ref-01/*.mjs",
@@ -23,6 +21,10 @@
     "start": "node --env-file-if-exists=.env dist/main.js",
     "dev": "node --import tsx --env-file-if-exists=.env --watch src/main.ts",
     "store": "node --import tsx --env-file-if-exists=.env src/modules/knowledge/interface/primary/store-cli.ts",
+    "contracts:generate": "node tools/boot-01/generate-http-contract.mjs && node tools/boot-01/generate-types.mjs && node tools/boot-01/generate-openapi.mjs",
+    "contracts:check": "node tools/boot-01/generate-types.mjs --check && npm run openapi:check",
+    "openapi:generate": "node tools/boot-01/generate-http-contract.mjs && node tools/boot-01/generate-openapi.mjs",
+    "openapi:check": "node tools/boot-01/generate-http-contract.mjs --check && node tools/boot-01/generate-openapi.mjs --check",
     "data:test": "node tools/data-01/audit.test.mjs && node tools/data-01/seed-audit.test.mjs",
     "data:verify": "node tools/data-01/verify.mjs",
     "data:tokenizer": "node --import tsx src/modules/knowledge/interface/primary/fetch-tokenizer.ts",

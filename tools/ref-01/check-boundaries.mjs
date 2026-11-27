@@ -164,8 +164,8 @@ const visitGraph = (file, chain) => {
 
   for (const next of graph.get(file)) {
     visitGraph(next, [...chain, file]);
-
   }
+
   active.delete(file);
   done.add(file);
 };

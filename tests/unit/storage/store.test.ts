@@ -240,7 +240,7 @@ await test('startup dan probe Qdrant enabled tidak memanggil jaringan atau membu
   });
 
   const app = createApplication(
-    readConfig({ LOG_LEVEL: 'silent' }),
+    readConfig({ LOG_LEVEL: 'silent', API_SERVICE_TOKEN: 'api-fixture-token-123' }),
     undefined,
     null,
     readQdrantConfig({ QDRANT_ENABLED: 'true' }),
@@ -253,8 +253,24 @@ await test('startup dan probe Qdrant enabled tidak memanggil jaringan atau membu
   assert.ok(app.storage);
 
   for (let i = 0; i < 3; i++) {
-    assert.equal((await app.server.inject('/health/live')).statusCode, 200);
-    assert.equal((await app.server.inject('/health/ready')).statusCode, 503);
+    assert.equal(
+      (
+        await app.server.inject({
+          url: '/health/live',
+          headers: { authorization: 'Bearer api-fixture-token-123' },
+        })
+      ).statusCode,
+      200,
+    );
+    assert.equal(
+      (
+        await app.server.inject({
+          url: '/health/ready',
+          headers: { authorization: 'Bearer api-fixture-token-123' },
+        })
+      ).statusCode,
+      503,
+    );
   }
 
   assert.equal(calls, 0);
@@ -289,6 +305,7 @@ await test('config storage invalid menghentikan startup sebelum listen', () => {
     env: {
       NODE_ENV: 'test',
       LOG_LEVEL: 'silent',
+      API_SERVICE_TOKEN: 'api-fixture-token-123',
       QDRANT_ENABLED: 'true',
       QDRANT_URL: 'https://private:secret@example.test',
     },

@@ -1,6 +1,6 @@
 # CON-01 — Kontrak layanan AI/RAG v1 dan audit aplikasi
 
-Tanggal: 23 November 2026. Dependensi: DEC-01 selesai. Status: kontrak dan fixture terverifikasi; endpoint serta adapter HTTP belum diimplementasikan. Task ini hanya mengubah repository RAG.
+Tanggal: 23 November 2026. Dependensi: DEC-01 selesai. Status audit 23 November: kontrak dan fixture terverifikasi. Endpoint service kemudian tersedia pada [API-01](../api/API-01-http.md), 27 November 2026; adapter HTTP aplikasi tetap INT-01. Task ini hanya mengubah repository RAG.
 
 ## Artefak dan sumber kebenaran
 

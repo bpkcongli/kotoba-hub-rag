@@ -11,13 +11,35 @@ const { readConfig } = await import(
 );
 const directory = await mkdtemp(join(tmpdir(), 'ref01-dist-'));
 const app = createApplication(
-  readConfig({ OBSERVATION_DIRECTORY: directory, LOG_LEVEL: 'silent' }),
+  readConfig({
+    OBSERVATION_DIRECTORY: directory,
+    LOG_LEVEL: 'silent',
+    API_SERVICE_TOKEN: 'api-fixture-token-123',
+  }),
 );
 
 try {
   assert.equal(app.contracts.health({ status: 'live' }), true);
-  assert.equal((await app.server.inject({ method: 'GET', url: '/health/live' })).statusCode, 200);
-  assert.equal((await app.server.inject({ method: 'GET', url: '/health/ready' })).statusCode, 503);
+  assert.equal(
+    (
+      await app.server.inject({
+        method: 'GET',
+        url: '/health/live',
+        headers: { authorization: 'Bearer api-fixture-token-123' },
+      })
+    ).statusCode,
+    200,
+  );
+  assert.equal(
+    (
+      await app.server.inject({
+        method: 'GET',
+        url: '/health/ready',
+        headers: { authorization: 'Bearer api-fixture-token-123' },
+      })
+    ).statusCode,
+    503,
+  );
   assert.equal(
     (
       await app.server.inject({
@@ -26,7 +48,7 @@ try {
         payload: {},
       })
     ).statusCode,
-    404,
+    401,
   );
 
   const admitted = await app.observations.admit({
@@ -63,7 +85,7 @@ try {
     JSON.stringify({
       healthLive: 200,
       healthReady: 503,
-      operationRoute: 404,
+      operationRoute: 401,
       staticSchemasLoaded: true,
       defaultPriceSnapshotLoaded: true,
       durableTerminalReadable: true,

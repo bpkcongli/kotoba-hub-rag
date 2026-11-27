@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 27 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. REF-01 memisahkan runtime ke modul DDD dengan kontrak aplikasi dan pemeriksaan dependency. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 27 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. REF-01 memisahkan runtime ke modul DDD dengan kontrak aplikasi dan pemeriksaan dependency. API-01 menyediakan empat endpoint operasi terautentikasi dengan body camelCase, batas kapasitas/deadline dan replay durable. Hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -25,6 +25,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [RAG-03](docs/retrieval/RAG-03-single-stage.md) | SINGLE_STAGE internal, satu retrieval round, low-evidence handling, accounting/terminal trace dan integrasi Qdrant fixture |
 | [ADP-01](docs/adaptive/ADP-01-router.md) | Router/initial stage, fitur dan policy/version/reason codes; prosedur kalibrasi pilot-only, threshold masih provisional |
 | [ADP-02](docs/adaptive/ADP-02-deep-path.md) | Runner ADAPTIVE FAST/DEEP internal, dua stages/satu rewrite opsional, BGE rerank/gate/terminal dan accounting seluruh batch |
+| [API-01](docs/api/API-01-http.md) | Empat endpoint v1 dengan body camelCase, Bearer service auth, batas kapasitas/deadline, replay dan rekonsiliasi envelope; [OpenAPI YAML](docs/api/openapi.yaml) |
 | [ADP-03](docs/adaptive/ADP-03-execution-policy.md) | Lifecycle tiga mode, deadline/cancellation, shared retry/call budget, terminal dan accounting seluruh attempts |
 | [REF-01](docs/architecture/REF-01-ddd-refactor.md) | Implementasi boundary DDD, pemetaan source dan bukti regresi; rencana awal tetap tersedia pada laporan |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
@@ -69,11 +70,15 @@ Struktur `tests/` mengikuti tanggung jawab modul di `src/`:
 - `__fixtures__/`: fixture/helper bersama untuk unit dan integration test, diimpor melalui `@tests/__fixtures__/<nama>`. Fixture kontrak bersama aplikasi tetap berada di `contracts/v1/`.
 
 ```bash
-curl -i http://127.0.0.1:3000/health/live
-curl -i http://127.0.0.1:3000/health/ready
+curl -i -H "Authorization: Bearer $API_SERVICE_TOKEN" http://127.0.0.1:3000/health/live
+curl -i -H "Authorization: Bearer $API_SERVICE_TOKEN" http://127.0.0.1:3000/health/ready
 ```
 
-Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 `{"status":"not_ready"}` karena dependency/pipeline belum terpasang. Empat endpoint operasi v1 belum terdaftar. Probe tidak memanggil inferensi, Qdrant atau jaringan provider. Bind default `127.0.0.1`; batas body tetap 1 MiB. Registry admission/terminal tersedia pada OBS-01; auth dan replay envelope tetap API-01; deadline/cancellation runner internal tersedia pada ADP-03.
+Body HTTP memakai camelCase (`requestId`, `corpusVersion`, `deadlineAt`, `meta.traceId`), termasuk metadata bersarang dan `questionMix.weak/reinforcement/stretch`. Snake_case dan alias campuran ditolak. Path `/v1` dan nilai `schemaVersion: "1"` tetap dalam pembaruan API-01 sesuai permintaan pengguna; snapshot CON-01 serta ledger internal tetap historis. Lihat [detail migrasi](docs/api/API-01-http.md#penamaan-field-camelcase).
+
+Isi `API_SERVICE_TOKEN` melalui environment secret dan `API_CORPUS_VERSION` sesuai snapshot sebelum menggunakan operasi. Semua route termasuk health memakai Bearer token; token kosong menghasilkan 503, token tidak valid 401. Liveness terautentikasi mengembalikan 200. Readiness dimulai 503 sampai setiap mode yang diizinkan tersedia dan berhasil dieksekusi pada proses berjalan; dependency/trace failure menghapus status mode tersebut. Probe hanya membaca status lokal, tanpa inference atau query Qdrant. Bind default `127.0.0.1`, body maksimum 1 MiB dan JSON strict. [Laporan API-01](docs/api/API-01-http.md) memuat empat endpoint, konfigurasi, error serta recovery.
+
+`API_ALLOWED_MODES` default ketiga mode; provider tetap opt-in. `API_MAX_CONCURRENT=4` membatasi eksekusi aktif tanpa antrean HTTP, sedangkan `API_MAX_DEADLINE_MS=120000` membatasi budget client. Request identik yang terminal direplay dengan envelope/execution ID sama; isi berbeda, in-flight, UNKNOWN atau terminal tanpa envelope menghasilkan 409 tanpa call baru. Simpan direktori observability sepanjang run dan rekonsiliasi, termasuk subdirektori `responses/`. Jangan mengganti request UUID untuk melewati UNKNOWN.
 
 | Environment | Default | Validasi |
 | --- | --- | --- |
@@ -84,16 +89,16 @@ Liveness mengembalikan HTTP 200 `{"status":"live"}`; readiness sengaja HTTP 503 
 | `SHUTDOWN_TIMEOUT_MS` | `10000` | Integer desimal 100–30000; batas shutdown SIGTERM/SIGINT |
 | `OBSERVATION_DIRECTORY` | `artifacts/observability/service` | Path tidak kosong/tanpa control characters; satu writer lokal, volume persisten diperlukan saat operasi dipasang |
 
-INF-02 menambahkan client HF opt-in melalui `HF_INFERENCE_ENABLED=true` dan secret `HF_TOKEN`. Startup tetap tidak memanggil provider. Provider/model/endpoint dipin pada `HF_IDENTITY`; override yang berbeda ditolak. Adapter yang sama menyediakan embedding dokumen/query dan reranker; orkestrator mode belum tersedia. Lihat [konfigurasi dan batas klien](docs/inference/INF-02-adapter.md). Tipe di `src/contracts/v1.generated.ts` dibangkitkan dari snapshot CON-01 dengan `npm run contracts:generate`; `contracts:check` menolak drift. Validator menerima `unknown` tanpa coercion/default/removal dan memeriksa schema, korelasi ID, target N5/N4 serta sisa deadline. Refinement domain dan admission lengkap tetap task UC/API.
+INF-02 menambahkan client HF opt-in melalui `HF_INFERENCE_ENABLED=true` dan secret `HF_TOKEN`. Startup tetap tidak memanggil provider. Provider/model/endpoint dipin pada `HF_IDENTITY`; override yang berbeda ditolak. Adapter yang sama menyediakan embedding dokumen/query dan reranker; runner tiga mode dan endpoint API-01 sudah tersedia. Lihat [konfigurasi dan batas klien](docs/inference/INF-02-adapter.md). Tipe di `src/contracts/v1.generated.ts` dibangkitkan dari snapshot CON-01 dengan `npm run contracts:generate`; `contracts:check` menolak drift. Validator menerima `unknown` tanpa coercion/default/removal dan memeriksa schema, korelasi ID, target N5/N4 serta sisa deadline. Refinement existing dan admission HTTP tersedia; verifikasi use case lanjutan tetap UC-01–03.
 
 Build dan smoke image Linux amd64 lokal (Docker diperlukan):
 
 ```bash
-docker build --platform linux/amd64 -t kotoba-hub-rag:boot-01 .
+docker build --platform linux/amd64 -t kotoba-hub-rag:api-01 .
 node tools/boot-01/smoke-image.mjs
 ```
 
-Dockerfile memakai image Node Debian 12 dengan digest terpin, npm build exact, runtime non-root dan dependency production saja. Smoke tidak memublikasikan port, memakai `--network none` dan root filesystem read-only; hasil disimpan pada [evidence image](docs/verification/BOOT-01-image.json). Laporan [BOOT-01](docs/BOOT-01-bootstrap.md) menjelaskan batas verifikasi. Compose Qdrant tersedia pada STORE-01; deployment publik tetap task lanjutan. Smoke provider tersedia pada INF-01.
+Dockerfile memakai image Node Debian 12 dengan digest terpin, npm build exact, runtime non-root dan dependency production saja. Smoke tidak memublikasikan port, memakai `--network none` dan root filesystem read-only; hasil baru ditulis ke `docs/api/API-01-image.json`. [Evidence image BOOT-01](docs/verification/BOOT-01-image.json) tetap historis; image aplikasi belum dibangun ulang pada API-01. Laporan [BOOT-01](docs/BOOT-01-bootstrap.md) menjelaskan batas verifikasi. Compose Qdrant tersedia pada STORE-01; deployment publik tetap task lanjutan. Smoke provider tersedia pada INF-01.
 
 ## Qdrant lokal STORE-01
 
@@ -107,7 +112,7 @@ npm run test:store
 
 Compose mematok Qdrant 1.20.2 linux/amd64 ke digest image, bind REST hanya `127.0.0.1:6333`, dengan named volumes storage/snapshots. `QDRANT_HTTP_PORT` mengubah port host; sesuaikan `QDRANT_URL` bila port berubah. `npm run test:store` memakai project, port dan volume sementara sendiri, lalu membersihkannya. Perintah ini terpisah dari `npm run check` karena memerlukan daemon Docker; keduanya dijalankan untuk perubahan storage.
 
-`QDRANT_ENABLED=true` dan `QDRANT_URL=http://127.0.0.1:6333` mengaktifkan client pada aplikasi/CLI. Startup dan health probe tetap tidak melakukan I/O Qdrant atau membuat collection. Readiness service masih 503 sampai corpus dan pipeline siap. `QDRANT_TIMEOUT_MS` default 5000 ms (1–30000); `QDRANT_API_KEY` opsional untuk server yang telah dikonfigurasi auth. Compose lokal ini memakai loopback tanpa auth; deployment/TLS/auth dan backup/restore tetap OPS-01.
+`QDRANT_ENABLED=true` dan `QDRANT_URL=http://127.0.0.1:6333` mengaktifkan client pada aplikasi/CLI. Startup dan health probe tetap tidak melakukan I/O Qdrant atau membuat collection. Readiness mengikuti konfigurasi dan hasil eksekusi terakhir pada API-01. `QDRANT_TIMEOUT_MS` default 5000 ms (1–30000); `QDRANT_API_KEY` opsional untuk server yang telah dikonfigurasi auth. Compose lokal ini memakai loopback tanpa auth; deployment/TLS/auth dan backup/restore tetap OPS-01.
 
 CLI admin `npm run store -- prepare path/manifest.json` membuat collection/index yang hilang secara idempotent; `npm run store -- validate path/manifest.json` memeriksa kompatibilitas, inventory, seluruh point dan filtered search smoke. Isi manifest aktual dari snapshot yang disetujui sebelum prepare pertama. [Contoh manifest](docs/storage/STORE-01-manifest.example.json) hanya placeholder collection kosong; [laporan STORE-01](docs/storage/STORE-01-qdrant.md) menjelaskan schema, lifecycle dan batasnya. Operasi ini bukan ingestion dan tidak memanggil model. `docker compose down` menghentikan service dengan volume tetap tersimpan.
 
@@ -153,7 +158,7 @@ npm run obs:reconcile -- --directory artifacts/observability/service
 npm run obs:reconcile -- --directory artifacts/observability/service --recover-stale-lock
 ```
 
-Laporan mencakup terminal UNKNOWN, admission failures dan trace invalid. Bila recovery ikut crash meninggalkan `recovery.lock`, ikuti [prosedur pemeriksaan operator](docs/observability/OBS-01-tracing.md#rekonsiliasi-operator) sebelum membersihkan guard tersebut. Endpoint operasi dan replay envelope tetap API-01; accounting biaya tersedia pada OBS-02. Indexing DATA-03 memakai journal sendiri.
+Laporan mencakup terminal UNKNOWN, admission failures dan trace invalid. Bila recovery ikut crash meninggalkan `recovery.lock`, ikuti [prosedur pemeriksaan operator](docs/observability/OBS-01-tracing.md#rekonsiliasi-operator) sebelum membersihkan guard tersebut. Endpoint operasi dan replay envelope tersedia pada API-01; accounting biaya tersedia pada OBS-02. Indexing DATA-03 memakai journal sendiri.
 
 ## Accounting OBS-02
 
@@ -188,7 +193,7 @@ Perintah ini memakai Qdrant sementara, port loopback dan volume milik runner sen
 
 `Application.singleStage` tersedia jika HF, Qdrant/retrieval, context builder dan OpenAI aktif. Runner memerlukan admission OBS-01 dan mode SINGLE_STAGE; tepat satu retrieval round, tanpa router/rewrite/rerank, lalu selected context/gate dan generator bersama. Hasil evidence kosong/di bawah batas ditutup sebagai INSUFFICIENT_EVIDENCE tanpa generation atau fallback. Sumber sitasi hanya dari selected context dan unknown cost tetap null.
 
-Gate awal `RAG_MIN_UNIQUE_CHUNKS=1`/`RAG_MIN_COVERED_SKILLS=1` memeriksa struktur, belum kualitas semantik terkalibrasi. Scope internal maksimal 64 skill (code 128 karakter) dan query 8192 karakter; pelanggaran ditolak sebelum inference tanpa menyempitkan scope diam-diam. [Laporan RAG-03](docs/retrieval/RAG-03-single-stage.md) memuat query mapping, status, deadline dan batasnya. HTTP/auth/replay belum terpasang; adaptive internal tersedia melalui ADP-02/03; readiness tetap 503 dan probe tanpa provider calls.
+Gate awal `RAG_MIN_UNIQUE_CHUNKS=1`/`RAG_MIN_COVERED_SKILLS=1` memeriksa struktur, belum kualitas semantik terkalibrasi. Scope internal maksimal 64 skill (code 128 karakter) dan query 8192 karakter; pelanggaran ditolak sebelum inference tanpa menyempitkan scope diam-diam. [Laporan RAG-03](docs/retrieval/RAG-03-single-stage.md) memuat query mapping, status, deadline dan batasnya. HTTP/auth/replay tersedia pada API-01; adaptive internal tersedia melalui ADP-02/03; readiness mengikuti status cache API-01 dan probe tanpa provider calls.
 
 ```sh
 npm run check
@@ -205,7 +210,7 @@ Threshold `ADAPTIVE_MIN_UNIQUE_CANDIDATES=1`, `ADAPTIVE_MIN_SELECTED_CHUNKS=1`, 
 
 ## Deep path internal — ADP-02
 
-`Application.adaptive` tersedia ketika retrieval/context/HF/OpenAI aktif, dengan admission OBS-01 dan input mode ADAPTIVE. FAST memakai context awal; DEEP maksimal dua retrieval stages total, satu rewrite opsional, merge/dedup pool, BGE rerank dan context/gate bersama. Hasil domain valid atau failure memiliki terminal; evidence kurang menghasilkan INSUFFICIENT_EVIDENCE tanpa generation/fallback. HTTP operasi tetap API-01.
+`Application.adaptive` tersedia ketika retrieval/context/HF/OpenAI aktif, dengan admission OBS-01 dan input mode ADAPTIVE. FAST memakai context awal; DEEP maksimal dua retrieval stages total, satu rewrite opsional, merge/dedup pool, BGE rerank dan context/gate bersama. Hasil domain valid atau failure memiliki terminal; evidence kurang menghasilkan INSUFFICIENT_EVIDENCE tanpa generation/fallback. HTTP operasi tersedia pada API-01.
 
 Default policy PROVISIONAL: `ADAPTIVE_REWRITE_ENABLED=false`, `ADAPTIVE_REWRITE_MODEL=gpt-5.6-terra`, `ADAPTIVE_RERANK_POOL_LIMIT=10`. Semua actual rerank batch attempts serta rewrite masuk usage/cost/counters sekali; unknown tetap null. Default retry tetap nol; policy opt-in tersedia pada ADP-03. Kalibrasi pilot belum dilakukan. Jalankan `npm run check`, `npm run test:adp02`, dan regresi `npm run test:rag03` tanpa paid provider. Checks 185 test, dua integrasi deep Qdrant nyata dan dua regresi baseline lulus pada Node 24.22.1/npm 11.19.1; pin Node 24.22.3 belum diuji pada sesi ini. [Laporan/bukti ADP-02](docs/adaptive/ADP-02-deep-path.md) memuat batas scope dan handoff ADP-03.
 
@@ -216,11 +221,11 @@ Ketiga runner memakai lifecycle dan snapshot `adp-03-v1` yang sama: deadline mon
 
 Konfigurasi `.env.example`: `PIPELINE_MAX_PROVIDER_RETRIES=0`, `PIPELINE_MAX_SCHEMA_RETRIES=0`, `PIPELINE_MAX_TOTAL_RETRIES=0`, `PIPELINE_MAX_MODEL_CALLS=72`, backoff base/max 250/2000 ms dan grace callback audit 1000 ms. Retry provider/schema berbagi batas total maksimal tiga tambahan attempt. Grace hanya untuk pencatatan attempt, tanpa inference baru setelah deadline. Semua attempts tetap masuk metadata/ledger, dengan unknown usage/cost null.
 
-`npm run check`, `npm run test:adp03`, `npm run test:adp02` dan `npm run test:rag03` lulus: 201 test proyek dan enam integrasi Qdrant sementara, tanpa paid call. Node aktual 24.22.1/npm 11.19.1; pin Node 24.22.3 belum diuji. [Laporan dan bukti ADP-03](docs/adaptive/ADP-03-execution-policy.md) merinci policy dan batas audit/timeout. HTTP API-01, pilot/kalibrasi dan freeze tetap terbuka.
+`npm run check`, `npm run test:adp03`, `npm run test:adp02` dan `npm run test:rag03` lulus: 201 test proyek dan enam integrasi Qdrant sementara, tanpa paid call. Node aktual 24.22.1/npm 11.19.1; pin Node 24.22.3 belum diuji. [Laporan dan bukti ADP-03](docs/adaptive/ADP-03-execution-policy.md) merinci policy dan batas audit/timeout. HTTP API-01 tersedia; pilot/kalibrasi dan freeze tetap terbuka.
 
 ## Baseline internal BASE-01
 
-`OPENAI_ENABLED=true` merangkai provider dan runner LLM_ONLY di composition root; `OPENAI_API_KEY` diinject melalui environment. Model tetap Terra untuk generate/evaluate/recommend dan Luna untuk normalize. Startup/probe tidak melakukan inference, dan endpoint operasi masih milik API-01. [Laporan BASE-01](docs/generation/BASE-01-baseline.md) memuat validasi domain, batas call/deadline/concurrency dan accounting.
+`OPENAI_ENABLED=true` merangkai provider dan runner LLM_ONLY di composition root; `OPENAI_API_KEY` diinject melalui environment. Model tetap Terra untuk generate/evaluate/recommend dan Luna untuk normalize. Startup/probe tidak melakukan inference, dan endpoint operasi tersedia pada API-01. [Laporan BASE-01](docs/generation/BASE-01-baseline.md) memuat validasi domain, batas call/deadline/concurrency dan accounting.
 
 ```bash
 npm run base:smoke
