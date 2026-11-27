@@ -1,0 +1,120 @@
+{
+  "task": "UC-01",
+  "status": "DONE",
+  "completedOn": "2026-11-28",
+  "verifiedAtUtc": "2026-11-27T17:42:43.395Z",
+  "scope": "Verifikasi generasi soal dan validator bersama yang tersedia; penambahan fixture, test HTTP dan probe source aplikasi aktual tanpa perubahan production runtime.",
+  "environment": {
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "pinnedNode": "24.22.3",
+    "pinnedNodeRetested": false,
+    "applicationImageRebuilt": false
+  },
+  "commands": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "runtimeTestsPassed": 422,
+      "evidence": "evidence/uc-01-check.log"
+    },
+    {
+      "command": "node --import tsx --test tests/unit/generation/practice.test.ts",
+      "exitCode": 0,
+      "testsPassed": 184,
+      "evidence": "evidence/uc-01-practice.log"
+    },
+    {
+      "command": "node --import tsx tools/uc-01/verify.mjs",
+      "equivalentNpmScript": "npm run test:uc01",
+      "exitCode": 0,
+      "scenariosPassed": 108,
+      "evidence": "evidence/uc-01-compatibility.json"
+    },
+    {
+      "command": "eslint tools/uc-01/verify.mjs",
+      "exitCode": 0,
+      "note": "Diulang setelah Git probe memakai --no-optional-locks."
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "coverage": {
+    "scenarios": 108,
+    "valid": 41,
+    "schemaInvalid": 17,
+    "invariantInvalid": 50,
+    "questionTypes": [
+      "SHORT_FREE_RESPONSE",
+      "SLOT_FILL",
+      "ARRANGE_TOKEN",
+      "FREE_RESPONSE"
+    ],
+    "levels": [
+      "JLPT_N5",
+      "JLPT_N4"
+    ],
+    "translationLocales": [
+      "en",
+      "id"
+    ],
+    "directions": [
+      "EN_TO_JA",
+      "JA_TO_EN",
+      "ID_TO_JA",
+      "JA_TO_ID"
+    ],
+    "difficultyBands": [
+      "REMEDIAL",
+      "STANDARD",
+      "STRETCH"
+    ],
+    "httpSuccessExecutions": 16,
+    "httpInvalidOutputExecutions": 67,
+    "httpPaths": [
+      "LLM_ONLY",
+      "SINGLE_STAGE",
+      "FAST",
+      "DEEP"
+    ],
+    "rejectionBeforeAdmission": "questionCount 0/21; batas valid 1/20.",
+    "durability": "Hasil invalid hanya terminal FAILED/error envelope tanpa data sukses; replay identik tanpa call baru. Kasus domain invalid juga diperiksa pada SINGLE_STAGE dan kedua jalur ADAPTIVE."
+  },
+  "sourceCompatibility": {
+    "repository": "kotoba-hub",
+    "auditedCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "currentCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "sourceFilesMatched": 24,
+    "workingTreeUnchanged": true,
+    "actualValidator": "AiServiceImpl.generatePracticeSession",
+    "providerAndLogs": "Mock; tanpa repository database."
+  },
+  "newPaidProviderCalls": 0,
+  "siblingSourceWrites": 0,
+  "databaseWrites": 0,
+  "persistentIndexMutations": 0,
+  "publicDeployments": 0,
+  "limitations": [
+    "Provider dan Qdrant pada suite HTTP memakai mock; tidak membuktikan kualitas pedagogis, billing remote atau semantik retrieval nyata.",
+    "Perbandingan source memakai AiServiceImpl aktual dengan mock; adapter HTTP aplikasi dan database end-to-end tetap INT-01.",
+    "Batas sesi 1–10 dan capability skill tetap milik KotobaHub; kontrak service AI tetap 1–20.",
+    "Regex hanya memeriksa struktur/script/pasangan locale; kebenaran terjemahan dan naturalitas Jepang memerlukan evaluasi peneliti.",
+    "Tidak ada pilot/main run atau freeze. Snapshot CON-01 serta prompt/model/schema/threshold/retry policy tidak diubah."
+  ],
+  "artifactsSha256": {
+    "docs/generation/evidence/uc-01-check.log": "5a9ffa2f58449b88ff748bee18488cd0a7975eb859e89aa095e0a27854809340",
+    "docs/generation/evidence/uc-01-practice.log": "9ce2b832149f0c6f1faf155913acb940c817d043852cd6d342e886417f2b6ca7",
+    "docs/generation/evidence/uc-01-compatibility.json": "00639ff66ddb933e576aebd768e8ed2b8a8943abc0f0244762c58233932ab414",
+    "tests/__fixtures__/practice-fixture.ts": "27006365ef99284516a602b14530062ad134a03917027bdacefd1524b9be3636",
+    "tests/unit/generation/practice.test.ts": "8e05fa83863194357ce5341885a5aebae7c2f673f51c6847422e9082c06aafd8",
+    "tools/uc-01/verify.mjs": "d65e6eb484607e0caaa2ea2513294c0302672af053471fd17ffc48ead70dfe93",
+    "src/modules/rag/application/generation/question.ts": "6e3e4ea97b01b1c46a82243c37399af9aaf20306fcc2799e7dae775c7263bc2e",
+    "src/modules/rag/application/generation/schema.ts": "13e5a80275530dfcf9885f56f59144382b8f0fde3fb604b67672bcb6ed9cd59b",
+    "src/modules/rag/application/generation/generator.ts": "fcec4265cf74a5cc52afaef1bd8ad798641faf17ebbc33d3b1f545b0c2059e80",
+    "src/modules/rag/application/generation/prompt.ts": "5b6124bd4da35d57183f513c4a85e36f875fb7d699ec309e301399c095c06f16",
+    "contracts/v1/domain.schema.json": "dd30836f920f73d62e65621569ec5162acef00a5d5fc03e5494c43b76dc64e6c",
+    "contracts/v1/http.schema.json": "ded8cb3f4c97b546561eba07497160d40f3f23b44c723674e2c0aecb117f9f86"
+  }
+}

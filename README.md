@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 27 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. REF-01 memisahkan runtime ke modul DDD dengan kontrak aplikasi dan pemeriksaan dependency. API-01 menyediakan empat endpoint operasi terautentikasi dengan body camelCase, batas kapasitas/deadline dan replay durable. Hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 28 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. REF-01 memisahkan runtime ke modul DDD dengan kontrak aplikasi dan pemeriksaan dependency. API-01 menyediakan empat endpoint operasi terautentikasi dengan body camelCase, batas kapasitas/deadline dan replay durable. UC-01 memverifikasi generator/validator soal bersama dan penolakan hasil invalid melalui HTTP serta validator aplikasi aktual. Hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -26,6 +26,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [ADP-01](docs/adaptive/ADP-01-router.md) | Router/initial stage, fitur dan policy/version/reason codes; prosedur kalibrasi pilot-only, threshold masih provisional |
 | [ADP-02](docs/adaptive/ADP-02-deep-path.md) | Runner ADAPTIVE FAST/DEEP internal, dua stages/satu rewrite opsional, BGE rerank/gate/terminal dan accounting seluruh batch |
 | [API-01](docs/api/API-01-http.md) | Empat endpoint v1 dengan body camelCase, Bearer service auth, batas kapasitas/deadline, replay dan rekonsiliasi envelope; [OpenAPI YAML](docs/api/openapi.yaml) |
+| [UC-01](docs/generation/UC-01-practice-generation.md) | Validator empat tipe soal, arah EN/ID↔JA, failure/replay dan probe kompatibilitas source KotobaHub dengan mock |
 | [ADP-03](docs/adaptive/ADP-03-execution-policy.md) | Lifecycle tiga mode, deadline/cancellation, shared retry/call budget, terminal dan accounting seluruh attempts |
 | [REF-01](docs/architecture/REF-01-ddd-refactor.md) | Implementasi boundary DDD, pemetaan source dan bukti regresi; rencana awal tetap tersedia pada laporan |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
@@ -131,6 +132,16 @@ npm run test:data02
 `data:tokenizer` mengambil dua file publik tokenizer BGE-M3 terpin dan memeriksa hash, tanpa inference atau model weights. `data:prepare` membaca snapshot lokal, tanpa database/jaringan, lalu menulis `artifacts/data-02/preparation-v2/`; direktori existing ditolak. Gunakan `-- --out artifacts/data-02/reproduction-01` untuk output baru, atau `--config` untuk konfigurasi pilot lain. `test:data02` terpisah dari check standar karena memerlukan snapshot/tokenizer lokal.
 
 Batas awal 512 token termasuk dua special tokens, overlap maksimal 96 content tokens/dua unit, belum dituning pada pilot. Tokenizer native lokal lulus 15 golden samples JA/EN/ID/Unicode; pin lokal tidak mengonfirmasi served revision HF atau billing. Embedding, pengisian index dan retrieval smoke tetap DATA-03; penelitian belum freeze.
+
+## Generasi soal UC-01
+
+`POST /v1/practice/generate` memakai generator/validator bersama pada tiga mode. Hasil harus tepat jumlah, skill/type/difficulty sesuai request, serta memenuhi invariant blank, opsi, urutan token dan pasangan EN/ID↔JA. Hasil invalid menjadi error terminal dan dapat direplay tanpa call baru. Persistensi sesi dan izin tipe soal per skill tetap di KotobaHub. [Laporan UC-01](docs/generation/UC-01-practice-generation.md) memuat batas validasi dan bukti.
+
+```bash
+node --import tsx --test tests/unit/generation/practice.test.ts
+# Opt-in; memerlukan checkout aplikasi/dependency audit, tanpa provider/database.
+npm run test:uc01
+```
 
 ## Ingestion DATA-03
 

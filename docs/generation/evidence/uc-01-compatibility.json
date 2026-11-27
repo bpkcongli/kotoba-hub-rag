@@ -1,0 +1,563 @@
+{
+  "task": "UC-01",
+  "verifiedAtUtc": "2026-11-27T17:42:43.395Z",
+  "node": "v24.22.1",
+  "auditedSourceCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+  "currentSourceCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+  "sourceFilesMatched": 24,
+  "appWorkingTreeUnchanged": true,
+  "passed": 108,
+  "failed": 0,
+  "accepted": 41,
+  "rejected": 67,
+  "networkCalls": 0,
+  "paidCalls": 0,
+  "databaseWrites": 0,
+  "checks": [
+    {
+      "name": "mixed/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "translation-locale-independent/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/REMEDIAL/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/STRETCH/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "backward-numeric-punctuation-repeated-label/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SLOT_FILL/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N5/en/EN_TO_JA",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N5/en/JA_TO_EN",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "FREE_RESPONSE/JLPT_N5/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "mixed/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "translation-locale-independent/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/REMEDIAL/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/STRETCH/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "backward-numeric-punctuation-repeated-label/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SLOT_FILL/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N5/id/ID_TO_JA",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N5/id/JA_TO_ID",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "FREE_RESPONSE/JLPT_N5/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "mixed/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "translation-locale-independent/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/REMEDIAL/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/STRETCH/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "backward-numeric-punctuation-repeated-label/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SLOT_FILL/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N4/en/EN_TO_JA",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N4/en/JA_TO_EN",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "FREE_RESPONSE/JLPT_N4/en",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "mixed/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "translation-locale-independent/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/REMEDIAL/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "difficulty/STRETCH/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "backward-numeric-punctuation-repeated-label/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SLOT_FILL/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N4/id/ID_TO_JA",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "ARRANGE_TOKEN/JLPT_N4/id/JA_TO_ID",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "FREE_RESPONSE/JLPT_N4/id",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/unknown-skill",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/wrong-difficulty",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/extra-property",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/wrong-grading-strategy",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/disallowed-type",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/wrong-count",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/unknown-skill",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/wrong-difficulty",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/extra-property",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/wrong-grading-strategy",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/disallowed-type",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/wrong-count",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/unknown-skill",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-difficulty",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/extra-property",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-grading-strategy",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/disallowed-type",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-count",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/unknown-skill",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/wrong-difficulty",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/extra-property",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/wrong-grading-strategy",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/disallowed-type",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/wrong-count",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/missing-blank",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/multiple-blanks",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/non-japanese",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/markup",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/slot-count",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/missing-blank",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/multiple-blanks",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/non-japanese",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/markup",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/slot-count",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/invalid-kana/ha",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/invalid-kana/学生",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/invalid-kana/ーー",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/invalid-kana/<は>",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SHORT_FREE_RESPONSE/empty-answers",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/three-options",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/duplicate-option-id",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/normalized-duplicate-label",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/non-japanese-option",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "SLOT_FILL/unknown-correct-option",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/duplicate-token-order",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/unknown-token-order",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/missing-token-order",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/duplicate-token-id",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-token-script",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-locale-direction",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-prompt-language",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-answer-language",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/wrong-source-script",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/multiple-source-sentences",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "ARRANGE_TOKEN/empty-orders",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/wrong-locale",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/japanese-source",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/multiple-sentences",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/newline",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/markup",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/non-japanese-reference",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "FREE_RESPONSE/markup-reference",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "empty-allowed-types/default-short",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "empty-allowed-types/reject-free",
+      "accepted": false,
+      "ragFailure": "POST_VALIDATION_FAILED"
+    },
+    {
+      "name": "empty-questions",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "too-many-questions",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "unknown-question-type",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "metadata-in-domain-data",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    }
+  ],
+  "limitations": [
+    "AiServiceImpl aktual dipanggil dengan mock provider/log; bukan adapter HTTP KotobaHub INT-01.",
+    "Fixture sintetis membuktikan invariant struktural; kualitas pedagogis/naturalitas Jepang belum dinilai manusia.",
+    "Capability skill dan batas sesi 1–10 soal tetap diperiksa PracticeService KotobaHub."
+  ]
+}

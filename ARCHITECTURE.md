@@ -355,6 +355,12 @@ Structured output diparse dan diperiksa terhadap JSON Schema/Zod hasil kontrak. 
 
 Hasil tidak langsung mengubah profil, mastery, atau sesi. KotobaHub tetap mengotorisasi dan memvalidasi sebelum menyimpannya. Onboarding claims memerlukan konfirmasi learner sesuai flow aplikasi.
 
+### Verifikasi UC-01
+
+[UC-01](docs/generation/UC-01-practice-generation.md) memeriksa `application/generation/schema.ts` dan `question.ts` yang sudah dipakai generator/runner ketiga mode. Schema dan post-validation dijalankan sebelum terminal sukses; schema invalid menjadi `SCHEMA_PARSE_FAILED`, pelanggaran invariant menjadi `POST_VALIDATION_FAILED`. HTTP menyimpan error envelope untuk replay tanpa call baru, sehingga hasil gagal tidak menjadi data soal valid. Tidak ada perubahan prompt/model/schema/policy atau persistensi domain pada task ini.
+
+Probe opt-in `npm run test:uc01` membandingkan fixture struktural dengan `AiServiceImpl` KotobaHub aktual melalui provider/log mock dan source checksum terpin. HTTP suite menggunakan runner nyata dengan adapter inference/Qdrant mock. Batas sesi 1–10, capability skill dan penulisan sesi tetap di `PracticeService` aplikasi; kontrak service AI tetap 1–20. Regex/script/permutasi tidak menilai kebenaran semantik, kualitas personalisasi atau naturalitas bahasa Jepang.
+
 ### Implementasi BASE-01
 
 [BASE-01](docs/generation/BASE-01-baseline.md) menyediakan adapter HTTP Responses API pada endpoint/model tetap, `store:false`, Structured Outputs strict, tier default dan output cap. Generator empat operasi menerima selected evidence dari caller; mode tidak mengubah template/schema/model. Runner internal LLM_ONLY mengirim evidence kosong dan tidak memiliki dependency retrieval. Schema CON-01 serta domain refinements aplikasi diperiksa lokal; schema/domain failure dipisahkan. Composition root mengaktifkan generator/baseline hanya melalui OPENAI_ENABLED, tanpa call startup/probe.
