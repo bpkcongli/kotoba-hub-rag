@@ -4,24 +4,26 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { TestContext } from 'node:test';
-
 import fixtures from '@contracts/v1/fixtures.json' with { type: 'json' };
-import { readOpenAiConfig } from '@/adapters/openai-config';
-import type { OpenAiConfig } from '@/adapters/openai-config';
-import { createOpenAiGenerator } from '@/adapters/openai-responses';
-import type { GenerationAttempt } from '@/adapters/openai-responses';
-import { createContractValidators } from '@/contracts/validator';
-import type { Operation, Requests, Responses } from '@/contracts/validator';
-import { createBaselineRunner } from '@/generation/baseline';
-import { createOperationGenerator } from '@/generation/generator';
-import { ObservationStore } from '@/observability/store';
-import type { Clock } from '@/shared/ports';
+import { ObservationStore } from '@/bootstrap/observation-store';
+import type { Requests, Responses } from '@/contracts/types';
+import { createBaselineRunner } from '@/modules/rag/application/generation/baseline';
+import { createOperationGenerator } from '@/modules/rag/application/generation/generator';
+import { createContractValidators } from '@/modules/rag/application/validation';
+import type { OpenAiConfig } from '@/modules/rag/infrastructure/config/openai-config';
+import { readOpenAiConfig } from '@/modules/rag/infrastructure/config/openai-config';
+import type { GenerationAttempt } from '@/modules/rag/interface/secondary/inference/openai-responses';
+import { createOpenAiGenerator } from '@/modules/rag/interface/secondary/inference/openai-responses';
+import type { Clock } from '@/shared/clock';
+import type { Operation } from '@/shared/operations';
 
 export const clock: Clock = {
   now: () => new Date('2026-11-25T10:00:00Z'),
   monotonicMs: () => performance.now(),
 };
+
 export const signal = new AbortController().signal;
+
 export const usage = {
   input_tokens: 100,
   input_tokens_details: { cached_tokens: 20, cache_write_tokens: 0 },

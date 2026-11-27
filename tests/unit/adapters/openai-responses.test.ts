@@ -12,9 +12,9 @@ import {
   setup,
   signal,
 } from '@tests/__fixtures__/generation-fixture';
-import { createOpenAiGenerator } from '@/adapters/openai-responses';
-import type { GenerationAttempt } from '@/adapters/openai-responses';
-import { createOperationGenerator } from '@/generation/generator';
+import { createOperationGenerator } from '@/modules/rag/application/generation/generator';
+import { createOpenAiGenerator } from '@/modules/rag/interface/secondary/inference/openai-responses';
+import type { GenerationAttempt } from '@/modules/rag/interface/secondary/inference/openai-responses';
 
 await test('429/5xx/auth/rejection/refusal/incomplete/invalid JSON gagal sekali dan biaya tetap tercatat', async (t) => {
   const cases: Array<[() => Response, string, number | null]> = [
@@ -162,7 +162,7 @@ await test('observer gagal tidak menjalankan retry; admission disimpan UNKNOWN',
   });
   t.after(() => provider.close());
   const generate = createOperationGenerator(provider, config());
-  const { createBaselineRunner } = await import('@/generation/baseline');
+  const { createBaselineRunner } = await import('@/modules/rag/application/generation/baseline');
   const runner = createBaselineRunner(generate, state.observations, clock);
   const request = requestFor('evaluate');
   const id = await admit(state.observations, 'evaluate', request);

@@ -1,0 +1,257 @@
+{
+  "method": "TypeScript AST function bodies, excluding trivia/import paths; type erasure additionally used for nine orchestration/provider functions",
+  "functions": [
+    {
+      "source": "src/generation/prompt.ts",
+      "destination": "src/modules/rag/application/generation/prompt.ts",
+      "function": "aiInstructions",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/generation/input.ts",
+      "destination": "src/modules/rag/application/generation/input.ts",
+      "function": "generationInput",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/generation/question.ts",
+      "destination": "src/modules/rag/application/generation/question.ts",
+      "function": "validQuestion",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/generation/schema.ts",
+      "destination": "src/modules/rag/application/generation/schema.ts",
+      "function": "operationSchema",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/generation/schema.ts",
+      "destination": "src/modules/rag/application/generation/schema.ts",
+      "function": "validPayload",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/generation/schema.ts",
+      "destination": "src/modules/rag/application/generation/schema.ts",
+      "function": "validateOutput",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/context/builder.ts",
+      "destination": "src/modules/rag/application/context/builder.ts",
+      "function": "buildContext",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/retrieval/ranking.ts",
+      "destination": "src/modules/rag/domain/services/ranking.ts",
+      "function": "fuseRanks",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/retrieval/ranking.ts",
+      "destination": "src/modules/rag/domain/services/ranking.ts",
+      "function": "rankedHit",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/retrieval-plan.ts",
+      "destination": "src/modules/rag/application/pipelines/retrieval-plan.ts",
+      "function": "retrievalPlan",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/evidence.ts",
+      "destination": "src/modules/rag/application/pipelines/evidence.ts",
+      "function": "assessEvidence",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/router.ts",
+      "destination": "src/modules/rag/application/pipelines/router.ts",
+      "function": "parseRouterPolicy",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/router.ts",
+      "destination": "src/modules/rag/application/pipelines/router.ts",
+      "function": "parseRouterFeatures",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/router.ts",
+      "destination": "src/modules/rag/application/pipelines/router.ts",
+      "function": "routeInitialEvidence",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/router.ts",
+      "destination": "src/modules/rag/application/pipelines/router.ts",
+      "function": "routerConfigurationHash",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/deep-candidates.ts",
+      "destination": "src/modules/rag/domain/services/deep-candidates.ts",
+      "function": "mergeDeepCandidates",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/deep-candidates.ts",
+      "destination": "src/modules/rag/domain/services/deep-candidates.ts",
+      "function": "mapRerankedCandidates",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/execution-policy.ts",
+      "destination": "src/modules/execution/application/execution-policy.ts",
+      "function": "parseExecutionPolicy",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/execution-policy.ts",
+      "destination": "src/modules/execution/application/execution-policy.ts",
+      "function": "readExecutionPolicy",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/observability/aggregation.ts",
+      "destination": "src/modules/observability/application/aggregation.ts",
+      "function": "allocateResource",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/observability/aggregation.ts",
+      "destination": "src/modules/observability/application/aggregation.ts",
+      "function": "aggregateAccounting",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/observability/aggregation.ts",
+      "destination": "src/modules/observability/application/aggregation.ts",
+      "function": "wireCost",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/observability/pricing.ts",
+      "destination": "src/modules/observability/application/pricing.ts",
+      "function": "accountCall",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/observability/pricing.ts",
+      "destination": "src/modules/observability/application/pricing.ts",
+      "function": "normalizeResponseUsage",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/observability/pricing.ts",
+      "destination": "src/modules/observability/application/pricing.ts",
+      "function": "priceSnapshotHash",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/storage/index-manifest.ts",
+      "destination": "src/modules/knowledge/application/index-manifest.ts",
+      "function": "parseIndexManifest",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/storage/index-manifest.ts",
+      "destination": "src/modules/knowledge/application/index-manifest.ts",
+      "function": "manifestFingerprint",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/storage/index-manifest.ts",
+      "destination": "src/modules/knowledge/application/index-manifest.ts",
+      "function": "contentDigest",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/ingestion/index-plan.ts",
+      "destination": "src/modules/knowledge/application/index-plan.ts",
+      "function": "pointId",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/ingestion/index-plan.ts",
+      "destination": "src/modules/knowledge/application/index-plan.ts",
+      "function": "createIngestionPlan",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/adapters/hf-validation.ts",
+      "destination": "src/modules/knowledge/application/vector-validation.ts",
+      "function": "validateEmbeddingBatch",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/adapters/hf-validation.ts",
+      "destination": "src/modules/knowledge/application/vector-validation.ts",
+      "function": "parseHfEmbeddings",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/adapters/hf-validation.ts",
+      "destination": "src/modules/knowledge/application/vector-validation.ts",
+      "function": "parseHfScores",
+      "body_tokens_unchanged": true
+    },
+    {
+      "source": "src/adapters/hf-inference.ts",
+      "destination": "src/modules/rag/interface/secondary/inference/hf-inference.ts",
+      "function": "createHfInference",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/adapters/openai-responses.ts",
+      "destination": "src/modules/rag/interface/secondary/inference/openai-responses.ts",
+      "function": "createOpenAiGenerator",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/generation/generator.ts",
+      "destination": "src/modules/rag/application/generation/generator.ts",
+      "function": "createOperationGenerator",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/generation/baseline.ts",
+      "destination": "src/modules/rag/application/generation/baseline.ts",
+      "function": "createBaselineRunner",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/single-stage.ts",
+      "destination": "src/modules/rag/application/pipelines/single-stage.ts",
+      "function": "createSingleStageRunner",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/adaptive.ts",
+      "destination": "src/modules/rag/application/pipelines/adaptive.ts",
+      "function": "createAdaptiveRunner",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/adaptive-initial.ts",
+      "destination": "src/modules/rag/application/pipelines/adaptive-initial.ts",
+      "function": "createAdaptiveInitialStage",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/execution.ts",
+      "destination": "src/modules/rag/application/pipelines/execution.ts",
+      "function": "createExecutionRunner",
+      "runtime_tokens_unchanged": true
+    },
+    {
+      "source": "src/pipelines/execution-control.ts",
+      "destination": "src/modules/execution/application/execution-control.ts",
+      "function": "createExecutionControl",
+      "runtime_tokens_unchanged": true
+    }
+  ]
+}

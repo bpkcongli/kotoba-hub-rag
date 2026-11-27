@@ -1,8 +1,15 @@
 import { randomUUID } from 'node:crypto';
-
-import type { CallMeasurement, PriceSnapshot, TokenUsage } from '@/observability/accounting-types';
-import type { AccountingInput, CallRow, ExecutionSpec } from '@/observability/aggregation';
-import { accountCall } from '@/observability/pricing';
+import type {
+  AccountingInput,
+  CallRow,
+  ExecutionSpec,
+} from '@/modules/observability/application/aggregation';
+import { accountCall } from '@/modules/observability/application/pricing';
+import type {
+  CallMeasurement,
+  PriceSnapshot,
+  TokenUsage,
+} from '@/modules/observability/domain/accounting-types';
 
 // Synthetic tariffs for hand calculations; never selected as runtime provider configuration.
 export const fixturePrices: PriceSnapshot = {

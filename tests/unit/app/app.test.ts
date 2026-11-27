@@ -1,10 +1,9 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-
-import { readHfConfig } from '@/adapters/hf-config';
 import { createApplication } from '@/app';
-import { readConfig } from '@/shared/config';
-import type { Clock } from '@/shared/ports';
+import { readConfig } from '@/bootstrap/config';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import type { Clock } from '@/shared/clock';
 
 await test('composition root menerima clock; probes tidak memanggil jaringan/provider', async (t) => {
   const clock: Clock = {
@@ -114,7 +113,7 @@ await test('HF enabled dirangkai tanpa inference pada startup, capability dan pr
 });
 
 await test('OpenAI enabled dirangkai tanpa call pada startup/probe dan memerlukan admission aktif', async (t) => {
-  const { readOpenAiConfig } = await import('@/adapters/openai-config');
+  const { readOpenAiConfig } = await import('@/modules/rag/infrastructure/config/openai-config');
   const originalFetch = globalThis.fetch;
 
   let calls = 0;
@@ -166,9 +165,9 @@ await test('OpenAI enabled dirangkai tanpa call pada startup/probe dan memerluka
 });
 
 await test('retrieval enabled tetap tanpa I/O jaringan pada startup/health dan menolak non-admitted calls', async (t) => {
-  const { readOpenAiConfig } = await import('@/adapters/openai-config');
+  const { readOpenAiConfig } = await import('@/modules/rag/infrastructure/config/openai-config');
   const { readFile } = await import('node:fs/promises');
-  const { retrievalConfig } = await import('@/retrieval/config');
+  const { retrievalConfig } = await import('@/modules/rag/infrastructure/config/retrieval');
   const index: unknown = JSON.parse(
     await readFile('research/indexing/data-03-v1/index-manifest.json', 'utf8'),
   );
@@ -181,7 +180,7 @@ await test('retrieval enabled tetap tanpa I/O jaringan pada startup/health dan m
   t.after(() => {
     globalThis.fetch = original;
   });
-  const { readQdrantConfig } = await import('@/storage/qdrant-config');
+  const { readQdrantConfig } = await import('@/modules/knowledge/application/connection-settings');
   const app = createApplication(
     readConfig({ NODE_ENV: 'test', LOG_LEVEL: 'silent' }),
     undefined,

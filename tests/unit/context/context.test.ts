@@ -4,7 +4,6 @@ import { glob, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
-
 import {
   candidate,
   contextConfig,
@@ -13,18 +12,18 @@ import {
   skill,
 } from '@tests/__fixtures__/context-fixture';
 import { admit, clock, config, outputFor, signal } from '@tests/__fixtures__/generation-fixture';
-import { buildContext, planningTokens } from '@/context/builder';
-import { readContextConfig } from '@/context/config';
-import { createContextBuilder } from '@/context/observed-builder';
-import { ContextError } from '@/context/types';
-import type { ContextTrace } from '@/context/types';
-import { createOperationGenerator } from '@/generation/generator';
-import { generationInput } from '@/generation/input';
-import { aiInstructions } from '@/generation/prompt';
-import { operationSchema } from '@/generation/schema';
-import { parseTraceEvent } from '@/observability/events';
-import { ObservationStore } from '@/observability/store';
-import type { GeneratorPort } from '@/shared/ports';
+import { ObservationStore } from '@/bootstrap/observation-store';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { buildContext, planningTokens } from '@/modules/rag/application/context/builder';
+import { createContextBuilder } from '@/modules/rag/application/context/observed-builder';
+import { createOperationGenerator } from '@/modules/rag/application/generation/generator';
+import { generationInput } from '@/modules/rag/application/generation/input';
+import { aiInstructions } from '@/modules/rag/application/generation/prompt';
+import { operationSchema } from '@/modules/rag/application/generation/schema';
+import type { GeneratorPort } from '@/modules/rag/application/ports/inference';
+import type { ContextTrace } from '@/modules/rag/domain/models/context';
+import { ContextError } from '@/modules/rag/domain/models/context';
+import { readContextConfig } from '@/modules/rag/infrastructure/config/context';
 
 const eventFor = (data: ContextTrace): unknown => ({
   schemaVersion: 'obs-02-v1',

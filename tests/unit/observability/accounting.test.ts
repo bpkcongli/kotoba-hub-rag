@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
@@ -13,25 +13,29 @@ import {
   fixtureUsage,
   measurement,
 } from '@tests/__fixtures__/accounting-fixture';
-import { readHfConfig } from '@/adapters/hf-config';
-import { createHfInference } from '@/adapters/hf-inference';
-import type { InferenceAttempt } from '@/adapters/hf-inference';
+import { ObservationStore } from '@/bootstrap/observation-store';
 import {
   parseMeasurement,
   parsePriceSnapshot,
   parseTokenUsage,
-} from '@/observability/accounting-schema';
-import type { ResourceCharge } from '@/observability/accounting-types';
-import { aggregateAccounting, allocateResource, wireCost } from '@/observability/aggregation';
-import { parseTraceEvent } from '@/observability/events';
-import { decimalUnits, priceAmount } from '@/observability/money';
+} from '@/modules/observability/application/accounting-schema';
+import {
+  aggregateAccounting,
+  allocateResource,
+  wireCost,
+} from '@/modules/observability/application/aggregation';
+import { parseTraceEvent } from '@/modules/observability/application/events';
 import {
   accountCall,
-  loadPriceSnapshot,
   normalizeResponseUsage,
   priceSnapshotHash,
-} from '@/observability/pricing';
-import { ObservationStore } from '@/observability/store';
+} from '@/modules/observability/application/pricing';
+import type { ResourceCharge } from '@/modules/observability/domain/accounting-types';
+import { decimalUnits, priceAmount } from '@/modules/observability/domain/money';
+import { loadPriceSnapshot } from '@/modules/observability/interface/secondary/files/price-snapshot';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import type { InferenceAttempt } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
 
 await test('token cache read/write tidak dihitung ulang; reasoning sudah termasuk output', () => {
   const call = accountCall(measurement(), fixturePrices);
@@ -640,7 +644,7 @@ await test('store menyalin snapshot, menyimpan ledger baru, membaca legacy tanpa
     [
       '--import',
       'tsx',
-      'src/observability/cost-cli.ts',
+      'src/bootstrap/cost-cli.ts',
       '--directory',
       path,
       '--resource-inventory-complete',

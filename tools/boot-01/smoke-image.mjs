@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { randomUUID, createHash } from 'node:crypto';
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, readdir, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 
 const execute = promisify(execFile);
@@ -129,13 +129,11 @@ const files = [
   'Dockerfile',
   'package.json',
   'package-lock.json',
-  'src/app.ts',
-  'src/main.ts',
-  'src/shared/config.ts',
-  'src/shared/ports.ts',
-  'src/adapters/system-clock.ts',
-  'src/contracts/validator.ts',
-  'src/contracts/v1.generated.ts',
+  'tools/boot-01/build.mjs',
+  ...(await readdir('src', { recursive: true }))
+    .filter((file) => file.endsWith('.ts'))
+    .sort()
+    .map((file) => `src/${file}`),
   'contracts/v1/domain.schema.json',
   'contracts/v1/contract.schema.json',
 ];

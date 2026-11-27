@@ -1,13 +1,23 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { test } from 'node:test';
-
-import { HF_IDENTITY, readHfConfig } from '@/adapters/hf-config';
-import type { HfConfig } from '@/adapters/hf-config';
-import { createHfInference, InferenceError } from '@/adapters/hf-inference';
-import type { HfDependencies, InferenceAttempt, InferenceErrorCode } from '@/adapters/hf-inference';
-import { parseHfEmbeddings, parseHfScores, validateEmbeddingBatch } from '@/adapters/hf-validation';
-import type { CallContext, Evidence } from '@/shared/ports';
+import type { CallContext } from '@/modules/execution/application/ports/call-context';
+import { HF_IDENTITY } from '@/modules/knowledge/application/inference-identity';
+import {
+  parseHfEmbeddings,
+  parseHfScores,
+  validateEmbeddingBatch,
+} from '@/modules/knowledge/application/vector-validation';
+import type { Evidence } from '@/modules/rag/domain/models/evidence';
+import type { HfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import type {
+  HfDependencies,
+  InferenceAttempt,
+} from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import type { InferenceErrorCode } from '@/shared/errors/inference-error';
+import { InferenceError } from '@/shared/errors/inference-error';
 
 function config(override: Partial<HfConfig> = {}): HfConfig {
   const value = readHfConfig({ HF_INFERENCE_ENABLED: 'true', HF_TOKEN: 'fixture-token' });

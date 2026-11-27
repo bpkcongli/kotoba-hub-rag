@@ -1,22 +1,22 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { appendFile, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import { appendFile, mkdtemp, readdir, readFile, rename, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { test } from 'node:test';
 import type { TestContext } from 'node:test';
-
-import { HF_IDENTITY, readHfConfig } from '@/adapters/hf-config';
-import type { InferenceAttempt } from '@/adapters/hf-inference';
+import { test } from 'node:test';
 import { createApplication } from '@/app';
-import { parseTraceEvent } from '@/observability/events';
-import type { TraceEvent } from '@/observability/events';
-import { JsonlTraceSink } from '@/observability/jsonl-sink';
-import { ObservationStore } from '@/observability/store';
-import type { AdmissionInput } from '@/observability/store';
-import { readConfig } from '@/shared/config';
-import type { Clock } from '@/shared/ports';
+import { readConfig } from '@/bootstrap/config';
+import { ObservationStore } from '@/bootstrap/observation-store';
+import type { AdmissionInput } from '@/modules/execution/application/services/execution-registry.service';
+import { HF_IDENTITY } from '@/modules/knowledge/application/inference-identity';
+import type { TraceEvent } from '@/modules/observability/application/events';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { JsonlTraceSink } from '@/modules/observability/interface/secondary/files/jsonl-sink';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import type { InferenceAttempt } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import type { Clock } from '@/shared/clock';
 
 async function directory(t: TestContext): Promise<string> {
   const path = await mkdtemp(join(tmpdir(), 'kotoba-obs-'));
@@ -254,7 +254,7 @@ await test('filesystem terminal ikut gagal: admission tetap tersedia, pulih UNKN
 await test('crash nyata meninggalkan lock/admission; recovery menutup UNKNOWN dan mendeteksi torn JSONL tanpa menghapus bukti', async (t) => {
   const path = await directory(t);
   const input = admission();
-  const source = new URL('../../../src/observability/store.ts', import.meta.url).href;
+  const source = new URL('../../../src/bootstrap/observation-store.ts', import.meta.url).href;
   const child = spawnSync(
     process.execPath,
     [
@@ -305,7 +305,7 @@ await test('crash nyata meninggalkan lock/admission; recovery menutup UNKNOWN da
 
   const cli = spawnSync(
     process.execPath,
-    ['--import', 'tsx', 'src/observability/cli.ts', '--directory', path],
+    ['--import', 'tsx', 'src/bootstrap/cli.ts', '--directory', path],
     { encoding: 'utf8', timeout: 15000 },
   );
 

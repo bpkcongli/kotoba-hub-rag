@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
-
-import { ConfigError, readConfig } from '@/shared/config';
+import { readConfig } from '@/bootstrap/config';
+import { ConfigError } from '@/shared/errors/config-error';
 
 await test('default bootstrap lokal dan override valid diparse tanpa coercion longgar', () => {
   assert.deepEqual(readConfig({}), {

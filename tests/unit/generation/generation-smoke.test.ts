@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-
 import fixtures from '@contracts/v1/fixtures.json' with { type: 'json' };
-import { runSmoke, syntheticSmokeCase } from '@/generation/smoke';
+import { runSmoke, syntheticSmokeCase } from '@/modules/rag/interface/primary/smoke';
 
 await test('smoke default hanya plan; execute tanpa budget memadai ditolak sebelum dispatch', async (t) => {
   const originalFetch = globalThis.fetch;

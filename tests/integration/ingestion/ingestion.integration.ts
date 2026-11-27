@@ -3,12 +3,14 @@ import { access, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import test from 'node:test';
-
-import { loadApprovedCorpus } from '@/ingestion/corpus-loader';
-import { prepareCorpus } from '@/ingestion/prepare';
-import { BGE_TOKENIZER, loadBgeTokenCounter } from '@/ingestion/tokenizer';
-import { IngestionError } from '@/ingestion/types';
-import { array, hash, object, string } from '@/ingestion/validation';
+import { array, hash, object, string } from '@/modules/knowledge/application/validation';
+import { IngestionError } from '@/modules/knowledge/domain/models/ingestion';
+import { loadApprovedCorpus } from '@/modules/knowledge/interface/secondary/corpus/corpus-loader';
+import { prepareCorpus } from '@/modules/knowledge/interface/secondary/corpus/prepare';
+import {
+  BGE_TOKENIZER,
+  loadBgeTokenCounter,
+} from '@/modules/knowledge/interface/secondary/corpus/tokenizer';
 
 const tokenizerDirectory = resolve(`artifacts/tokenizers/bge-m3/${BGE_TOKENIZER.revision}`);
 const configPath = resolve('research/chunking/data-02-v1/config.json');

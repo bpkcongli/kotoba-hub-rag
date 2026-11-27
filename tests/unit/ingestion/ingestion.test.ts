@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-
-import { chunkLessons } from '@/ingestion/chunker';
-import { normalizeCorpus } from '@/ingestion/normalize';
-import { htmlToText } from '@/ingestion/text';
-import { loadBgeTokenCounter } from '@/ingestion/tokenizer';
-import { IngestionError } from '@/ingestion/types';
+import { chunkLessons } from '@/modules/knowledge/application/services/chunker';
+import {
+  canonical,
+  hash,
+  parseChunkConfig,
+  parseSource,
+} from '@/modules/knowledge/application/validation';
 import type {
   ApprovedCorpus,
   ApprovedSource,
@@ -13,8 +14,11 @@ import type {
   JsonObject,
   NormalizedLesson,
   TokenCounter,
-} from '@/ingestion/types';
-import { canonical, hash, parseChunkConfig, parseSource } from '@/ingestion/validation';
+} from '@/modules/knowledge/domain/models/ingestion';
+import { IngestionError } from '@/modules/knowledge/domain/models/ingestion';
+import { normalizeCorpus } from '@/modules/knowledge/interface/secondary/corpus/normalize';
+import { htmlToText } from '@/modules/knowledge/interface/secondary/corpus/text';
+import { loadBgeTokenCounter } from '@/modules/knowledge/interface/secondary/corpus/tokenizer';
 
 const config: ChunkConfig = {
   version: 'pedagogical-v1',

@@ -1,59 +1,69 @@
-import Fastify, { LogController } from 'fastify';
 import type { FastifyInstance } from 'fastify';
-import { EMBEDDING_CONFIG_ID } from '@/adapters/bge-configuration';
-import type { HfConfig } from '@/adapters/hf-config';
-import { HF_IDENTITY } from '@/adapters/hf-config';
-import { createHfInference, InferenceError } from '@/adapters/hf-inference';
-import type { HfInference } from '@/adapters/hf-inference';
-import type { OpenAiConfig } from '@/adapters/openai-config';
-import { createOpenAiGenerator, GenerationError } from '@/adapters/openai-responses';
-import type { OpenAiGenerator } from '@/adapters/openai-responses';
-import { systemClock } from '@/adapters/system-clock';
-import { readContextConfig } from '@/context/config';
-import { createContextBuilder } from '@/context/observed-builder';
-import type { ContextConfig } from '@/context/types';
-import { createContractValidators } from '@/contracts/validator';
-import type { ContractValidators } from '@/contracts/validator';
-import { createBaselineRunner } from '@/generation/baseline';
-import { createOperationGenerator } from '@/generation/generator';
-import { ObservationStore } from '@/observability/store';
-import { createAdaptiveRunner } from '@/pipelines/adaptive';
-import { createAdaptiveInitialStage } from '@/pipelines/adaptive-initial';
-import { readDeepPolicy } from '@/pipelines/deep-config';
-import type { DeepPolicy } from '@/pipelines/deep-config';
-import { readEvidencePolicy } from '@/pipelines/evidence';
-import type { EvidencePolicy } from '@/pipelines/evidence';
-import { readExecutionPolicy } from '@/pipelines/execution-policy';
-import type { ExecutionPolicy } from '@/pipelines/execution-policy';
-import { createQueryRewriter } from '@/pipelines/rewrite';
-import { readRouterPolicy } from '@/pipelines/router';
-import type { RouterPolicy } from '@/pipelines/router';
-import { createSingleStageRunner } from '@/pipelines/single-stage';
-import type { RetrievalConfig } from '@/retrieval/config';
-import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
-import type { QdrantRetriever } from '@/retrieval/qdrant-retriever';
-import { createRetrievalStage } from '@/retrieval/stage';
-import { RetrievalError } from '@/retrieval/types';
-import type { AppConfig } from '@/shared/config';
-import type { CallContext, Clock } from '@/shared/ports';
-import type { QdrantConfig } from '@/storage/qdrant-config';
-import { QdrantIndexStore } from '@/storage/qdrant-index';
+import Fastify, { LogController } from 'fastify';
+import type { AppConfig } from '@/bootstrap/config';
+import { ObservationStore } from '@/bootstrap/observation-store';
+import type { ContractValidators } from '@/contracts/types';
+import type { ExecutionPolicy } from '@/modules/execution/application/execution-policy';
+import { readExecutionPolicy } from '@/modules/execution/application/execution-policy';
+import type { QdrantConfig } from '@/modules/knowledge/application/connection-settings';
+import { createKnowledgeModule } from '@/modules/knowledge/infrastructure/di/index';
+import type { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
+import type { RetrievalConfig } from '@/modules/rag/application/models/retrieval-config';
+import type { DeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
+import { readDeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
+import type { EvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
+import { readEvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
+import type { RouterPolicy } from '@/modules/rag/application/pipelines/router';
+import { readRouterPolicy } from '@/modules/rag/application/pipelines/router';
+import type { RagService } from '@/modules/rag/application/services/rag.service';
+import type {
+  AdaptiveInitialStageService,
+  ContextBuilderService,
+  PipelineService,
+  RetrievalStageService,
+} from '@/modules/rag/application/services/stages';
+import { createContractValidators } from '@/modules/rag/application/validation';
+import type { ContextConfig } from '@/modules/rag/domain/models/context';
+import { readContextConfig } from '@/modules/rag/infrastructure/config/context';
+import type { HfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import type { OpenAiConfig } from '@/modules/rag/infrastructure/config/openai-config';
+import { createRagModule } from '@/modules/rag/infrastructure/di/index';
+import type { HfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import type { OpenAiGenerator } from '@/modules/rag/interface/secondary/inference/openai-responses';
+import type { QdrantRetriever } from '@/modules/rag/interface/secondary/qdrant/retriever';
+import type { Clock } from '@/shared/clock';
+import { systemClock } from '@/shared/system-clock';
 
 export interface Application {
+  readonly operations: RagService;
+
   readonly server: FastifyInstance;
+
   readonly clock: Clock;
+
   readonly contracts: ContractValidators;
+
   readonly inference: HfInference | null;
+
   readonly storage: QdrantIndexStore | null;
+
   readonly observations: ObservationStore;
+
   readonly generator: OpenAiGenerator | null;
-  readonly baseline: ReturnType<typeof createBaselineRunner> | null;
+
+  readonly baseline: PipelineService | null;
+
   readonly retriever: QdrantRetriever | null;
-  readonly retrievalStage: ReturnType<typeof createRetrievalStage> | null;
-  readonly contextBuilder: ReturnType<typeof createContextBuilder> | null;
-  readonly singleStage: ReturnType<typeof createSingleStageRunner> | null;
-  readonly adaptiveInitialStage: ReturnType<typeof createAdaptiveInitialStage> | null;
-  readonly adaptive: ReturnType<typeof createAdaptiveRunner> | null;
+
+  readonly retrievalStage: RetrievalStageService | null;
+
+  readonly contextBuilder: ContextBuilderService | null;
+
+  readonly singleStage: PipelineService | null;
+
+  readonly adaptiveInitialStage: AdaptiveInitialStageService | null;
+
+  readonly adaptive: PipelineService | null;
 }
 
 export function createApplication(
@@ -89,171 +99,35 @@ export function createApplication(
     },
   });
 
-  const rawInference = hfConfig
-    ? createHfInference(hfConfig, {
-        clock,
-        onAttempt: (attempt) => observations.recordHfAttempt(attempt),
-      })
-    : null;
-
-  let inferenceClosed = false;
-  const requireAdmission = (context: CallContext): void => {
-    if (inferenceClosed) {
-      throw new InferenceError('CANCELLED');
-    }
-
-    observations.assertActive(context.executionId);
-  };
-
-  const inference: HfInference | null =
-    rawInference === null
-      ? null
-      : {
-          ...rawInference,
-          embedding: {
-            embed: async (texts, purpose, context) => {
-              requireAdmission(context);
-              return rawInference.embedding.embed(texts, purpose, context);
-            },
-          },
-          reranker: {
-            rerank: async (query, candidates, context) => {
-              requireAdmission(context);
-              return rawInference.reranker.rerank(query, candidates, context);
-            },
-          },
-          close: () => {
-            inferenceClosed = true;
-            rawInference.close();
-          },
-        };
-
-  const storage = qdrantConfig ? new QdrantIndexStore(qdrantConfig) : null;
-
-  if (retrievalConfig && (!qdrantConfig || !inference || hfConfig?.profile !== 'DENSE')) {
-    throw new RetrievalError('INCOMPATIBLE_INDEX');
-  }
-
-  const rawRetriever =
-    retrievalConfig && qdrantConfig
-      ? createQdrantRetriever(retrievalConfig, qdrantConfig, { clock })
-      : null;
-  const retriever: QdrantRetriever | null =
-    rawRetriever === null
-      ? null
-      : {
-          close: () => rawRetriever.close(),
-          retrieve: (vector, filter, limit, context) => {
-            const correlation = observations.activeCorrelation(context.executionId);
-            if (inferenceClosed || correlation.mode === 'LLM_ONLY') {
-              throw new RetrievalError('INVALID_INPUT');
-            }
-
-            return rawRetriever.retrieve(vector, filter, limit, context);
-          },
-        };
-  const retrievalStage =
-    retrievalConfig && retriever && inference
-      ? createRetrievalStage(
-          retrievalConfig,
-          {
-            profile: 'DENSE',
-            configId: EMBEDDING_CONFIG_ID,
-            modelRevision: HF_IDENTITY.servedModelRevision,
-            tokenizerRevision: HF_IDENTITY.tokenizerRevision,
-            processingRevision: HF_IDENTITY.processingRevision,
-            sparseCapabilityVerified: false,
-            sparseTokenMappingId: null,
-          },
-          inference.embedding,
-          retriever,
-          observations,
-          clock,
-        )
-      : null;
-
-  const rawGenerator = openAiConfig
-    ? createOpenAiGenerator(openAiConfig, {
-        clock,
-        onAttempt: (attempt) => observations.recordGenerationAttempt(attempt),
-      })
-    : null;
-  const generator: OpenAiGenerator | null =
-    rawGenerator === null
-      ? null
-      : {
-          close: () => rawGenerator.close(),
-          generate: (input, context) => {
-            if (inferenceClosed) {
-              throw new GenerationError('DEPENDENCY_NOT_READY');
-            }
-            observations.assertActive(context.executionId);
-
-            return rawGenerator.generate(input, context);
-          },
-        };
-  const baseline =
-    generator && openAiConfig
-      ? createBaselineRunner(
-          createOperationGenerator(generator, openAiConfig),
-          observations,
-          clock,
-          executionPolicy,
-        )
-      : null;
-  const contextBuilder =
-    openAiConfig && contextConfig
-      ? createContextBuilder(contextConfig, openAiConfig, observations, clock)
-      : null;
-
-  const singleStage =
-    retrievalConfig && retrievalStage && contextBuilder && generator && openAiConfig
-      ? createSingleStageRunner(
-          retrievalConfig.index,
-          retrievalStage,
-          contextBuilder,
-          createOperationGenerator(generator, openAiConfig),
-          observations,
-          evidencePolicy,
-          clock,
-          executionPolicy,
-        )
-      : null;
-  const adaptiveInitialStage =
-    retrievalConfig && retrievalStage && contextBuilder
-      ? createAdaptiveInitialStage(
-          retrievalConfig.index,
-          retrievalStage,
-          contextBuilder,
-          observations,
-          routerPolicy,
-          clock,
-        )
-      : null;
-
-  const adaptive =
-    retrievalConfig && retrievalStage && contextBuilder && generator && openAiConfig && inference
-      ? createAdaptiveRunner(
-          retrievalConfig.index,
-          retrievalStage,
-          contextBuilder,
-          createOperationGenerator(generator, openAiConfig),
-          createQueryRewriter(generator),
-          inference.reranker,
-          observations,
-          evidencePolicy,
-          routerPolicy,
-          deepPolicy,
-          clock,
-          executionPolicy,
-        )
-      : null;
-
+  const rag = createRagModule({
+    clock,
+    hfConfig,
+    qdrantConfig,
+    openAiConfig,
+    retrievalConfig,
+    contextConfig,
+    evidencePolicy,
+    routerPolicy,
+    deepPolicy,
+    executionPolicy,
+    registry: observations,
+    createStorage: () => createKnowledgeModule(qdrantConfig).storage,
+  });
+  const {
+    storage,
+    inference,
+    generator,
+    retriever,
+    retrievalStage,
+    contextBuilder,
+    singleStage,
+    adaptiveInitialStage,
+    adaptive,
+    baseline,
+    operations,
+  } = rag;
   server.addHook('onClose', async () => {
-    inferenceClosed = true;
-    inference?.close();
-    generator?.close();
-    retriever?.close();
+    rag.close();
     await observations.close();
   });
 
@@ -264,6 +138,7 @@ export function createApplication(
 
   return {
     server,
+    operations,
     clock,
     contracts,
     inference,

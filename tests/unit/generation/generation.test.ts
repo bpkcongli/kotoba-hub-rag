@@ -12,11 +12,11 @@ import {
   signal,
   usage,
 } from '@tests/__fixtures__/generation-fixture';
-import { readOpenAiConfig } from '@/adapters/openai-config';
-import { readOpenAiUsage } from '@/adapters/openai-responses';
-import { createContractValidators } from '@/contracts/validator';
-import type { Operation } from '@/contracts/validator';
-import { operationSchema, validateOutput } from '@/generation/schema';
+import { operationSchema, validateOutput } from '@/modules/rag/application/generation/schema';
+import { createContractValidators } from '@/modules/rag/application/validation';
+import { readOpenAiConfig } from '@/modules/rag/infrastructure/config/openai-config';
+import { readOpenAiUsage } from '@/modules/rag/interface/secondary/inference/openai-responses';
+import type { Operation } from '@/shared/operations';
 
 await test('konfigurasi OpenAI opt-in, model tetap dan error tanpa secret', () => {
   assert.equal(readOpenAiConfig({}), null);

@@ -1,15 +1,16 @@
-import { readHfConfig } from '@/adapters/hf-config';
-import { readOpenAiConfig } from '@/adapters/openai-config';
-import { systemClock } from '@/adapters/system-clock';
 import { createApplication } from '@/app';
-import { readContextConfig } from '@/context/config';
-import { readDeepPolicy } from '@/pipelines/deep-config';
-import { readEvidencePolicy } from '@/pipelines/evidence';
-import { readExecutionPolicy } from '@/pipelines/execution-policy';
-import { readRouterPolicy } from '@/pipelines/router';
-import { readRetrievalConfig } from '@/retrieval/config';
-import { ConfigError, readConfig } from '@/shared/config';
-import { readQdrantConfig } from '@/storage/qdrant-config';
+import { readConfig } from '@/bootstrap/config';
+import { readExecutionPolicy } from '@/modules/execution/application/execution-policy';
+import { readQdrantConfig } from '@/modules/knowledge/application/connection-settings';
+import { readDeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
+import { readEvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
+import { readRouterPolicy } from '@/modules/rag/application/pipelines/router';
+import { readContextConfig } from '@/modules/rag/infrastructure/config/context';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import { readOpenAiConfig } from '@/modules/rag/infrastructure/config/openai-config';
+import { readRetrievalConfig } from '@/modules/rag/infrastructure/config/retrieval';
+import { ConfigError } from '@/shared/errors/config-error';
+import { systemClock } from '@/shared/system-clock';
 
 async function main(): Promise<void> {
   // Validate configuration before creating resources or opening the listener.

@@ -3,11 +3,11 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
-
 import { parseHfDenseResponse, validateHybridBatch, validateRerank } from './validate.mjs';
 
 export const denseUrl =
   'https://router.huggingface.co/hf-inference/models/BAAI/bge-m3/pipeline/feature-extraction';
+
 export const rerankUrl =
   'https://router.huggingface.co/hf-inference/models/BAAI/bge-reranker-v2-m3';
 

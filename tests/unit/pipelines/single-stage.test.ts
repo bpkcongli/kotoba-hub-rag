@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import { appendFile, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { test } from 'node:test';
-
 import {
   admit,
   clock,
@@ -12,12 +11,12 @@ import {
 } from '@tests/__fixtures__/generation-fixture';
 import { checksum, dense, hit } from '@tests/__fixtures__/retrieval-fixture';
 import { setupSingleStage, skill, trace } from '@tests/__fixtures__/single-stage-fixture';
-import { createContractValidators } from '@/contracts/validator';
-import { parseTraceEvent } from '@/observability/events';
-import { JsonlTraceSink } from '@/observability/jsonl-sink';
-import { readEvidencePolicy } from '@/pipelines/evidence';
-import { retrievalPlan } from '@/pipelines/retrieval-plan';
-import { createSingleStageRunner } from '@/pipelines/single-stage';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { JsonlTraceSink } from '@/modules/observability/interface/secondary/files/jsonl-sink';
+import { readEvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
+import { retrievalPlan } from '@/modules/rag/application/pipelines/retrieval-plan';
+import { createSingleStageRunner } from '@/modules/rag/application/pipelines/single-stage';
+import { createContractValidators } from '@/modules/rag/application/validation';
 
 await test('SINGLE_STAGE four operations/EN-ID use one round, shared generator and selected sources', async (t) => {
   for (const operation of ['generate', 'evaluate', 'normalize', 'recommend'] as const) {

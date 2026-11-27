@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-
 import { setupAdaptive } from '@tests/__fixtures__/adaptive-fixture';
-import { candidate, skill, secondSkill } from '@tests/__fixtures__/context-fixture';
+import { candidate, secondSkill, skill } from '@tests/__fixtures__/context-fixture';
 import {
   admit,
   clock,
@@ -12,13 +11,16 @@ import {
 } from '@tests/__fixtures__/generation-fixture';
 import { dense, hit, scope } from '@tests/__fixtures__/retrieval-fixture';
 import { trace } from '@tests/__fixtures__/single-stage-fixture';
-import { createContractValidators } from '@/contracts/validator';
-import { parseTraceEvent } from '@/observability/events';
-import { JsonlTraceSink } from '@/observability/jsonl-sink';
-import { mapRerankedCandidates, mergeDeepCandidates } from '@/pipelines/deep-candidates';
-import { parseDeepPolicy, readDeepPolicy } from '@/pipelines/deep-config';
-import { readEvidencePolicy } from '@/pipelines/evidence';
-import { createQueryRewriter } from '@/pipelines/rewrite';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { JsonlTraceSink } from '@/modules/observability/interface/secondary/files/jsonl-sink';
+import { parseDeepPolicy, readDeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
+import { readEvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
+import { createQueryRewriter } from '@/modules/rag/application/pipelines/rewrite';
+import { createContractValidators } from '@/modules/rag/application/validation';
+import {
+  mapRerankedCandidates,
+  mergeDeepCandidates,
+} from '@/modules/rag/domain/services/deep-candidates';
 
 await test('ADAPTIVE FAST/DEEP four operations and EN-ID/N5-N4 fixtures use shared generator and terminal schema', async (t) => {
   for (const fast of [true, false]) {

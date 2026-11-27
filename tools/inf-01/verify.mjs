@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-
 import { validateAudit, validateDenseDecision } from './validate.mjs';
 
 const directory = new URL('../../docs/inference/', import.meta.url);

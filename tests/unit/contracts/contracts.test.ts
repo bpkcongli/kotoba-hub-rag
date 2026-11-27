@@ -1,9 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-
 import fixtures from '@contracts/v1/fixtures.json' with { type: 'json' };
-import { createContractValidators, validateRequest } from '@/contracts/validator';
-import type { Operation } from '@/contracts/validator';
+import { createContractValidators, validateRequest } from '@/modules/rag/application/validation';
+import type { Operation } from '@/shared/operations';
 
 const validators = createContractValidators();
 const now = Date.parse('2026-11-23T12:00:00Z');

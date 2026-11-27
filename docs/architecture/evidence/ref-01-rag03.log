@@ -1,0 +1,14 @@
+
+> kotoba-hub-rag@0.1.0 test:rag03
+> node tools/rag-01/run-integration.mjs --single-stage
+
+✔ SINGLE_STAGE/ADAPTIVE initial Qdrant nyata: filtered retrieval/context parity, route FAST adaptive (1542.330768ms)
+✔ SINGLE_STAGE/ADAPTIVE initial Qdrant nyata: empty evidence gagal baseline, route DEEP adaptive (1174.283874ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3396.392326

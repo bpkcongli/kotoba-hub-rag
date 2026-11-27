@@ -3,10 +3,9 @@ import { once } from 'node:events';
 import { createServer } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { test } from 'node:test';
-
-import { readHfConfig } from '@/adapters/hf-config';
-import { createHfInference } from '@/adapters/hf-inference';
-import type { InferenceAttempt } from '@/adapters/hf-inference';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import type { InferenceAttempt } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
 
 await test('adapter memakai fetch HTTP nyata pada fixture loopback, tanpa endpoint HF', async (t) => {
   const payloads: unknown[] = [];

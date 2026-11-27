@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { test } from 'node:test';
-
 import {
   candidate,
   contextConfig,
@@ -12,11 +11,11 @@ import {
 import { admit, clock, signal } from '@tests/__fixtures__/generation-fixture';
 import { hit } from '@tests/__fixtures__/retrieval-fixture';
 import { setupSingleStage, trace } from '@tests/__fixtures__/single-stage-fixture';
-import { buildContext } from '@/context/builder';
-import { parseTraceEvent } from '@/observability/events';
-import { JsonlTraceSink } from '@/observability/jsonl-sink';
-import { createAdaptiveInitialStage } from '@/pipelines/adaptive-initial';
-import { retrievalPlan } from '@/pipelines/retrieval-plan';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { JsonlTraceSink } from '@/modules/observability/interface/secondary/files/jsonl-sink';
+import { buildContext } from '@/modules/rag/application/context/builder';
+import { createAdaptiveInitialStage } from '@/modules/rag/application/pipelines/adaptive-initial';
+import { retrievalPlan } from '@/modules/rag/application/pipelines/retrieval-plan';
 import {
   extractRouterFeatures,
   parseRouterFeatures,
@@ -24,7 +23,7 @@ import {
   readRouterPolicy,
   routeInitialEvidence,
   routerConfigurationHash,
-} from '@/pipelines/router';
+} from '@/modules/rag/application/pipelines/router';
 
 function features(rows = [candidate(1, [skill, secondSkill])]) {
   const request = ragRequest('generate');

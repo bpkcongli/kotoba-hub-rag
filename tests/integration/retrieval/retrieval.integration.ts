@@ -3,9 +3,9 @@ import { randomUUID } from 'node:crypto';
 import { test } from 'node:test';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { context, dense, manifest, payload, scope } from '@tests/__fixtures__/retrieval-fixture';
-import { retrievalConfig } from '@/retrieval/config';
-import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
-import { QdrantIndexStore } from '@/storage/qdrant-index';
+import { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
+import { retrievalConfig } from '@/modules/rag/infrastructure/config/retrieval';
+import { createQdrantRetriever } from '@/modules/rag/interface/secondary/qdrant/retriever';
 
 const url = process.env.RAG01_QDRANT_URL;
 

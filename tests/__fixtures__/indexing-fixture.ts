@@ -1,9 +1,12 @@
-import { createIngestionPlan } from '@/ingestion/index-plan';
-import type { IngestionPlan } from '@/ingestion/index-plan';
-import type { ApprovedSource, PreparedChunk } from '@/ingestion/types';
-import { hash } from '@/ingestion/validation';
-import type { IndexManifest } from '@/storage/index-manifest';
-import type { IndexPoint, IndexValidation } from '@/storage/qdrant-index';
+import type { IndexManifest } from '@/modules/knowledge/application/index-manifest';
+import type { IngestionPlan } from '@/modules/knowledge/application/index-plan';
+import { createIngestionPlan } from '@/modules/knowledge/application/index-plan';
+import type {
+  IndexPoint,
+  IndexValidation,
+} from '@/modules/knowledge/application/models/index-store';
+import { hash } from '@/modules/knowledge/application/validation';
+import type { ApprovedSource, PreparedChunk } from '@/modules/knowledge/domain/models/ingestion';
 
 export function fixturePlan(count = 3): IngestionPlan {
   const sources: ApprovedSource[] = [];

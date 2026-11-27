@@ -3,37 +3,36 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { TestContext } from 'node:test';
-
 import {
-  config,
   clock,
+  config,
   outputFor,
   providerResponse,
   requestFor,
 } from '@tests/__fixtures__/generation-fixture';
 import { dense, hit, manifest, transport } from '@tests/__fixtures__/retrieval-fixture';
-import { EMBEDDING_CONFIG_ID } from '@/adapters/bge-configuration';
-import { readHfConfig } from '@/adapters/hf-config';
-import { createHfInference } from '@/adapters/hf-inference';
-import { createOpenAiGenerator } from '@/adapters/openai-responses';
-import { readContextConfig } from '@/context/config';
-import { createContextBuilder } from '@/context/observed-builder';
-import type { ContextConfig } from '@/context/types';
-import type { Operation } from '@/contracts/validator';
-import { createOperationGenerator } from '@/generation/generator';
-import { parseTraceEvent } from '@/observability/events';
-import { ObservationStore } from '@/observability/store';
-import type { ObservationOptions } from '@/observability/store';
-import { readEvidencePolicy } from '@/pipelines/evidence';
-import type { EvidencePolicy } from '@/pipelines/evidence';
-import type { Scheduling } from '@/pipelines/execution-control';
-import type { ExecutionPolicy } from '@/pipelines/execution-policy';
-import { createSingleStageRunner } from '@/pipelines/single-stage';
-import { retrievalConfig } from '@/retrieval/config';
-import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
-import { createRetrievalStage } from '@/retrieval/stage';
-import type { Clock } from '@/shared/ports';
-import { parseIndexManifest } from '@/storage/index-manifest';
+import { ObservationStore } from '@/bootstrap/observation-store';
+import type { Scheduling } from '@/modules/execution/application/execution-control';
+import type { ExecutionPolicy } from '@/modules/execution/application/execution-policy';
+import type { ObservationOptions } from '@/modules/execution/application/services/execution-registry.service';
+import { EMBEDDING_CONFIG_ID } from '@/modules/knowledge/application/embedding-configuration';
+import { parseIndexManifest } from '@/modules/knowledge/application/index-manifest';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { createContextBuilder } from '@/modules/rag/application/context/observed-builder';
+import { createOperationGenerator } from '@/modules/rag/application/generation/generator';
+import type { EvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
+import { readEvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
+import { createSingleStageRunner } from '@/modules/rag/application/pipelines/single-stage';
+import { createRetrievalStage } from '@/modules/rag/application/retrieval/stage';
+import type { ContextConfig } from '@/modules/rag/domain/models/context';
+import { readContextConfig } from '@/modules/rag/infrastructure/config/context';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import { retrievalConfig } from '@/modules/rag/infrastructure/config/retrieval';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { createOpenAiGenerator } from '@/modules/rag/interface/secondary/inference/openai-responses';
+import { createQdrantRetriever } from '@/modules/rag/interface/secondary/qdrant/retriever';
+import type { Clock } from '@/shared/clock';
+import type { Operation } from '@/shared/operations';
 
 export const skill = 'synthetic_copula';
 

@@ -3,14 +3,20 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import test from 'node:test';
-
 import { dense, fixturePlan, memoryStore } from '@tests/__fixtures__/indexing-fixture';
-import { readHfConfig } from '@/adapters/hf-config';
-import { createHfInference, InferenceError } from '@/adapters/hf-inference';
-import { appendJournal, createIndexJob, readJournal, runIndexJob } from '@/ingestion/index-job';
-import { createIngestionPlan, IndexingError } from '@/ingestion/index-plan';
-import { canonical, hash, object } from '@/ingestion/validation';
-import type { EmbeddingPort } from '@/shared/ports';
+import { createIngestionPlan } from '@/modules/knowledge/application/index-plan';
+import type { EmbeddingPort } from '@/modules/knowledge/application/ports/embedding';
+import { canonical, hash, object } from '@/modules/knowledge/application/validation';
+import { IndexingError } from '@/modules/knowledge/domain/exceptions/indexing-error';
+import { runIndexJob } from '@/modules/knowledge/infrastructure/di/index';
+import {
+  appendJournal,
+  createIndexJob,
+  readJournal,
+} from '@/modules/knowledge/interface/secondary/corpus/index-job';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { InferenceError } from '@/shared/errors/inference-error';
 
 async function harness(count = 3) {
   const root = await mkdtemp(resolve(tmpdir(), 'kotoba-data03-'));

@@ -1,0 +1,329 @@
+
+> kotoba-hub-rag@0.1.0 check
+> npm run inf:check && npm run data:test && npm run contracts:check && npm run architecture:check && npm run typecheck && npm run lint && npm run format:check && npm test && npm run build
+
+
+> kotoba-hub-rag@0.1.0 inf:check
+> node tools/inf-01/audit.test.mjs && node tools/inf-01/smoke.test.mjs && node tools/inf-01/verify.mjs && node tools/inf-01/capture.mjs
+
+✔ capture hybrid: cardinality, dense-only, finite values dan sparse vocabulary (13.477573ms)
+✔ rerank memakai ID bijektif, menerima logit negatif dan urutan provider berbeda (1.388341ms)
+✔ discovery GET allowlist tanpa auth/body/redirect/retry dan tanpa panggilan saat import (33.715244ms)
+✔ failed metadata tidak hilang atau menyimpan raw error; tidak lolos verifier (8.372556ms)
+✔ manifest audit tidak dapat mengklaim smoke, served revision, final provider atau freeze (11.14524ms)
+✔ DENSE menerima sparse absen; HYBRID tetap wajib dan sparse malformed selalu gagal (2.52959ms)
+✔ parser HF dense memeriksa batch/dimensi/finite; similarity scores bukan embedding (0.882064ms)
+✔ keputusan HF dense tidak menghapus reranker, parity, revision gates atau metrik penelitian (6.35304ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.349722
+✔ plan fixed HF only: six dense, six rerank pairs, one explicit sparse diagnostic (0.880621ms)
+✔ invoke auth/TLS route/no redirects, vectors valid; secrets and unknown cost retained safely (24.263177ms)
+ja-query: HTTP 422, HTTP_ERROR
+rerank-ja-time: HTTP 422, HTTP_ERROR
+✔ runner stops failed operations, retains 13 slots and rejects replay; no retry or fallback (10.156653ms)
+✔ 429 and timeout are single attempts; unsupported sparse is not claimed as valid (5.937777ms)
+✔ pair diagnostic uses Transformers text/text_pair and input-order mapping; no fake ranking IDs (1.742647ms)
+✔ outer HF classification batch maps to IDs without an extra paid call (1.395525ms)
+pair-en-0: HTTP 200, SHAPE_VALID
+pair-en-1: HTTP 200, SHAPE_VALID
+pair-id-0: HTTP 200, SHAPE_VALID
+pair-id-1: HTTP 200, SHAPE_VALID
+✔ continuation reanalyzes saved JA offline, spends only four slots and cannot replay (11.198963ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 60.808034
+Snapshot historis INF-01 v1/v2 valid: audit/keputusan sebelum smoke (0 calls pada snapshot tersebut). Capture aktual diperiksa terpisah.
+Capture INF-01 v3 valid: 13 POST unik, 0 retry; dense/pair rerank valid, sparse belum terbukti; freeze tetap diblokir.
+
+> kotoba-hub-rag@0.1.0 data:test
+> node tools/data-01/audit.test.mjs && node tools/data-01/seed-audit.test.mjs
+
+✔ published bilingual snapshot retains canonical Japanese and holds unapproved candidates (7.024442ms)
+✔ unpublished or unsupported ancestors cannot expose published descendants (1.342193ms)
+✔ stale English ancestor or owner is excluded; stale Indonesian is never relabelled fallback (0.36147ms)
+✔ standalone group, level mismatch and unpublished skills stay outside lesson corpus (0.293611ms)
+✔ nested evaluator keys, learner fields and comprehension answers are removed (0.160356ms)
+✔ identity and content checksum are stable under source row order and object key order (0.391196ms)
+✔ current locale requires published schema v2 and matching positive revisions (0.109108ms)
+✔ N4 reading keeps passage and translations while excluding canonical and localized checks (0.250538ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14.36597
+✔ seed comparison accepts reading projection without treating removed answer checks as drift (1.591128ms)
+✔ wrong parent, unpublished ancestor, stale translation and content changes cannot pass seed evidence (1.257902ms)
+✔ multiple tracks are mapped explicitly and duplicate owner IDs fail (0.432716ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6.627454
+
+> kotoba-hub-rag@0.1.0 contracts:check
+> node tools/boot-01/generate-types.mjs --check
+
+
+> kotoba-hub-rag@0.1.0 architecture:check
+> node tools/ref-01/check-boundaries.mjs
+
+Boundary check passed: 139 TypeScript files; no implementation cycles.
+
+> kotoba-hub-rag@0.1.0 typecheck
+> tsc --noEmit
+
+
+> kotoba-hub-rag@0.1.0 lint
+> eslint src tests eslint.config.mjs tools/boot-01 tools/inf-01 tools/store-01 tools/data-01 tools/data-03 tools/rag-01 tools/ref-01
+
+
+> kotoba-hub-rag@0.1.0 format:check
+> prettier --check .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs tools/ref-01/*.mjs
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> kotoba-hub-rag@0.1.0 test
+> node --import tsx --test "tests/unit/**/*.test.ts"
+
+✔ HF opt-in, konfigurasi immutable dan identitas served revision tetap unknown (3.240207ms)
+✔ config menolak kredensial, override provider/model/endpoint dan limit invalid (2.039143ms)
+✔ factory memvalidasi ulang config langsung sebelum resource/call dibuat (0.451321ms)
+✔ startup HF invalid berhenti sebelum listen tanpa mengungkap secret (1898.948153ms)
+✔ adapter memakai fetch HTTP nyata pada fixture loopback, tanpa endpoint HF (96.160913ms)
+✔ parser memutar ulang capture dense JA/EN/ID dan kedua layout pair INF-01 (42.215538ms)
+✔ DENSE/HYBRID dan malformed sparse dibedakan tanpa sparse kosong palsu (3.757705ms)
+✔ embedding batch menjaga urutan, purpose dan wire config sama untuk dokumen/query (44.731562ms)
+✔ reranker batch memetakan input IDs sebelum sort dan mempertahankan stable tie (3.611777ms)
+✔ embedding multi-item batch, snapshot input dan config tidak berubah saat await (2.292347ms)
+✔ concurrency bersama membatasi embedding dan rerank tanpa antrean atau retry (4.287105ms)
+✔ total deadline memakai budget monotonic lintas batch, termasuk observer (4.224826ms)
+✔ HYBRID capability belum terbukti: fail tanpa network atau fallback (0.390796ms)
+✔ 429 menyimpan Retry-After tanpa retry; batch berikut tidak dikirim (6.036086ms)
+✔ HTTP/auth/network dan respons invalid memiliki failure eksplisit tersanitasi (4.542553ms)
+✔ deadline timeout membatalkan transport; ignored abort tetap menahan concurrency slot (15.680171ms)
+✔ caller abort saat streaming body menutup stream dan mencatat outcome unknown (7.10649ms)
+✔ input, expired deadline dan pre-abort tidak mengirim attempt (1.018124ms)
+✔ body limit dan observer failure tidak menjadi sukses atau retry diam-diam (4.758536ms)
+✔ close membatalkan in-flight dan menolak batch/call selanjutnya (0.764229ms)
+✔ 429/5xx/auth/rejection/refusal/incomplete/invalid JSON gagal sekali dan biaya tetap tercatat (2933.680444ms)
+✔ timeout/cancellation membatasi fetch yang mengabaikan abort dan menahan slot concurrency (411.184963ms)
+✔ aborted caller tidak mengirim call; stream body dan response oversized dibatasi (734.451062ms)
+✔ observer gagal tidak menjalankan retry; admission disimpan UNKNOWN (336.196759ms)
+✔ shared generator memakai prompt/schema/model identik lintas mode dan mengisolasi evidence (300.506812ms)
+✔ fetch HTTP loopback nyata mengirim Structured Outputs dan memetakan Retry-After (244.35498ms)
+✔ snapshot input/context menjaga identitas dan hash prompt saat caller memutasi setelah dispatch (150.796843ms)
+✔ composition root menerima clock; probes tidak memanggil jaringan/provider (372.015785ms)
+✔ HF enabled dirangkai tanpa inference pada startup, capability dan probe health (232.861727ms)
+✔ OpenAI enabled dirangkai tanpa call pada startup/probe dan memerlukan admission aktif (342.095475ms)
+✔ retrieval enabled tetap tanpa I/O jaringan pada startup/health dan menolak non-admitted calls (707.874756ms)
+✔ RAG modes share deterministic packing, cap and prompt budget across all operations (813.804095ms)
+✔ dedup keeps one copy of identical chunk/content and accounts every candidate (150.925774ms)
+✔ coverage selects a lower-ranked new skill before redundant evidence under a tight cap (164.629321ms)
+✔ packing includes JSON escapes/IDs/separators and preserves whole Japanese chunks (139.64213ms)
+✔ oversized candidate is skipped so a later complete chunk can still cover the skill (146.992435ms)
+✔ fixed reserves constrain evidence and overflow remains explicit without changing input (104.507843ms)
+✔ char cap includes instructions plus serialized input as required by provider adapter (143.668819ms)
+✔ scope/empty evidence preserve explicit uncovered skills and never invent sources (116.775097ms)
+✔ rejects conflicting chunk identity, invalid checksum, hidden target and baseline mode (126.871475ms)
+✔ context config validates caps and derives output/input limits from generator config (0.600406ms)
+✔ generator uses exactly the budgeted input for four operations and excludes envelope data (936.393557ms)
+✔ trace parser rejects forged selection, accounting, coverage and arbitrary text (99.316701ms)
+✔ observed context requires admission, retains durable redacted selection and rejects cancellation (366.930542ms)
+✔ observed builder binds generator reserves and the complete admitted request (119.933018ms)
+✔ 16 pasangan fixture CON-01 valid pada schema request/response ketiga mode (33.529232ms)
+✔ wire validation strict: locale, tipe, extra property, mode, bahasa grading (2.149324ms)
+✔ validator tidak memutasi input/default/remove dan menjaga teks Jepang (2.815126ms)
+✔ policy murni memeriksa ID, eligibility target dan deadline dari clock caller (0.804847ms)
+✔ metadata harus di luar domain; unknown usage/cost tidak diganti nol (0.865482ms)
+{"task":"BASE-01","execute":false,"calls":4,"maxCalls":0,"maxBudgetUsd":0,"estimatedCeilingUsd":0.09516159999999999,"maxOutputTokens":768,"providerRetries":0,"schemaRetries":0,"modes":["LLM_ONLY"],"models":{"generation":"gpt-5.6-terra","normalization":"gpt-5.6-luna"},"priceAsOf":"2026-11-25"}
+{"task":"BASE-01","execute":true,"calls":4,"maxCalls":4,"maxBudgetUsd":0.092,"estimatedCeilingUsd":0.09516159999999999,"maxOutputTokens":768,"providerRetries":0,"schemaRetries":0,"modes":["LLM_ONLY"],"models":{"generation":"gpt-5.6-terra","normalization":"gpt-5.6-luna"},"priceAsOf":"2026-11-25"}
+{"task":"BASE-01","execute":true,"calls":4,"maxCalls":5,"maxBudgetUsd":0.1,"estimatedCeilingUsd":0.09516159999999999,"maxOutputTokens":768,"providerRetries":0,"schemaRetries":0,"modes":["LLM_ONLY"],"models":{"generation":"gpt-5.6-terra","normalization":"gpt-5.6-luna"},"priceAsOf":"2026-11-25"}
+✔ smoke default hanya plan; execute tanpa budget memadai ditolak sebelum dispatch (49.528141ms)
+✔ konfigurasi OpenAI opt-in, model tetap dan error tanpa secret (1.953149ms)
+✔ usage lengkap/partial/missing/malformed mengikuti OBS-02 tanpa mengisi nol (1.202937ms)
+✔ 16 fixture EN/ID N5/N4 melalui baseline/provider/schema/domain/accounting, tanpa retrieval (6478.345229ms)
+✔ schema dan domain validation memisahkan invalid JSON, count, catalog, locale dan references (1003.987119ms)
+✔ unknown usage/cost tetap null dan baseline menolak mode lain serta fingerprint berbeda (195.520146ms)
+✔ domain refinements menolak count/skill/difficulty/type, blanks/options/kana/token permutations dan arah locale (244.428145ms)
+✔ billing profile berbeda/tidak teramati menahan estimasi meski usage terisi (346.347462ms)
+✔ plan preserves original provenance/overlap, deterministic UUIDs and explicit dense identity with unknown revisions (13.950969ms)
+✔ re-ingestion replays deterministic upserts without new embedding and repairs missing stored points (72.969371ms)
+✔ HTTP 429 is retained, no hidden retry, resume skips successful vectors and records all provider attempts (88.745965ms)
+✔ upsert failure resumes from durable vectors with zero additional provider calls (14.074585ms)
+✔ call ceiling and active collection preflight fail before paid embedding (8.619037ms)
+✔ persisted pre-call intent after a crash remains unknown and is not erased by successful resume (21.581439ms)
+✔ lock, plan mutation and torn journal block network; invalid journal is preserved byte-for-byte (11.323712ms)
+✔ tampered cache and malformed vectors cannot reach Qdrant or trigger an implicit re-embedding (31.238929ms)
+✔ cache written before a crash is reconciled to its original intent without another provider call (26.136707ms)
+✔ DENSE validates optional sparse output without materializing it and rejects malformed sparse (26.231297ms)
+✔ approved loader overlays capture status only after integrity and scoped researcher approval (51.223959ms)
+✔ changed snapshot or unresolved content approval fails before normalization (18.929245ms)
+✔ manifest pointer cannot traverse outside corpus directory (7.423734ms)
+✔ HTML conversion preserves entities, ruby, line structure and Japanese while excluding executable content (10.817095ms)
+✔ grammar meaning, structure and adjacent Japanese/translation remain one pedagogical unit (3.832939ms)
+✔ normalization and chunks are deterministic across source order and preserve full source coverage (5.382778ms)
+✔ whole-unit overlap respects token budget and always includes fresh evidence (2.049945ms)
+✔ oversized grammar/example unit fails explicitly without truncation or splitting (3.551221ms)
+✔ locale parents, no cross-lesson skills, publication and grammar ownership are enforced (1.962587ms)
+✔ strict source parser detects checksum changes, revisions and evaluation-key injection (4.058519ms)
+✔ config revisions change chunk identity and invalid limits or malformed token counts fail (1.253794ms)
+✔ Indonesian reading and vocabulary preserve Japanese evidence with locale-specific translations (1.099539ms)
+✔ tokenizer assets are required explicitly and never substituted with an estimated count (16.143595ms)
+✔ token cache read/write tidak dihitung ulang; reasoning sudah termasuk output (19.601909ms)
+✔ missing cache/usage/rate tetap null dan subtotal bagian yang teramati dipertahankan (2.861353ms)
+✔ normalizer Responses mempertahankan missing; cache/output/total malformed ditolak (0.819906ms)
+✔ price scope mengikat provider/model/purpose/profile/waktu dan ceiling; overlap snapshot ditolak (6.83947ms)
+✔ billable compute aktual dihitung presisi; client duration/itemCount bukan pengganti quantity provider (2.716107ms)
+✔ provider-reported charge menggantikan estimasi, termasuk billed failure yang usage-nya missing (1.50854ms)
+✔ seluruh retry dan rewrite masuk online sekali; replay identik diabaikan dan attempt konflik ditolak (30.570683ms)
+✔ parent onboarding menjumlahkan child raw calls sekali dan missing child menjaga total null (7.658102ms)
+✔ hosting yang mencakup call dihitung sekali; alokasi child/parent/run dan residual utuh (8.426971ms)
+✔ document indexing, judge, warmup dan startup terpisah dari online call cost (7.540177ms)
+✔ nol hanya pada inventory lengkap; unknown execution/resource menjaga null dan known subtotal (4.6822ms)
+✔ ledger/snapshot yang tidak cocok ditolak; default snapshot mempertahankan HF unknown (26.472448ms)
+✔ request/pair units dan batas waktu tarif eksplisit tanpa asumsi gratis untuk missing (7.045042ms)
+✔ parent tanpa execution memerlukan bukti no-call untuk biaya nol (2.555531ms)
+✔ metadata retry/warmup HF disalin sebelum await dan phase invalid tidak mengirim transport (57.786379ms)
+✔ store menyalin snapshot, menyimpan ledger baru, membaca legacy tanpa backfill dan ekspor CLI tanpa provider (1033.688495ms)
+✔ admission concurrent, canonical fingerprint, mode/service scope dan terminal tetap idempoten setelah reopen (136.565244ms)
+✔ durasi request/span/rejection monotonic tetap benar saat UTC bergerak mundur; attempt usage/cost unknown (24.66669ms)
+✔ sink failure mempertahankan admission dan UNKNOWN tanpa mengizinkan eksekusi ulang (21.513338ms)
+✔ filesystem terminal ikut gagal: admission tetap tersedia, pulih UNKNOWN setelah storage kembali (21.301094ms)
+✔ crash nyata meninggalkan lock/admission; recovery menutup UNKNOWN dan mendeteksi torn JSONL tanpa menghapus bukti (1484.980731ms)
+✔ writer kedua tidak dapat menulis ataupun menghapus lock writer hidup dengan flag recovery (14.745937ms)
+✔ antrean penuh saat finish membuat UNKNOWN yang dapat direkonsiliasi dalam proses yang sama (61.749047ms)
+✔ guard recovery yang tertinggal memerlukan pemeriksaan operator, tanpa membuka inferensi baru (16.07284ms)
+✔ kegagalan penulisan terminal sesudah attempt sukses tetap menjadi UNKNOWN (14.43281ms)
+✔ terminal registry lengkap dengan baris terminal JSONL hilang terdeteksi INVALID (31.292943ms)
+✔ JSONL strict, antrean concurrent utuh dan snapshot tidak berubah sesudah write (9.64664ms)
+✔ composition root mencegah HF tanpa admission; attempt provider disimpan durable melalui observer mock (255.990664ms)
+✔ ADAPTIVE FAST/DEEP four operations and EN-ID/N5-N4 fixtures use shared generator and terminal schema (14388.972508ms)
+✔ one actual rewrite changes stage2 query only; original filters and domain generation input remain intact (229.420972ms)
+✔ merge interleaves stages, removes duplicate chunks/content, bounds pool, and rejects conflicting identity/scope (0.679678ms)
+✔ cross-encoder mapping is bijective, handles unordered IDs/negative logits and stable ties (0.240389ms)
+✔ deep pool cap and dedup bound actual HF rerank batch attempts (226.679597ms)
+✔ empty and inadequate final evidence produce terminal failure with bounded stages and no generator (544.195122ms)
+✔ rewrite schema failures and 429 stop after one actual call without stage2, fallback or retry (514.923347ms)
+✔ invalid rerank ID/score mapping fails without domain generation (167.025737ms)
+✔ deep config rejects topology/model drift, malformed thresholds and unvalidated frozen claim (0.320743ms)
+✔ rewrite output is parsed strictly, never accepted as arbitrary object or empty query (0.209009ms)
+✔ adaptive trace cannot forge actual path/counters, pool membership or score ranks (214.439827ms)
+✔ partial rerank batch failure retains both attempts and unknown billing, without generator or retry (187.799646ms)
+✔ trace sink failures at rerank/path/terminal leave UNKNOWN without inference replay (650.789378ms)
+✔ invalid requests/corpus and pre-cancellation stop before any inference with terminal records (735.961253ms)
+✔ monotonic budget during stage2 embedding prevents rerank/generation and closes TIMEOUT (177.696425ms)
+✔ execution replay and concurrent invocation cannot exceed one deep sequence (185.457616ms)
+✔ execution policy defaults keep retries opt-in and strict config rejects invalid/extra/overbudget values (2.489273ms)
+✔ schema regeneration is identical across all paths and operations, with unchanged evidence/prompt/model/schema (8030.043815ms)
+✔ provider then schema retry share one global budget; failed usage/cost remain unknown in every path (1120.356203ms)
+✔ schema then transient failure does not multiply nested provider/schema budgets (1017.455952ms)
+✔ global retry exhaustion preserves final failure and never changes requested mode (776.17138ms)
+✔ query embedding retry stays within one retrieval stage and same hard filters (231.312648ms)
+✔ rerank retries only failed batch; successful batch and stage1 are never repeated (257.374575ms)
+✔ rewrite cannot retry even when provider/schema/global budgets remain (378.134441ms)
+✔ Retry-After and jitter use remaining deadline, and cancellation during backoff prevents new HTTP (439.840712ms)
+✔ Retry-After exceeding deadline is not truncated into another paid call (230.548552ms)
+✔ model call cap allows first call and refuses additional work across generation and deep path (401.225197ms)
+✔ auth/refusal/unknown network and invalid provider output do not trigger transient retry (923.914859ms)
+✔ deadline after domain generation prevents success and preserves paid attempt accounting (303.148597ms)
+✔ retry event or terminal sink failure leaves UNKNOWN and does not repeat inference (480.228532ms)
+✔ strict execution events reject forged config/hash, retry kind/reason and legacy versions (227.425111ms)
+✔ mode integrity control refuses baseline semantic calls and cross-execution context before HTTP (212.482328ms)
+✔ RAG facade dispatches each explicit mode once with the original operation and execution context (3.397759ms)
+✔ an unavailable requested mode fails without invoking another mode (0.921419ms)
+✔ fingerprint preserves the existing canonical digest across key order and Japanese text (1.509222ms)
+✔ fingerprinting rejects non-JSON values before any persistence or inference (0.390155ms)
+✔ router inclusive threshold boundaries and stricter provisional configurations (420.323806ms)
+✔ empty retrieval, empty selected budget, partial coverage choose DEEP without invented scores (489.525928ms)
+✔ dedup and selected coverage, rather than repeated chunks or raw candidate metadata, drive route (120.717815ms)
+✔ raw cosine/fusion scores and gap are diagnostics without universal confidence thresholds (130.631716ms)
+✔ policy parser rejects invalid, nonfinite, extra and claimed calibrated configurations (1.183139ms)
+✔ feature boundary rejects evaluator labels, missing and inconsistent values rather than coercing zero (138.384419ms)
+✔ conflicting target/context and fixed input overflow reject without a routing decision (138.340435ms)
+✔ ADAPTIVE initial retrieval/context matches SINGLE_STAGE across four operations and locale/level fixtures (5140.987015ms)
+✔ initial helper rejects invalid mode, label leakage and contradictory domain constraints before inference (1012.01245ms)
+✔ initial helper emits DEEP for empty or partial evidence without rewrite/rerank/generation (323.335171ms)
+✔ strict route trace rejects forged decisions, thresholds, reason codes, labels and legacy/mode mismatch (161.265227ms)
+✔ policy is validated before calls and snapshotted, cancellation/deadline prevent inference (159.280107ms)
+✔ claimed context coverage must match selected evidence metadata (50.192884ms)
+✔ failed retrieval preserves attempt accounting and has no fabricated route or generation (163.469446ms)
+✔ routing event/span sink failures preserve TRACE_WRITE_FAILED and UNKNOWN without repeating inference (321.671787ms)
+✔ monotonic deadline during embedding stops before routing with unchanged wall clock (158.714998ms)
+✔ SINGLE_STAGE four operations/EN-ID use one round, shared generator and selected sources (6730.311558ms)
+✔ empty/low evidence closes INSUFFICIENT_EVIDENCE without generator or fallback (508.175341ms)
+✔ fixed input overflow is INVALID_INPUT, not empty success or ungrounded generation (123.301695ms)
+✔ evidence gate counts selected unique chunks after dedup and preserves uncovered skills (115.64796ms)
+✔ unrecorded generator attempts cannot become trace-complete success (222.292669ms)
+✔ request validation, mode, scope size and pinned corpus fail before provider calls (879.812109ms)
+✔ planner parity uses domain fields only and grade scope stays on question skill (98.196959ms)
+✔ embedding failure and Qdrant outage retain failed attempt costs and never retry (218.609909ms)
+✔ schema/domain invalid generator output terminates without schema retry (415.099288ms)
+✔ missing LLM usage keeps all aggregate usage and online total unknown (149.537875ms)
+✔ monotonic deadline stops after embedding or generation even when wall clock is unchanged (251.364807ms)
+✔ unreadable attempt ledger becomes UNKNOWN instead of trace-complete failure (150.953409ms)
+✔ cancelled input stops before embedding; generation timeout aborts and preserves attempts (1201.075786ms)
+✔ fingerprint mismatch, concurrent execution and terminal replay never cause extra calls (153.199999ms)
+✔ sink failure during context or terminal leaves UNKNOWN without mode fallback (246.050832ms)
+✔ evidence policy and trace enforce counts/reasons without pretending score confidence (150.300154ms)
+✔ retrieval config opt-in, pinned manifest, bounds dan embedding ID sama DATA-03 (38.505945ms)
+✔ dense search memakai hard filter, raw rank/score dan tidak mengaktifkan sparse dari output (59.084128ms)
+✔ HYBRID membutuhkan sparse, menggunakan dua cabang terfilter dan fixed RRF, tanpa downgrade (5.037149ms)
+✔ malformed/mismatched payload, checksum, order, duplicated chunks, nonfinite score ditolak (32.383675ms)
+✔ empty result tetap kosong; invalid filter/vector tidak dikirim ke Qdrant (2.940905ms)
+✔ JA/EN/ID dan dua mode memakai stage/query provider sama, trace skor mentah tanpa raw query (149.753065ms)
+✔ timeout dan close membatalkan transport; slot tetap ditahan bila fetch mengabaikan abort (17.94251ms)
+✔ Qdrant 429/5xx, JSON rusak, body timeout dan oversized gagal eksplisit tanpa retry (26.849819ms)
+✔ query tidak dikirim saat mode LLM_ONLY; embedding/search failure tetap direkam tanpa fallback (35.15669ms)
+✔ HYBRID menolak chunk ganda lintas point serta metadata yang berubah antar cabang (4.532795ms)
+✔ HYBRID dua cabang dihitung satu event per round; stage 1/2 mempertahankan profile/configuration (19.945164ms)
+✔ embedding 429 dan Qdrant failure mempertahankan satu attempt ONLINE dengan unknown cost (98.532572ms)
+✔ default bootstrap lokal dan override valid diparse tanpa coercion longgar (2.860512ms)
+✔ config invalid ditolak, termasuk kosong, non-string, rentang dan enum (1.5556ms)
+✔ startup sungguhan gagal sebelum listen dengan pesan tersanitasi (1798.549396ms)
+✔ manifest strict menolak profil/revision/field tambahan tanpa coercion atau mutasi (4.387668ms)
+✔ payload mensyaratkan seluruh metadata minimum, tipe strict dan provenance tanpa field evaluator/learner (7.479422ms)
+✔ fingerprint canonical mengikat profile, physical revision, embedding dan inventory (1.408149ms)
+✔ filter menolak scope invalid dan tidak dapat dilemahkan menjadi pencarian tanpa skill (0.767887ms)
+✔ config Qdrant opt-in, URL TLS/loopback dan timeout tervalidasi tanpa membocorkan value (1.44009ms)
+✔ startup dan probe Qdrant enabled tidak memanggil jaringan atau membuat collection (287.798979ms)
+✔ promosi empty/unknown model revision gagal sebelum jaringan (0.905058ms)
+✔ SDK failure menjadi error tersanitasi tanpa mengekspos URL atau raw error (3.640883ms)
+✔ config storage invalid menghentikan startup sebelum listen (1045.454514ms)
+✔ actual backend import graph respects layers, public facades and has no implementation cycle (785.939271ms)
+✔ consumer adapter may implement its own port and call a public provider facade (351.422155ms)
+✔ boundary guard rejects imports, re-exports and dynamic dependencies that bypass layers (2476.448032ms)
+✔ runtime dependency cycles fail while a cycle of type-only contracts is permitted (560.188317ms)
+✔ ESLint menolak import relatif dan alias # pada src dan tests (3275.115672ms)
+✔ ESLint menerima alias, import bawaan Node dan dependency eksternal (196.673584ms)
+✔ ESLint juga menolak import relatif pada konfigurasi dan tooling runtime (8.16462ms)
+✔ tsx memuat alias source dan fixture JSON tanpa build (88.307011ms)
+ℹ tests 209
+ℹ suites 0
+ℹ pass 209
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19609.865044
+
+> kotoba-hub-rag@0.1.0 build
+> node tools/boot-01/build.mjs
+

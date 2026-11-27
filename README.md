@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 26 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 27 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. REF-01 memisahkan runtime ke modul DDD dengan kontrak aplikasi dan pemeriksaan dependency. Runtime HTTP tetap health-only; endpoint operasi dan hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -26,14 +26,14 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [ADP-01](docs/adaptive/ADP-01-router.md) | Router/initial stage, fitur dan policy/version/reason codes; prosedur kalibrasi pilot-only, threshold masih provisional |
 | [ADP-02](docs/adaptive/ADP-02-deep-path.md) | Runner ADAPTIVE FAST/DEEP internal, dua stages/satu rewrite opsional, BGE rerank/gate/terminal dan accounting seluruh batch |
 | [ADP-03](docs/adaptive/ADP-03-execution-policy.md) | Lifecycle tiga mode, deadline/cancellation, shared retry/call budget, terminal dan accounting seluruh attempts |
-| [Rencana REF-01](docs/architecture/REF-01-ddd-refactor-plan.md) | Target boundary DDD, ownership, tahapan migrasi dan acceptance sebelum API-01; refactor belum dijalankan |
+| [REF-01](docs/architecture/REF-01-ddd-refactor.md) | Implementasi boundary DDD, pemetaan source dan bukti regresi; rencana awal tetap tersedia pada laporan |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
 | [AGENTS.md](AGENTS.md) | Aturan kontribusi, peran subagent, skill, dan integritas penelitian |
 | [TECH_DEBT.md](TECH_DEBT.md) | Register tech debt kosong beserta format pengisiannya |
 
 Dokumentasi utama berada di root repository. Mulai dari PRD dan arsitektur, lalu ambil task yang dependensinya selesai. `AGENTS.md` memuat pedoman kerja lengkap. Folder `docs/` menyimpan referensi dan laporan keputusan; `contracts/v1/` memuat artefak CON-01, `research/protocol-v1/` memuat plan/template/source manifest/evidence RES-01.
 
-TOOLS-DDD-01 menyiapkan skill `kotoba-rag-backend-boundaries` pada paket `agent-tooling` dan instalasi `.agents/skills`. Panduan ini mengikuti stack RAG dan menjadi acuan REF-01; pemasangan skill tidak menjalankan refactor. Source paket memuat sembilan skill dan lima role. Verifikasi instalasi, batas discovery serta perbedaan lama skill TypeScript tercatat pada [bukti tooling](agent-tooling/TOOLS-DDD-01-verification.json).
+TOOLS-DDD-01 menyiapkan skill `kotoba-rag-backend-boundaries` pada paket `agent-tooling` dan instalasi `.agents/skills`. Panduan ini mengikuti stack RAG dan menjadi acuan REF-01; refactor kemudian dijalankan sebagai task terpisah. Source paket memuat sembilan skill dan lima role. Verifikasi instalasi, batas discovery serta perbedaan lama skill TypeScript tercatat pada [bukti tooling](agent-tooling/TOOLS-DDD-01-verification.json).
 
 ## Konfigurasi penelitian
 
@@ -58,7 +58,7 @@ npm run check
 npm start
 ```
 
-`npm run check` memeriksa drift tipe kontrak, typecheck strict, lint, format, test dan build. `npm start` menjalankan `dist/main.js` hasil build, dengan `.env` opsional. Untuk pengembangan, `npm run dev` menjalankan source TypeScript melalui tsx dan watcher Node. Konfigurasi invalid membuat proses keluar dengan status 1 sebelum listen; pesan hanya memuat nama field. `.env` diabaikan Git dan dikecualikan dari build context.
+`npm run check` memeriksa drift tipe kontrak, dependency boundary, typecheck strict, lint, format, test dan build. `npm run architecture:check` memeriksa graph import TypeScript, isolasi domain/application, facade lintas modul dan siklus implementasi; kontrak type-only diperiksa layer-nya tetapi tidak dihitung sebagai runtime cycle. `npm start` menjalankan `dist/main.js` hasil build, dengan `.env` opsional. Untuk pengembangan, `npm run dev` menjalankan source TypeScript melalui tsx dan watcher Node. Konfigurasi invalid membuat proses keluar dengan status 1 sebelum listen; pesan hanya memuat nama field. `.env` diabaikan Git dan dikecualikan dari build context.
 
 Format runtime mengikuti `.prettierrc.json`. Jalankan `npm run format` untuk menerapkan format atau `npm run format:check` untuk memeriksanya; pemeriksaan ini juga masuk `npm run check`.
 

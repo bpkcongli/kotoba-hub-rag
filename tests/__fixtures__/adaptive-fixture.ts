@@ -1,14 +1,13 @@
 import assert from 'node:assert/strict';
 import type { TestContext } from 'node:test';
-
 import { clock, outputFor, providerResponse } from '@tests/__fixtures__/generation-fixture';
 import { dense, hit } from '@tests/__fixtures__/retrieval-fixture';
 import { setupSingleStage, skill } from '@tests/__fixtures__/single-stage-fixture';
-import { createAdaptiveRunner } from '@/pipelines/adaptive';
-import { readDeepPolicy } from '@/pipelines/deep-config';
-import type { DeepPolicy } from '@/pipelines/deep-config';
-import { createQueryRewriter } from '@/pipelines/rewrite';
-import type { RerankerPort } from '@/shared/ports';
+import { createAdaptiveRunner } from '@/modules/rag/application/pipelines/adaptive';
+import type { DeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
+import { readDeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
+import { createQueryRewriter } from '@/modules/rag/application/pipelines/rewrite';
+import type { RerankerPort } from '@/modules/rag/application/ports/inference';
 
 export async function setupAdaptive(
   t: TestContext,

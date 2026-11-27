@@ -15,22 +15,22 @@ import {
 } from '@tests/__fixtures__/generation-fixture';
 import { dense, manifest, payload } from '@tests/__fixtures__/retrieval-fixture';
 import { skill, trace } from '@tests/__fixtures__/single-stage-fixture';
-import { EMBEDDING_CONFIG_ID } from '@/adapters/bge-configuration';
-import { readHfConfig } from '@/adapters/hf-config';
-import { createHfInference } from '@/adapters/hf-inference';
-import { createOpenAiGenerator } from '@/adapters/openai-responses';
-import { readContextConfig } from '@/context/config';
-import { createContextBuilder } from '@/context/observed-builder';
-import { createContractValidators } from '@/contracts/validator';
-import { createOperationGenerator } from '@/generation/generator';
-import { ObservationStore } from '@/observability/store';
-import { createAdaptiveInitialStage } from '@/pipelines/adaptive-initial';
-import { createSingleStageRunner } from '@/pipelines/single-stage';
-import { retrievalConfig } from '@/retrieval/config';
-import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
-import { createRetrievalStage } from '@/retrieval/stage';
-import { parseIndexManifest } from '@/storage/index-manifest';
-import { QdrantIndexStore } from '@/storage/qdrant-index';
+import { ObservationStore } from '@/bootstrap/observation-store';
+import { EMBEDDING_CONFIG_ID } from '@/modules/knowledge/application/embedding-configuration';
+import { parseIndexManifest } from '@/modules/knowledge/application/index-manifest';
+import { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
+import { createContextBuilder } from '@/modules/rag/application/context/observed-builder';
+import { createOperationGenerator } from '@/modules/rag/application/generation/generator';
+import { createAdaptiveInitialStage } from '@/modules/rag/application/pipelines/adaptive-initial';
+import { createSingleStageRunner } from '@/modules/rag/application/pipelines/single-stage';
+import { createRetrievalStage } from '@/modules/rag/application/retrieval/stage';
+import { createContractValidators } from '@/modules/rag/application/validation';
+import { readContextConfig } from '@/modules/rag/infrastructure/config/context';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import { retrievalConfig } from '@/modules/rag/infrastructure/config/retrieval';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { createOpenAiGenerator } from '@/modules/rag/interface/secondary/inference/openai-responses';
+import { createQdrantRetriever } from '@/modules/rag/interface/secondary/qdrant/retriever';
 
 const url = process.env.RAG01_QDRANT_URL;
 

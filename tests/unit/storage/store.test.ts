@@ -1,19 +1,19 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
-
 import { createApplication } from '@/app';
-import { ConfigError, readConfig } from '@/shared/config';
+import { readConfig } from '@/bootstrap/config';
+import { readQdrantConfig } from '@/modules/knowledge/application/connection-settings';
 import {
   contentDigest,
   INDEX_SCHEMA_VERSION,
   manifestFingerprint,
   parseIndexManifest,
-} from '@/storage/index-manifest';
-import { knowledgeFilter } from '@/storage/knowledge-filter';
-import { parseKnowledgePayload } from '@/storage/knowledge-payload';
-import { readQdrantConfig } from '@/storage/qdrant-config';
-import { QdrantIndexStore } from '@/storage/qdrant-index';
+} from '@/modules/knowledge/application/index-manifest';
+import { parseKnowledgePayload } from '@/modules/knowledge/application/knowledge-payload';
+import { knowledgeFilter } from '@/modules/knowledge/interface/secondary/qdrant/knowledge-filter';
+import { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
+import { ConfigError } from '@/shared/errors/config-error';
 
 function fixture() {
   return {

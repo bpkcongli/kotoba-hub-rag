@@ -5,11 +5,12 @@ import { resolve } from 'node:path';
 import test from 'node:test';
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { dense, fixturePlan } from '@tests/__fixtures__/indexing-fixture';
-import { createIndexJob, runIndexJob } from '@/ingestion/index-job';
-import { createIngestionPlan } from '@/ingestion/index-plan';
-import { StoreError } from '@/storage/index-manifest';
-import { knowledgeFilter } from '@/storage/knowledge-filter';
-import { QdrantIndexStore } from '@/storage/qdrant-index';
+import { StoreError } from '@/modules/knowledge/application/index-manifest';
+import { createIngestionPlan } from '@/modules/knowledge/application/index-plan';
+import { runIndexJob } from '@/modules/knowledge/infrastructure/di/index';
+import { createIndexJob } from '@/modules/knowledge/interface/secondary/corpus/index-job';
+import { knowledgeFilter } from '@/modules/knowledge/interface/secondary/qdrant/knowledge-filter';
+import { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
 
 const url = process.env.STORE01_QDRANT_URL;
 assert.ok(url, 'Gunakan npm run test:store untuk Qdrant sementara nyata');

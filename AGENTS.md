@@ -36,7 +36,7 @@ Reviewer Jepang adalah alat bantu. Peneliti tetap validator final; role ini tida
 
 | Skill | Kapan digunakan | Acuan khusus |
 | --- | --- | --- |
-| `kotoba-rag-backend-boundaries` | Desain/refactor/review boundary backend dan composition API | Ownership DDD, kontrak service/port, adapter, dependency direction serta kompatibilitas runtime; target REF-01 belum diimplementasikan |
+| `kotoba-rag-backend-boundaries` | Desain/refactor/review boundary backend dan composition API | Ownership DDD, kontrak service/port, adapter, dependency direction serta kompatibilitas runtime; modul REF-01 dan kompatibilitas ledger |
 | `kotoba-rag-ingestion` | Snapshot, chunking, embedding, indexing/reindexing | Provenance, eligibility, Unicode Jepang, idempotency dan corpus freeze |
 | `kotoba-rag-pipelines` | Single-stage, router, deep path dan context | Shared baseline, hard filters, bounded stage, score calibration dan token cap |
 | `kotoba-rag-contracts` | API, provider/service boundary dan integrasi KotobaHub | Schema aktual, strict payload, locale, FREE_RESPONSE dan domain ownership |
@@ -48,7 +48,7 @@ Reviewer Jepang adalah alat bantu. Peneliti tetap validator final; role ini tida
 
 Skill dapat dipanggil eksplisit dengan `$nama-skill` atau dipilih otomatis sesuai deskripsi setelah terpasang. Jangan memaksa semua skill masuk setiap task. Skill tidak mengubah izin filesystem, akses provider, atau otorisasi tindakan eksternal.
 
-`backend-coder`, `code-reviewer` dan `sdet` memakai `kotoba-rag-backend-boundaries` sesuai assignment boundary backend; reviewer tetap read-only. [Rencana REF-01](docs/architecture/REF-01-ddd-refactor-plan.md) memisahkan target DDD dari struktur runtime saat ini. Task tooling/planning tidak mengotorisasi refactor atau implementasi API-01. Skill melengkapi contracts/pipelines/ingestion sesuai perilaku yang disentuh, tanpa mengimpor stack aplikasi KotobaHub.
+`backend-coder`, `code-reviewer` dan `sdet` memakai `kotoba-rag-backend-boundaries` sesuai assignment boundary backend; reviewer tetap read-only. [Laporan REF-01](docs/architecture/REF-01-ddd-refactor.md) memuat struktur DDD yang tersedia serta pemetaan path lama; rencana awal tetap dirujuk sebagai acuan migrasi. Task tooling/planning tidak mengotorisasi refactor atau implementasi API-01. Skill melengkapi contracts/pipelines/ingestion sesuai perilaku yang disentuh, tanpa mengimpor stack aplikasi KotobaHub.
 
 Pemetaan skill bahasa: `backend-coder` memilih sesuai berkas implementasi; `sdet` sesuai bahasa test; `code-reviewer` memakai sebagai kriteria review read-only; `research-evaluator` memakai hanya untuk script harness/evaluasi dalam bahasa yang sudah dipilih task. `japanese-content-reviewer` tetap fokus pada konten Jepang. Agent utama dapat menyebut skill pada pesan penugasan, misalnya `backend-coder: gunakan $python-pro untuk INF-02, ownership inference/`. Skill bahasa melengkapi skill domain RAG dan mengikuti ADR-001; tidak memilih ulang stack atau mengubah bahasa script yang belum diputuskan.
 
@@ -66,9 +66,11 @@ Pembaruan preferensi spasi dan pemasangan `anti-slop-copy` pada 23 November 2026
 
 Jangan mengubah permission, menghapus mount, atau menimpa konfigurasi lain untuk memaksa pemasangan. Installer menolak berkas berbeda yang sudah ada; merge terarah dilakukan sebagai task tersendiri setelah file tersebut diperiksa.
 
-TOOLS-DDD-01 pada 27 November 2026 menambahkan `kotoba-rag-backend-boundaries` sehingga source paket memuat sembilan skill dan lima role. Skill mengadaptasi panduan backend checkout KotobaHub dengan commit/hash pada [provenance](agent-tooling/.agents/skills/kotoba-rag-backend-boundaries/PROVENANCE.md). Source/instalasi skill baru dan tiga role teknis diverifikasi dalam [bukti TOOLS-DDD-01](agent-tooling/TOOLS-DDD-01-verification.json); perbedaan lama source/aktif `typescript-pro` dipertahankan dan dicatat di sana. Mulai sesi Codex baru untuk memeriksa discovery skill baru dan memuat ulang role; validasi berkas bukan bukti discovery. REF-01 dan API-01 tetap belum dikerjakan.
+TOOLS-DDD-01 pada 27 November 2026 menambahkan `kotoba-rag-backend-boundaries` sehingga source paket memuat sembilan skill dan lima role. Skill mengadaptasi panduan backend checkout KotobaHub dengan commit/hash pada [provenance](agent-tooling/.agents/skills/kotoba-rag-backend-boundaries/PROVENANCE.md). Source/instalasi skill baru dan tiga role teknis diverifikasi dalam [bukti TOOLS-DDD-01](agent-tooling/TOOLS-DDD-01-verification.json); perbedaan lama source/aktif `typescript-pro` dipertahankan dan dicatat di sana. Mulai sesi Codex baru untuk memeriksa discovery skill baru dan memuat ulang role; validasi berkas bukan bukti discovery. Pada penutupan TOOLS-DDD-01, REF-01 dan API-01 belum dikerjakan.
 
 Format subagent/skills merujuk [official OpenAI subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents) dan [build skills](https://learn.chatgpt.com/docs/build-skills). Reviewer diminta read-only melalui instruksi; ini tidak memberikan sandbox terpisah dari parent session. Role mewarisi model/effort parent; tidak dipin ke model yang mungkin tidak tersedia.
+
+REF-01 kemudian memigrasikan source ke `src/modules/{knowledge,rag,execution,observability}`. `src/bootstrap/observation-store.ts` adalah compatibility composition untuk CLI/tests; domain/application memakai kontrak service/port dan tidak mengimpor wrapper itu. Jalankan `npm run architecture:check` serta checks/integrasi yang dirinci pada laporan REF-01. Endpoint operasi tetap task API-01.
 
 ## Invariant penelitian dan domain
 

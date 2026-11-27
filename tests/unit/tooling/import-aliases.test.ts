@@ -42,12 +42,12 @@ await test('ESLint menolak import relatif dan alias # pada src dan tests', async
 
 await test('ESLint menerima alias, import bawaan Node dan dependency eksternal', async () => {
   const samples = [
-    "import { readConfig } from '@/shared/config'; readConfig({});",
-    "import type { AppConfig } from '@/shared/config'; export type Config = AppConfig;",
-    "export { readConfig } from '@/shared/config';",
-    "void import('@/shared/config');",
+    "import { readConfig } from '@/bootstrap/config'; readConfig({});",
+    "import type { AppConfig } from '@/bootstrap/config'; export type Config = AppConfig;",
+    "export { readConfig } from '@/bootstrap/config';",
+    "void import('@/bootstrap/config');",
     "void import('@tests/unit/app/app.test');",
-    "export type Config = import('@/shared/config').AppConfig;",
+    "export type Config = import('@/bootstrap/config').AppConfig;",
     "import fixtures from '@contracts/v1/fixtures.json' with { type: 'json' }; void fixtures;",
     "void import(`@contracts/v1/${'fixtures'}.json`, { with: { type: 'json' } });",
     "import { readFileSync } from 'node:fs'; import { Ajv } from 'ajv'; void readFileSync; void new Ajv();",
@@ -73,7 +73,7 @@ await test('ESLint juga menolak import relatif pada konfigurasi dan tooling runt
 
 await test('tsx memuat alias source dan fixture JSON tanpa build', () => {
   const source = `
-    import { readConfig } from '@/shared/config';
+    import { readConfig } from '@/bootstrap/config';
     import fixtures from '@contracts/v1/fixtures.json' with { type: 'json' };
 
     console.log(JSON.stringify([readConfig({}).port, fixtures.cases.length]));

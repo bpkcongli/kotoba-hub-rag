@@ -1,0 +1,14 @@
+
+> kotoba-hub-rag@0.1.0 test:adp03
+> node tools/rag-01/run-integration.mjs --execution
+
+✔ ADP-03 retries ADAPTIVE DEEP Qdrant nyata: rewrite preserves scope, dedup/rerank/context/generation success (1556.981606ms)
+✔ ADP-03 retries ADAPTIVE DEEP Qdrant nyata: terminal insufficient evidence (879.096075ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2863.68212

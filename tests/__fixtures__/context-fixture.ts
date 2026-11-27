@@ -1,12 +1,13 @@
 import { createHash } from 'node:crypto';
-
 import { config, requestFor } from '@tests/__fixtures__/generation-fixture';
-import { readContextConfig } from '@/context/config';
-import type { ContextConfig } from '@/context/types';
-import type { Operation, Requests } from '@/contracts/validator';
-import type { RetrievedEvidence } from '@/retrieval/types';
+import type { Requests } from '@/contracts/types';
+import type { ContextConfig } from '@/modules/rag/domain/models/context';
+import type { RetrievedEvidence } from '@/modules/rag/domain/models/retrieval';
+import { readContextConfig } from '@/modules/rag/infrastructure/config/context';
+import type { Operation } from '@/shared/operations';
 
 export const skill = 'synthetic_copula';
+
 export const secondSkill = 'synthetic_particle';
 
 export function ragRequest<K extends Operation>(operation: K): Requests[K] {

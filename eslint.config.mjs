@@ -41,6 +41,7 @@ export default tseslint.config(
       'tools/store-01/**/*.mjs',
       'tools/data-03/**/*.mjs',
       'tools/rag-01/**/*.mjs',
+      'tools/ref-01/**/*.mjs',
     ],
     // Plugin 2.32 uses SourceCode APIs removed in ESLint 10.
     plugins: { import: fixupPluginRules(importPlugin) },

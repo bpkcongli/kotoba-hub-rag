@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
-import { test } from 'node:test';
 import type { TestContext } from 'node:test';
-
+import { test } from 'node:test';
 import { setupAdaptive } from '@tests/__fixtures__/adaptive-fixture';
 import {
   admit,
@@ -12,13 +11,16 @@ import {
 } from '@tests/__fixtures__/generation-fixture';
 import { dense, hit } from '@tests/__fixtures__/retrieval-fixture';
 import { skill, trace } from '@tests/__fixtures__/single-stage-fixture';
-import { createBaselineRunner } from '@/generation/baseline';
-import { parseTraceEvent } from '@/observability/events';
-import { JsonlTraceSink } from '@/observability/jsonl-sink';
-import { readDeepPolicy } from '@/pipelines/deep-config';
-import { createExecutionControl } from '@/pipelines/execution-control';
-import { parseExecutionPolicy, readExecutionPolicy } from '@/pipelines/execution-policy';
-import type { Clock } from '@/shared/ports';
+import { createExecutionControl } from '@/modules/execution/application/execution-control';
+import {
+  parseExecutionPolicy,
+  readExecutionPolicy,
+} from '@/modules/execution/application/execution-policy';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { JsonlTraceSink } from '@/modules/observability/interface/secondary/files/jsonl-sink';
+import { createBaselineRunner } from '@/modules/rag/application/generation/baseline';
+import { readDeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
+import type { Clock } from '@/shared/clock';
 
 const enabled = (extra: Readonly<Record<string, unknown>> = {}) =>
   readExecutionPolicy({

@@ -14,10 +14,10 @@ import {
   parseIndexManifest,
   PAYLOAD_INDEXES,
   QDRANT_VERSION,
-} from '@/storage/index-manifest';
-import type { IndexManifest } from '@/storage/index-manifest';
-import { knowledgeFilter } from '@/storage/knowledge-filter';
-import { QdrantIndexStore } from '@/storage/qdrant-index';
+} from '@/modules/knowledge/application/index-manifest';
+import type { IndexManifest } from '@/modules/knowledge/application/index-manifest';
+import { knowledgeFilter } from '@/modules/knowledge/interface/secondary/qdrant/knowledge-filter';
+import { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
 
 const url = process.env.STORE01_QDRANT_URL;
 assert.ok(url, 'Gunakan npm run test:store untuk Qdrant sementara nyata');
@@ -348,17 +348,21 @@ await test('CLI prepare/validate berfungsi pada manifest file dan Qdrant nyata t
 
   function cli(action: string): unknown {
     return JSON.parse(
-      execFileSync(process.execPath, ['--import', 'tsx', 'src/storage/cli.ts', action, file], {
-        cwd: new URL('../../../', import.meta.url),
-        env: {
-          NODE_ENV: 'test',
-          QDRANT_ENABLED: 'true',
-          QDRANT_URL: url,
-          QDRANT_TIMEOUT_MS: '5000',
+      execFileSync(
+        process.execPath,
+        ['--import', 'tsx', 'src/modules/knowledge/interface/primary/store-cli.ts', action, file],
+        {
+          cwd: new URL('../../../', import.meta.url),
+          env: {
+            NODE_ENV: 'test',
+            QDRANT_ENABLED: 'true',
+            QDRANT_URL: url,
+            QDRANT_TIMEOUT_MS: '5000',
+          },
+          encoding: 'utf8',
+          timeout: 10000,
         },
-        encoding: 'utf8',
-        timeout: 10000,
-      }),
+      ),
     ) as unknown;
   }
 

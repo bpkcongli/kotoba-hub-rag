@@ -4,22 +4,25 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 import {
-  dense,
   context,
+  dense,
   hit,
   manifest,
   scope,
   settings,
   transport,
 } from '@tests/__fixtures__/retrieval-fixture';
-import { EMBEDDING_CONFIG_ID } from '@/adapters/bge-configuration';
-import { readHfConfig } from '@/adapters/hf-config';
-import { createHfInference } from '@/adapters/hf-inference';
-import { parseTraceEvent } from '@/observability/events';
-import { ObservationStore } from '@/observability/store';
-import { readRetrievalConfig, retrievalConfig } from '@/retrieval/config';
-import { createQdrantRetriever } from '@/retrieval/qdrant-retriever';
-import { createRetrievalStage } from '@/retrieval/stage';
+import { ObservationStore } from '@/bootstrap/observation-store';
+import { EMBEDDING_CONFIG_ID } from '@/modules/knowledge/application/embedding-configuration';
+import { parseTraceEvent } from '@/modules/observability/application/events';
+import { createRetrievalStage } from '@/modules/rag/application/retrieval/stage';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import {
+  readRetrievalConfig,
+  retrievalConfig,
+} from '@/modules/rag/infrastructure/config/retrieval';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { createQdrantRetriever } from '@/modules/rag/interface/secondary/qdrant/retriever';
 
 await test('retrieval config opt-in, pinned manifest, bounds dan embedding ID sama DATA-03', async (t) => {
   const directory = await mkdtemp(join(tmpdir(), 'rag01-config-'));

@@ -10,6 +10,8 @@ RUN npm ci --ignore-scripts
 
 COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
+COPY tools/boot-01/build.mjs ./tools/boot-01/build.mjs
+COPY contracts/v1/domain.schema.json contracts/v1/contract.schema.json ./contracts/v1/
 RUN npm run build && npm prune --omit=dev --ignore-scripts
 
 FROM node:24.22.3-bookworm-slim@sha256:0e2646ab57e77b7a384a0cb59b6815b182c77e1f9c3ba36bd8435bd9c4e6680e AS runtime

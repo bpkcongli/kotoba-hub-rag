@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { test } from 'node:test';
-
-import { HF_IDENTITY, readHfConfig } from '@/adapters/hf-config';
-import { createHfInference } from '@/adapters/hf-inference';
-import { ConfigError } from '@/shared/config';
+import { HF_IDENTITY } from '@/modules/knowledge/application/inference-identity';
+import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
+import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
+import { ConfigError } from '@/shared/errors/config-error';
 
 await test('HF opt-in, konfigurasi immutable dan identitas served revision tetap unknown', () => {
   assert.equal(readHfConfig({}), null);

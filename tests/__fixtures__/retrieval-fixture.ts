@@ -1,25 +1,27 @@
 import { createHash, randomUUID } from 'node:crypto';
-
-import { retrievalConfig } from '@/retrieval/config';
-import type { RetrievalConfig } from '@/retrieval/config';
+import type { IndexManifest } from '@/modules/knowledge/application/index-manifest';
 import {
   INDEX_SCHEMA_VERSION,
   manifestFingerprint,
   parseIndexManifest,
   PAYLOAD_INDEXES,
   QDRANT_VERSION,
-} from '@/storage/index-manifest';
-import type { IndexManifest } from '@/storage/index-manifest';
+} from '@/modules/knowledge/application/index-manifest';
+import type { RetrievalConfig } from '@/modules/rag/application/models/retrieval-config';
+import { retrievalConfig } from '@/modules/rag/infrastructure/config/retrieval';
 
 export const checksum = (text: string): string => createHash('sha256').update(text).digest('hex');
+
 export const dense = (index = 0): number[] =>
   Array.from({ length: 1024 }, (_v, i) => (i === index ? 1 : 0));
+
 export const scope = {
   published: true,
   corpusVersion: 'rag01-synthetic-v1',
   targetLevel: 'JLPT_N5',
   skillCodes: ['grammar-ni'],
 } as const;
+
 export const context = (): { executionId: string; signal: AbortSignal; deadlineAt: string } => ({
   executionId: randomUUID(),
   signal: new AbortController().signal,

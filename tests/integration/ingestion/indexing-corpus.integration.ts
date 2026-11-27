@@ -3,10 +3,9 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import test from 'node:test';
-
-import { createIndexJob } from '@/ingestion/index-job';
-import { currentIngestionPlan } from '@/ingestion/index-plan';
-import { canonical, hash } from '@/ingestion/validation';
+import { canonical, hash } from '@/modules/knowledge/application/validation';
+import { createIndexJob } from '@/modules/knowledge/interface/secondary/corpus/index-job';
+import { currentIngestionPlan } from '@/modules/knowledge/interface/secondary/corpus/index-plan';
 
 await test('DATA-03 full approved corpus maps deterministically to strict payload and source/overlap sidecars without provider calls', async () => {
   const root = await mkdtemp(resolve(tmpdir(), 'kotoba-data03-corpus-'));

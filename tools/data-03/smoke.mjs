@@ -66,7 +66,7 @@ function docker(args) {
 function cli(args, overrides = {}) {
   const result = spawnSync(
     process.execPath,
-    ['--import', 'tsx', 'src/ingestion/index-cli.ts', ...args],
+    ['--import', 'tsx', 'src/bootstrap/index-cli.ts', ...args],
     {
       cwd: root,
       env: { ...env, ...overrides },

@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
-
 import { makePairProbePlan, makePlan, parsePairResponse } from './smoke.mjs';
 import { parseHfDenseResponse, validateDiscovery } from './validate.mjs';
 

@@ -1,6 +1,6 @@
 # REF-01 — Rencana boundary DDD sebelum API-01
 
-Tanggal: 27 November 2026. Status: **rencana, implementasi belum dijalankan**. Task tooling `TOOLS-DDD-01` menyiapkan skill dan panduan; penyelesaiannya tidak menyelesaikan REF-01 atau API-01.
+Tanggal: 27 November 2026. Status: **diimplementasikan pada REF-01**. Task tooling `TOOLS-DDD-01` sebelumnya menyiapkan skill dan panduan. Hasil, pemetaan source dan bukti verifikasi dicatat pada [laporan implementasi](REF-01-ddd-refactor.md); API-01 tetap belum dikerjakan.
 
 ## Tujuan dan cakupan
 
@@ -10,7 +10,7 @@ Sumber pola: skill `kotoba-backend-boundaries`, `ARCHITECTURE.md` dan `docs/arch
 
 ## Source aktual dan alasan pemisahan
 
-Pada pembacaan 27 November, modul runtime masih berada di `src/pipelines`, `src/retrieval`, `src/context`, `src/generation`, `src/ingestion`, `src/storage`, `src/observability`, `src/adapters`, `src/shared` dan `src/contracts`. Port serta dependency injection melalui factory sudah tersedia. Folder target di bawah belum dibuat.
+Sebelum REF-01 pada 27 November, modul runtime berada di `src/pipelines`, `src/retrieval`, `src/context`, `src/generation`, `src/ingestion`, `src/storage`, `src/observability`, `src/adapters`, `src/shared` dan `src/contracts`. Port serta dependency injection melalui factory sudah tersedia. Daftar berikut mencatat kondisi sebelum migrasi; source kini mengikuti modul DDD pada laporan implementasi.
 
 - `pipelines/single-stage.ts` menerima tipe factory melalui `ReturnType` serta `ObservationStore` konkret; dependency use case belum berupa kontrak aplikasi tersendiri.
 - `generation/generator.ts` memakai `OpenAiConfig` dan `GenerationError` dari adapter. Konfigurasi generator bersama dan error caller perlu terpisah dari transport provider.
@@ -34,7 +34,7 @@ HF/OpenAI menjadi secondary adapter bagi consumer RAG/knowledge. Jika transport 
 
 ## Layer dan kontrak
 
-Target struktur ketika REF-01 diimplementasikan:
+Struktur berikut menjadi acuan migrasi dan kini tersedia pada source:
 
 ```text
 src/
@@ -93,4 +93,4 @@ Dependency use case lintas modul mengarah melalui facade application pemilik, de
 
 ## Batas pekerjaan saat ini
 
-TOOLS-DDD-01 hanya menambahkan skill, instruksi role dan rencana ini. REF-01 belum diotorisasi untuk dieksekusi oleh task tooling ini. API-01 tetap belum dikerjakan. Tidak ada perubahan source runtime/test/tool runner, kontrak, model/provider, dataset/threshold, trace historis, database KotobaHub, index persistent atau deployment. Penambahan microservice, message broker, CQRS dan event sourcing tidak diperlukan oleh rencana ini.
+TOOLS-DDD-01 hanya menyiapkan tooling. Pengguna kemudian mengotorisasi REF-01 secara terpisah; pemisahan kode sudah dijalankan dan diverifikasi sesuai laporan implementasi. Endpoint operasi/auth/replay HTTP tetap API-01. Kontrak/model/provider, dataset/threshold, artefak penelitian historis, database KotobaHub, index persistent dan deployment tidak diubah. Microservice, message broker, CQRS serta event sourcing tidak ditambahkan.

@@ -1,12 +1,11 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { resolve } from 'node:path';
 import test from 'node:test';
-
-import { loadApprovedCorpus } from '@/ingestion/corpus-loader';
-import { IngestionError } from '@/ingestion/types';
-import { canonical, hash } from '@/ingestion/validation';
+import { canonical, hash } from '@/modules/knowledge/application/validation';
+import { IngestionError } from '@/modules/knowledge/domain/models/ingestion';
+import { loadApprovedCorpus } from '@/modules/knowledge/interface/secondary/corpus/corpus-loader';
 
 async function bundle(root: string, approved = true): Promise<void> {
   const manifestDir = resolve(root, 'research/corpus/fixture');
