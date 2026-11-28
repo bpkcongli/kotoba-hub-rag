@@ -121,8 +121,17 @@ export function createIngestionPlan(
   }));
   const points = provenance.map(({ chunk, sources }) => {
     const licenses = [...new Set(sources.map((source) => source.license))];
+    const rubricSource = sources.find((source) => source.content_type === 'RUBRIC');
 
-    if (licenses.length !== 1 || !licenses[0] || hash(chunk.text) !== chunk.contentChecksum) {
+    if (
+      licenses.length !== 1 ||
+      !licenses[0] ||
+      hash(chunk.text) !== chunk.contentChecksum ||
+      (rubricSource !== undefined &&
+        (sources.length !== 1 ||
+          !rubricSource.rubric ||
+          chunk.contentChecksum !== rubricSource.rubric.guidanceContentSha256))
+    ) {
       throw new IndexingError('INTEGRITY_ERROR');
     }
 
@@ -132,8 +141,8 @@ export function createIngestionPlan(
         chunk_id: chunk.chunkId,
         parent_id: chunk.parentId,
         corpus_version: chunk.corpusVersion,
-        source_id: chunk.sourceId,
-        source_url: chunk.sourceId,
+        source_id: rubricSource?.source_id ?? chunk.sourceId,
+        source_url: rubricSource?.source_uri ?? chunk.sourceId,
         license: licenses[0],
         content_checksum: chunk.contentChecksum,
         track_slug: chunk.trackSlug,
@@ -142,7 +151,8 @@ export function createIngestionPlan(
         skill_codes: chunk.skillCodes,
         jlpt_level: chunk.jlptLevel,
         locale: chunk.locale,
-        content_type: 'PEDAGOGICAL_CHUNK',
+        content_type: rubricSource ? 'RUBRIC' : 'PEDAGOGICAL_CHUNK',
+        ...(rubricSource?.rubric === undefined ? {} : { rubric: rubricSource.rubric }),
         published: true,
         chunk_index: chunk.chunkIndex,
         token_count: chunk.tokenCount,

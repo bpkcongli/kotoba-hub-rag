@@ -4,6 +4,15 @@ export type JsonObject = { [key: string]: Json };
 
 export type Locale = 'EN' | 'ID';
 
+export interface RubricBinding {
+  readonly guidanceId: string;
+  readonly guidanceRevision: number;
+  readonly guidanceContentSha256: string;
+  readonly policyId: string;
+  readonly policyRevision: number;
+  readonly policyContentSha256: string;
+}
+
 export class IngestionError extends Error {
   readonly code:
     | 'INVALID_SOURCE'
@@ -26,7 +35,7 @@ export interface SourceDocument {
 
   readonly parent_id: string;
 
-  readonly source_table: 'skills' | 'lesson_content_blocks';
+  readonly source_table: 'skills' | 'lesson_content_blocks' | 'rubric_guidance';
 
   readonly source_row_id: string;
 
@@ -51,7 +60,15 @@ export interface SourceDocument {
   readonly locale: Locale;
 
   readonly content_type:
-    'GRAMMAR' | 'VOCABULARY' | 'READING' | 'PARAGRAPH' | 'EXAMPLE_SENTENCE' | 'GRAMMAR_STRUCTURE';
+    | 'GRAMMAR'
+    | 'VOCABULARY'
+    | 'READING'
+    | 'PARAGRAPH'
+    | 'EXAMPLE_SENTENCE'
+    | 'GRAMMAR_STRUCTURE'
+    | 'RUBRIC';
+
+  readonly rubric?: RubricBinding;
 
   readonly published: true;
 
@@ -151,7 +168,7 @@ export interface SourceSpan {
 export interface PedagogicalUnit {
   readonly id: string;
 
-  readonly kind: 'narrative' | 'grammar' | 'example' | 'lexical' | 'reading';
+  readonly kind: 'narrative' | 'grammar' | 'example' | 'lexical' | 'reading' | 'rubric';
 
   readonly start: number;
 

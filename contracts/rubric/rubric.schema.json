@@ -1,0 +1,1402 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:kotobahub:free-response-rubric:1.0.0",
+  "title": "KotobaHub FREE_RESPONSE runtime rubric contract",
+  "description": "Versioned policy, retrieval guidance and internal assessment. Schema validation never grants approval or usage authorization; deployment trust and content integrity are checked separately.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/policy"
+    },
+    {
+      "$ref": "#/$defs/guidance"
+    },
+    {
+      "$ref": "#/$defs/assessment"
+    },
+    {
+      "$ref": "#/$defs/publicGrade"
+    }
+  ],
+  "$defs": {
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "kind": {
+          "const": "FREE_RESPONSE_GRADING_POLICY"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "APPROVED",
+            "RETIRED"
+          ]
+        },
+        "contentSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "content": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "scope": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "operation": {
+                  "const": "GRADE_PRACTICE_ANSWER"
+                },
+                "questionType": {
+                  "const": "FREE_RESPONSE"
+                },
+                "sourceLanguages": {
+                  "const": [
+                    "EN",
+                    "ID"
+                  ]
+                },
+                "answerLanguage": {
+                  "const": "JA"
+                },
+                "jlptLevels": {
+                  "const": [
+                    "N5",
+                    "N4"
+                  ]
+                }
+              },
+              "required": [
+                "operation",
+                "questionType",
+                "sourceLanguages",
+                "answerLanguage",
+                "jlptLevels"
+              ]
+            },
+            "criteria": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "meaning": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "maxPoints": {
+                      "const": 60
+                    },
+                    "anchors": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "0": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "20": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "40": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "60": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "0",
+                        "20",
+                        "40",
+                        "60"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "maxPoints",
+                    "anchors"
+                  ]
+                },
+                "grammar": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "maxPoints": {
+                      "const": 30
+                    },
+                    "anchors": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "0": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "10": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "20": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "30": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "0",
+                        "10",
+                        "20",
+                        "30"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "maxPoints",
+                    "anchors"
+                  ]
+                },
+                "naturalness": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "maxPoints": {
+                      "const": 10
+                    },
+                    "anchors": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "0": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "5": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        },
+                        "10": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "properties": {
+                            "en": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          },
+                          "required": [
+                            "en",
+                            "id"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "0",
+                        "5",
+                        "10"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "maxPoints",
+                    "anchors"
+                  ]
+                }
+              },
+              "required": [
+                "meaning",
+                "grammar",
+                "naturalness"
+              ]
+            },
+            "scoring": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "profile": {
+                  "const": "MEANING_60_GRAMMAR_30_NATURALNESS_10_V1"
+                },
+                "algorithm": {
+                  "const": "SUM_THEN_CAP_V1"
+                },
+                "integerScores": {
+                  "const": true
+                },
+                "passThreshold": {
+                  "const": 80
+                },
+                "maxScoreByMeaning": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "0": {
+                      "const": 0
+                    },
+                    "20": {
+                      "const": 49
+                    },
+                    "40": {
+                      "const": 79
+                    },
+                    "60": {
+                      "const": 100
+                    }
+                  },
+                  "required": [
+                    "0",
+                    "20",
+                    "40",
+                    "60"
+                  ]
+                },
+                "majorGrammarScores": {
+                  "const": [
+                    0,
+                    10
+                  ]
+                },
+                "majorGrammarCap": {
+                  "const": 79
+                },
+                "reconstructionNaturalnessScore": {
+                  "const": 0
+                },
+                "reconstructionNaturalnessCap": {
+                  "const": 79
+                }
+              },
+              "required": [
+                "profile",
+                "algorithm",
+                "integerScores",
+                "passThreshold",
+                "maxScoreByMeaning",
+                "majorGrammarScores",
+                "majorGrammarCap",
+                "reconstructionNaturalnessScore",
+                "reconstructionNaturalnessCap"
+              ]
+            },
+            "equivalence": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "referenceRole": {
+                  "const": "NON_EXHAUSTIVE_EXAMPLE"
+                },
+                "acceptNaturalKanaKanjiVariants": {
+                  "const": true
+                },
+                "acceptNaturalEllipsis": {
+                  "const": true
+                },
+                "acceptEquivalentVocabularyAndWordOrder": {
+                  "const": true
+                },
+                "registerPolicy": {
+                  "const": "ACCEPT_PLAIN_OR_POLITE_UNLESS_SOURCE_CONSTRAINS"
+                },
+                "requireExactReferenceGrammarPattern": {
+                  "const": false
+                },
+                "sourceLocaleAffectsScore": {
+                  "const": false
+                }
+              },
+              "required": [
+                "referenceRole",
+                "acceptNaturalKanaKanjiVariants",
+                "acceptNaturalEllipsis",
+                "acceptEquivalentVocabularyAndWordOrder",
+                "registerPolicy",
+                "requireExactReferenceGrammarPattern",
+                "sourceLocaleAffectsScore"
+              ]
+            },
+            "inputHandling": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "preserveSubmittedRepresentations": {
+                  "const": true
+                },
+                "rawRomajiRole": {
+                  "const": "AUXILIARY_ONLY"
+                },
+                "normalizationConflict": {
+                  "const": "UNGRADABLE"
+                },
+                "sourceReferenceConflict": {
+                  "const": "UNGRADABLE"
+                },
+                "materialSourceAmbiguity": {
+                  "const": "UNGRADABLE"
+                }
+              },
+              "required": [
+                "preserveSubmittedRepresentations",
+                "rawRomajiRole",
+                "normalizationConflict",
+                "sourceReferenceConflict",
+                "materialSourceAmbiguity"
+              ]
+            },
+            "feedback": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "localeSource": {
+                  "const": "language.feedbackLocale"
+                },
+                "minLength": {
+                  "const": 1
+                },
+                "maxLength": {
+                  "const": 500
+                },
+                "format": {
+                  "const": "PLAIN_TEXT"
+                },
+                "includePrimaryReason": {
+                  "const": true
+                }
+              },
+              "required": [
+                "localeSource",
+                "minLength",
+                "maxLength",
+                "format",
+                "includePrimaryReason"
+              ]
+            },
+            "failureHandling": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "ungradable": {
+                  "const": "FAIL_WITHOUT_GRADE"
+                },
+                "insufficientEvidence": {
+                  "const": "FAIL_WITHOUT_GRADE"
+                },
+                "providerFailure": {
+                  "const": "FAIL_WITHOUT_GRADE"
+                }
+              },
+              "required": [
+                "ungradable",
+                "insufficientEvidence",
+                "providerFailure"
+              ]
+            }
+          },
+          "required": [
+            "scope",
+            "criteria",
+            "scoring",
+            "equivalence",
+            "inputHandling",
+            "feedback",
+            "failureHandling"
+          ]
+        },
+        "approval": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "approvedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "approvedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "reviewedContentSha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "approvedBy",
+                "role",
+                "approvedAt",
+                "reviewedContentSha256"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "authorship": {
+              "enum": [
+                "HUMAN_AUTHORED",
+                "AI_ASSISTED"
+              ]
+            },
+            "sourceRefs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "repository": {
+                    "enum": [
+                      "kotoba-hub",
+                      "kotoba-hub-rag"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "\\S"
+                  },
+                  "fileSha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "role": {
+                    "enum": [
+                      "CURRENT_BEHAVIOR",
+                      "PROPOSED_POLICY",
+                      "CURRICULUM_SCOPE"
+                    ]
+                  }
+                },
+                "required": [
+                  "repository",
+                  "path",
+                  "fileSha256",
+                  "role"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 32,
+              "uniqueItems": true
+            },
+            "license": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512,
+                  "pattern": "\\S"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "usageScope": {
+              "enum": [
+                "DESIGN_REVIEW_ONLY",
+                "INTERNAL_RUNTIME"
+              ]
+            }
+          },
+          "required": [
+            "authorship",
+            "sourceRefs",
+            "license",
+            "usageScope"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "id",
+        "revision",
+        "status",
+        "contentSha256",
+        "content",
+        "approval",
+        "provenance"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "DRAFT"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approval": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "approval": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "approvedBy": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "\\S"
+                  },
+                  "role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "\\S"
+                  },
+                  "approvedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "reviewedContentSha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "approvedBy",
+                  "role",
+                  "approvedAt",
+                  "reviewedContentSha256"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "guidance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "const": "1.0.0"
+        },
+        "kind": {
+          "const": "FREE_RESPONSE_RUBRIC_GUIDANCE"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "DRAFT",
+            "APPROVED",
+            "RETIRED"
+          ]
+        },
+        "contentSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "content": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "policyRef": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "revision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "contentSha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "id",
+                "revision",
+                "contentSha256"
+              ]
+            },
+            "scope": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "questionType": {
+                  "const": "FREE_RESPONSE"
+                },
+                "jlptLevel": {
+                  "enum": [
+                    "N5",
+                    "N4"
+                  ]
+                },
+                "trackSlug": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "unitSlug": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "lessonSlug": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "skillCode": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                }
+              },
+              "required": [
+                "questionType",
+                "jlptLevel",
+                "trackSlug",
+                "unitSlug",
+                "lessonSlug",
+                "skillCode"
+              ]
+            },
+            "locale": {
+              "enum": [
+                "en",
+                "id"
+              ]
+            },
+            "semanticChecks": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000,
+                "pattern": "\\S"
+              },
+              "minItems": 1,
+              "maxItems": 32,
+              "uniqueItems": true
+            },
+            "acceptableVariations": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000,
+                "pattern": "\\S"
+              },
+              "minItems": 1,
+              "maxItems": 32,
+              "uniqueItems": true
+            },
+            "commonErrors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80,
+                    "pattern": "\\S"
+                  },
+                  "description": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000,
+                    "pattern": "\\S"
+                  }
+                },
+                "required": [
+                  "code",
+                  "description"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 32,
+              "uniqueItems": true
+            },
+            "illustrations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "sourceLanguage": {
+                    "enum": [
+                      "EN",
+                      "ID"
+                    ]
+                  },
+                  "sourceSentence": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000,
+                    "pattern": "\\S"
+                  },
+                  "japaneseAnswer": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000,
+                    "pattern": "\\S"
+                  },
+                  "relationship": {
+                    "enum": [
+                      "EQUIVALENT",
+                      "MEANING_CHANGED",
+                      "GRAMMAR_ERROR"
+                    ]
+                  },
+                  "explanation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000,
+                    "pattern": "\\S"
+                  }
+                },
+                "required": [
+                  "sourceLanguage",
+                  "sourceSentence",
+                  "japaneseAnswer",
+                  "relationship",
+                  "explanation"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 16,
+              "uniqueItems": true
+            }
+          },
+          "required": [
+            "policyRef",
+            "scope",
+            "locale",
+            "semanticChecks",
+            "acceptableVariations",
+            "commonErrors",
+            "illustrations"
+          ]
+        },
+        "approval": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "approvedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "role": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "\\S"
+                },
+                "approvedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "reviewedContentSha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                }
+              },
+              "required": [
+                "approvedBy",
+                "role",
+                "approvedAt",
+                "reviewedContentSha256"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "authorship": {
+              "enum": [
+                "HUMAN_AUTHORED",
+                "AI_ASSISTED"
+              ]
+            },
+            "sourceRefs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "repository": {
+                    "enum": [
+                      "kotoba-hub",
+                      "kotoba-hub-rag"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "pattern": "\\S"
+                  },
+                  "fileSha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  "role": {
+                    "enum": [
+                      "CURRENT_BEHAVIOR",
+                      "PROPOSED_POLICY",
+                      "CURRICULUM_SCOPE"
+                    ]
+                  }
+                },
+                "required": [
+                  "repository",
+                  "path",
+                  "fileSha256",
+                  "role"
+                ]
+              },
+              "minItems": 1,
+              "maxItems": 32,
+              "uniqueItems": true
+            },
+            "license": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512,
+                  "pattern": "\\S"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "usageScope": {
+              "enum": [
+                "DESIGN_REVIEW_ONLY",
+                "INTERNAL_RUNTIME"
+              ]
+            }
+          },
+          "required": [
+            "authorship",
+            "sourceRefs",
+            "license",
+            "usageScope"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "id",
+        "revision",
+        "status",
+        "contentSha256",
+        "content",
+        "approval",
+        "provenance"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "DRAFT"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "approval": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "approval": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "approvedBy": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "\\S"
+                  },
+                  "role": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "\\S"
+                  },
+                  "approvedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "reviewedContentSha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "approvedBy",
+                  "role",
+                  "approvedAt",
+                  "reviewedContentSha256"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "assessment": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "FREE_RESPONSE_ASSESSMENT"
+            },
+            "outcome": {
+              "const": "GRADED"
+            },
+            "scores": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "meaning": {
+                  "enum": [
+                    0,
+                    20,
+                    40,
+                    60
+                  ]
+                },
+                "grammar": {
+                  "enum": [
+                    0,
+                    10,
+                    20,
+                    30
+                  ]
+                },
+                "naturalness": {
+                  "enum": [
+                    0,
+                    5,
+                    10
+                  ]
+                }
+              },
+              "required": [
+                "meaning",
+                "grammar",
+                "naturalness"
+              ]
+            },
+            "feedbackText": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500,
+              "pattern": "\\S"
+            }
+          },
+          "required": [
+            "kind",
+            "outcome",
+            "scores",
+            "feedbackText"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "FREE_RESPONSE_ASSESSMENT"
+            },
+            "outcome": {
+              "const": "UNGRADABLE"
+            },
+            "reason": {
+              "enum": [
+                "SOURCE_AMBIGUOUS",
+                "SOURCE_REFERENCE_CONFLICT",
+                "NORMALIZATION_CONFLICT"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "outcome",
+            "reason"
+          ]
+        }
+      ]
+    },
+    "publicGrade": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "isCorrect": {
+          "type": "boolean"
+        },
+        "numericScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "feedbackText": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        }
+      },
+      "required": [
+        "isCorrect",
+        "numericScore",
+        "feedbackText"
+      ]
+    },
+    "traceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "policyRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "\\S"
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "contentSha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "id",
+            "revision",
+            "contentSha256"
+          ]
+        },
+        "guidanceRefs": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "\\S"
+              },
+              "revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "contentSha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              }
+            },
+            "required": [
+              "id",
+              "revision",
+              "contentSha256"
+            ]
+          }
+        },
+        "corpusVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "promptVersion": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "\\S"
+        },
+        "scoringAlgorithmVersion": {
+          "const": "SUM_THEN_CAP_V1"
+        }
+      },
+      "required": [
+        "policyRef",
+        "guidanceRefs",
+        "corpusVersion",
+        "promptVersion",
+        "scoringAlgorithmVersion"
+      ]
+    }
+  }
+}

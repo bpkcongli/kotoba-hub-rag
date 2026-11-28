@@ -3,7 +3,7 @@ import { test } from 'node:test';
 import fixtures from '@contracts/v1/fixtures.json' with { type: 'json' };
 import { runSmoke, syntheticSmokeCase } from '@/modules/rag/interface/primary/smoke';
 
-await test('smoke default hanya plan; execute tanpa budget memadai ditolak sebelum dispatch', async (t) => {
+await test('smoke default hanya plan historis; execute tanpa rubric ditolak sebelum dispatch', async (t) => {
   const originalFetch = globalThis.fetch;
   let calls = 0;
   globalThis.fetch = () => {
@@ -27,6 +27,13 @@ await test('smoke default hanya plan; execute tanpa budget memadai ditolak sebel
     runSmoke(['--execute', '--max-calls=5', '--max-budget-usd=0.1'], {
       OPENAI_API_KEY: 'fixture-token',
     }),
+  );
+
+  await assert.rejects(
+    runSmoke(['--execute', '--max-calls=4', '--max-budget-usd=1'], {
+      OPENAI_API_KEY: 'fixture-token',
+    }),
+    { code: 'DEPENDENCY_NOT_READY' },
   );
 
   assert.equal(synthetic.request.payload.questionCount, 1);

@@ -9,8 +9,10 @@ import {
   parseExecutionPolicy,
   readExecutionPolicy,
 } from '@/modules/execution/application/public';
+import { assertRubricBundle, type RubricBundle } from '@/modules/knowledge/application/public';
 import type { CallAccounting } from '@/modules/observability/application/public';
 import { executionPolicyHash } from '@/modules/observability/application/public';
+import { GRADING_PROMPT_VERSION } from '@/modules/rag/application/generation/grading';
 import { validateOutput, validPayload } from '@/modules/rag/application/generation/schema';
 import { pipelineFailure } from '@/modules/rag/application/pipelines/failure';
 import { pipelineMetadata } from '@/modules/rag/application/pipelines/metadata';
@@ -96,6 +98,7 @@ export function createExecutionRunner(
   policy: ExecutionPolicy = readExecutionPolicy(),
   corpusVersion?: string,
   scheduling?: Scheduling,
+  rubric?: RubricBundle | null,
 ) {
   policy = parseExecutionPolicy(policy);
   const validators = createContractValidators();
@@ -236,6 +239,36 @@ export function createExecutionRunner(
         },
         Math.max(0, clock.monotonicMs() - started),
       );
+
+      if (operation === 'evaluate' && rubric !== undefined) {
+        if (!rubric) {
+          throw new GenerationError('DEPENDENCY_NOT_READY');
+        }
+
+        assertRubricBundle(rubric);
+
+        if (request.corpus_version !== rubric.corpusVersion) {
+          throw new GenerationError('SNAPSHOT_MISMATCH');
+        }
+
+        await observations.record(
+          executionId,
+          {
+            kind: 'grading_binding',
+            version: 'uc-02-v1',
+            policyRef: rubric.policyRef,
+            guidanceRefs: [],
+            corpusVersion: rubric.corpusVersion,
+            promptVersion: GRADING_PROMPT_VERSION,
+            scoringAlgorithmVersion: 'SUM_THEN_CAP_V1',
+            outcome: 'PENDING',
+            scores: null,
+            reason: null,
+          },
+          Math.max(0, clock.monotonicMs() - started),
+        );
+      }
+
       await finishSpan();
       execution.check();
       const result = await work(operation, request, context, state);

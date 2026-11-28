@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { IngestionError } from '@/modules/knowledge/domain/models/ingestion';
 import { prepareCorpus } from '@/modules/knowledge/interface/secondary/corpus/prepare';
+import { loadRubricBundle } from '@/modules/knowledge/interface/secondary/corpus/rubric-loader';
 import { BGE_TOKENIZER } from '@/modules/knowledge/interface/secondary/corpus/tokenizer';
 
 async function main(): Promise<void> {
@@ -13,7 +14,9 @@ async function main(): Promise<void> {
 
     if (
       !key ||
-      !['--config', '--tokenizer', '--out'].includes(key) ||
+      !['--config', '--tokenizer', '--out', '--rubric-bundle', '--rubric-bundle-sha256'].includes(
+        key,
+      ) ||
       !value ||
       value.startsWith('--') ||
       options.has(key)
@@ -24,7 +27,21 @@ async function main(): Promise<void> {
     options.set(key, value);
   }
 
+  const rubricPath = options.get('--rubric-bundle');
+  const rubricHash = options.get('--rubric-bundle-sha256');
+
+  if (
+    (rubricPath === undefined) !== (rubricHash === undefined) ||
+    (rubricHash !== undefined && !/^[a-f0-9]{64}$/.test(rubricHash))
+  ) {
+    throw new IngestionError('INVALID_CONFIG');
+  }
+
+  const rubricBundle = rubricPath
+    ? await loadRubricBundle(resolve(rubricPath), undefined, rubricHash)
+    : undefined;
   const manifest = await prepareCorpus({
+    ...(rubricBundle ? { rubricBundle } : {}),
     repoRoot: resolve('.'),
     configPath: resolve(options.get('--config') ?? 'research/chunking/data-02-v1/config.json'),
     tokenizerDirectory: resolve(

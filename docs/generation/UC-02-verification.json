@@ -1,0 +1,216 @@
+{
+  "task": "UC-02",
+  "status": "DONE",
+  "completionScope": "Implementasi dan verifikasi teknis runtime; kualitas grading semantik provider nyata belum dibuktikan dan tetap memerlukan pilot.",
+  "updatedOn": "2026-11-28",
+  "verifiedAtUtc": "2026-11-27T22:39:00.931380+00:00",
+  "scope": "Policy server approved, retrieval guidance approved per skill, internal assessment, deterministic server score mapping, HTTP failure/replay, trace dan offline preparation tanpa paid call atau persistent index mutation.",
+  "acceptance": {
+    "nonFreeResponseRejectedBeforeInference": "VERIFIED",
+    "structuralContractAndInputPreservation": "VERIFIED",
+    "approvedRuntimeRubric": "VERIFIED_EXPLICIT_USER_APPROVAL",
+    "rubricRetrieval": "VERIFIED_REAL_TEMPORARY_QDRANT_WITH_SYNTHETIC_APPROVED_FIXTURES",
+    "serverScoringAndCorrectness": "VERIFIED_ALL_48_ANCHOR_COMBINATIONS",
+    "sharedPolicyPromptSchemaThreeModes": "VERIFIED_WITH_MOCK_PROVIDER",
+    "ungradableNoSuccessGradeNoSemanticRetry": "VERIFIED_ALL_THREE_REASONS",
+    "productionLegacyGradeFallback": "DISABLED_WITHOUT_APPROVED_BUNDLE",
+    "durableSuccessFailureReplay": "VERIFIED_INCLUDING_RESTART",
+    "actualModelEnIdEquivalence": "NOT_VERIFIED_PILOT_REQUIRED",
+    "actualModelNaturalKanaKanjiGrading": "NOT_VERIFIED_PILOT_REQUIRED"
+  },
+  "rubricDecision": {
+    "evidence": "research/rubrics/uc-02-v1/researcher-decision.json",
+    "userChoice": "Setujui isi dan penggunaan internal runtime",
+    "contentApproved": true,
+    "implementedInProductionComposition": true,
+    "configuredInLocalEnv": false,
+    "publicDtoChanged": false,
+    "bundle": "research/rubrics/uc-02-v1/bundle.json",
+    "bundleSha256": "0008af90cf90b9fe84682f5dbda668bbe0e01ef572d8785ff5582e46e0de5d73",
+    "policyContentSha256": "110e52d1c27dcda70ef7cc388864b9db956602195091c174d8a43bcc25fba08a",
+    "guidanceContentSha256": "973a2d96b26a99bc1301c8e8840e7b708f8bbc89148cdbb270cc6eef88583713",
+    "approvedGuidanceCoverage": [
+      {
+        "skillCode": "n5_copula_affirmative",
+        "jlptLevel": "JLPT_N5",
+        "locale": "id"
+      }
+    ],
+    "approvedEnOrN4Guidance": false,
+    "corpusVersion": "uc-02-rubric-v1",
+    "promptVersion": "uc-02-assessment-v1",
+    "scoringAlgorithmVersion": "SUM_THEN_CAP_V1",
+    "persistentIndexBuilt": false,
+    "historicalDraftUnchanged": true,
+    "userDesignFilesUnchanged": true
+  },
+  "environment": {
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "pinnedNode": "24.22.3",
+    "pinnedNodeRetested": false,
+    "applicationImageRebuilt": false,
+    "qdrantTemporary": {
+      "title": "qdrant - vector search engine",
+      "version": "1.20.2",
+      "commit": "23065a0bf6857c3e5da45f6c8939cc746cc0580e"
+    },
+    "qdrantClient": "1.20.0"
+  },
+  "commands": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "runtimeTestsPassed": 663,
+      "evidence": "evidence/uc-02-rubric-check.log",
+      "checks": [
+        "inference audit",
+        "data audit",
+        "contracts/OpenAPI",
+        "architecture boundaries",
+        "typecheck",
+        "lint",
+        "format",
+        "unit tests",
+        "build"
+      ]
+    },
+    {
+      "command": "node --import tsx --test tests/unit/generation/rubric.test.ts",
+      "exitCode": 0,
+      "testsPassed": 97,
+      "evidence": "evidence/uc-02-rubric-runtime.log"
+    },
+    {
+      "command": "npm run test:uc02",
+      "exitCode": 0,
+      "scenariosPassed": 93,
+      "serverMappedGradesChecked": 48,
+      "evidence": "evidence/uc-02-rubric-compatibility.json"
+    },
+    {
+      "command": "npm run test:uc02:integration",
+      "exitCode": 0,
+      "testsPassed": 4,
+      "cleanupSucceeded": true,
+      "evidence": "evidence/uc-02-rubric-integration.json",
+      "log": "evidence/uc-02-rubric-integration.log"
+    },
+    {
+      "command": "npm run data:prepare -- --out artifacts/uc-02/preparation-v1 --rubric-bundle research/rubrics/uc-02-v1/bundle.json --rubric-bundle-sha256 0008af90cf90b9fe84682f5dbda668bbe0e01ef572d8785ff5582e46e0de5d73",
+      "exitCode": 0,
+      "counts": {
+        "sourceDocuments": 737,
+        "normalizedLessons": 41,
+        "pedagogicalUnits": 475,
+        "chunks": 99,
+        "byLocale": {
+          "EN": 51,
+          "ID": 48
+        },
+        "byLevel": {
+          "JLPT_N5": 79,
+          "JLPT_N4": 20
+        },
+        "minTokens": 91,
+        "maxTokens": 512,
+        "totalStoredTokensIncludingOverlapAndSpecial": 38668,
+        "overlapUnitOccurrences": 48
+      },
+      "evidence": "evidence/uc-02-rubric-preparation.log"
+    },
+    {
+      "command": "node tools/ref-01/smoke-dist.mjs",
+      "exitCode": 0,
+      "afterSuccessfulBuild": true,
+      "evidence": "evidence/uc-02-rubric-dist.log"
+    }
+  ],
+  "sourceCompatibility": {
+    "auditedSourceCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "currentSourceCommit": "6c4f4df2a9d82c08e627f7fb409e4f2b68bf9880",
+    "sourceFilesMatched": 24,
+    "appWorkingTreeUnchanged": true,
+    "accepted": 77,
+    "rejected": 16,
+    "networkCalls": 0,
+    "paidCalls": 0,
+    "databaseWrites": 0
+  },
+  "reviews": {
+    "readOnlyCodeReview": "Satu P2: CLI smoke execute masih memakai grading legacy; diperbaiki, bundle diwajibkan sebelum dispatch dan schema/policy UC-02 dipasang. Pemeriksaan ulang tidak menemukan defect correctness lain dalam scope review.",
+    "humanIndependentValidation": false
+  },
+  "historicalEvidence": {
+    "verification": "evidence/uc-02-before-rubric-verification.json",
+    "runtimeTests": 538,
+    "evaluationTests": 116,
+    "compatibilityScenarios": 45,
+    "note": "Log dan hasil sebelum integrasi rubric dipertahankan; bukan hasil runtime rubric baru."
+  },
+  "newPaidProviderCalls": 0,
+  "siblingSourceWrites": 0,
+  "databaseWrites": 0,
+  "persistentIndexMutations": 0,
+  "publicDeployments": 0,
+  "experimentRuns": 0,
+  "limitations": [
+    "Guidance approved aktual hanya N5/ID n5_copula_affirmative; EN/N4 pada test memakai fixture sintetis dan bukan official content approval.",
+    "SINGLE_STAGE/ADAPTIVE pada scope tanpa approved guidance gagal sebelum provider; corpus/index persistent lama tidak otomatis menyediakan rubric.",
+    "Temporary Qdrant membuktikan filtering/projection/retrieval nyata; embedding/generation tetap mock dan tidak mengukur kualitas semantik.",
+    "Schema assessment baru belum dipanggil pada provider nyata; empat call BASE-01 lama tetap bukti historis, bukan uji ulang schema UC-02.",
+    "Konsistensi source EN/ID, naturalitas kana/kanji, kualitas feedback dan ketahanan semantic prompt injection masih memerlukan pilot serta review peneliti.",
+    "Persetujuan internal konten bukan validasi pakar manusia independen, kalibrasi pilot, izin redistribusi publik atau freeze penelitian.",
+    "Local .env dan research/chunking/current.json tidak diubah; index persistent rubric belum dibuat/promoted.",
+    "Image aplikasi belum dibangun ulang; startup container dengan rubric memerlukan bundle dan audit/snapshot DATA-01 yang dirujuk.",
+    "Node pin 24.22.3 belum diuji ulang; pemeriksaan memakai 24.22.1.",
+    "Objective grading/persistensi/mastery tetap dimiliki aplikasi KotobaHub; integrasi HTTP aplikasi adalah INT-01."
+  ],
+  "artifactsSha256": {
+    "Dockerfile": "f67834a3adf7ea55f9ef6c26352247cca805eb020cd1ce118d83661eb213df1b",
+    "contracts/rubric/rubric.schema.json": "3682aa54ba55c8a2315dfa57a18bec498180dde89c74c52898e21936c202cae7",
+    "contracts/v1/domain.schema.json": "dd30836f920f73d62e65621569ec5162acef00a5d5fc03e5494c43b76dc64e6c",
+    "contracts/v1/http.schema.json": "ded8cb3f4c97b546561eba07497160d40f3f23b44c723674e2c0aecb117f9f86",
+    "docs/api/openapi.yaml": "a7eae1cc55a87a6177de4fbdc04ffeb19832c78e19dac93140b6a3146c69e824",
+    "docs/data/free-response-rubric-design/design-notes.txt": "087d81b928204c86f802f180e0c784edb200dcfa50a7b80f8768286805f26419",
+    "docs/data/free-response-rubric-design/guidance.draft.example.json": "695ad634668997eef41bcdc095509e0da56098a950bab634190b1ea293ebd11b",
+    "docs/data/free-response-rubric-design/policy.draft.example.json": "7933ab6e42543def0be995c48c595441a20d7c17ecf4ba8501cff4feb4bcbc58",
+    "docs/data/free-response-rubric-design/rubric.schema.json": "305712c58eef010998139196f5ce9df84b1e2e0cd225b961807a2ce8a69dc7f1",
+    "docs/generation/UC-02-free-response-evaluation.md": "4d46f1f0287ff4ac2a96201f5b0340b0c05424ed2ed82c15d83e7457c06a5306",
+    "docs/generation/UC-02-grading-rubric-draft.md": "c8924987036426a0f5575463df04ecd3bda79cff6266603fe80cd614aa29e261",
+    "docs/generation/evidence/uc-02-rubric-check.log": "5960670b7865cc43b53dbcacf4ba4a50b0c075b7af101229c248a3be8abede15",
+    "docs/generation/evidence/uc-02-rubric-compatibility.json": "b25ab4e3a4f7587b2b7fe5eb1ebf5df26741ab7a5cd371a00e04f56a0bd44dfb",
+    "docs/generation/evidence/uc-02-rubric-dist.log": "0f009e226e5f7440d5c1dca61c5702dc2d836a1d3e49d5dfd6e9fec20326dc0d",
+    "docs/generation/evidence/uc-02-rubric-integration.json": "edf944b0f164411cbaebf6eac252be91b7458e0ce25a172439943f897d279708",
+    "docs/generation/evidence/uc-02-rubric-integration.log": "b4d357cfcd754a755c6ebd469ebe5ecbb4173a8d549aa69c8a91914be0aa9a7f",
+    "docs/generation/evidence/uc-02-rubric-preparation.log": "956dedb39bfbb7a8c6f609595a83225b2d915a250861fb718e8d6617ce45a996",
+    "docs/generation/evidence/uc-02-rubric-runtime.log": "5197813f19b3a9c7601cdce8f79b26d310016ae4f8435db1e30a06dfb0659eb3",
+    "research/rubrics/uc-02-v1/bundle.json": "0008af90cf90b9fe84682f5dbda668bbe0e01ef572d8785ff5582e46e0de5d73",
+    "research/rubrics/uc-02-v1/guidance-id-n5.json": "f99b01ba5ecd93dbe2db1e3452d039bf543ec548751e5ae8093dec483a55c0ac",
+    "research/rubrics/uc-02-v1/policy.json": "69add7820076d35c4ed7afab72a4ac6f6a3523bc0bfb4c1ae1aaaa901bfeb1eb",
+    "research/rubrics/uc-02-v1/preparation-manifest.json": "9a3285a313310f7529cfaa391ea6973215e2a3adf43a66fe38652708dc648533",
+    "research/rubrics/uc-02-v1/researcher-decision.json": "e5116e1baf5ca18d7e3efda0457d5a6064a8183af75f2c8270176ad7c3c56186",
+    "src/app.ts": "bc9e7bec50c56e734561f09979b90b7aaae0f6b56757158eed525588c7c636b5",
+    "src/bootstrap/grading-config.ts": "5c5a0df74c8e27a61cc1bb6bae8bb39a2f1b1be2104ff8da923ecb9ebb9a804a",
+    "src/main.ts": "1003c208ab88d72fafdfd97cdbe338b1fce6d0bd70a2162c881b6ae74b842d42",
+    "src/modules/knowledge/application/rubric-canonical.ts": "c280626fb2c182f03c045f6247f2d3d4f43ac7671317a515480e40dbb60343a4",
+    "src/modules/knowledge/application/rubric-projection.ts": "cd21bac2a0f991901fa48956335c79775c9104854e63dbf2b0ff084b0fe6250c",
+    "src/modules/knowledge/application/rubric.ts": "d83dda7b85202b30de02c9a2cdb7b27111957962d16ab804ea39b3f1d43cf8a7",
+    "src/modules/knowledge/interface/secondary/corpus/rubric-loader.ts": "282fb88521373b76b628031836b66d8c627af4e7a4e66725d840214b950f5c9f",
+    "src/modules/observability/application/grading-event.ts": "2039f2c2ff604207846fea026db94e1c572c41a7f811fe9028e42a906b1ca460",
+    "src/modules/rag/application/generation/generator.ts": "f8df65dc4f590c06e51ec9706263afd629aef237521c8d5c8ed452501fe3d737",
+    "src/modules/rag/application/generation/grading.ts": "0cfd1878388096dfa6fb07843cfa9b3f2b688dfdd3dd3df009675c45153195a6",
+    "src/modules/rag/application/pipelines/execution.ts": "c0c12161e6963ff15d0039c6e61961d6cf74981b7b3ef445d9e3a3a33bcaa43f",
+    "src/modules/rag/application/pipelines/retrieval-plan.ts": "f295ef008830d32a30358dd497b8a28dedb9732104e20ee67769fa4e7a6ba39d",
+    "src/modules/rag/infrastructure/di/index.ts": "f077ffcdb9f7a3f22019687e4ef87e66af33a4a0151c2851133e66af05c6ff70",
+    "src/modules/rag/interface/primary/smoke.ts": "e83a02b4e8b626d5a979173f76aeb84fccf6f52649bf4e85b3a234c67ae6d64c",
+    "src/modules/rag/interface/secondary/qdrant/knowledge-filter.ts": "3835b079dd45de937d3e3a0ec5b9cdfcbcae505add03a8de13e9e25071464f29",
+    "tests/__fixtures__/rubric-fixture.ts": "8eede3392ab67123c44aeb7e8a39301f8826707de36ffd455a7e5b732c05d4f7",
+    "tests/integration/retrieval/rubric.integration.ts": "f42ab9481ab11a1ca5f73290e85b4325164d2b2f7cf35ec7dde3b909949b8ce3",
+    "tests/unit/generation/rubric.test.ts": "a69983f3d70b536bd1d2e76d3e85572b012d16ac1ac0a15a79c9429734a3fae2",
+    "tests/unit/ingestion/rubric-ingestion.test.ts": "af6dda73075e0c5782cca056343c46b395081dcbe2efeae084b5365d240962eb",
+    "tests/unit/ingestion/rubric.test.ts": "59f562399e5fa517da2de7334b98ff26843c32245063c3415e23ef0263907aee",
+    "tools/rag-01/run-integration.mjs": "ad59a1363da6d83b8c81e1bc93437a7686c8a5f4d21832bbf282ec5b2e0eb45c",
+    "tools/uc-02/verify.mjs": "8a3130e4f4e1f897482696f6cec0e4f23173e48af5d2a533306c28b025d74602"
+  }
+}

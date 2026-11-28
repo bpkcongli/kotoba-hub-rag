@@ -6,6 +6,7 @@ import type { ContractValidators } from '@/contracts/types';
 import type { ExecutionPolicy } from '@/modules/execution/application/execution-policy';
 import { readExecutionPolicy } from '@/modules/execution/application/execution-policy';
 import type { QdrantConfig } from '@/modules/knowledge/application/connection-settings';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
 import { createKnowledgeModule } from '@/modules/knowledge/infrastructure/di/index';
 import type { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
 import type { RetrievalConfig } from '@/modules/rag/application/models/retrieval-config';
@@ -81,6 +82,7 @@ export function createApplication(
   routerPolicy: RouterPolicy = readRouterPolicy(),
   deepPolicy: DeepPolicy = readDeepPolicy(),
   executionPolicy: ExecutionPolicy = readExecutionPolicy(),
+  rubric: RubricBundle | null = null,
 ): Application {
   const contracts = createContractValidators();
   const server = Fastify({
@@ -112,6 +114,7 @@ export function createApplication(
     routerPolicy,
     deepPolicy,
     executionPolicy,
+    rubric,
     registry: observations,
     createStorage: () => createKnowledgeModule(qdrantConfig).storage,
   });

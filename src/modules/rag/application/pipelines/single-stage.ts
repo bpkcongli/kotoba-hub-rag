@@ -1,5 +1,6 @@
 import type { ExecutionPolicy, Scheduling } from '@/modules/execution/application/public';
 import { readExecutionPolicy } from '@/modules/execution/application/public';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
 import type { IndexManifest } from '@/modules/knowledge/application/public';
 import type { EvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
 import { readEvidencePolicy } from '@/modules/rag/application/pipelines/evidence';
@@ -26,6 +27,7 @@ export function createSingleStageRunner(
   clock: Clock = systemClock,
   executionPolicy: ExecutionPolicy = readExecutionPolicy(),
   scheduling?: Scheduling,
+  rubric?: RubricBundle | null,
 ) {
   index = structuredClone(index);
   policy = structuredClone(policy);
@@ -42,7 +44,7 @@ export function createSingleStageRunner(
   return createExecutionRunner(
     'SINGLE_STAGE',
     async (operation, request, context, state) => {
-      const plan = retrievalPlan(operation, request);
+      const plan = retrievalPlan(operation, request, rubric);
       state.choose('SINGLE_STAGE');
       state.stage(1);
       const retrieved = await retrieve(plan.query, plan.filter, 1, context);
@@ -68,5 +70,6 @@ export function createSingleStageRunner(
     executionPolicy,
     index.corpusVersion,
     scheduling,
+    rubric,
   );
 }

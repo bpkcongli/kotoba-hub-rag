@@ -2,10 +2,19 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import fixtures from '@contracts/v1/fixtures.json' with { type: 'json' };
+import { readGradingBundle } from '@/bootstrap/grading-config';
 import { ObservationStore } from '@/bootstrap/observation-store';
 import type { Requests, Responses } from '@/contracts/types';
 import { createBaselineRunner } from '@/modules/rag/application/generation/baseline';
 import { createOperationGenerator } from '@/modules/rag/application/generation/generator';
+import {
+  assessmentSchema,
+  gradingInstructions,
+  GRADING_PROMPT_VERSION,
+} from '@/modules/rag/application/generation/grading';
+import { generationInput } from '@/modules/rag/application/generation/input';
+import { aiInstructions } from '@/modules/rag/application/generation/prompt';
+import { operationSchema, SCHEMA_NAMES } from '@/modules/rag/application/generation/schema';
 import { OPENAI_MODELS } from '@/modules/rag/application/models/generation-models';
 import type { GeneratorPort } from '@/modules/rag/application/ports/inference';
 import { createContractValidators } from '@/modules/rag/application/validation';
@@ -88,28 +97,37 @@ export async function runSmoke(
     throw new Error('Konfigurasi smoke invalid');
   }
 
-  const cases = operations.map((operation) => ({ operation, ...syntheticSmokeCase(operation) }));
-  const inputs: Array<Parameters<GeneratorPort['generate']>[0]> = [];
+  const rubric = await readGradingBundle(env);
 
-  for (const row of cases) {
-    await createOperationGenerator(
-      {
-        generate: (input) => {
-          inputs.push(input);
-          return Promise.resolve({
-            outputText: JSON.stringify(row.output),
-            providerRequestId: null,
-            usage: null,
-          });
-        },
-      },
-      config,
-    )(row.operation, row.request, [], {
-      executionId: 'offline-plan',
-      signal: new AbortController().signal,
-      deadlineAt: row.request.deadline_at,
-    });
+  if (execute && !rubric) {
+    throw new GenerationError('DEPENDENCY_NOT_READY');
   }
+
+  const cases = operations.map((operation) => {
+    const row = { operation, ...syntheticSmokeCase(operation) };
+
+    if (operation === 'evaluate' && rubric) {
+      row.request.corpus_version = rubric.corpusVersion;
+    }
+
+    return row;
+  });
+
+  const inputs: Array<Parameters<GeneratorPort['generate']>[0]> = cases.map((row) => ({
+    operation: row.operation,
+    model: row.operation === 'normalize' ? config.normalizationModel : config.generationModel,
+    instructions:
+      row.operation === 'evaluate' && rubric
+        ? gradingInstructions(rubric)
+        : aiInstructions(row.operation),
+    input: generationInput(row.request, []),
+    schemaName:
+      row.operation === 'evaluate' && rubric
+        ? 'FreeResponseAssessmentV1'
+        : SCHEMA_NAMES[row.operation],
+    jsonSchema:
+      row.operation === 'evaluate' && rubric ? assessmentSchema : operationSchema(row.operation),
+  }));
 
   // Conservative byte-based token reservation plus framing margin, using OBS-02 dated rates.
   // This is a tariff ceiling for standard text calls, not provider settlement evidence.
@@ -133,6 +151,8 @@ export async function runSmoke(
 
   const plan = {
     task: 'BASE-01',
+    evaluationProfile: rubric ? GRADING_PROMPT_VERSION : 'BASE-01-HISTORICAL-OFFLINE-PLAN',
+    policyRef: rubric?.policyRef ?? null,
     execute,
     calls: cases.length,
     maxCalls: cap,
@@ -170,7 +190,14 @@ export async function runSmoke(
   const provider = createOpenAiGenerator(config, {
     onAttempt: (attempt) => observations.recordGenerationAttempt(attempt),
   });
-  const runner = createBaselineRunner(createOperationGenerator(provider, config), observations);
+  const runner = createBaselineRunner(
+    createOperationGenerator(provider, config, rubric, observations),
+    observations,
+    undefined,
+    undefined,
+    undefined,
+    rubric,
+  );
   const results: unknown[] = [];
 
   try {

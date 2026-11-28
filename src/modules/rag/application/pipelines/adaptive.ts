@@ -1,5 +1,6 @@
 import type { ExecutionPolicy, Scheduling } from '@/modules/execution/application/public';
 import { readExecutionPolicy } from '@/modules/execution/application/public';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
 import type { IndexManifest } from '@/modules/knowledge/application/public';
 import { createAdaptiveInitialStage } from '@/modules/rag/application/pipelines/adaptive-initial';
 import type { DeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
@@ -41,6 +42,7 @@ export function createAdaptiveRunner(
   clock: Clock = systemClock,
   executionPolicy: ExecutionPolicy = readExecutionPolicy(),
   scheduling?: Scheduling,
+  rubric?: RubricBundle | null,
 ) {
   index = structuredClone(index);
   policy = structuredClone(policy);
@@ -62,6 +64,7 @@ export function createAdaptiveRunner(
     observations,
     routerPolicy,
     clock,
+    rubric,
   );
 
   return createExecutionRunner(
@@ -156,5 +159,6 @@ export function createAdaptiveRunner(
     executionPolicy,
     index.corpusVersion,
     scheduling,
+    rubric,
   );
 }

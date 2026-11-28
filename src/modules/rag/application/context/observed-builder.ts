@@ -1,5 +1,6 @@
 import type { Requests } from '@/contracts/types';
 import type { CallContext } from '@/modules/execution/application/public';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
 import { buildContext } from '@/modules/rag/application/context/builder';
 import { validPayload } from '@/modules/rag/application/generation/schema';
 import type { GenerationSettings } from '@/modules/rag/application/models/generator-config';
@@ -16,6 +17,7 @@ export function createContextBuilder(
   generator: GenerationSettings,
   observations: RagExecutionPort,
   clock: Clock = systemClock,
+  rubric?: RubricBundle | null,
 ) {
   config = structuredClone(config);
 
@@ -71,7 +73,7 @@ export function createContextBuilder(
 
     checkDeadline();
 
-    const result = buildContext(config, operation, request, candidates, targetSkillCodes);
+    const result = buildContext(config, operation, request, candidates, targetSkillCodes, rubric);
     checkDeadline();
 
     await observations.record(

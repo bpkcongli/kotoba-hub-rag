@@ -4,22 +4,38 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 
 const root = new URL('../../', import.meta.url);
+const rubric = process.argv[2] === '--rubric';
 const singleStage = process.argv[2] === '--single-stage';
 const execution = process.argv[2] === '--execution';
 const adaptive = process.argv[2] === '--adaptive' || execution;
-if (process.argv.length > 3 || (process.argv[2] !== undefined && !singleStage && !adaptive)) {
+
+if (
+  process.argv.length > 3 ||
+  (process.argv[2] !== undefined && !singleStage && !adaptive && !rubric)
+) {
   throw new Error('Argument integration runner tidak valid');
 }
-const task = execution ? 'ADP-03' : adaptive ? 'ADP-02' : singleStage ? 'RAG-03' : 'RAG-01';
-const artifactPath = execution
-  ? '../../artifacts/adp-03/'
-  : adaptive
-    ? '../../artifacts/adp-02/'
-    : singleStage
-      ? '../../artifacts/rag-03/'
-      : '../../artifacts/rag-01/';
+
+const task = rubric
+  ? 'UC-02'
+  : execution
+    ? 'ADP-03'
+    : adaptive
+      ? 'ADP-02'
+      : singleStage
+        ? 'RAG-03'
+        : 'RAG-01';
+const artifactPath = rubric
+  ? '../../artifacts/uc-02/'
+  : execution
+    ? '../../artifacts/adp-03/'
+    : adaptive
+      ? '../../artifacts/adp-02/'
+      : singleStage
+        ? '../../artifacts/rag-03/'
+        : '../../artifacts/rag-01/';
 const compose = new URL('../../compose.yaml', import.meta.url).pathname;
-const project = `${execution ? 'adp03' : adaptive ? 'adp02' : singleStage ? 'rag03' : 'rag01'}-${process.pid}-${randomBytes(4).toString('hex')}`;
+const project = `${rubric ? 'uc02' : execution ? 'adp03' : adaptive ? 'adp02' : singleStage ? 'rag03' : 'rag01'}-${process.pid}-${randomBytes(4).toString('hex')}`;
 const env = { ...process.env, QDRANT_HTTP_PORT: '0' };
 const args = ['compose', '--file', compose, '--project-name', project];
 
@@ -81,11 +97,13 @@ try {
       '--import',
       'tsx',
       '--test',
-      adaptive
-        ? 'tests/integration/pipelines/adaptive.integration.ts'
-        : singleStage
-          ? 'tests/integration/pipelines/single-stage.integration.ts'
-          : 'tests/integration/retrieval/retrieval.integration.ts',
+      rubric
+        ? 'tests/integration/retrieval/rubric.integration.ts'
+        : adaptive
+          ? 'tests/integration/pipelines/adaptive.integration.ts'
+          : singleStage
+            ? 'tests/integration/pipelines/single-stage.integration.ts'
+            : 'tests/integration/retrieval/retrieval.integration.ts',
     ],
     {
       cwd: root,

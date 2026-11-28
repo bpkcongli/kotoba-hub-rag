@@ -1,0 +1,162 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "FREE_RESPONSE_GRADING_POLICY",
+  "id": "kotobahub-free-response-translation",
+  "revision": 1,
+  "status": "APPROVED",
+  "contentSha256": "110e52d1c27dcda70ef7cc388864b9db956602195091c174d8a43bcc25fba08a",
+  "content": {
+    "scope": {
+      "operation": "GRADE_PRACTICE_ANSWER",
+      "questionType": "FREE_RESPONSE",
+      "sourceLanguages": [
+        "EN",
+        "ID"
+      ],
+      "answerLanguage": "JA",
+      "jlptLevels": [
+        "N5",
+        "N4"
+      ]
+    },
+    "criteria": {
+      "meaning": {
+        "maxPoints": 60,
+        "anchors": {
+          "0": {
+            "en": "No interpretable translation of the source.",
+            "id": "Tidak ada padanan makna sumber yang dapat dipahami."
+          },
+          "20": {
+            "en": "Some meaning remains, but a core proposition changes, such as negation, explicit time, participant roles or quantity.",
+            "id": "Sebagian makna terjaga, tetapi proposisi inti berubah, misalnya negasi, waktu eksplisit, peran pelaku/objek, atau jumlah."
+          },
+          "40": {
+            "en": "The main message remains, but a stated supporting detail is missing or changed; no core proposition is reversed.",
+            "id": "Pesan utama terjaga, tetapi informasi pendukung yang dinyatakan sumber hilang atau bergeser; tidak ada pembalikan proposisi inti."
+          },
+          "60": {
+            "en": "All relevant source information is preserved, including through valid ellipsis or equivalent expressions.",
+            "id": "Seluruh informasi sumber yang relevan terjaga, termasuk melalui elipsis atau ungkapan setara yang sah."
+          }
+        }
+      },
+      "grammar": {
+        "maxPoints": 30,
+        "anchors": {
+          "0": {
+            "en": "The structure cannot be interpreted reliably.",
+            "id": "Struktur tidak dapat diinterpretasikan secara andal."
+          },
+          "10": {
+            "en": "Multiple errors or one major error; the structure is only partly interpretable.",
+            "id": "Beberapa kesalahan atau satu kesalahan besar; struktur hanya dapat dipahami sebagian."
+          },
+          "20": {
+            "en": "One recoverable local error without a different interpretation of meaning.",
+            "id": "Satu kesalahan lokal yang mudah dipulihkan tanpa menimbulkan tafsir makna berbeda."
+          },
+          "30": {
+            "en": "Natural grammatical structure for what the answer actually says.",
+            "id": "Struktur gramatikal natural untuk makna yang benar-benar disampaikan jawaban."
+          }
+        }
+      },
+      "naturalness": {
+        "maxPoints": 10,
+        "anchors": {
+          "0": {
+            "en": "The expression requires substantial reconstruction.",
+            "id": "Ungkapan memerlukan rekonstruksi besar."
+          },
+          "5": {
+            "en": "Awkward but understandable without changing meaning.",
+            "id": "Ungkapan janggal tetapi dapat dipahami tanpa perubahan makna."
+          },
+          "10": {
+            "en": "Natural expression; accept valid kana/kanji, punctuation and spacing variants.",
+            "id": "Ungkapan wajar; terima variasi kana/kanji, tanda baca, dan spasi yang sah."
+          }
+        }
+      }
+    },
+    "scoring": {
+      "profile": "MEANING_60_GRAMMAR_30_NATURALNESS_10_V1",
+      "algorithm": "SUM_THEN_CAP_V1",
+      "integerScores": true,
+      "passThreshold": 80,
+      "maxScoreByMeaning": {
+        "0": 0,
+        "20": 49,
+        "40": 79,
+        "60": 100
+      },
+      "majorGrammarScores": [
+        0,
+        10
+      ],
+      "majorGrammarCap": 79,
+      "reconstructionNaturalnessScore": 0,
+      "reconstructionNaturalnessCap": 79
+    },
+    "equivalence": {
+      "referenceRole": "NON_EXHAUSTIVE_EXAMPLE",
+      "acceptNaturalKanaKanjiVariants": true,
+      "acceptNaturalEllipsis": true,
+      "acceptEquivalentVocabularyAndWordOrder": true,
+      "registerPolicy": "ACCEPT_PLAIN_OR_POLITE_UNLESS_SOURCE_CONSTRAINS",
+      "requireExactReferenceGrammarPattern": false,
+      "sourceLocaleAffectsScore": false
+    },
+    "inputHandling": {
+      "preserveSubmittedRepresentations": true,
+      "rawRomajiRole": "AUXILIARY_ONLY",
+      "normalizationConflict": "UNGRADABLE",
+      "sourceReferenceConflict": "UNGRADABLE",
+      "materialSourceAmbiguity": "UNGRADABLE"
+    },
+    "feedback": {
+      "localeSource": "language.feedbackLocale",
+      "minLength": 1,
+      "maxLength": 500,
+      "format": "PLAIN_TEXT",
+      "includePrimaryReason": true
+    },
+    "failureHandling": {
+      "ungradable": "FAIL_WITHOUT_GRADE",
+      "insufficientEvidence": "FAIL_WITHOUT_GRADE",
+      "providerFailure": "FAIL_WITHOUT_GRADE"
+    }
+  },
+  "approval": {
+    "approvedBy": "project-researcher-user",
+    "role": "PENELITI",
+    "approvedAt": "2026-11-27T22:26:47Z",
+    "reviewedContentSha256": "110e52d1c27dcda70ef7cc388864b9db956602195091c174d8a43bcc25fba08a"
+  },
+  "provenance": {
+    "authorship": "AI_ASSISTED",
+    "sourceRefs": [
+      {
+        "repository": "kotoba-hub-rag",
+        "path": "docs/generation/UC-02-grading-rubric-draft.md",
+        "fileSha256": "c8924987036426a0f5575463df04ecd3bda79cff6266603fe80cd614aa29e261",
+        "role": "PROPOSED_POLICY"
+      },
+      {
+        "repository": "kotoba-hub",
+        "path": "src/backend/shared/application/helpers/ai-templates.ts",
+        "fileSha256": "795f2a97eee3af62b334941bc94be419ea954f2c83820ec690bdb5ec5412b33f",
+        "role": "CURRENT_BEHAVIOR"
+      },
+      {
+        "repository": "kotoba-hub",
+        "path": "src/backend/shared/application/helpers/ai-schemas.ts",
+        "fileSha256": "16e933668af72b4428802b44b6c7759311736dea6df3261f7addc86097a4a916",
+        "role": "CURRENT_BEHAVIOR"
+      }
+    ],
+    "license": "Internal runtime use explicitly authorized by project researcher; no public redistribution authorized; original source terms remain as audited.",
+    "usageScope": "INTERNAL_RUNTIME"
+  }
+}

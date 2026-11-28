@@ -9,11 +9,11 @@ import { setupAdaptive } from '@tests/__fixtures__/adaptive-fixture';
 import {
   clock,
   config,
-  outputFor,
   providerResponse,
   requestFor,
 } from '@tests/__fixtures__/generation-fixture';
 import { hit } from '@tests/__fixtures__/retrieval-fixture';
+import { gradedAssessment, rubricFixture } from '@tests/__fixtures__/rubric-fixture';
 import Fastify, { type FastifyInstance } from 'fastify';
 import { createApplication } from '@/app';
 import { readConfig, type ApiConfig } from '@/bootstrap/config';
@@ -589,11 +589,13 @@ await test('API-01: disconnect HTTP nyata membatalkan signal dan hasil terminal 
 await test('API-01: composition produksi merangkai baseline HTTP dan replay sukses setelah restart', async (t) => {
   const directory = await mkdtemp(join(tmpdir(), 'api-01-composition-'));
   const originalFetch = globalThis.fetch;
+  const input = requestFor('evaluate');
+  const rubric = rubricFixture(input);
   let calls = 0;
   globalThis.fetch = () => {
     calls++;
 
-    return Promise.resolve(providerResponse(outputFor('evaluate')));
+    return Promise.resolve(providerResponse(gradedAssessment()));
   };
   t.after(() => {
     globalThis.fetch = originalFetch;
@@ -611,8 +613,14 @@ await test('API-01: composition produksi merangkai baseline HTTP dan replay suks
     null,
     undefined,
     config(),
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+    rubric,
   );
-  const input = requestFor('evaluate');
   const response = await post(app.server, input, 'evaluate');
 
   assert.equal(response.statusCode, 200, response.body);

@@ -180,6 +180,13 @@ export function createQdrantRetriever(
 
           if (
             chunks.has(payload.chunk_id) ||
+            (filter.language !== undefined && payload.locale !== filter.language) ||
+            (filter.contentType !== undefined && payload.content_type !== filter.contentType) ||
+            (filter.policyRef !== undefined &&
+              (!payload.rubric ||
+                payload.rubric.policyId !== filter.policyRef.id ||
+                payload.rubric.policyRevision !== filter.policyRef.revision ||
+                payload.rubric.policyContentSha256 !== filter.policyRef.contentSha256)) ||
             payload.chunk_id.length > 200 ||
             payload.corpus_version !== index.corpusVersion ||
             payload.embedding_config_id !== index.embeddingConfigId ||
@@ -212,6 +219,7 @@ export function createQdrantRetriever(
             trackSlug: payload.track_slug,
             contentChecksum: payload.content_checksum,
             tokenCount: payload.token_count,
+            ...(payload.rubric ? { rubric: payload.rubric } : {}),
           };
         });
       }

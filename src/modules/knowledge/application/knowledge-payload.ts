@@ -1,6 +1,10 @@
 import { Ajv } from 'ajv';
 import { default as formats } from 'ajv-formats';
+
 import { StoreError } from '@/modules/knowledge/application/index-manifest';
+import { canonicalRubricContent } from '@/modules/knowledge/application/rubric-canonical';
+import { hash, object, rubricBindingSchema } from '@/modules/knowledge/application/validation';
+import type { RubricBinding } from '@/modules/knowledge/domain/models/ingestion';
 
 export interface KnowledgePayload {
   readonly chunk_id: string;
@@ -30,6 +34,8 @@ export interface KnowledgePayload {
   readonly locale: 'JA' | 'EN' | 'ID';
 
   readonly content_type: string;
+
+  readonly rubric?: RubricBinding;
 
   readonly published: true;
 
@@ -71,6 +77,7 @@ const properties = {
   jlpt_level: { enum: ['JLPT_N5', 'JLPT_N4'] },
   locale: { enum: ['JA', 'EN', 'ID'] },
   content_type: text,
+  rubric: rubricBindingSchema,
   published: { const: true },
   chunk_index: { type: 'integer', minimum: 0 },
   token_count: { type: 'integer', minimum: 1 },
@@ -82,13 +89,76 @@ const properties = {
 const validate = ajv.compile<KnowledgePayload>({
   type: 'object',
   additionalProperties: false,
-  required: Object.keys(properties),
+  required: Object.keys(properties).filter((key) => key !== 'rubric'),
   properties,
 });
+
+function validateRubricPayload(value: KnowledgePayload, binding: RubricBinding): void {
+  const content = object(JSON.parse(value.text));
+  const scope = object(content.scope);
+  const policy = object(content.policyRef);
+
+  if (
+    canonicalRubricContent(content) !== value.text ||
+    hash(value.text) !== value.content_checksum ||
+    value.content_checksum !== binding.guidanceContentSha256
+  ) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+
+  const sourceId = `kotobahub:rubric_guidance:${binding.guidanceId}@${binding.guidanceRevision}:${value.locale.toLowerCase()}`;
+
+  if (value.source_id !== sourceId) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+
+  if (
+    policy.id !== binding.policyId ||
+    policy.revision !== binding.policyRevision ||
+    policy.contentSha256 !== binding.policyContentSha256
+  ) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+
+  if (
+    scope.questionType !== 'FREE_RESPONSE' ||
+    `JLPT_${String(scope.jlptLevel)}` !== value.jlpt_level
+  ) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+
+  if (
+    scope.trackSlug !== value.track_slug ||
+    scope.unitSlug !== value.unit_slug ||
+    scope.lessonSlug !== value.lesson_slug
+  ) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+
+  if (value.skill_codes.length !== 1 || scope.skillCode !== value.skill_codes[0]) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+
+  if (content.locale !== value.locale.toLowerCase()) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+}
 
 export function parseKnowledgePayload(value: unknown): KnowledgePayload {
   if (!validate(value)) {
     throw new StoreError('INVALID_CONTENT');
+  }
+
+  if ((value.content_type === 'RUBRIC') !== (value.rubric !== undefined)) {
+    throw new StoreError('INVALID_CONTENT');
+  }
+
+  if (value.rubric) {
+    try {
+      validateRubricPayload(value, value.rubric);
+    } catch {
+      throw new StoreError('INVALID_CONTENT');
+    }
   }
 
   return value;

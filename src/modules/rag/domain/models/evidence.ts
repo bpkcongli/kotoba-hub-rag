@@ -1,4 +1,15 @@
+export interface RubricEvidenceRef {
+  readonly guidanceId: string;
+  readonly guidanceRevision: number;
+  readonly guidanceContentSha256: string;
+  readonly policyId: string;
+  readonly policyRevision: number;
+  readonly policyContentSha256: string;
+}
+
 export interface Evidence {
+  readonly rubric?: RubricEvidenceRef;
+
   readonly chunkId: string;
 
   readonly sourceId: string;

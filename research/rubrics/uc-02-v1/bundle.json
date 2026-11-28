@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "uc-02-rubric-bundle-v1",
+  "corpusVersion": "uc-02-rubric-v1",
+  "sourceCorpus": {
+    "corpusVersion": "kotobahub-n5n4-data01-20261124-v2",
+    "manifestSha256": "ef3a9238ec48cb4bd73991a5550da6a0790d69d26b595e419e451fffeb2da304"
+  },
+  "trustedReviewers": [
+    {
+      "id": "project-researcher-user",
+      "role": "PENELITI"
+    }
+  ],
+  "policy": {
+    "path": "policy.json",
+    "sha256": "69add7820076d35c4ed7afab72a4ac6f6a3523bc0bfb4c1ae1aaaa901bfeb1eb"
+  },
+  "guidances": [
+    {
+      "path": "guidance-id-n5.json",
+      "sha256": "f99b01ba5ecd93dbe2db1e3452d039bf543ec548751e5ae8093dec483a55c0ac"
+    }
+  ]
+}

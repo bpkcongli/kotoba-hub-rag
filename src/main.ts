@@ -1,5 +1,6 @@
 import { createApplication } from '@/app';
 import { readConfig } from '@/bootstrap/config';
+import { readGradingBundle } from '@/bootstrap/grading-config';
 import { readExecutionPolicy } from '@/modules/execution/application/execution-policy';
 import { readQdrantConfig } from '@/modules/knowledge/application/connection-settings';
 import { readDeepPolicy } from '@/modules/rag/application/pipelines/deep-config';
@@ -15,6 +16,7 @@ import { systemClock } from '@/shared/system-clock';
 async function main(): Promise<void> {
   // Validate configuration before creating resources or opening the listener.
   const config = readConfig(process.env);
+  const rubric = await readGradingBundle(process.env);
   const hfConfig = readHfConfig(process.env);
   const qdrantConfig = readQdrantConfig(process.env);
   const openAiConfig = readOpenAiConfig(process.env);
@@ -38,6 +40,7 @@ async function main(): Promise<void> {
     routerPolicy,
     deepPolicy,
     executionPolicy,
+    rubric,
   );
 
   let closing = false;

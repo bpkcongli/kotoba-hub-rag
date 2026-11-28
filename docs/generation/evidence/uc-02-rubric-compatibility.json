@@ -1,0 +1,489 @@
+{
+  "task": "UC-02",
+  "verifiedAtUtc": "2026-11-27T22:29:24.214Z",
+  "node": "v24.22.1",
+  "auditedSourceCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+  "currentSourceCommit": "6c4f4df2a9d82c08e627f7fb409e4f2b68bf9880",
+  "sourceFilesMatched": 24,
+  "appWorkingTreeUnchanged": true,
+  "passed": 93,
+  "failed": 0,
+  "serverMappedGradesChecked": 48,
+  "accepted": 77,
+  "rejected": 16,
+  "networkCalls": 0,
+  "paidCalls": 0,
+  "databaseWrites": 0,
+  "checks": [
+    {
+      "name": "JLPT_N5/en/kana",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/en/kanji",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/en/mixed",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/en/without-full-stop",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/en/full-width-space",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/en/separate-feedback-locale",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/id/kana",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/id/kanji",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/id/mixed",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/id/without-full-stop",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/id/full-width-space",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N5/id/separate-feedback-locale",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/en/kana",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/en/kanji",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/en/mixed",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/en/without-full-stop",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/en/full-width-space",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/en/separate-feedback-locale",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/id/kana",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/id/kanji",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/id/mixed",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/id/without-full-stop",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/id/full-width-space",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "JLPT_N4/id/separate-feedback-locale",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "score-boundary/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "score-boundary/49.5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "score-boundary/100",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "feedback-boundary/ascii-500",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "feedback-boundary/unicode-500",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "invalid-output/null",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/array",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/missing-isCorrect",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/missing-numericScore",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/missing-feedbackText",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/wrong-isCorrect-type",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/wrong-score-type",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/negative-score",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/score-over-100",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/null-score",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/empty-feedback",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/feedback-over-500",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/unicode-feedback-over-500",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/wrong-feedback-type",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/extra-progress",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "invalid-output/extra-metadata",
+      "accepted": false,
+      "ragFailure": "SCHEMA_PARSE_FAILED"
+    },
+    {
+      "name": "server-map/0/0/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/0/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/0/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/10/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/10/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/10/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/20/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/20/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/20/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/30/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/30/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/0/30/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/0/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/0/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/0/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/10/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/10/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/10/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/20/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/20/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/20/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/30/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/30/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/20/30/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/0/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/0/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/0/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/10/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/10/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/10/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/20/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/20/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/20/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/30/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/30/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/40/30/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/0/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/0/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/0/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/10/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/10/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/10/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/20/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/20/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/20/10",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/30/0",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/30/5",
+      "accepted": true,
+      "ragFailure": null
+    },
+    {
+      "name": "server-map/60/30/10",
+      "accepted": true,
+      "ragFailure": null
+    }
+  ],
+  "limitations": [
+    "AiServiceImpl aktual dipanggil dengan mock provider/log; bukan adapter HTTP KotobaHub INT-01.",
+    "Fixture sintetis membuktikan invariant struktural; kualitas pedagogis/naturalitas Jepang belum dinilai manusia.",
+    "Fixture hanya menguji kontrak dan preservasi input; skor mock tidak membuktikan konsistensi semantik EN/ID atau penerimaan variasi Jepang oleh model."
+  ]
+}

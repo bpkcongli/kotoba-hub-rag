@@ -1,0 +1,5 @@
+
+> kotoba-hub-rag@0.1.0 data:prepare
+> node --import tsx src/modules/knowledge/interface/primary/prepare-cli.ts --out artifacts/uc-02/preparation-v1 --rubric-bundle research/rubrics/uc-02-v1/bundle.json --rubric-bundle-sha256 0008af90cf90b9fe84682f5dbda668bbe0e01ef572d8785ff5582e46e0de5d73
+
+{"status":"PREPARED_OFFLINE_PILOT_CONFIG","counts":{"sourceDocuments":737,"normalizedLessons":41,"pedagogicalUnits":475,"chunks":99,"byLocale":{"EN":51,"ID":48},"byLevel":{"JLPT_N5":79,"JLPT_N4":20},"minTokens":91,"maxTokens":512,"totalStoredTokensIncludingOverlapAndSpecial":38668,"overlapUnitOccurrences":48}}

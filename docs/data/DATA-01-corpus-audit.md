@@ -116,3 +116,7 @@ Generator menolak snapshot dengan checksum/scope keputusan berbeda dan seed yang
 Riwayat N5 pada [laporan awal](DATA-01-n5-audit-history.md) dan `research/corpus/data-01-v1/` tidak ditulis ulang. Manifest v2 menggantikan status corpus aktif; v1 tetap bukti kondisi sebelum N4 dan keputusan penggunaan internal.
 
 DATA-02 menerima manifest/inventaris v2 untuk parser, sanitasi, normalisasi berversi, chunk pedagogis, offsets serta token accounting. DATA-03 tetap perlu embedding/index validation dan scope/budget panggilan berbayar. Tidak ada ingestion, perubahan domain DB, provider call, deployment atau pembekuan eksperimen yang dijalankan DATA-01.
+
+## Handoff rubric UC-02, 28 November 2026
+
+Hasil audit historis DATA-01 tetap: snapshot silabus tidak berisi rubric FREE_RESPONSE terpisah. Sesudah audit, pengguna menyediakan rancangan dan menyetujui isi/penggunaan internal [bundle UC-02](../../research/rubrics/uc-02-v1/bundle.json). Guidance approved baru mencakup N5/ID `n5_copula_affirmative`; konten ini berasal dari authoring UC-02, bukan temuan ulang atau perubahan snapshot DATA-01. [Laporan UC-02](../generation/UC-02-free-response-evaluation.md) mencatat corpus proyeksi baru, preparation offline dan batas verifikasinya.

@@ -1,6 +1,6 @@
 # KotobaHub RAG Service
 
-Status 28 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. REF-01 memisahkan runtime ke modul DDD dengan kontrak aplikasi dan pemeriksaan dependency. API-01 menyediakan empat endpoint operasi terautentikasi dengan body camelCase, batas kapasitas/deadline dan replay durable. UC-01 memverifikasi generator/validator soal bersama dan penolakan hasil invalid melalui HTTP serta validator aplikasi aktual. Hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
+Status 28 November 2026: bootstrap BOOT-01, adapter HTTP HF INF-02, Compose/lifecycle Qdrant STORE-01, tooling, kontrak v1 dan protokol penelitian tersedia. Preparation corpus DATA-02 dan ingestion DATA-03 selesai; index candidate penuh 98 point tersimpan pada Qdrant lokal. BASE-01 menyediakan generator OpenAI dan baseline internal LLM_ONLY opt-in, dengan empat smoke nyata berizin berhasil. RAG-01 menyediakan retrieval internal DENSE terfilter dan trace rank/score. RAG-02 menyediakan context builder bersama dengan dedup, coverage, budget dan selected sources. RAG-03 menyediakan runner SINGLE_STAGE internal untuk empat operasi dengan gate evidence dan terminal trace. ADP-01 menyediakan router deterministik; ADP-02 menyediakan runner ADAPTIVE internal FAST/DEEP dengan rewrite opsional, stage 2, merge/dedup, BGE rerank dan gate/terminal. ADP-03 menyediakan lifecycle/deadline/cancellation dan budget provider/schema retry bersama, default nol retry. REF-01 memisahkan runtime ke modul DDD dengan kontrak aplikasi dan pemeriksaan dependency. API-01 menyediakan empat endpoint operasi terautentikasi dengan body camelCase, batas kapasitas/deadline dan replay durable. UC-01 memverifikasi generator/validator soal bersama dan penolakan hasil invalid melalui HTTP serta validator aplikasi aktual. UC-02 menyediakan grading FREE_RESPONSE dengan rubrik approved, retrieval guidance terikat policy, perhitungan skor oleh server dan error UNGRADABLE; guidance aktual baru N5/ID. Hasil eksperimen belum tersedia. Adapter HF opt-in, protokol belum freeze.
 
 Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tugas akhir **Penerapan Retrieval-Augmented Generation untuk Adaptive Question Generation dan Answer Evaluation pada Aplikasi Adaptive Learning Bahasa Jepang**. KotobaHub menjadi lingkungan integrasi dan pengujian; penelitian membandingkan pipeline, bukan mengukur hasil belajar pengguna.
 
@@ -27,6 +27,7 @@ Repository ini membangun layanan AI/RAG bagi KotobaHub dan subjek eksperimen tug
 | [ADP-02](docs/adaptive/ADP-02-deep-path.md) | Runner ADAPTIVE FAST/DEEP internal, dua stages/satu rewrite opsional, BGE rerank/gate/terminal dan accounting seluruh batch |
 | [API-01](docs/api/API-01-http.md) | Empat endpoint v1 dengan body camelCase, Bearer service auth, batas kapasitas/deadline, replay dan rekonsiliasi envelope; [OpenAPI YAML](docs/api/openapi.yaml) |
 | [UC-01](docs/generation/UC-01-practice-generation.md) | Validator empat tipe soal, arah EN/ID↔JA, failure/replay dan probe kompatibilitas source KotobaHub dengan mock |
+| [UC-02](docs/generation/UC-02-free-response-evaluation.md) | Grading assessment dengan policy/guidance approved, server score/cap/threshold, UNGRADABLE 422 dan retrieval rubric; guidance aktual N5/ID, kualitas semantik menunggu pilot |
 | [ADP-03](docs/adaptive/ADP-03-execution-policy.md) | Lifecycle tiga mode, deadline/cancellation, shared retry/call budget, terminal dan accounting seluruh attempts |
 | [REF-01](docs/architecture/REF-01-ddd-refactor.md) | Implementasi boundary DDD, pemetaan source dan bukti regresi; rencana awal tetap tersedia pada laporan |
 | [TASK_BREAKDOWN.md](TASK_BREAKDOWN.md) | Urutan pekerjaan, dependensi, owner, deliverable, dan definition of done |
@@ -142,6 +143,29 @@ node --import tsx --test tests/unit/generation/practice.test.ts
 # Opt-in; memerlukan checkout aplikasi/dependency audit, tanpa provider/database.
 npm run test:uc01
 ```
+
+## Evaluasi jawaban UC-02
+
+`POST /v1/practice/evaluate` hanya menerima `FREE_RESPONSE`. Policy/guidance yang disetujui pengguna mengatur assessment meaning/grammar/naturalness 60/30/10; server menghitung skor, cap dan `isCorrect` pada threshold 80. Respons publik tetap `{ isCorrect, numericScore, feedbackText }`. UNGRADABLE menjadi 422 tanpa semantic retry. Source EN/ID dan jawaban kana/kanji dipertahankan, serta sukses/gagal dapat direplay tanpa inference baru.
+
+Operator perlu memasang kedua env berikut; tanpa bundle evaluate menghasilkan 503 sebelum inference. `.env` belum diubah.
+
+```dotenv
+UC02_RUBRIC_BUNDLE=research/rubrics/uc-02-v1/bundle.json
+UC02_RUBRIC_BUNDLE_SHA256=0008af90cf90b9fe84682f5dbda668bbe0e01ef572d8785ff5582e46e0de5d73
+```
+
+Bundle saat ini menyediakan guidance **N5/ID `n5_copula_affirmative`**. Mode RAG memerlukan corpus/index baru `uc-02-rubric-v1` dan matching guidance approved; index DATA-03 lama belum memuatnya. Preparation offline 737 source/99 chunk sudah tersedia, tetapi pointer dan index persistent tidak diubah. Untuk container, pasang juga audit/snapshot DATA-01 yang diverifikasi saat startup. [Laporan UC-02](docs/generation/UC-02-free-response-evaluation.md) memerinci file mount, preparation dan guard index.
+
+```bash
+node --import tsx --test tests/unit/generation/rubric.test.ts
+# Opt-in; validator aplikasi aktual dengan provider/log mock.
+npm run test:uc02
+# Qdrant loopback sementara, embedding/generator mock.
+npm run test:uc02:integration
+```
+
+Checks utama lulus 663 test, probe aplikasi 93 skenario dan integrasi Qdrant 4 test. Penilaian semantik provider nyata, guidance EN/N4 dan kalibrasi pilot belum tersedia; tidak ada call berbayar atau aktivasi index baru pada pekerjaan ini.
 
 ## Ingestion DATA-03
 

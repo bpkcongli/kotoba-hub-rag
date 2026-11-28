@@ -1,6 +1,7 @@
 import { resolve } from 'node:path';
 import { readQdrantConfig } from '@/modules/knowledge/application/connection-settings';
 import { parseIndexManifest, StoreError } from '@/modules/knowledge/application/index-manifest';
+import { RubricError } from '@/modules/knowledge/application/rubric';
 import { canonical, hash, object, string } from '@/modules/knowledge/application/validation';
 import { IndexingError } from '@/modules/knowledge/domain/exceptions/indexing-error';
 import { runIndexJob } from '@/modules/knowledge/infrastructure/di/index';
@@ -12,6 +13,7 @@ import {
   currentIngestionPlan,
   readBounded,
 } from '@/modules/knowledge/interface/secondary/corpus/index-plan';
+import { loadRubricBundle } from '@/modules/knowledge/interface/secondary/corpus/rubric-loader';
 import { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
 import { readHfConfig } from '@/modules/rag/infrastructure/config/hf-config';
 import { createHfInference } from '@/modules/rag/interface/secondary/inference/hf-inference';
@@ -20,11 +22,12 @@ import { InferenceError } from '@/shared/errors/inference-error';
 
 async function main(): Promise<void> {
   const [action, ...args] = process.argv.slice(2);
+  const rubricFlags = ['--rubric-bundle', '--rubric-bundle-sha256'];
   const allowed: Readonly<Record<string, readonly string[]>> = {
-    plan: ['--job', '--revision', '--batch-size', '--sample-size'],
-    run: ['--job', '--max-new-calls'],
-    validate: ['--job'],
-    promote: ['--job', '--alias'],
+    plan: ['--job', '--revision', '--batch-size', '--sample-size', ...rubricFlags],
+    run: ['--job', '--max-new-calls', ...rubricFlags],
+    validate: ['--job', ...rubricFlags],
+    promote: ['--job', '--alias', ...rubricFlags],
   };
   const flags = action ? allowed[action] : undefined;
   const options = new Map<string, string>();
@@ -44,6 +47,20 @@ async function main(): Promise<void> {
     options.set(key, value);
   }
 
+  const rubricPath = options.get('--rubric-bundle');
+  const rubricHash = options.get('--rubric-bundle-sha256');
+
+  if (
+    (rubricPath === undefined) !== (rubricHash === undefined) ||
+    (rubricHash !== undefined && !/^[a-f0-9]{64}$/.test(rubricHash))
+  ) {
+    throw new IndexingError('INVALID_PLAN');
+  }
+
+  const rubricBundle =
+    rubricPath === undefined
+      ? undefined
+      : await loadRubricBundle(resolve(rubricPath), undefined, rubricHash);
   const directory = resolve(string(options.get('--job')));
   const integer = (value: string | undefined, fallback?: number): number => {
     if (value === undefined && fallback !== undefined) {
@@ -63,6 +80,8 @@ async function main(): Promise<void> {
       string(options.get('--revision')),
       integer(options.get('--batch-size'), 1),
       options.has('--sample-size') ? integer(options.get('--sample-size')) : null,
+      rubricBundle,
+      rubricHash,
     );
 
     await createIndexJob(directory, plan);
@@ -92,6 +111,8 @@ async function main(): Promise<void> {
     index.indexRevision,
     raw.batchSize,
     selection.sampleSize,
+    rubricBundle,
+    rubricHash,
   );
 
   if (canonical(raw) !== canonical(plan)) {
@@ -180,7 +201,10 @@ async function main(): Promise<void> {
 
 void main().catch((error: unknown) => {
   const code =
-    error instanceof IndexingError || error instanceof StoreError || error instanceof InferenceError
+    error instanceof IndexingError ||
+    error instanceof StoreError ||
+    error instanceof InferenceError ||
+    error instanceof RubricError
       ? error.code
       : error instanceof ConfigError
         ? 'INVALID_CONFIG'

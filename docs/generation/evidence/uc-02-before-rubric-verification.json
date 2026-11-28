@@ -1,0 +1,139 @@
+{
+  "task": "UC-02",
+  "status": "IN_PROGRESS",
+  "updatedOn": "2026-11-28",
+  "verifiedAtUtc": "2026-11-27T18:46:46.796Z",
+  "scope": "Verifikasi teknis grading FREE_RESPONSE existing, fixture, probe source aplikasi aktual dan draf rubric yang belum disetujui/aktif.",
+  "acceptance": {
+    "nonFreeResponseRejectedBeforeInference": "VERIFIED",
+    "structuralContractAndInputPreservation": "VERIFIED",
+    "approvedRuntimeRubric": "PENDING_RESEARCHER_REVIEW",
+    "rubricRetrieval": "NOT_AVAILABLE_IN_CURRENT_CORPUS",
+    "actualModelEnIdEquivalence": "NOT_VERIFIED",
+    "actualModelNaturalKanaKanjiGrading": "NOT_VERIFIED"
+  },
+  "rubricDecision": {
+    "on": "2026-11-28",
+    "userChoice": "Siapkan draf rubric untuk ditinjau (disarankan)",
+    "scope": "Menyusun draf; bukan persetujuan isi, angka, contoh, aktivasi, call berbayar atau mutasi index.",
+    "draft": "UC-02-grading-rubric-draft.md",
+    "draftVersion": "uc-02-runtime-rubric-draft-v1",
+    "contentApproved": false,
+    "activeInPrompt": false,
+    "indexed": false
+  },
+  "environment": {
+    "node": "24.22.1",
+    "npm": "11.19.1",
+    "pinnedNode": "24.22.3",
+    "pinnedNodeRetested": false,
+    "applicationImageRebuilt": false
+  },
+  "commands": [
+    {
+      "command": "npm run check",
+      "exitCode": 0,
+      "runtimeTestsPassed": 538,
+      "evidence": "evidence/uc-02-check.log"
+    },
+    {
+      "command": "node --import tsx tests/unit/generation/evaluation.test.ts",
+      "exitCode": 0,
+      "testsPassed": 116,
+      "evidence": "evidence/uc-02-evaluation.log"
+    },
+    {
+      "command": "node --import tsx tools/uc-02/verify.mjs",
+      "equivalentNpmScript": "npm run test:uc02",
+      "exitCode": 0,
+      "scenariosPassed": 45,
+      "evidence": "evidence/uc-02-compatibility.json"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "coverage": {
+    "scenarios": 45,
+    "schemaValid": 29,
+    "schemaInvalid": 16,
+    "translationLocales": [
+      "en",
+      "id"
+    ],
+    "levels": [
+      "JLPT_N5",
+      "JLPT_N4"
+    ],
+    "variants": [
+      "kana",
+      "kanji",
+      "mixed",
+      "without-full-stop",
+      "full-width-space"
+    ],
+    "httpModePathSuccessExecutions": 16,
+    "httpPreservationExecutions": 29,
+    "httpInvalidOutputExecutions": 16,
+    "httpInvalidOutputRagExecutions": 3,
+    "requestRejectionsBeforeAdmission": 16,
+    "paths": [
+      "LLM_ONLY",
+      "SINGLE_STAGE",
+      "FAST",
+      "DEEP"
+    ],
+    "unicodeBoundary": "ASCII/emoji 500 diterima, 501 ditolak oleh kedua validator; tanpa guard berbasis panjang UTF-16.",
+    "durability": "Output invalid hanya terminal FAILED dan error envelope tanpa data sukses; replay sukses/gagal tidak menambah inference.",
+    "promptInput": "Question/userAnswer/language utuh; selected evidence sesuai mode; metadata user/source dan eksperimen di luar prompt."
+  },
+  "sourceCompatibility": {
+    "repository": "kotoba-hub",
+    "auditedCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "currentCommit": "7cd3869d327fa89a45548c0736d3c42998bc6c03",
+    "sourceFilesMatched": 24,
+    "workingTreeUnchanged": true,
+    "actualValidator": "AiServiceImpl.gradePracticeAnswer",
+    "providerAndLogs": "Mock, retry nol, tanpa database."
+  },
+  "reviews": {
+    "runtimeAndTestReview": "Tidak ada defect correctness baru pada scope audit/read-only review.",
+    "japaneseDraftReview": "Dua temuan konsistensi threshold dan subjek feedback diperbaiki; review ulang tidak menemukan defect konten baru yang pasti.",
+    "humanIndependentValidation": false
+  },
+  "newPaidProviderCalls": 0,
+  "siblingSourceWrites": 0,
+  "databaseWrites": 0,
+  "persistentIndexMutations": 0,
+  "publicDeployments": 0,
+  "limitations": [
+    "Provider dan Qdrant memakai mock; grade fixture tidak membuktikan kualitas model atau konsistensi skor semantik.",
+    "Source grammar/syllabus bukan bukti rubric resmi; gate evidence belum memeriksa keberadaan rubric.",
+    "Grader hanya memvalidasi isCorrect boolean, numericScore0–100, feedbackText1–500; tidak ada threshold skor/boolean baru yang dipasang.",
+    "Draf memerlukan keputusan peneliti tentang bobot/cap/threshold, register/target grammar, contoh dan kasus ambigu sebelum aktivasi.",
+    "Label N4 pada fixture adalah eligibility kontrak, bukan penilaian difficulty pedagogis N4.",
+    "Tidak ada perubahan runtime/prompt/schema/model atau snapshot/protokol/index. Integrasi aplikasi tetap INT-01."
+  ],
+  "remainingWork": [
+    "Tinjauan/persetujuan peneliti atas draf dan kebijakan kasus ambigu.",
+    "Provenance/versi/jalur corpus-index rubric yang disepakati dan integrasi UC-02 setelah persetujuan.",
+    "Policy grading bersama yang disetujui pada tiga mode, dengan verifikasi dan versi template/config.",
+    "Verifikasi semantik grader terhadap pasangan yang ditinjau peneliti dalam scope/budget yang disepakati."
+  ],
+  "artifactsSha256": {
+    "docs/generation/evidence/uc-02-check.log": "29222100333b46db6c40d47311d0c5d16e2d4d08818adae0b1e0f98d9d8f38d8",
+    "docs/generation/evidence/uc-02-evaluation.log": "1d0f54c815086e7667c4399bfe9245e168cefb9c97a86a8f83e155a404b584bc",
+    "docs/generation/evidence/uc-02-compatibility.json": "2cc3d5402ca0314a2ad718f81c34fd52a904b08ac3eb8cbd016a565ee64637cf",
+    "docs/generation/UC-02-grading-rubric-draft.md": "c8924987036426a0f5575463df04ecd3bda79cff6266603fe80cd614aa29e261",
+    "tests/__fixtures__/evaluation-fixture.ts": "fd263307b3734534bce22bfdfe956fa2ac6c98e9c331fa2ef8dd5b5aa68de3e3",
+    "tests/unit/generation/evaluation.test.ts": "ac7d6e556d419f2d47ba14ed9d88894bca91390d3cb7f40104683624ca54f80e",
+    "tools/uc-02/verify.mjs": "f3bd03be9cecc7ce4ba5289a549c9a972bd673b0bc485f5939ef90610196e545",
+    "src/modules/rag/application/generation/prompt.ts": "5b6124bd4da35d57183f513c4a85e36f875fb7d699ec309e301399c095c06f16",
+    "src/modules/rag/application/generation/input.ts": "6a9f309b9994a1a09efaf47736d1a9a5747a36cf3b5165f13b2dca30a9bc6d9d",
+    "src/modules/rag/application/generation/schema.ts": "13e5a80275530dfcf9885f56f59144382b8f0fde3fb604b67672bcb6ed9cd59b",
+    "src/modules/rag/application/pipelines/retrieval-plan.ts": "06321c95adbe27ad1946bed7fe302f72bc5fbfc9b48cfb80ecadc6df5f3fa1c0",
+    "contracts/v1/domain.schema.json": "dd30836f920f73d62e65621569ec5162acef00a5d5fc03e5494c43b76dc64e6c",
+    "contracts/v1/http.schema.json": "ded8cb3f4c97b546561eba07497160d40f3f23b44c723674e2c0aecb117f9f86"
+  }
+}

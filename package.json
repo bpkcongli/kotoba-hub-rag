@@ -10,9 +10,9 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src tests eslint.config.mjs tools/boot-01 tools/inf-01 tools/store-01 tools/data-01 tools/data-03 tools/rag-01 tools/ref-01 tools/uc-01",
-    "format": "prettier --write .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs tools/ref-01/*.mjs tools/uc-01/*.mjs",
-    "format:check": "prettier --check .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs tools/ref-01/*.mjs tools/uc-01/*.mjs",
+    "lint": "eslint src tests eslint.config.mjs tools/boot-01 tools/inf-01 tools/store-01 tools/data-01 tools/data-03 tools/rag-01 tools/ref-01 tools/uc-01 tools/uc-02",
+    "format": "prettier --write .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs tools/ref-01/*.mjs tools/uc-01/*.mjs tools/uc-02/*.mjs",
+    "format:check": "prettier --check .prettierrc.json package.json package-lock.json tsconfig.json tsconfig.build.json eslint.config.mjs src tests tools/boot-01/*.mjs tools/inf-01/*.mjs tools/store-01/*.mjs compose.yaml infra/qdrant/*.yaml tools/data-01/*.mjs tools/data-03/*.mjs configs/pricing/*.json tools/rag-01/*.mjs tools/ref-01/*.mjs tools/uc-01/*.mjs tools/uc-02/*.mjs",
     "build": "node tools/boot-01/build.mjs",
     "test": "node --import tsx --test \"tests/unit/**/*.test.ts\"",
     "inf:check": "node tools/inf-01/audit.test.mjs && node tools/inf-01/smoke.test.mjs && node tools/inf-01/verify.mjs && node tools/inf-01/capture.mjs",
@@ -41,6 +41,8 @@
     "test:adp02": "node tools/rag-01/run-integration.mjs --adaptive",
     "test:adp03": "node tools/rag-01/run-integration.mjs --execution",
     "test:uc01": "node --import tsx tools/uc-01/verify.mjs",
+    "test:uc02": "node --import tsx tools/uc-02/verify.mjs",
+    "test:uc02:integration": "node tools/rag-01/run-integration.mjs --rubric",
     "base:smoke": "node --import tsx --env-file-if-exists=.env src/modules/rag/interface/primary/smoke.ts"
   },
   "dependencies": {

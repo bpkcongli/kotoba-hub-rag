@@ -30,3 +30,20 @@ export {
 export { type EmbeddingVector } from '@/modules/knowledge/domain/models/embedding';
 
 export { type RetrievalFilter } from '@/modules/knowledge/domain/models/retrieval-filter';
+
+export {
+  assertRubricBundle,
+  samePolicyRef,
+  rubricRef,
+  parseRubricBundle,
+  canonicalRubricContent,
+  RubricError,
+} from '@/modules/knowledge/application/rubric';
+
+export type {
+  RubricBundle,
+  RubricBundleManifest,
+  PolicyRef,
+  GradingPolicy,
+  RubricGuidance,
+} from '@/modules/knowledge/domain/models/rubric';

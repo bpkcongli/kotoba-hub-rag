@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "data-02-preparation-v1",
+  "status": "PREPARED_OFFLINE_PILOT_CONFIG",
+  "corpusVersion": "uc-02-rubric-v1",
+  "corpusManifestSha256": "9269cbd1c1cbc6ad7a6ceec57ff1eb705371896806e10b4ce3f691fbd963d57f",
+  "usagePolicySha256": "090efba90be3ec4d1b2eb3e5fe014c53f475be81acc1b2f8911e36280709dd00",
+  "usageScope": "internal_research",
+  "publicRedistributionAuthorized": false,
+  "config": {
+    "version": "pedagogical-v1",
+    "unicode": "NFC",
+    "maxTokens": 512,
+    "overlapTokens": 96,
+    "overlapUnits": 2
+  },
+  "configSha256": "f400d7552a21ba3c330d7b49d7b77df53c4f8d5d7ed219e7348d34ef5b0141a9",
+  "chunkingVersion": "pedagogical-v1-6d8ece8a297e3e5d6ef6febe",
+  "normalizationVersion": "html-fields-v1-NFC",
+  "tokenizer": {
+    "id": "bge-m3-c069f8913ad0b40f06f2c650",
+    "model": "BAAI/bge-m3",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+    "engine": "tokenizers@0.23.2",
+    "files": {
+      "tokenizer.json": "21106b6d7dab2952c1d496fb21d5dc9db75c28ed361a05f5020bbba27810dd08",
+      "tokenizer_config.json": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4"
+    },
+    "addSpecialTokens": true,
+    "truncation": false,
+    "padding": false,
+    "providerServedTokenizerRevision": null,
+    "purpose": "local_chunk_budget_not_provider_billing"
+  },
+  "counts": {
+    "sourceDocuments": 737,
+    "normalizedLessons": 41,
+    "pedagogicalUnits": 475,
+    "chunks": 99,
+    "byLocale": {
+      "EN": 51,
+      "ID": 48
+    },
+    "byLevel": {
+      "JLPT_N5": 79,
+      "JLPT_N4": 20
+    },
+    "minTokens": 91,
+    "maxTokens": 512,
+    "totalStoredTokensIncludingOverlapAndSpecial": 38668,
+    "overlapUnitOccurrences": 48
+  },
+  "offsetUnit": "UTF16_CODE_UNITS",
+  "rawSpanPolicy": "whole_original_JSON_string_field; normalized start/end refer to parent text, not raw HTML character alignment",
+  "pilotTuned": false,
+  "experimentFrozen": false,
+  "embeddingCalls": 0,
+  "qdrantWrites": 0,
+  "billableProviderUsage": null,
+  "files": {
+    "normalized-lessons.jsonl": {
+      "sha256": "c4d48ddbc960069a9c5935d0a90618da0552fd0690cfe8b62fa354ade89896e2",
+      "bytes": 980763
+    },
+    "chunks.jsonl": {
+      "sha256": "d5bd64c5f153ceacb8bad9e6dd8035f73668bd8869a0229ab902181974f862ce",
+      "bytes": 1043786
+    },
+    "source-map.jsonl": {
+      "sha256": "ba6ae87d02075f05bd9d8c6d2415097d704da28ca5d0d0ad817b4f56c85fe68a",
+      "bytes": 891758
+    }
+  }
+}

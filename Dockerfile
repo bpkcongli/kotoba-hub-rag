@@ -10,6 +10,7 @@ RUN npm ci --ignore-scripts
 
 COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
+COPY contracts/rubric ./contracts/rubric
 COPY tools/boot-01/build.mjs ./tools/boot-01/build.mjs
 COPY contracts/v1/domain.schema.json contracts/v1/contract.schema.json contracts/v1/http.schema.json contracts/v1/errors.json ./contracts/v1/
 RUN npm run build && npm prune --omit=dev --ignore-scripts
@@ -23,6 +24,7 @@ COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --chown=node:node package.json ./
 COPY --chown=node:node contracts/v1/domain.schema.json contracts/v1/contract.schema.json contracts/v1/http.schema.json contracts/v1/errors.json ./contracts/v1/
+COPY --chown=node:node contracts/rubric ./contracts/rubric/
 COPY --chown=node:node configs/pricing ./configs/pricing/
 
 USER node

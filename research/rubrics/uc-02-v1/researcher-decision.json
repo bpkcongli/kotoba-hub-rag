@@ -1,0 +1,27 @@
+{
+  "task": "UC-02",
+  "approvedAtUtc": "2026-11-27T22:26:47Z",
+  "approver": "project-researcher-user",
+  "role": "PENELITI",
+  "evidence": "User explicit reply in this session: Setujui isi dan penggunaan internal runtime",
+  "approvedPolicyContentSha256": "110e52d1c27dcda70ef7cc388864b9db956602195091c174d8a43bcc25fba08a",
+  "approvedGuidanceContentSha256": "973a2d96b26a99bc1301c8e8840e7b708f8bbc89148cdbb270cc6eef88583713",
+  "bundleFileSha256": "0008af90cf90b9fe84682f5dbda668bbe0e01ef572d8785ff5582e46e0de5d73",
+  "approvedUsage": "Internal runtime policy/guidance; scoring60/30/10 threshold80 caps49/79; UNGRADABLE422.",
+  "notAuthorized": [
+    "Paid provider calls",
+    "Persistent index mutation",
+    "Public redistribution"
+  ],
+  "sourceDesignFilesSha256": {
+    "docs/data/free-response-rubric-design/design-notes.txt": "087d81b928204c86f802f180e0c784edb200dcfa50a7b80f8768286805f26419",
+    "docs/data/free-response-rubric-design/guidance.draft.example.json": "695ad634668997eef41bcdc095509e0da56098a950bab634190b1ea293ebd11b",
+    "docs/data/free-response-rubric-design/policy.draft.example.json": "7933ab6e42543def0be995c48c595441a20d7c17ecf4ba8501cff4feb4bcbc58",
+    "docs/data/free-response-rubric-design/rubric.schema.json": "305712c58eef010998139196f5ce9df84b1e2e0cd225b961807a2ce8a69dc7f1"
+  },
+  "limitations": [
+    "Researcher content approval is not independent expert validation or pilot calibration.",
+    "Only supplied guidance n5_copula_affirmative/id is approved in this bundle; EN/N4 guidance requires separate reviewed content.",
+    "New corpus/index version; original DATA-01/03 artifacts retained."
+  ]
+}

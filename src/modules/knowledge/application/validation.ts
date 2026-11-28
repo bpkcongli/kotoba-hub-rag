@@ -1,9 +1,11 @@
 import { createHash } from 'node:crypto';
 import { Ajv } from 'ajv';
+import { canonicalRubricContent } from '@/modules/knowledge/application/rubric-canonical';
 import type {
   ChunkConfig,
   Json,
   JsonObject,
+  RubricBinding,
   SourceDocument,
 } from '@/modules/knowledge/domain/models/ingestion';
 import { IngestionError } from '@/modules/knowledge/domain/models/ingestion';
@@ -78,10 +80,32 @@ export function rejectPrivateKeys(value: unknown): void {
 
 const text = { type: 'string', minLength: 1, maxLength: 4096 };
 const revision = { type: 'integer', minimum: 1 };
+
+export const rubricBindingSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'guidanceId',
+    'guidanceRevision',
+    'guidanceContentSha256',
+    'policyId',
+    'policyRevision',
+    'policyContentSha256',
+  ],
+  properties: {
+    guidanceId: text,
+    guidanceRevision: revision,
+    guidanceContentSha256: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+    policyId: text,
+    policyRevision: revision,
+    policyContentSha256: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+  },
+};
+
 const properties = {
   source_id: text,
   parent_id: text,
-  source_table: { enum: ['skills', 'lesson_content_blocks'] },
+  source_table: { enum: ['skills', 'lesson_content_blocks', 'rubric_guidance'] },
   source_row_id: text,
   source_uri: text,
   track_id: text,
@@ -101,8 +125,10 @@ const properties = {
       'PARAGRAPH',
       'EXAMPLE_SENTENCE',
       'GRAMMAR_STRUCTURE',
+      'RUBRIC',
     ],
   },
+  rubric: rubricBindingSchema,
   published: { const: true },
   sort_order: { type: 'integer', minimum: 1 },
   content_revision: revision,
@@ -130,7 +156,7 @@ const validateSource = ajv.compile<SourceDocument>({
   type: 'object',
   additionalProperties: false,
   properties,
-  required: Object.keys(properties).filter((key) => key !== 'sort_order'),
+  required: Object.keys(properties).filter((key) => key !== 'sort_order' && key !== 'rubric'),
 });
 
 const validateConfig = ajv.compile<ChunkConfig>({
@@ -146,6 +172,52 @@ const validateConfig = ajv.compile<ChunkConfig>({
   },
 });
 
+function validateRubricSource(value: SourceDocument, binding: RubricBinding): void {
+  const scope = object(value.content.scope);
+  const policy = object(value.content.policyRef);
+
+  if (
+    value.content_checksum !== binding.guidanceContentSha256 ||
+    value.source_row_id !== `${binding.guidanceId}@${binding.guidanceRevision}` ||
+    value.content_revision !== binding.guidanceRevision ||
+    value.translation_revision !== binding.guidanceRevision
+  ) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (value.content.locale !== value.locale.toLowerCase()) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (
+    policy.id !== binding.policyId ||
+    policy.revision !== binding.policyRevision ||
+    policy.contentSha256 !== binding.policyContentSha256
+  ) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (scope.questionType !== 'FREE_RESPONSE' || scope.jlptLevel !== value.jlpt_level) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (
+    scope.trackSlug !== value.track_slug ||
+    scope.unitSlug !== value.unit_slug ||
+    scope.lessonSlug !== value.lesson_slug
+  ) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (
+    value.skill_codes.length !== 1 ||
+    scope.skillCode !== value.skill_codes[0] ||
+    value.sort_order !== undefined
+  ) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+}
+
 export function parseSource(value: unknown): SourceDocument {
   if (!validateSource(value)) {
     throw new IngestionError('INVALID_SOURCE');
@@ -158,14 +230,41 @@ export function parseSource(value: unknown): SourceDocument {
   const isSkillType = ['GRAMMAR', 'VOCABULARY', 'READING'].includes(value.content_type);
 
   if (
+    (value.content_type === 'RUBRIC') !== (value.source_table === 'rubric_guidance') ||
+    (value.content_type === 'RUBRIC') !== (value.rubric !== undefined)
+  ) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (value.rubric) {
+    validateRubricSource(value, value.rubric);
+  }
+
+  if (
     (value.source_table === 'skills') !== isSkillType ||
-    value.source_revision !== value.content_revision ||
-    hash(canonical(value.content)) !== value.content_checksum ||
+    value.source_revision !== value.content_revision
+  ) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  const content =
+    value.content_type === 'RUBRIC'
+      ? canonicalRubricContent(value.content)
+      : canonical(value.content);
+
+  if (hash(content) !== value.content_checksum) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (
     value.source_id !==
       `kotobahub:${value.source_table}:${value.source_row_id}:${value.locale.toLowerCase()}` ||
-    value.parent_id !== `kotobahub:lessons:${value.lesson_id}` ||
-    (value.source_table === 'lesson_content_blocks' && value.sort_order === undefined)
+    value.parent_id !== `kotobahub:lessons:${value.lesson_id}`
   ) {
+    throw new IngestionError('INTEGRITY_ERROR');
+  }
+
+  if (value.source_table === 'lesson_content_blocks' && value.sort_order === undefined) {
     throw new IngestionError('INTEGRITY_ERROR');
   }
 

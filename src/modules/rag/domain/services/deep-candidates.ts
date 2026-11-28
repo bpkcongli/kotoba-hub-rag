@@ -56,6 +56,7 @@ export function mergeDeepCandidates(
         row.unitSlug,
         row.trackSlug,
         row.tokenCount,
+        row.rubric ?? null,
       ]);
 
       if (prior !== undefined && prior !== fingerprint) {

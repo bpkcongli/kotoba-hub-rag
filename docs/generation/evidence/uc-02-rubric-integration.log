@@ -1,0 +1,12 @@
+✔ UC-02 Qdrant nyata: approved guidance locale/level 0, filter policy dan grade publik (1009.761827ms)
+✔ UC-02 Qdrant nyata: approved guidance locale/level 1, filter policy dan grade publik (953.938291ms)
+✔ UC-02 Qdrant nyata: approved guidance locale/level 2, filter policy dan grade publik (926.190588ms)
+✔ UC-02 Qdrant nyata: approved guidance locale/level 3, filter policy dan grade publik (899.88841ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4395.42535

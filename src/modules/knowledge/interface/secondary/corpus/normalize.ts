@@ -1,8 +1,10 @@
+import { canonicalRubricContent } from '@/modules/knowledge/application/rubric-canonical';
 import {
   canonical,
   hash,
   jsonObject,
   parseChunkConfig,
+  parseSource,
   string,
 } from '@/modules/knowledge/application/validation';
 import type {
@@ -60,7 +62,9 @@ function pieces(source: ApprovedSource): Piece[] {
 
   const content = source.content;
 
-  if (source.content_type === 'PARAGRAPH') {
+  if (source.content_type === 'RUBRIC') {
+    result.push({ source, path: '$.content', raw: canonicalRubricContent(content), html: false });
+  } else if (source.content_type === 'PARAGRAPH') {
     add('title', content.title);
     add('body', content.body, true);
 
@@ -125,7 +129,14 @@ export function normalizeCorpus(
       throw new IngestionError('INVALID_SOURCE');
     }
 
-    const key = `${source.lesson_id}:${source.locale}`;
+    if (source.content_type === 'RUBRIC') {
+      parseSource(source);
+    }
+
+    const key =
+      source.content_type === 'RUBRIC'
+        ? `rubric:${source.source_id}`
+        : `${source.lesson_id}:${source.locale}`;
     const group = groups.get(key) ?? [];
     group.push(source);
     groups.set(key, group);
@@ -143,7 +154,9 @@ export function normalizeCorpus(
     }
 
     const skills = group.filter((source) => source.source_table === 'skills');
-    const codes = new Set(skills.flatMap((source) => source.skill_codes));
+    const codes = new Set(
+      (first.content_type === 'RUBRIC' ? group : skills).flatMap((source) => source.skill_codes),
+    );
     const sourceIds = new Set<string>();
 
     for (const source of group) {
@@ -169,6 +182,10 @@ export function normalizeCorpus(
     }
 
     const drafts: UnitDraft[] = [];
+    if (first.content_type === 'RUBRIC') {
+      drafts.push({ kind: 'rubric', sources: [first], pieces: pieces(first) });
+    }
+
     const attachedSkills = new Set<string>();
     const blocks = group
       .filter((source) => source.source_table === 'lesson_content_blocks')
@@ -238,9 +255,12 @@ export function normalizeCorpus(
       const spans: SourceSpan[] = [];
 
       for (const piece of draft.pieces) {
-        const normalized = piece.html
-          ? htmlToText(piece.raw, config.unicode)
-          : normalizeText(piece.raw, config.unicode);
+        const normalized =
+          piece.source.content_type === 'RUBRIC'
+            ? piece.raw
+            : piece.html
+              ? htmlToText(piece.raw, config.unicode)
+              : normalizeText(piece.raw, config.unicode);
 
         if (!normalized) {
           throw new IngestionError('EMPTY_CONTENT');
@@ -287,7 +307,10 @@ export function normalizeCorpus(
     }
 
     output.push({
-      id: `kotobahub:lesson-text:${key}`,
+      id:
+        first.content_type === 'RUBRIC'
+          ? `kotobahub:rubric-text:${first.source_row_id}:${first.locale}`
+          : `kotobahub:lesson-text:${key}`,
       parentId: first.parent_id,
       corpusVersion: corpus.corpusVersion,
       locale: first.locale,

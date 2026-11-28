@@ -1,0 +1,59 @@
+{
+  "task": "UC-02",
+  "change": "Penghapusan folder rancangan atas permintaan pengguna; fixture membaca policy/guidance approved yang dipertahankan.",
+  "on": "2026-11-28",
+  "verifiedAtUtc": "2026-11-28T01:56:45.514960+00:00",
+  "folderRemoved": "docs/data/free-response-rubric-design",
+  "removedFilesSha256": {
+    "docs/data/free-response-rubric-design/design-notes.txt": "087d81b928204c86f802f180e0c784edb200dcfa50a7b80f8768286805f26419",
+    "docs/data/free-response-rubric-design/guidance.draft.example.json": "695ad634668997eef41bcdc095509e0da56098a950bab634190b1ea293ebd11b",
+    "docs/data/free-response-rubric-design/policy.draft.example.json": "7933ab6e42543def0be995c48c595441a20d7c17ecf4ba8501cff4feb4bcbc58",
+    "docs/data/free-response-rubric-design/rubric.schema.json": "305712c58eef010998139196f5ce9df84b1e2e0cd225b961807a2ce8a69dc7f1"
+  },
+  "historicalReferences": "Path/checksum pada researcher-decision.json dan UC-02-verification.json dipertahankan sebagai snapshot sebelum penghapusan; bukan referensi file yang masih tersedia.",
+  "syntheticTestApprovalPreserved": true,
+  "approvedArtifactsUnchangedSha256": {
+    "research/rubrics/uc-02-v1/researcher-decision.json": "e5116e1baf5ca18d7e3efda0457d5a6064a8183af75f2c8270176ad7c3c56186",
+    "research/rubrics/uc-02-v1/guidance-id-n5.json": "f99b01ba5ecd93dbe2db1e3452d039bf543ec548751e5ae8093dec483a55c0ac",
+    "research/rubrics/uc-02-v1/bundle.json": "0008af90cf90b9fe84682f5dbda668bbe0e01ef572d8785ff5582e46e0de5d73",
+    "research/rubrics/uc-02-v1/preparation-manifest.json": "9a3285a313310f7529cfaa391ea6973215e2a3adf43a66fe38652708dc648533",
+    "research/rubrics/uc-02-v1/policy.json": "69add7820076d35c4ed7afab72a4ac6f6a3523bc0bfb4c1ae1aaaa901bfeb1eb",
+    "contracts/rubric/rubric.schema.json": "3682aa54ba55c8a2315dfa57a18bec498180dde89c74c52898e21936c202cae7"
+  },
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "tests": 663,
+      "passed": 663,
+      "failed": 0,
+      "log": "docs/generation/evidence/uc-02-draft-cleanup-tests.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "eslint tests/__fixtures__/rubric-fixture.ts tests/unit/ingestion/rubric.test.ts tests/unit/ingestion/rubric-ingestion.test.ts",
+      "exitCode": 0
+    },
+    {
+      "command": "prettier --check tests/__fixtures__/rubric-fixture.ts tests/unit/ingestion/rubric.test.ts tests/unit/ingestion/rubric-ingestion.test.ts",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "runtimeSourceChanged": false,
+  "paidProviderCalls": 0,
+  "persistentIndexMutations": 0,
+  "artifactsSha256": {
+    "tests/__fixtures__/rubric-fixture.ts": "f4a7dae8d099af880e5ac717a26850d421ea6b3573ca4e23fd9928d52f15a13b",
+    "tests/unit/ingestion/rubric.test.ts": "e14248387212ffbb9956e2be76bf31fc4c9dbb9a8f6c8e0f310e282aad38a422",
+    "tests/unit/ingestion/rubric-ingestion.test.ts": "61ff3371ae94415ec3aaa65b6702c9eab69f4e172b204c1df1294c3bad835750",
+    "docs/generation/UC-02-free-response-evaluation.md": "e0a85ee8d5b97b0c2eb1d5f72f44ab5cc93e5681396d8b6e5ce25bb782798a33",
+    "docs/generation/evidence/uc-02-draft-cleanup-tests.log": "e655ea4c30443c495b82e49bf3424d07a8597ae69d810e76600d39c3586c9b25"
+  }
+}

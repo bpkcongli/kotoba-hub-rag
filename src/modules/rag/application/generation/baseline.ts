@@ -1,5 +1,6 @@
 import type { ExecutionPolicy, Scheduling } from '@/modules/execution/application/public';
 import { readExecutionPolicy } from '@/modules/execution/application/public';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
 import { createExecutionRunner } from '@/modules/rag/application/pipelines/execution';
 import { observedStep } from '@/modules/rag/application/pipelines/steps';
 import type { RagExecutionPort } from '@/modules/rag/application/ports/execution';
@@ -13,6 +14,7 @@ export function createBaselineRunner(
   clock: Clock = systemClock,
   policy: ExecutionPolicy = readExecutionPolicy(),
   scheduling?: Scheduling,
+  rubric?: RubricBundle | null,
 ) {
   return createExecutionRunner(
     'LLM_ONLY',
@@ -30,5 +32,6 @@ export function createBaselineRunner(
     policy,
     undefined,
     scheduling,
+    rubric,
   );
 }

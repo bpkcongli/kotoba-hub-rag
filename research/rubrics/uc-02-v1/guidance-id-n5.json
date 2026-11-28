@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "1.0.0",
+  "kind": "FREE_RESPONSE_RUBRIC_GUIDANCE",
+  "id": "n5-copula-affirmative-id",
+  "revision": 1,
+  "status": "APPROVED",
+  "contentSha256": "973a2d96b26a99bc1301c8e8840e7b708f8bbc89148cdbb270cc6eef88583713",
+  "content": {
+    "policyRef": {
+      "id": "kotobahub-free-response-translation",
+      "revision": 1,
+      "contentSha256": "110e52d1c27dcda70ef7cc388864b9db956602195091c174d8a43bcc25fba08a"
+    },
+    "scope": {
+      "questionType": "FREE_RESPONSE",
+      "jlptLevel": "N5",
+      "trackSlug": "jlpt-n5-foundation",
+      "unitSlug": "n5-self-introduction-and-copula",
+      "lessonSlug": "copula-affirmative-and-questions",
+      "skillCode": "n5_copula_affirmative"
+    },
+    "locale": "id",
+    "semanticChecks": [
+      "Periksa identitas atau keadaan yang dinyatakan sumber dan polaritas kalimat."
+    ],
+    "acceptableVariations": [
+      "わたしはがくせいです。 dan 私は学生です。 dapat menyampaikan makna sama.",
+      "Elipsis subjek yang natural diterima jika konteks tidak mengubah rujukan."
+    ],
+    "commonErrors": [
+      {
+        "code": "IDENTITY_CHANGED",
+        "description": "Mengganti pelajar dengan guru mengubah identitas yang dinyatakan sumber."
+      }
+    ],
+    "illustrations": [
+      {
+        "sourceLanguage": "ID",
+        "sourceSentence": "Saya seorang pelajar.",
+        "japaneseAnswer": "私は学生です。",
+        "relationship": "EQUIVALENT",
+        "explanation": "Identitas pelajar dan makna afirmatif terjaga; ini ilustrasi authoring baru, bukan label dataset."
+      }
+    ]
+  },
+  "approval": {
+    "approvedBy": "project-researcher-user",
+    "role": "PENELITI",
+    "approvedAt": "2026-11-27T22:26:47Z",
+    "reviewedContentSha256": "973a2d96b26a99bc1301c8e8840e7b708f8bbc89148cdbb270cc6eef88583713"
+  },
+  "provenance": {
+    "authorship": "AI_ASSISTED",
+    "sourceRefs": [
+      {
+        "repository": "kotoba-hub-rag",
+        "path": "docs/generation/UC-02-grading-rubric-draft.md",
+        "fileSha256": "c8924987036426a0f5575463df04ecd3bda79cff6266603fe80cd614aa29e261",
+        "role": "PROPOSED_POLICY"
+      },
+      {
+        "repository": "kotoba-hub",
+        "path": "src/backend/shared/application/helpers/ai-templates.ts",
+        "fileSha256": "795f2a97eee3af62b334941bc94be419ea954f2c83820ec690bdb5ec5412b33f",
+        "role": "CURRENT_BEHAVIOR"
+      },
+      {
+        "repository": "kotoba-hub",
+        "path": "src/backend/shared/application/helpers/ai-schemas.ts",
+        "fileSha256": "16e933668af72b4428802b44b6c7759311736dea6df3261f7addc86097a4a916",
+        "role": "CURRENT_BEHAVIOR"
+      },
+      {
+        "repository": "kotoba-hub",
+        "path": "content/syllabus/v2/tracks/jlpt-n5-foundation.json",
+        "fileSha256": "d56a0ddac6b9003419094257e9002c10a585d27ae506d3df69501413e64830c8",
+        "role": "CURRICULUM_SCOPE"
+      }
+    ],
+    "license": "Internal runtime use explicitly authorized by project researcher; no public redistribution authorized; original source terms remain as audited.",
+    "usageScope": "INTERNAL_RUNTIME"
+  }
+}

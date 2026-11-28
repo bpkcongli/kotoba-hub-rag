@@ -4,6 +4,7 @@ import type { ExecutionRegistryService } from '@/modules/execution/application/p
 import type { QdrantConfig } from '@/modules/knowledge/application/connection-settings';
 import { EMBEDDING_CONFIG_ID } from '@/modules/knowledge/application/embedding-configuration';
 import { HF_IDENTITY } from '@/modules/knowledge/application/inference-identity';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
 import type { QdrantIndexStore } from '@/modules/knowledge/interface/secondary/qdrant/qdrant-index';
 import { createContextBuilder } from '@/modules/rag/application/context/observed-builder';
 import { createBaselineRunner } from '@/modules/rag/application/generation/baseline';
@@ -40,6 +41,7 @@ import { InferenceError } from '@/shared/errors/inference-error';
 
 export function createRagModule(options: {
   clock: Clock;
+  rubric?: RubricBundle | null;
   hfConfig: HfConfig | null;
   qdrantConfig: QdrantConfig | null;
   openAiConfig: OpenAiConfig | null;
@@ -65,6 +67,7 @@ export function createRagModule(options: {
     executionPolicy,
     registry,
   } = options;
+  const rubric = options.rubric ?? null;
   const observations = new ExecutionRegistryAdapter(registry);
   const rawInference = hfConfig
     ? createHfInference(hfConfig, {
@@ -172,15 +175,17 @@ export function createRagModule(options: {
   const baseline =
     generator && openAiConfig
       ? createBaselineRunner(
-          createOperationGenerator(generator, openAiConfig),
+          createOperationGenerator(generator, openAiConfig, rubric, observations),
           observations,
           clock,
           executionPolicy,
+          undefined,
+          rubric,
         )
       : null;
   const contextBuilder =
     openAiConfig && contextConfig
-      ? createContextBuilder(contextConfig, openAiConfig, observations, clock)
+      ? createContextBuilder(contextConfig, openAiConfig, observations, clock, rubric)
       : null;
 
   const singleStage =
@@ -189,11 +194,13 @@ export function createRagModule(options: {
           retrievalConfig.index,
           retrievalStage,
           contextBuilder,
-          createOperationGenerator(generator, openAiConfig),
+          createOperationGenerator(generator, openAiConfig, rubric, observations),
           observations,
           evidencePolicy,
           clock,
           executionPolicy,
+          undefined,
+          rubric,
         )
       : null;
   const adaptiveInitialStage =
@@ -205,6 +212,7 @@ export function createRagModule(options: {
           observations,
           routerPolicy,
           clock,
+          rubric,
         )
       : null;
 
@@ -214,7 +222,7 @@ export function createRagModule(options: {
           retrievalConfig.index,
           retrievalStage,
           contextBuilder,
-          createOperationGenerator(generator, openAiConfig),
+          createOperationGenerator(generator, openAiConfig, rubric, observations),
           createQueryRewriter(generator),
           inference.reranker,
           observations,
@@ -223,6 +231,8 @@ export function createRagModule(options: {
           deepPolicy,
           clock,
           executionPolicy,
+          undefined,
+          rubric,
         )
       : null;
 

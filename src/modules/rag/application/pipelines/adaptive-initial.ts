@@ -1,4 +1,5 @@
 import type { CallContext } from '@/modules/execution/application/public';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
 import type { IndexManifest } from '@/modules/knowledge/application/public';
 import { validPayload } from '@/modules/rag/application/generation/schema';
 import {
@@ -33,6 +34,7 @@ export function createAdaptiveInitialStage(
   observations: RagExecutionPort,
   policy: RouterPolicy = readRouterPolicy(),
   clock: Clock = systemClock,
+  rubric?: RubricBundle | null,
 ) {
   index = structuredClone(index);
   policy = parseRouterPolicy(policy);
@@ -113,7 +115,7 @@ export function createAdaptiveInitialStage(
     };
 
     try {
-      const plan = retrievalPlan(operation, request);
+      const plan = retrievalPlan(operation, request, rubric);
       checkDeadline();
       const retrieved = await retrieve(plan.query, plan.filter, 1, callContext);
       checkDeadline();

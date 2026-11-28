@@ -1,5 +1,10 @@
 import { createHash } from 'node:crypto';
 import type { Requests } from '@/contracts/types';
+import type { RubricBundle } from '@/modules/knowledge/application/public';
+import {
+  gradingInstructions,
+  assessmentSchema,
+} from '@/modules/rag/application/generation/grading';
 import { generationInput } from '@/modules/rag/application/generation/input';
 import { aiInstructions } from '@/modules/rag/application/generation/prompt';
 import { operationSchema } from '@/modules/rag/application/generation/schema';
@@ -31,6 +36,7 @@ export function buildContext(
   request: Requests[Operation],
   candidates: readonly ContextCandidate[],
   targetSkillCodes: readonly string[],
+  rubric?: RubricBundle | null,
 ): BuiltContext {
   const targets = [...new Set(targetSkillCodes)];
   const catalog = new Set(request.payload.context.catalog.map((skill) => skill.skillCode));
@@ -113,9 +119,12 @@ export function buildContext(
     unique.push({ row, ref });
   }
 
-  const systemChars = aiInstructions(operation).length;
-  const systemTokens = planningTokens(aiInstructions(operation));
-  const schemaTokens = planningTokens(JSON.stringify(operationSchema(operation)));
+  const instructions =
+    operation === 'evaluate' && rubric ? gradingInstructions(rubric) : aiInstructions(operation);
+  const schema = operation === 'evaluate' && rubric ? assessmentSchema : operationSchema(operation);
+  const systemChars = instructions.length;
+  const systemTokens = planningTokens(instructions);
+  const schemaTokens = planningTokens(JSON.stringify(schema));
   const baseInput = generationInput(request, []);
   const inputTokens = planningTokens(baseInput);
   const fixed =
@@ -165,6 +174,7 @@ export function buildContext(
       text: row.text,
       score: row.score,
       scoreType: row.scoreType,
+      ...(row.rubric ? { rubric: row.rubric } : {}),
     };
     const packed = generationInput(request, [...evidence, item]);
     const nextTokens = planningTokens(packed) - inputTokens;

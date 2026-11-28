@@ -37,6 +37,11 @@ import {
   validRetryTrace,
 } from '@/modules/observability/application/execution-event';
 import {
+  type GradingTrace,
+  gradingEventSchema,
+  validGradingTrace,
+} from '@/modules/observability/application/grading-event';
+import {
   retrievalEventSchema,
   validRetrievalTrace,
 } from '@/modules/observability/application/retrieval-event';
@@ -69,6 +74,7 @@ export interface Correlation {
 export type Outcome = 'SUCCESS' | 'FAILED' | 'TIMEOUT' | 'UNKNOWN';
 
 export type EventData =
+  | GradingTrace
   | ExecutionPolicyTrace
   | RetryTrace
   | DeepRerankTrace
@@ -236,6 +242,7 @@ export const traceEventSchema = object({
     oneOf: [
       object({ kind: { const: 'request_started' }, fingerprint: hash }),
       retrievalEventSchema,
+      gradingEventSchema,
       contextEventSchema,
       evidenceEventSchema,
       routingEventSchema,
@@ -341,6 +348,15 @@ export function parseTraceEvent(value: unknown): TraceEvent {
     (event.schemaVersion !== 'obs-02-v1' || !validRetrievalTrace(event.data))
   ) {
     throw new Error('Invariant retrieval trace tidak valid');
+  }
+
+  if (
+    (event.data.kind === 'grading_binding' || event.data.kind === 'grading_assessed') &&
+    (event.schemaVersion !== 'obs-02-v1' ||
+      event.correlation.operation !== 'evaluate' ||
+      !validGradingTrace(event.data))
+  ) {
+    throw new Error('Invariant grading trace tidak valid');
   }
 
   const terminal = event.data.kind === 'terminal' || event.data.kind === 'admission_rejected';

@@ -99,7 +99,7 @@ const descriptions = {
   generate:
     'Generates exactly questionCount questions matching the catalog, allowedQuestionTypes, and difficultyBand. Preserves blank, option, token-order, and EN/ID↔JA language-pair invariants.',
   evaluate:
-    'Evaluates FREE_RESPONSE only. promptLanguage is EN/ID according to translationLocale, and answerLanguage is JA. Returns isCorrect, numericScore from 0 to 100, and feedbackText; objective grading remains owned by KotobaHub.',
+    'Evaluates FREE_RESPONSE only. promptLanguage is EN/ID according to translationLocale, and answerLanguage is JA. Requires a server-pinned approved UC-02 rubric bundle. The server computes isCorrect and numericScore from validated internal assessment anchors; feedbackText follows feedbackLocale. Material input ambiguity or conflicting representations returns 422 POST_VALIDATION_FAILED without a grade; missing rubric dependency returns 503. RAG requires selected approved guidance matching skill, level, source locale and policy; insufficient guidance returns 422 INSUFFICIENT_EVIDENCE. Objective grading remains owned by KotobaHub.',
   normalize:
     'Normalizes a nonblank note into candidate skill claims from the catalog. Suggestions require confirmation; the endpoint does not modify the profile or mastery.',
   recommend:

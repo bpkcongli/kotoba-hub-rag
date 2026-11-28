@@ -1,12 +1,40 @@
 import type { RetrievalTrace } from '@/modules/observability/application/event-contracts/retrieval-v1';
 
-const object = (properties: Record<string, unknown>): object => ({
+const object = (properties: Record<string, unknown>) => ({
   type: 'object',
   properties,
   required: Object.keys(properties),
   additionalProperties: false,
 });
 const text = { type: 'string', minLength: 1, maxLength: 128, pattern: '^[a-zA-Z0-9_.:-]+$' };
+const policyRef = object({
+  id: text,
+  revision: { type: 'integer', minimum: 1 },
+  contentSha256: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+});
+const scope = object({
+  published: { const: true },
+  corpusVersion: text,
+  targetLevel: { enum: ['JLPT_N5', 'JLPT_N4'] },
+  skillCodes: {
+    type: 'array',
+    minItems: 1,
+    maxItems: 64,
+    uniqueItems: true,
+    items: { type: 'string', minLength: 1, maxLength: 128 },
+  },
+  embeddingConfigId: text,
+});
+const rubricScope = {
+  ...scope,
+  properties: {
+    ...scope.properties,
+    language: { enum: ['EN', 'ID'] },
+    contentType: { const: 'RUBRIC' },
+    policyRef,
+  },
+  required: [...scope.required, 'language', 'contentType', 'policyRef'],
+};
 const nullable = (schema: object): object => ({ anyOf: [schema, { type: 'null' }] });
 const hits = {
   type: 'array',
@@ -29,19 +57,7 @@ export const retrievalEventSchema = object({
   physicalCollection: text,
   indexFingerprint: { type: 'string', pattern: '^[a-f0-9]{64}$' },
   configurationHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
-  scope: object({
-    published: { const: true },
-    corpusVersion: text,
-    targetLevel: { enum: ['JLPT_N5', 'JLPT_N4'] },
-    skillCodes: {
-      type: 'array',
-      minItems: 1,
-      maxItems: 64,
-      uniqueItems: true,
-      items: { type: 'string', minLength: 1, maxLength: 128 },
-    },
-    embeddingConfigId: text,
-  }),
+  scope: { anyOf: [scope, rubricScope] },
   queryHash: { type: 'string', pattern: '^[a-f0-9]{64}$' },
   limit: { type: 'integer', minimum: 1, maximum: 32 },
   candidateLimit: { type: 'integer', minimum: 1, maximum: 32 },
